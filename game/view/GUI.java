@@ -17,6 +17,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.StackPane;
 import javafx.scene.image.ImageView;
 import javafx.geometry.Insets;
+import javafx.scene.layout.HBox;
 
 /**
  * This class represents the main GUI class this class bring together all the
@@ -36,6 +37,7 @@ public class GUI extends Application {
 	private Label timeLable;
 	private Label miniMapLable;
 	private Label textAreaLable;
+	private TextField msg;
 	// panes
 	// right pane with vertical alligment
 	private VBox vbox;
@@ -125,13 +127,29 @@ public class GUI extends Application {
 
 	public void setchat() {
 		TitledPane titlePane = new TitledPane();
-		VBox chatControls = new VBox(2);
+		VBox chatControls = new VBox(5);
 		titlePane.setText("Chat Room");
 		chatControls.setPrefWidth(400);
 		chatControls.setPrefHeight(200);
 		chatControls.getStyleClass().add("chatarea-background");
-		titlePane.setContent(chatControls);
+		textAreaLable = new Label();
+		textAreaLable.setPrefWidth(400);
+		textAreaLable.setPrefHeight(150);
+		textAreaLable.getStyleClass().add("chat-display");
+		HBox hbox = new HBox(5);
+		Button send = new Button("Send");
+		send.setPrefWidth(100);
+		send.getStyleClass().add("button-send");
+		msg = new TextField();
+		msg.setPrefWidth(280);
+		msg.setPrefHeight(40);
+		hbox.getChildren().add(msg);
+		hbox.getChildren().add(send);
 		
+		chatControls.getChildren().add(textAreaLable);
+		chatControls.getChildren().add(hbox);
+		titlePane.setContent(chatControls);
+
 		vbox.getChildren().add(titlePane);
 
 	}
