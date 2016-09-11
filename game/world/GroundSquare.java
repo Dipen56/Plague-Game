@@ -8,8 +8,20 @@ package game.world;
  */
 public class GroundSquare extends Position {
 
-    public GroundSquare(int x, int y) {
+    private Area area;
+
+    public GroundSquare(int x, int y, Area area) {
         super(x, y);
+        this.area = area;
+    }
+
+    public Area getArea() {
+        return area;
+    }
+
+    @Override
+    public String toString() {
+        return " ";
     }
 
 }
