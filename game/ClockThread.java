@@ -9,7 +9,7 @@ package game;
  * @author Hector (Fang Zhao 300364061)
  * 
  */
-public class ClockThread {
+public class ClockThread extends Thread {
 
     // XXX should be in main class
     public static final int DEFAULT_CLK_PERIOD = 20;
@@ -36,16 +36,13 @@ public class ClockThread {
         this.game = game;
     }
 
+    @Override
     public void run() {
         while (true) {
             // Loop forever
             try {
                 Thread.sleep(delay);
                 game.update();
-
-                // if (display != null) {
-                // display.repaint();
-                // }
             } catch (InterruptedException e) {
                 // should never happen
             }

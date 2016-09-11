@@ -1,7 +1,7 @@
 package game.player;
 
 /**
- * This enumerate class represents different types of virus.
+ * This enumeration class represents different types of virus.
  * 
  * @author Hector (Fang Zhao 300364061)
  *

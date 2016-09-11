@@ -1,6 +1,6 @@
 package game.world;
 
-import javax.swing.ImageIcon;
+import java.awt.image.BufferedImage;
 
 /**
  * This class represents an unwalkable position on map, like a rock, or a tree.
@@ -25,12 +25,17 @@ public class Obstacle extends Position {
      */
 
     private String description;
-    private ImageIcon image;
+    private BufferedImage image;
 
-    public Obstacle(int x, int y, String description, ImageIcon image) {
+    public Obstacle(int x, int y, String description, BufferedImage image) {
         super(x, y);
         this.description = description;
         this.image = image;
+    }
+
+    @Override
+    public String toString() {
+        return "o";
     }
 
 }
