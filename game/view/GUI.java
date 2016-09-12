@@ -186,6 +186,22 @@ public class GUI extends Application {
 	public void setItems() {
 		TitledPane titlePane = new TitledPane();
 		titlePane.setText("Item Inventory");
+
+		// FlowPane flow = new FlowPane();
+		// flow.getStyleClass().add("itempane-background");
+		// flow.setPrefHeight(230);
+		// titlePane.setContent(flow);
+		// flow.setVgap(2);
+		// flow.setHgap(2);
+		TableView table = new TableView();
+		table.setPrefHeight(230);
+		table.setPrefWidth(400);
+		TableColumn thrid = new TableColumn("First Name");
+        TableColumn second = new TableColumn("Last Name");
+        
+        //table.getColumns().addAll(firstNameCol, lastNameCol, emailCol);
+       // titlePane.setContent(table);
+
 		vbox.getChildren().add(titlePane);
 
 	}
