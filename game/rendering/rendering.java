@@ -1,7 +1,7 @@
 package game.rendering;
 
-import game.view.GUI;
 import javafx.scene.image.ImageView;
+import view.GUI;
 
 /**
  * This class represents the main rendering class, this class will control the

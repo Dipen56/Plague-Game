@@ -1,4 +1,4 @@
-package game.view;
+package view;
 
 import javafx.*;
 import javafx.scene.Scene;
@@ -9,6 +9,7 @@ import javafx.stage.Stage;
 import javafx.scene.Group;
 
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
@@ -19,6 +20,8 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.image.ImageView;
 import javafx.geometry.Insets;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.RowConstraints;
+import javafx.scene.layout.GridPane;
 
 /**
  * This class represents the main GUI class this class bring together all the
@@ -42,6 +45,8 @@ public class GUI extends Application {
 	// panes
 	// right pane with vertical alligment
 	private VBox vbox;
+	private GridPane itemGrid;
+	private GridPane iteminfo;
 	// standard layout
 	private BorderPane borderPane;
 
@@ -87,7 +92,7 @@ public class GUI extends Application {
 	private void render(Group group) {
 		int renderWidth = WIDTH_VALUE - 400;
 
-		//Night image background
+		// Night image background
 		Image image = new Image("/background.gif");
 		ImageView iv1 = new ImageView();
 		iv1.setImage(image);
@@ -95,7 +100,7 @@ public class GUI extends Application {
 		iv1.setFitHeight(HEIGHT_VALUE);
 		group.getChildren().add(iv1);
 
-		//Game field
+		// Game field
 		Rectangle rect = new Rectangle(0, HEIGHT_VALUE / 2 + 50, renderWidth, HEIGHT_VALUE / 2 - 50);
 		rect.setArcHeight(15);
 		rect.setArcWidth(15);
@@ -103,7 +108,7 @@ public class GUI extends Application {
 		rect.setStroke(Color.BLACK);
 		group.getChildren().add(rect);
 
-		//Player on the board
+		// Player on the board
 		Circle player = new Circle(renderWidth / 2, HEIGHT_VALUE - 75, 10, Color.RED);
 		group.getChildren().add(player);
 	}
@@ -186,21 +191,51 @@ public class GUI extends Application {
 	public void setItems() {
 		TitledPane titlePane = new TitledPane();
 		titlePane.setText("Item Inventory");
+		HBox hbox = new HBox(5);
+		itemGrid = new GridPane();
+		
+		hbox.getStyleClass().add("itempane-background");
+		itemGrid.setGridLinesVisible(true);
+		for (int i = 0; i < 3; i++) {
+			for (int j = 0; j < 4; j++) {
+				Label item = new Label();
+				item.getStyleClass().add("item-grid");
+				Image img = loadImage("/item-tray2.png");
+				ImageView image = new ImageView();
+				image.setFitWidth(60); 
+				image.setFitHeight(60);
+				image.setImage(img);
+				item.setGraphic(image);
+				GridPane.setRowIndex(item, i);
+				GridPane.setColumnIndex(item, j);
+				itemGrid.getChildren().add(item);
 
-		// FlowPane flow = new FlowPane();
-		// flow.getStyleClass().add("itempane-background");
-		// flow.setPrefHeight(230);
-		// titlePane.setContent(flow);
-		// flow.setVgap(2);
-		// flow.setHgap(2);
-		TableView table = new TableView();
-		table.setPrefHeight(230);
-		table.setPrefWidth(400);
-		TableColumn thrid = new TableColumn("First Name");
-        TableColumn second = new TableColumn("Last Name");
-        
-        //table.getColumns().addAll(firstNameCol, lastNameCol, emailCol);
-       // titlePane.setContent(table);
+			}
+		}
+		hbox.getChildren().add(itemGrid);
+		iteminfo = new GridPane();
+		iteminfo.setGridLinesVisible(true);
+		Label zoomedItem = new Label();
+		Image img = loadImage("/item-tray2.png");
+		ImageView image = new ImageView();
+		image.setFitWidth(100);
+		image.setFitHeight(100);
+		image.setImage(img);
+		zoomedItem.setGraphic(image);
+		GridPane.setRowIndex(zoomedItem, 0);
+		GridPane.setColumnIndex(zoomedItem, 0);
+		iteminfo.getChildren().add(zoomedItem);
+		
+		Label itemDetail = new Label("No Item Currently Selected");
+		itemDetail.getStyleClass().add("item-lable");
+		GridPane.setRowIndex(itemDetail, 1);
+		GridPane.setColumnIndex(itemDetail, 0);
+		itemDetail.setWrapText(true);
+		itemDetail.setPrefHeight(80);
+		iteminfo.getChildren().add(itemDetail);
+		
+		hbox.getChildren().add(iteminfo);
+		titlePane.setContent(hbox);
 
 		vbox.getChildren().add(titlePane);
 
