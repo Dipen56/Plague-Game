@@ -1,4 +1,6 @@
-package server.game.control;
+package server;
+
+import client.ThreadClient;
 
 public abstract class Packet {
 

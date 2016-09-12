@@ -1,4 +1,4 @@
-package server.game.control;
+package server;
 
 import java.util.ArrayList;
 

@@ -1,4 +1,4 @@
-package server.game.control;
+package server;
 
 import server.game.player.Player;
 

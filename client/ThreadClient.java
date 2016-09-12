@@ -1,4 +1,4 @@
-package server.game.control;
+package client;
 
 import java.io.IOException;
 import java.net.DatagramPacket;

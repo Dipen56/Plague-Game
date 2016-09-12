@@ -1,4 +1,4 @@
-package server.game.control;
+package server;
 
 import java.net.InetAddress;
 
@@ -30,10 +30,6 @@ public class ClientInformation {
 	}
 	public InetAddress getIpAddress(){
 		return ipAddress;
-	}
-	
-	
-
-	
+	}	
 	
 }
