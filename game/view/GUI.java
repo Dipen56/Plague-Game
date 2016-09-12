@@ -11,7 +11,6 @@ import javafx.scene.Group;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
-import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.paint.Color;
 import javafx.scene.control.*;
@@ -19,6 +18,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.image.ImageView;
 import javafx.geometry.Insets;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.FlowPane;
 
 /**
  * This class represents the main GUI class this class bring together all the
@@ -55,7 +55,7 @@ public class GUI extends Application {
 	@Override
 	public void start(Stage mainWindow) throws Exception {
 		this.window = mainWindow;
-		window.setTitle("Plague Game");
+		window.setTitle("Plague Game Developed By Team: HARDD");
 		window.getIcons().add(loadImage(GAMEICON_IMAGE));
 		window.setResizable(false);
 
@@ -73,39 +73,11 @@ public class GUI extends Application {
 		setminiMap();
 		setchat();
 		setItems();
-		Group group = new Group();
-		// Calls the rendering
-		render(group);
-		borderPane.setLeft(group);
 		Scene scene = new Scene(borderPane, WIDTH_VALUE, HEIGHT_VALUE);
 		scene.getStylesheets().add(this.getClass().getResource("/main.css").toExternalForm());
 		window.setScene(scene);
 		window.show();
 
-	}
-
-	private void render(Group group) {
-		int renderWidth = WIDTH_VALUE - 400;
-
-		//Night image background
-		Image image = new Image("/background.gif");
-		ImageView iv1 = new ImageView();
-		iv1.setImage(image);
-		iv1.setFitWidth(renderWidth);
-		iv1.setFitHeight(HEIGHT_VALUE);
-		group.getChildren().add(iv1);
-
-		//Game field
-		Rectangle rect = new Rectangle(0, HEIGHT_VALUE / 2 + 50, renderWidth, HEIGHT_VALUE / 2 - 50);
-		rect.setArcHeight(15);
-		rect.setArcWidth(15);
-		rect.setFill(Color.FORESTGREEN);
-		rect.setStroke(Color.BLACK);
-		group.getChildren().add(rect);
-
-		//Player on the board
-		Circle player = new Circle(renderWidth / 2, HEIGHT_VALUE - 75, 10, Color.RED);
-		group.getChildren().add(player);
 	}
 
 	private void setMenuBar() {
@@ -175,6 +147,7 @@ public class GUI extends Application {
 		msg.setPrefHeight(40);
 		hbox.getChildren().add(msg);
 		hbox.getChildren().add(send);
+
 		chatControls.getChildren().add(textAreaLable);
 		chatControls.getChildren().add(hbox);
 		titlePane.setContent(chatControls);
@@ -186,6 +159,22 @@ public class GUI extends Application {
 	public void setItems() {
 		TitledPane titlePane = new TitledPane();
 		titlePane.setText("Item Inventory");
+
+		// FlowPane flow = new FlowPane();
+		// flow.getStyleClass().add("itempane-background");
+		// flow.setPrefHeight(230);
+		// titlePane.setContent(flow);
+		// flow.setVgap(2);
+		// flow.setHgap(2);
+		TableView table = new TableView();
+		table.setPrefHeight(230);
+		table.setPrefWidth(400);
+		TableColumn thrid = new TableColumn("First Name");
+        TableColumn second = new TableColumn("Last Name");
+        
+        //table.getColumns().addAll(firstNameCol, lastNameCol, emailCol);
+       // titlePane.setContent(table);
+
 		vbox.getChildren().add(titlePane);
 
 	}
