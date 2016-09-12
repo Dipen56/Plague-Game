@@ -11,6 +11,7 @@ import javafx.scene.Group;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.paint.Color;
 import javafx.scene.control.*;
@@ -71,11 +72,40 @@ public class GUI extends Application {
 		setWorldTime();
 		setminiMap();
 		setchat();
+		setItems();
+		Group group = new Group();
+		// Calls the rendering
+		render(group);
+		borderPane.setLeft(group);
 		Scene scene = new Scene(borderPane, WIDTH_VALUE, HEIGHT_VALUE);
 		scene.getStylesheets().add(this.getClass().getResource("/main.css").toExternalForm());
 		window.setScene(scene);
 		window.show();
 
+	}
+
+	private void render(Group group) {
+		int renderWidth = WIDTH_VALUE - 400;
+
+		//Night image background
+		Image image = new Image("/background.gif");
+		ImageView iv1 = new ImageView();
+		iv1.setImage(image);
+		iv1.setFitWidth(renderWidth);
+		iv1.setFitHeight(HEIGHT_VALUE);
+		group.getChildren().add(iv1);
+
+		//Game field
+		Rectangle rect = new Rectangle(0, HEIGHT_VALUE / 2 + 50, renderWidth, HEIGHT_VALUE / 2 - 50);
+		rect.setArcHeight(15);
+		rect.setArcWidth(15);
+		rect.setFill(Color.FORESTGREEN);
+		rect.setStroke(Color.BLACK);
+		group.getChildren().add(rect);
+
+		//Player on the board
+		Circle player = new Circle(renderWidth / 2, HEIGHT_VALUE - 75, 10, Color.RED);
+		group.getChildren().add(player);
 	}
 
 	private void setMenuBar() {
@@ -145,11 +175,17 @@ public class GUI extends Application {
 		msg.setPrefHeight(40);
 		hbox.getChildren().add(msg);
 		hbox.getChildren().add(send);
-		
 		chatControls.getChildren().add(textAreaLable);
 		chatControls.getChildren().add(hbox);
 		titlePane.setContent(chatControls);
 
+		vbox.getChildren().add(titlePane);
+
+	}
+
+	public void setItems() {
+		TitledPane titlePane = new TitledPane();
+		titlePane.setText("Item Inventory");
 		vbox.getChildren().add(titlePane);
 
 	}

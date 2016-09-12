@@ -1,7 +1,13 @@
 package game.items;
 
-import javax.swing.ImageIcon;
+import java.awt.image.BufferedImage;
 
+/**
+ * This class represents a key.
+ * 
+ * @author Hector (Fang Zhao 300364061)
+ *
+ */
 public class Key extends Item implements Tradable {
 
     /**
@@ -10,7 +16,7 @@ public class Key extends Item implements Tradable {
      */
     private int keyID;
 
-    public Key(String description, ImageIcon sprite, int keyID) {
+    public Key(String description, BufferedImage sprite, int keyID) {
         super(description, sprite);
         this.keyID = keyID;
     }
@@ -19,4 +25,8 @@ public class Key extends Item implements Tradable {
         return keyID;
     }
 
+    @Override
+    public String toString() {
+        return super.toString() + " A number is engraved on it: " + keyID + ".";
+    }
 }

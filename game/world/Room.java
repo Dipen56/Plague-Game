@@ -1,14 +1,13 @@
 package game.world;
 
-import game.items.Key;
-
 /**
- * This class represents a room in the game world.
+ * This class represents a room.
+ * 
  * 
  * @author Hector (Fang Zhao 300364061)
  *
  */
-public class Room {
+public class Room extends Area {
 
     /**
      * The keyID specifies which key can open the door to this room. Only the key with the
@@ -18,25 +17,69 @@ public class Room {
 
     private boolean isLocked;
 
-    public Room(int keyID, boolean isLocked) {
+    private RoomExit exit;
+
+    /**
+     * Constructor
+     * 
+     * @param filename
+     * @param roomID
+     * @param keyID
+     * @param isLocked
+     */
+    public Room(String filename, int keyID, boolean isLocked) {
+        super(filename);
         this.keyID = keyID;
         this.isLocked = isLocked;
+
+        // remember the exit
+        rememberEixt();
     }
 
     /**
-     * This method let any player to try to unlock this room with a key. If the key
-     * matches, this room is unlocked.
+     * Constructor used in test. Probably will be discarded.
      * 
-     * @param key
-     * @return
+     * @param width
+     * @param height
+     * @param board
      */
-    public boolean tryUnlockWithKey(Key key) {
-        if (key.getKeyID() == keyID) {
-            isLocked = true;
-            return true;
-        }
+    public Room(Position[][] board, int keyID, boolean isLocked) {
+        super(board);
+        this.keyID = keyID;
+        this.isLocked = isLocked;
 
-        return false;
+        // remember the exit
+        rememberEixt();
+    }
+
+    /**
+     * let the room remember where the exit is.
+     */
+    public void rememberEixt() {
+        for (Position[] row : board) {
+            for (Position col : row) {
+                if (col instanceof RoomExit) {
+                    this.exit = (RoomExit) col;
+                    return;
+                }
+            }
+        }
+    }
+
+    public int getKeyID() {
+        return keyID;
+    }
+
+    public boolean isLocked() {
+        return isLocked;
+    }
+
+    public void setLocked(boolean boo) {
+        isLocked = boo;
+    }
+
+    public RoomExit getExit() {
+        return exit;
     }
 
 }

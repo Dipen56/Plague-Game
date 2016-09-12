@@ -6,8 +6,6 @@ package game.items;
  * @author Hector (Fang Zhao 300364061)
  *
  */
-public interface Breakable {
-
-    
+public interface Destroyable {
 
 }

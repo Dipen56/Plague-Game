@@ -1,0 +1,54 @@
+.root{
+	-fx-background-color: #353535;
+}
+.cotrolvbox{
+	-fx-background-color: #242731;
+	-fx-border-color: #505360;
+	-fx-padding: 14;
+}
+.world-time-lable{
+	-fx-background-color: #323639;
+	-fx-border-color: #505360;
+	-fx-background-radius: 4;
+	-fx-border-radius: 4;
+	-fx-text-fill: rgb(255, 255, 255);
+	-fx-alignment: CENTER;
+	-fx-effect: dropshadow( one-pass-box , black ,0 , 0.0 , 0 , 2 );
+}
+.minimap-lable{
+	-fx-background-color: #323639;
+	-fx-border-color: #505360;
+	-fx-background-radius: 4;
+	-fx-border-radius: 4;
+	-fx-text-fill: rgb(255, 255, 255);
+	-fx-alignment: CENTER;
+	-fx-effect: dropshadow( one-pass-box , black ,0 , 0.0 , 0 , 2 );
+}
+.chatarea-background{
+	-fx-background-color: #323639;
+	-fx-border-color: #505360;
+	-fx-background-radius: 4;
+	-fx-border-radius: 4;
+	-fx-text-fill: rgb(255, 255, 255);
+	-fx-alignment: CENTER;
+	-fx-effect: dropshadow( one-pass-box , black ,0 , 0.0 , 0 , 2 );
+}
+.chat-display{
+	-fx-background-color: #404040;
+	-fx-border-color: #505360;
+	-fx-background-radius: 4;
+	-fx-border-radius: 4;
+	-fx-text-fill: rgb(255, 255, 255);
+}
+.button-send{
+	-fx-background-color: #323639;
+	-fx-border-color: #505360;
+	-fx-text-fill: rgb(255, 255, 255);
+	-fx-alignment: CENTER;
+}
+.button-send:hover{
+	-fx-background-color: #76B900;
+	-fx-border-color: #505360;
+	-fx-text-fill: rgb(255, 255, 255);
+	-fx-alignment: CENTER;
+}
