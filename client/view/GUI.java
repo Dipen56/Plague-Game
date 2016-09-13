@@ -23,6 +23,10 @@ import javafx.geometry.Pos;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.GridPane;
+import javafx.event.*;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
+
 /**
  * This class represents the main GUI class this class bring together all the
  * different components of the GUI.
@@ -50,8 +54,16 @@ public class GUI extends Application {
 	// standard layout
 	private BorderPane borderPane;
 	private String chatText = "HARDD: Welcome Players";
+	// Event Handlers
+	// for clicks
+	private EventHandler<ActionEvent> actionEvent;
+	// for keys inputs
+	private EventHandler<KeyEvent> keyEvent;
+	// for mouse events
+	private EventHandler<MouseEvent> mouseEvent;
 
 	public GUI() {
+		Button b = new Button();
 	}
 
 	/**
@@ -199,9 +211,6 @@ public class GUI extends Application {
 		titlePane.setContent(chatControls);
 
 		vbox.getChildren().add(titlePane);
-		
-		//setChatText("fuk this", "dipen");
-		//setChatText("fuk this", "dipen");
 
 	}
 
@@ -287,5 +296,6 @@ public class GUI extends Application {
 	public static void main(String[] args) {
 		// this lunch's the window which will end up call the start method above
 		launch(args);
+
 	}
 }
