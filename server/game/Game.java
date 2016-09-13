@@ -19,15 +19,18 @@ import server.game.player.Player;
 import server.game.world.Area;
 import server.game.world.Chest;
 import server.game.world.GroundSquare;
+import server.game.world.MapElement;
+import server.game.world.Obstacle;
 import server.game.world.Position;
 import server.game.world.Room;
 import server.game.world.RoomEntrance;
 import server.game.world.RoomExit;
+import server.game.world.TransitionSpace;
 import server.game.world.World;
 
 /**
  * This class represents the game.
- * 
+ *
  * @author Hector (Fang Zhao 300364061)
  *
  */
@@ -65,7 +68,7 @@ public class Game {
 
     /*
      * FOR TEAM
-     * 
+     *
      * Ideally, other packages who want to visit game states should only interact with
      * this class. This class wraps all game-world-related and logic-related classes
      * inside, and provides getters, setters and reasonable functions for external
@@ -77,7 +80,7 @@ public class Game {
     /**
      * Constructor, take in an XML file that describes the game world, and construct it
      * with details in the file.
-     * 
+     *
      * @param file
      */
     public Game(File file) {
@@ -93,7 +96,7 @@ public class Game {
 
     /**
      * Constructor for testing
-     * 
+     *
      * @param file
      */
     public Game(World world, Map<Room, RoomEntrance> entrances) {
@@ -145,7 +148,7 @@ public class Game {
 
     /**
      * This method returns the clock of the world. The world time is constantly advancing.
-     * 
+     *
      * @return
      */
     public LocalTime getClock() {
@@ -215,11 +218,11 @@ public class Game {
 
     /**
      * This method check if the given position is occupied by other player.
-     * 
+     *
      * @param position
      * @return
      */
-    public boolean isEmptyPosition(GroundSquare position) {
+    public boolean isEmptyPosition(Position position) {
         for (Player p : players.values()) {
             if (p.getPosition().equals(position)) {
                 return false;
@@ -231,37 +234,34 @@ public class Game {
 
     /**
      * This method tries to move the given player one step forward.
-     * 
+     *
      * @param player
      * @return --- true if successful, or false if the player cannot move forward for some
      *         reason, e.g. blocked by obstacle.
      */
     public boolean playerMoveForward(Player player) {
-        Area currentArea = player.getPosition().getArea();
-        Position forwardPos = currentArea.getFrontPos(player);
+        Position position = player.getPosition();
+        Position forwardPos = player.getArea().getFrontPos(player);
 
         // check if the forward position is a valid one to move to
         if (!canMoveTo(player, forwardPos)) {
             return false;
         }
 
-        // After canMove() check, it's safe to cast
-        GroundSquare gs = (GroundSquare) forwardPos;
-
         // OK we can move him forward
-        player.setPosition(gs);
+        player.setPosition(forwardPos);
         return true;
     }
 
     /**
      * This method tries to move the given player one step backward.
-     * 
+     *
      * @param player
      * @return --- true if successful, or false if the player cannot move backward for
      *         some reason, e.g. blocked by obstacle.
      */
     public boolean playerMoveBackward(Player player) {
-        Area currentArea = player.getPosition().getArea();
+        Area currentArea = player.getArea();
         Position backPos = currentArea.getBackPos(player);
 
         // check if the back position is a valid one to move to
@@ -279,13 +279,13 @@ public class Game {
 
     /**
      * This method tries to move the given player one step to the left.
-     * 
+     *
      * @param player
      * @return --- true if successful, or false if the player cannot move left for some
      *         reason, e.g. blocked by obstacle.
      */
     public boolean playerMoveLeft(Player player) {
-        Area currentArea = player.getPosition().getArea();
+        Area currentArea = player.getArea();
         Position leftPos = currentArea.getLeftPos(player);
 
         // check if the left position is a valid one to move to
@@ -303,13 +303,13 @@ public class Game {
 
     /**
      * This method tries to move the given player one step to the right.
-     * 
+     *
      * @param player
      * @return --- true if successful, or false if the player cannot move right for some
      *         reason, e.g. blocked by obstacle.
      */
     public boolean playerMoveRight(Player player) {
-        Area currentArea = player.getPosition().getArea();
+        Area currentArea = player.getArea();
         Position rightPos = currentArea.getRightPos(player);
 
         // check if the right position is a valid one to move to
@@ -328,14 +328,15 @@ public class Game {
     /**
      * Whether the given position is empty, i.e. a player can move into. Note that this
      * method is meant to check only one step away.
-     * 
+     *
      * @param player
      * @param position
      * @return
      */
     private boolean canMoveTo(Player player, Position position) {
+    	MapElement element = player.getArea().getMapElementAtIndex(position.x, position.y);
         // we cannot let him move out of board or move into obstacles
-        if (position == null || !(position instanceof GroundSquare)) {
+        if (position == null || element == null || element instanceof Obstacle) {
             return false;
         }
 
@@ -351,7 +352,7 @@ public class Game {
 
     /**
      * This method let the given player turn left.
-     * 
+     *
      * @param player
      */
     public void playerTurnLeft(Player player) {
@@ -360,7 +361,7 @@ public class Game {
 
     /**
      * This method let the given player turn right.
-     * 
+     *
      * @param player
      */
     public void playerTurnRight(Player player) {
@@ -369,109 +370,104 @@ public class Game {
 
     /**
      * This method let the given player try to unlock a chest in front.
-     * 
+     *
      * @param player
      * @return --- true if the chest is unlocked, or false if this action failed. Failure
      *         can be caused by many reasons, for example it's not a chest in front, or
      *         the player doesn't have a right key to open it.
      */
     public boolean playerUnlockChest(Player player) {
-        Area currentArea = player.getPosition().getArea();
-        Position forwardPos = currentArea.getFrontPos(player);
+        Area currentArea = player.getArea();
+        Position p = player.getPosition();
+        MapElement elementInFront = currentArea.getMapElementAtIndex(p.x, p.y);
 
         // if it's not a chest
-        if (!(forwardPos instanceof Chest)) {
+        if (!(elementInFront instanceof Chest)) {
             return false;
         }
 
-        return player.tryUnlockChest((Chest) forwardPos);
+        return player.tryUnlockChest((Chest) elementInFront);
     }
 
     /**
      * This method let the player try to take items from the chest in front. If the
      * player's inventory can contain all items, he will take them all; otherwise he will
      * take as many as he can until his inventory is full.
-     * 
+     *
      * @param player
      * @return --- true if he has taken at least one item from the chest, or false if he
      *         has taken none from the chest.
      */
     public boolean playerTakeItemsInChest(Player player) {
-        Area currentArea = player.getPosition().getArea();
-        Position forwardPos = currentArea.getFrontPos(player);
+        Area currentArea = player.getArea();
+        Position position = player.getPosition();
+        MapElement elementInFront = currentArea.getMapElementAtIndex(position.x, position.y);
 
         // if it's not a chest
-        if (!(forwardPos instanceof Chest)) {
+        if (!(elementInFront instanceof Chest)) {
             return false;
         }
 
-        return player.tryTakeItemsInChest((Chest) forwardPos);
+        return player.tryTakeItemsInChest((Chest) elementInFront);
     }
 
     /**
      * This method let the given player try to unlock a room in front.
-     * 
+     *
      * @param player
      * @return --- true if the room is unlocked, or false if this action failed. Failure
      *         can be caused by many reasons, for example it's not a room in front, or the
      *         player doesn't have a right key to open it.
      */
     public boolean playerUnlockRoom(Player player) {
-        GroundSquare currentPos = player.getPosition();
+    	Position position = player.getPosition();
+        MapElement element = player.getArea().getMapElementAtIndex(position.x, position.y);
 
         // if the player is not standing on an entrance tile
-        if (!(currentPos instanceof RoomEntrance)) {
+        if (!(element instanceof TransitionSpace)) {
             return false;
         }
 
-        RoomEntrance entrance = (RoomEntrance) currentPos;
+        TransitionSpace entrance = (TransitionSpace) element;
 
         // if the player is not facing the room door
-        if (player.getDirection() != entrance.getFacingDirection()) {
+        if (player.getDirection() != entrance.direction) {
             return false;
         }
 
-        Room room = entrance.getRoom();
+        TransitionSpace rt = (TransitionSpace)entrance;
+        Room room = (Room)rt.destArea;
         return player.tryUnlockDoor(room);
     }
 
     /**
      * This method let the given player try to enter or exit a room depending on the
      * player's current position.
-     * 
+     *
      * @param player
      * @return --- true if the player changed to another area, or false if this action
      *         failed for some reason, for example the player is not facing the door, or
      *         he is too far from it.
      */
     public boolean playerEnterExitRoom(Player player) {
-        GroundSquare currentPos = player.getPosition();
-
-        if (currentPos instanceof RoomEntrance) {
+    	Position pos = player.getPosition();
+        MapElement currentPos =player.getArea().getMapElementAtIndex(pos.x, pos.y);
+        TransitionSpace entrance = null;
+        if (currentPos instanceof TransitionSpace) {
             // the player is standing in front of a room ready to enter
-            RoomEntrance entrance = (RoomEntrance) currentPos;
+        	entrance = (TransitionSpace) currentPos;
             // if the player is not facing the room door
-            if (player.getDirection() != entrance.getFacingDirection()) {
+            if (player.getDirection() != entrance.direction) {
                 return false;
             }
-            Room room = entrance.getRoom();
-            return player.tryEnterRoom(room);
-
-        } else if (currentPos instanceof RoomExit) {
-            // the player is standing inside a room and ready to exit
-            RoomExit exit = (RoomExit) currentPos;
-            Room room = (Room) exit.getArea();
-            return player.tryExitRoom(room, entrances.get(room));
-
         }
-
-        // not within a valid distance to door
-        return false;
+        Room room = (Room) entrance.destArea;
+        return player.tryEnterRoom(room);
     }
 
     /**
      * Get the player's health left in seconds.
-     * 
+     *
      * @param player
      * @return
      */
@@ -481,7 +477,7 @@ public class Game {
 
     /**
      * Get all items in the player's inventory as a list.
-     * 
+     *
      * @param player
      * @return
      */
@@ -491,7 +487,7 @@ public class Game {
 
     /**
      * This method let the player use an item.
-     * 
+     *
      * @param player
      * @param item
      */
@@ -520,7 +516,7 @@ public class Game {
 
     /**
      * This method let the player try to destroy an item.
-     * 
+     *
      * @param player
      * @param item
      * @return --- true if the item is destroyed, or false if the action failed.
@@ -534,7 +530,7 @@ public class Game {
 
     /**
      * This method is used to automatically update the game status.
-     * 
+     *
      */
     public synchronized void update() {
         // TODO Auto-generated method stub
