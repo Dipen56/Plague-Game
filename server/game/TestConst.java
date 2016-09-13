@@ -113,6 +113,7 @@ public class TestConst {
         // room exit
         roomBoard[2][1] = new TransitionSpace(1, 2, room, new Position(1,2), world, Direction.South);
 
+
         // let the room remember exit
         room.rememberExit();
 

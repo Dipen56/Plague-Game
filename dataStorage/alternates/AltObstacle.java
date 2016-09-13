@@ -1,4 +1,4 @@
-package server.dataStorage.alternates;
+package dataStorage.alternates;
 
 import javax.xml.bind.annotation.XmlElement;
 
@@ -26,6 +26,8 @@ public class AltObstacle extends AltMapElement{
 
 
 	public AltObstacle(Obstacle obstacle) {
+		if(obstacle == null)
+			throw new IllegalArgumentException("Argument is null");
 		this.description = obstacle.getDescription();
 		this.x = obstacle.getX();
 		this.y = obstacle.getY();

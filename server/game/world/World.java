@@ -1,6 +1,6 @@
 package server.game.world;
 
-import server.dataStorage.alternates.AltWorld;
+import dataStorage.alternates.AltWorld;
 
 /**
  * This class represents the logic board of the game.

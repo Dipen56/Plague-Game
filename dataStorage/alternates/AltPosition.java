@@ -1,4 +1,4 @@
-package server.dataStorage.alternates;
+package dataStorage.alternates;
 
 import javax.xml.bind.annotation.XmlElement;
 
@@ -15,10 +15,19 @@ public class AltPosition {
 	private int x, y;
 
 	public AltPosition(Position pos){
+		if(pos == null)
+			throw new IllegalArgumentException("Argument is null");
 		x = pos.x;
 		y = pos.y;
 	}
 
+	/**
+	 * Only to be used by XML parser
+	 */
+	public AltPosition(){
+		
+	}
+	
 	/**
 	 * Returns a copy of the original Position object which this was based on.
 	 * @return A Position object.

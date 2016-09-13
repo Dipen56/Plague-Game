@@ -1,4 +1,4 @@
-package server.dataStorage.alternates;
+package dataStorage.alternates;
 
 import javax.xml.bind.annotation.XmlElement;
 
@@ -26,6 +26,8 @@ public class AltKey extends AltItem{
     private String description;
 
 	public AltKey(Key item) {
+		if(item == null)
+			throw new IllegalArgumentException("Argument is null");
 		keyID = item.getKeyID();
 	}
 

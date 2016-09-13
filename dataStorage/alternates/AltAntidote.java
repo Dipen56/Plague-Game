@@ -1,4 +1,4 @@
-package server.dataStorage.alternates;
+package dataStorage.alternates;
 
 import javax.xml.bind.annotation.XmlElement;
 
@@ -24,6 +24,8 @@ public class AltAntidote extends AltItem{
 	@XmlElement
 	private String description;
 	public AltAntidote(Antidote a) {
+		if(a == null)
+			throw new IllegalArgumentException("Argument is null");
 		virus = a.getVirus();
 	}
 

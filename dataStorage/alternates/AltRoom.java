@@ -1,4 +1,4 @@
-package server.dataStorage.alternates;
+package dataStorage.alternates;
 
 import javax.xml.bind.annotation.XmlElement;
 
@@ -33,8 +33,12 @@ public class AltRoom {
 	/**
 	 * The area map.
 	 */
+	@XmlElement
 	protected AltMapElement[][] board;
+
 	public AltRoom(Room room) {
+		if(room == null)
+			throw new IllegalArgumentException("Argument is null");
 		keyID = room.getKeyID();
 		isLocked = room.isLocked();
 		exit = new AltTransitionSpace(room.getExit());
@@ -70,6 +74,8 @@ public class AltRoom {
 	 * @return The Room copy.
 	 */
 	public Room getOriginal(){
+		int i = this.board.length;		//testline
+		int j = this.board[0].length; 	//testline
 		MapElement[][] board = new MapElement[this.board.length][this.board[0].length];
 		// Creates copies of the AltMapElements, as MapElements.
 		for(int row = 0; row < board.length; row++){
