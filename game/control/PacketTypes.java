@@ -13,10 +13,12 @@ public class PacketTypes {
 	
 	public class LogIn extends Packet{
 
-		private String username = null;
-		public LogIn(String playerName) {
+		private String username;
+		public LogIn(byte[] playerName) {
 			super(1);
-			username = playerName;
+			username =  new String(playerName).trim();
+
+			
 		}
 
 		/**
@@ -26,12 +28,16 @@ public class PacketTypes {
 		public byte[] getMessage() {
 			return  ("1"+username).getBytes();
 		}
+		
+		public String getUserName(){
+			return username;
+		}
 	}
 
-	public class Trade extends Packet
+	public class MouseEvent extends Packet
 	{
 		
-		public Trade(int number,ClientInformation client1, ClientInformation client2){
+		public MouseEvent(int number,ClientInformation client1, ClientInformation client2){
 			super(2);
 			
 		}
@@ -50,11 +56,11 @@ public class PacketTypes {
 	}
 	
 	
-	public class UpdateView extends Packet{
+	public class KeyEvent extends Packet{
 		
 		//TODO: UPDATE PARAMETER BY PASSING THE VIEW/RENDERER TO UPDATE THE SCREEN OF EACH PLAYER
 
-		public UpdateView(int number) {
+		public KeyEvent(int number) {
 			super(3);
 		}
 
@@ -67,19 +73,28 @@ public class PacketTypes {
 	
 	
 	
-	public class PickUp extends Packet{
+	public class Message extends Packet{
 
-		public PickUp(int number) {
-			super(4);
-			// TODO Auto-generated constructor stub
+		
+		
+		private String message ;
+		public Message(byte[] m) {
+			super(5);	
+			this.message = new String(m).trim();
 		}
 
+		
 		@Override
 		public byte[] getMessage() {
-			// TODO Auto-generated method stub
-			return null;
+			return ("5"+message).getBytes();
+		}
+		
+		public String toString(){
+			return this.message.substring(1).trim();
 		}
 		
 	}
+	
+	
 
 }
