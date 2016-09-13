@@ -67,8 +67,6 @@ public class GUI extends Application {
 		// Create a VBox which is just layout manger and adds gap of 10
 		vbox = new VBox(10);
 		vbox.setPrefSize(400, 1000);
-		// vbox.setStyle("-fx-background-color: #242731;");
-		// vbox.setPadding(new Insets(10, 50, 50, 50));
 		vbox.getStyleClass().add("cotrolvbox");
 		borderPane = new BorderPane();
 		borderPane.setRight(vbox);
