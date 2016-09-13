@@ -4,10 +4,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-import game.control.PacketTypes.LogIn;
-import game.control.PacketTypes.Message;
-import game.rendering.rendering;
-import game.view.GUI;
+import client.ThreadClient;
+
+import server.PacketTypes;
 
 /**
  * 
@@ -17,9 +16,9 @@ import game.view.GUI;
 
 public class Client {
 	
-	private GUI gui;
-	private rendering renderer;
-	
+//	private GUI gui;
+//	private rendering renderer;
+//	
 
 	public static void main(String[] args){
 		/*

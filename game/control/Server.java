@@ -1,6 +1,6 @@
 package game.control;
 
-
+import server.ThreadServer;
 
 public class Server {
 	

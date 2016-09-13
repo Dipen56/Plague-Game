@@ -11,7 +11,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import game.control.Packet.DataType;
+import server.Packet.DataType;
+
 
 public class ThreadServer extends Thread {
 

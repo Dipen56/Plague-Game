@@ -7,7 +7,11 @@ import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 
-import game.control.Packet.DataType;
+import server.Packet.DataType;
+import server.PacketTypes;
+import server.Packet;;
+
+//import game.control.Packet.DataType;
 
 public class ThreadClient extends Thread {
 
