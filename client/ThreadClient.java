@@ -8,6 +8,7 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 
 import client.view.GUI;
+import game.control.Server;
 import server.Packet.DataType;
 import server.PacketTypes;
 import server.Packet;;
@@ -21,11 +22,12 @@ public class ThreadClient extends Thread {
 	private InetAddress ipAddress;
 	private GUI gui;
 
-	public ThreadClient(String addressName, GUI g) {
+	public ThreadClient(GUI g) {
 		this.gui = g;
 		try {
 			clientSocket = new DatagramSocket();
-			this.ipAddress = InetAddress.getByName(addressName);
+			ipAddress = InetAddress.getByName("localhost");
+			clientSocket.connect(ipAddress, Server.PORTN_NUM);
 		} catch (SocketException e) {
 			e.getMessage();
 		} catch (UnknownHostException e) {
@@ -67,9 +69,12 @@ public class ThreadClient extends Thread {
 		
 
 	}
-
+	/**
+	 * 	Makes a new Datagram object and sends it to the server
+	 * @param data bytes of information to be sent
+	 */
 	synchronized public void sendDataToServer(byte[] message) {
-		  DatagramPacket packet = new DatagramPacket(message, message.length, ipAddress, 32768);
+		  DatagramPacket packet = new DatagramPacket(message, message.length, ipAddress, Server.PORTN_NUM);
 	        try {
 	            clientSocket.send(packet);
 	        } catch (IOException e) {

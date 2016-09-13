@@ -28,7 +28,7 @@ public class Client {
 		 * to each client
 		 */
 		gui = new GUI();
-		ThreadClient c = new ThreadClient("localhost", gui); // the name of the address
+		ThreadClient c = new ThreadClient(gui); // the name of the address
 		BufferedReader bf = new BufferedReader(new InputStreamReader(System.in));
 		c.start(); // start thread
 		PacketTypes p = new PacketTypes();

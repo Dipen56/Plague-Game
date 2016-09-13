@@ -5,28 +5,23 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.net.ServerSocket;
-import java.net.SocketException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
+import game.control.Server;
 import server.Packet.DataType;
 
 
 public class ThreadServer extends Thread {
-
-	public final int PORTN_NUM = 32768;
-
+	
 	private HashMap<String,ClientInformation> connectedClients;
-	private DatagramSocket serversock;
+	private DatagramSocket serverSocket;
 	private PacketTypes packetType = new PacketTypes();
 
 
 	public ThreadServer() {
 		connectedClients = new HashMap<>();
 		try {
-		serversock = new DatagramSocket(PORTN_NUM);
+		serverSocket = new DatagramSocket(Server.PORTN_NUM);
 		} catch (IOException e) {
 			e.getMessage();
 		}
@@ -39,7 +34,7 @@ public class ThreadServer extends Thread {
 		DatagramPacket data = new DatagramPacket(buffer, buffer.length);
 		try {
 			System.out.println("server is up and ready for connections.....");
-			serversock.receive(data);
+			serverSocket.receive(data);
 		} catch (IOException e) {
 			e.getMessage();
 		}
@@ -47,30 +42,38 @@ public class ThreadServer extends Thread {
 		}
 	}
 
-	public void readPacket(DatagramPacket packet) {
+	/**
+	 * Extracts the type of packet the server had received and calls the appropriate method 
+	 * to handle the data
+	 * @param recievedPacket to be parsed and extracted
+	 */
+	public void readPacket(DatagramPacket recievedPacket) {
 
-		InetAddress address = packet.getAddress();
-		byte[] data = packet.getData();
-		int portNum = packet.getPort();
+		InetAddress clientIP = recievedPacket.getAddress();
+		byte[] data = recievedPacket.getData();
+		int portNum = recievedPacket.getPort();
 		DataType type = Packet.getPacketType(new String(data).substring(0, 1));
-		PacketTypes.Message m ;
-
-
-		if (type.equals(DataType.LOGIN)) {
-			handleLogIn(data,address, portNum);
-			
-		} else if (type.equals(DataType.MESSAGE)) {
-			broadcastToAll(data);
-		}
+		
+		if (type.equals(DataType.LOGIN)) 
+			handleLogIn(data,clientIP, portNum);		
+		 else if (type.equals(DataType.MESSAGE)) 
+			broadcastToAll(data);	
 	}
 	
 	
+	/**
+	 * Broadcasts to everyone in the network that a new user has joined the game 
+	 * by making a new Message packet and attaching the name of the player
+	 * @param data that contains the username
+	 * @param ipAddress of the client
+	 * @param portNum port where it came from
+	 */
 	public void handleLogIn(byte[] data, InetAddress ipAddress, int portNum){
 		PacketTypes.LogIn log = packetType.new LogIn(data);
 		String newMessage  = "User " + log.getUserName() + " has joined the game";
+		System.out.println(log.getUserName());
 		broadcastToAll(packetType. new Message(newMessage.getBytes()).getMessage());
 		addClient(log.getUserName(), ipAddress, portNum);
-
 	}
 	
 	/**
@@ -81,35 +84,31 @@ public class ThreadServer extends Thread {
 	 */
 
 	synchronized private void addClient(String username, InetAddress hostAddress, int port) {
-
 		int clientNum = connectedClients.size() + 1;
 		ClientInformation playerData = new ClientInformation(port, username, hostAddress,clientNum);
 		connectedClients.put(username,playerData);
 	}
 
 	/**
-	 * Sends the data to everyone who is connected to the server
-	 * 
-	 * @param message
+	 * Sends the data to everyone who is connected to the server 
+	 * @param message bytes of information to be sent
 	 */
-	synchronized public void broadcastToAll(byte[] message) {
-		
+	synchronized public void broadcastToAll(byte[] message) {	
 		for(ClientInformation client : connectedClients.values()){
 		sendData(message, client.getIpAddress(), client.getPortNum());
 		}
-
 	}
 
 	/**
-	 * Sends the data to the client
-	 * @param data
-	 * @param ipAddress
+	 * 	Makes a new Datagram object and sends it to the target client
+	 * @param data bytes of information to be sent
+	 * @param ipAddress client ip address
 	 * @param port
 	 */
 	synchronized public void sendData(byte[] data, InetAddress ipAddress, int port) {
 		DatagramPacket packet = new DatagramPacket(data, data.length, ipAddress, port);
 		try {
-			serversock.send(packet);
+			serverSocket.send(packet);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
