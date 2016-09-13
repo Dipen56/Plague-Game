@@ -1,4 +1,4 @@
-package server.dataStorage;
+package dataStorage;
 
 import java.io.File;
 import javax.xml.bind.JAXBContext;
@@ -7,7 +7,7 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import server.dataStorage.alternates.AltGame;
+import dataStorage.alternates.AltGame;
 import server.game.Game;
 
 import javax.xml.bind.Unmarshaller;

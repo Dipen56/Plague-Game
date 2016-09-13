@@ -1,6 +1,6 @@
 package server.game;
 
-import server.dataStorage.alternates.AltGame;
+import dataStorage.alternates.AltGame;
 
 /**
  * The Clock Thread is responsible for producing a consistent "pulse" which is used to

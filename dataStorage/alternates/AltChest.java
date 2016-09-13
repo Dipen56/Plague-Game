@@ -1,4 +1,4 @@
-package server.dataStorage.alternates;
+package dataStorage.alternates;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +32,7 @@ public class AltChest {
 	 * A list of all items in this chest.
 	 */
 	@XmlElement
-	private List<AltItem> loot;
+	private AltItem[] loot;
 
 	/**
 	 * A description of this chest.
@@ -53,16 +53,21 @@ public class AltChest {
 		isLocked = chest.isLocked();
 		description = chest.getDescription();
 
-		loot = new ArrayList<>();
-		for(Item i : chest.getLoot()){
-			if(i instanceof Antidote){
-				loot.add(new AltAntidote((Antidote)i));
+		//Array is used, as List cannot have JAXB annotations.
+		List<Item> chestLoot = chest.getLoot();
+		loot = new AltItem[chestLoot.size()];
+
+		Item item = null;
+		for(int i = 0; i < chestLoot.size(); i++){
+			item = chestLoot.get(i);
+			if(item instanceof Antidote){
+				loot[i] = (new AltAntidote((Antidote)item));
 			}
-			else if(i instanceof Key){
-				loot.add(new AltKey((Key)i));
+			else if(item instanceof Key){
+				loot[i] = (new AltKey((Key)item));
 			}
-			else if(i instanceof Torch){
-				loot.add(new AltTorch((Torch)i));
+			else if(item instanceof Torch){
+				loot[i] = (new AltTorch((Torch)item));
 			}
 			else{
 				continue;

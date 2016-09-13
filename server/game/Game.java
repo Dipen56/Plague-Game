@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import server.dataStorage.alternates.AltPlayer;
+import dataStorage.alternates.AltPlayer;
 import server.game.items.Antidote;
 import server.game.items.Destroyable;
 import server.game.items.Item;

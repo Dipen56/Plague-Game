@@ -1,6 +1,6 @@
-package server.dataStorage.alternates;
+package dataStorage.alternates;
 
-import server.dataStorage.XmlFunctions;
+import dataStorage.XmlFunctions;
 import server.game.ClockThread;
 import server.game.Game;
 import server.game.TextUI;

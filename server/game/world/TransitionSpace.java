@@ -1,6 +1,6 @@
 package server.game.world;
 
-import server.dataStorage.alternates.AltArea;
+import dataStorage.alternates.AltArea;
 import server.game.player.Direction;
 
 /**
