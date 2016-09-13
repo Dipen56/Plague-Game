@@ -56,7 +56,12 @@ public class AltGame{
 		entrances = new HashMap<>();
 		// Copies all entries from original entrances list, replacing values with alternative objects
 		for(Map.Entry<Room, TransitionSpace> m: game.getEntrances().entrySet()){
-			entrances.put(new AltRoom(m.getKey()), new AltTransitionSpace(m.getValue()));
+			Room room = m.getKey();
+			AltRoom aroom = new AltRoom(room);
+			TransitionSpace ts = m.getValue();
+			AltTransitionSpace ats = new AltTransitionSpace(ts);
+			entrances.put(aroom, ats);
+			//entrances.put(new AltRoom(m.getKey()), new AltTransitionSpace(m.getValue()));
 		}
     }
 

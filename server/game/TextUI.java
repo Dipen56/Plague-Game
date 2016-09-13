@@ -34,7 +34,7 @@ public class TextUI {
         SCANNER.close();
     }
 
-    private Game setupGame() {
+    public static Game setupGame() {
         // mock up a world
         Game game = new Game(TestConst.world, TestConst.entrances);
 

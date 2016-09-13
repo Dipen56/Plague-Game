@@ -18,6 +18,13 @@ public class TransitionSpace extends MapElement{
 	 * The destination Area to be reached from this space.
 	 */
 	public final Area destArea;
+
+
+	/**
+	 * The position of this object in the area.
+	 */
+	public final Position position;
+
 	/**
 	 * The x and y indeces to transition the player to in the destination area.
 	 */
@@ -34,8 +41,9 @@ public class TransitionSpace extends MapElement{
      * @param Destination Area
      * @param Direction to face in order to enter destination area.
      */
-    public TransitionSpace(int x, int y, Area currentArea, Area destArea, Direction direction) {
+    public TransitionSpace(int x, int y, Area currentArea, Position pos, Area destArea, Direction direction) {
     	this.currentArea = currentArea;
+    	this.position = pos;
         this.destArea = destArea;
         this.destX = x;
         this.destY = y;

@@ -16,6 +16,7 @@ import server.game.world.GroundSquare;
 import server.game.world.Position;
 import server.game.world.Room;
 import server.game.world.RoomEntrance;
+import server.game.world.TransitionSpace;
 
 /**
  * This class represents a player.
@@ -371,7 +372,8 @@ public class Player {
         }
 
         // OK, let move player into the room
-        position = room.getExit();
+        position = room.getExit().position;	//Changes the player's position field.
+    	this.area = room; 					//Changes the player's area field.
         return true;
     }
 

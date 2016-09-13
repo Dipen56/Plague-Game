@@ -5,6 +5,7 @@ import javax.xml.bind.annotation.XmlElement;
 import server.game.player.Direction;
 import server.game.world.Area;
 import server.game.world.MapElement;
+import server.game.world.Position;
 import server.game.world.RoomEntrance;
 import server.game.world.TransitionSpace;
 
@@ -14,6 +15,13 @@ import server.game.world.TransitionSpace;
  *
  */
 public class AltTransitionSpace extends AltMapElement{
+
+	/**
+	 * The position of this object in the area.
+	 */
+	@XmlElement
+	private AltPosition position;
+
 	/**
 	 * The area which this space resides.
 	 */
@@ -37,12 +45,13 @@ public class AltTransitionSpace extends AltMapElement{
 	@XmlElement
 	private Direction direction;
 
-	public AltTransitionSpace(TransitionSpace value) {
-		currentArea = new AltArea(value.currentArea);
-		destArea = new AltArea(value.destArea);
-		destX = value.destX;
-		destY = value.destY;
-		direction = value.direction;
+	public AltTransitionSpace(TransitionSpace ts) {
+		currentArea = new AltArea(ts.currentArea);
+		destArea = new AltArea(ts.destArea);
+		position = new AltPosition(ts.position);
+		destX = ts.destX;
+		destY = ts.destY;
+		direction = ts.direction;
 	}
 
 	/**
@@ -55,7 +64,8 @@ public class AltTransitionSpace extends AltMapElement{
 	public TransitionSpace getOriginal() {
 		Area areaD = destArea.getOriginal();
 		Area areaC = currentArea.getOriginal();
-		return new TransitionSpace(destX, destY, areaC, areaD, direction);
+		Position pos = position.getOriginal();
+		return new TransitionSpace(destX, destY, areaC, pos, areaD, direction);
 	}
 
 }
