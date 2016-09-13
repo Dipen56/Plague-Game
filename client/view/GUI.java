@@ -27,6 +27,10 @@ import javafx.event.*;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.KeyCode;
+import javafx.stage.WindowEvent;
+import javafx.beans.value.*;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * This class represents the main GUI class this class bring together all the
@@ -37,8 +41,10 @@ import javafx.scene.input.KeyCode;
  */
 public class GUI extends Application {
 	private static final String GAMEICON_IMAGE = "/game-icon.png";
-	private static int WIDTH_VALUE = 1500;
-	private static int HEIGHT_VALUE = 1000;
+	// private static int WIDTH_VALUE = 1500;
+	// private static int HEIGHT_VALUE = 1000;
+	private int WIDTH_VALUE = 1000;
+	private int HEIGHT_VALUE = 700;
 	// main window
 	private Stage window;
 	// controls
@@ -56,6 +62,7 @@ public class GUI extends Application {
 	// standard layout
 	private BorderPane borderPane;
 	private String chatText = "HARDD: Welcome Players";
+	private StackPane gamePane;
 	// Event Handlers
 	// for clicks
 	private EventHandler<ActionEvent> actionEvent;
@@ -63,6 +70,8 @@ public class GUI extends Application {
 	private EventHandler<KeyEvent> keyEvent;
 	// for mouse events
 	private EventHandler<MouseEvent> mouseEvent;
+	// for window resizing not really need else where
+	private EventHandler<WindowEvent> windowEvent;
 
 	public GUI() {
 		Button b = new Button();
@@ -77,6 +86,8 @@ public class GUI extends Application {
 		this.window = mainWindow;
 		window.setTitle("Plague Game");
 		window.getIcons().add(loadImage(GAMEICON_IMAGE));
+		// this will disable and enable resizing so when we have a working
+		// version we can just set this to false;
 		window.setResizable(false);
 
 		// Create a VBox which is just layout manger and adds gap of 10
@@ -98,11 +109,12 @@ public class GUI extends Application {
 		setminiMap();
 		setchat();
 		setItems();
-
+		gamePane = new StackPane();
 		Group group = new Group();
 		// Calls the rendering
 		render(group);
-		borderPane.setLeft(group);
+		gamePane.getChildren().add(group);
+		borderPane.setLeft(gamePane);
 		Scene scene = new Scene(borderPane, WIDTH_VALUE, HEIGHT_VALUE);
 		scene.getStylesheets().add(this.getClass().getResource("/main.css").toExternalForm());
 		scene.setOnKeyPressed(keyEvent);
@@ -284,6 +296,12 @@ public class GUI extends Application {
 
 	}
 
+	/**
+	 * this method is used to set the chat message the text area in the gui
+	 * 
+	 * @param text
+	 * @param user
+	 */
 	public void setChatText(String text, String user) {
 		chatText = chatText + "\n";
 		chatText = chatText + user + ": " + text;
