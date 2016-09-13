@@ -7,7 +7,7 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.util.HashMap;
 
-import game.control.Server;
+import client.ClientInformation;
 import server.Packet.DataType;
 
 

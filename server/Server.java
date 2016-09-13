@@ -1,6 +1,4 @@
-package game.control;
-
-import server.ThreadServer;
+package server;
 
 public class Server {
 	public static final int PORTN_NUM = 9876;
