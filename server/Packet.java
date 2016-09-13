@@ -1,4 +1,6 @@
-package server.game.control;
+package server;
+
+import client.ThreadClient;
 
 public abstract class Packet {
 
@@ -55,7 +57,7 @@ public abstract class Packet {
 	
 	
 	public static enum DataType{
-		ERROR(0),LOGIN(1),TRADE(2), UPDATEVIEW(3),PICKUP(4);
+		ERROR(0), LOGIN(1), DISCONNECT(2), KEYEVENT(3), MOUSEEVENT(4), MESSAGE(5);
 		
 		private int id;
 		private DataType(int type){

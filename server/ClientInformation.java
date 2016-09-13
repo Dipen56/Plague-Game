@@ -1,4 +1,4 @@
-package server.game.control;
+package server;
 
 import java.net.InetAddress;
 
@@ -10,17 +10,21 @@ public class ClientInformation {
 	private String username;
 	private Player player;
 	private InetAddress ipAddress;
+	private int clientnum;
 	
 	
-	public ClientInformation(int portNum, String username, Player player, InetAddress ip){
+	public ClientInformation(int portNum, String username, InetAddress ip,int num){
 		this.portNum = portNum; 
 		this.username = username;
-		this.player = player;
 		this.ipAddress = ip;
+		this.clientnum = num;
 	}
 	
 	public int getPortNum(){
 		return portNum;
+	}
+	public int getClientNum(){
+		return clientnum;
 	}
 	public Player getPlayer(){
 		return player;
@@ -30,10 +34,6 @@ public class ClientInformation {
 	}
 	public InetAddress getIpAddress(){
 		return ipAddress;
-	}
-	
-	
-
-	
+	}	
 	
 }

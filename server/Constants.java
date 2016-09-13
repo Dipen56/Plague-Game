@@ -1,4 +1,4 @@
-package server.game.control;
+package server;
 
 public class Constants {
 
