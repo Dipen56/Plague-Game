@@ -1,5 +1,7 @@
 package server.dataStorage.alternates;
 
+import javax.xml.bind.annotation.XmlElement;
+
 import server.game.player.Direction;
 import server.game.world.Area;
 import server.game.world.MapElement;
@@ -12,6 +14,12 @@ import server.game.world.TransitionSpace;
  *
  */
 public class AltTransitionSpace extends AltMapElement{
+	/**
+	 * The area which this space resides.
+	 */
+	@XmlElement
+	private AltArea currentArea;
+
 	/**
 	 * The destination Area to be reached from this space.
 	 */
@@ -30,6 +38,7 @@ public class AltTransitionSpace extends AltMapElement{
 	private Direction direction;
 
 	public AltTransitionSpace(TransitionSpace value) {
+		currentArea = new AltArea(value.currentArea);
 		destArea = new AltArea(value.destArea);
 		destX = value.destX;
 		destY = value.destY;
@@ -44,8 +53,9 @@ public class AltTransitionSpace extends AltMapElement{
 	}
 
 	public TransitionSpace getOriginal() {
-		Area area = destArea.getOriginal();
-		return new TransitionSpace(destX, destY, area, direction);
+		Area areaD = destArea.getOriginal();
+		Area areaC = currentArea.getOriginal();
+		return new TransitionSpace(destX, destY, areaC, areaD, direction);
 	}
 
 }

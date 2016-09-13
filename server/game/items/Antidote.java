@@ -6,7 +6,7 @@ import server.game.player.Virus;
 
 /**
  * This class represents the antidote. An antidote is put in player's antidote inventory.
- * 
+ *
  * @author Hector (Fang Zhao 300364061)
  *
  */
@@ -21,8 +21,8 @@ public class Antidote extends Item implements Destroyable, Tradable {
 
     private Virus virus;
 
-    public Antidote(String description, BufferedImage sprite, Virus virus) {
-        super(description, sprite);
+    public Antidote(String description, Virus virus) {
+        super(description);
         this.virus = virus;
     }
 

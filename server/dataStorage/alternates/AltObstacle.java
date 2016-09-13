@@ -27,8 +27,8 @@ public class AltObstacle extends AltMapElement{
 
 	public AltObstacle(Obstacle obstacle) {
 		this.description = obstacle.getDescription();
-		this.x = x;
-		this.y = y;
+		this.x = obstacle.getX();
+		this.y = obstacle.getY();
 	}
 
 

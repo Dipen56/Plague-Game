@@ -61,6 +61,33 @@ public class Player {
         this.area = area;
     }
 
+    /**
+     * The builder pattern was considered as an alternative to this constructor.
+     * As this will only be constructed once per game load, that pattern was considered unnecessary.
+     * @param ID
+     * @param name
+     * @param virus
+     * @param area
+     * @param health
+     * @param True if the player is alive.
+     * @param The player's Inventory
+     * @param The player's position.
+     */
+    public Player(int ID, String name, Virus virus, Area area, int health, boolean isAlive,
+			List<Item> newInventory, Position newPosition) {
+    	this.uID = ID;
+    	this.name = name;
+    	this.virus = virus;
+    	this.area = area;
+    	this.health = health;
+    	this.isAlive = isAlive;
+	}
+
+	public String getName() {
+		return this.name;
+	}
+
+
     public int getId() {
         return uID;
     }
@@ -436,5 +463,4 @@ public class Player {
 
         return tookAtLeastOne;
     }
-
 }

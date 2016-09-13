@@ -4,7 +4,7 @@ import java.awt.image.BufferedImage;
 
 /**
  * This class represents a key.
- * 
+ *
  * @author Hector (Fang Zhao 300364061)
  *
  */
@@ -16,8 +16,8 @@ public class Key extends Item implements Tradable {
      */
     private int keyID;
 
-    public Key(String description, BufferedImage sprite, int keyID) {
-        super(description, sprite);
+    public Key(String description, int keyID) {
+        super(description);
         this.keyID = keyID;
     }
 

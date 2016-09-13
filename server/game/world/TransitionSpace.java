@@ -10,6 +10,11 @@ import server.game.player.Direction;
 public class TransitionSpace extends MapElement{
 
 	/**
+	 * The area which the space resides;
+	 */
+	public final Area currentArea;
+
+	/**
 	 * The destination Area to be reached from this space.
 	 */
 	public final Area destArea;
@@ -29,8 +34,9 @@ public class TransitionSpace extends MapElement{
      * @param Destination Area
      * @param Direction to face in order to enter destination area.
      */
-    public TransitionSpace(int x, int y, Area area, Direction direction) {
-        this.destArea = area;
+    public TransitionSpace(int x, int y, Area currentArea, Area destArea, Direction direction) {
+    	this.currentArea = currentArea;
+        this.destArea = destArea;
         this.destX = x;
         this.destY = y;
         this.direction = direction;

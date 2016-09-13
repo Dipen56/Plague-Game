@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.xml.bind.annotation.XmlElement;
+
 import server.game.items.Antidote;
 import server.game.items.Destroyable;
 import server.game.items.Item;
@@ -13,37 +15,82 @@ import server.game.items.Tradable;
 import server.game.player.Direction;
 import server.game.player.Player;
 import server.game.player.Virus;
+import server.game.world.Area;
 import server.game.world.Chest;
 import server.game.world.GroundSquare;
+import server.game.world.Position;
 import server.game.world.Room;
 import server.game.world.RoomEntrance;
 /**
  * This class represents the an alternate version of the Player class, specifically for XML parsing.
- * 
+ *
  * @author Hector (Fang Zhao 300364061), Daniel Anastasi 300145878
  *
  */
 public class AltPlayer {
-	    private final int uID;
-	    private final String name;
-	    private final Virus virus;
-	    private int health;
-	    private boolean isAlive;
-	    private List<Item> inventory;
+		/**
+		 * The player's user ID
+		*/
+		@XmlElement
+	    private int uID;
 
-	    // Geographical infos
+	    /**
+	     * Player name
+	     */
+		@XmlElement
+	    private String name;
+
+	    /**
+	     * The virus which the player has.
+	     */
+		@XmlElement
+	    private  Virus virus;
+
+	    /**
+	     * The player's health remaining.
+	     */
+		@XmlElement
+	    private int health;
+
+	    /**
+	     * True if the player is still alive.
+	     */
+		@XmlElement
+	    private boolean isAlive;
+
+	    /**
+	     * The player's inventory.
+	     */
+		@XmlElement
+	    private List<AltItem> inventory;
+
+	    // Geographical information.
+		/**
+		 * The area in which the player currently resides.
+		 */
+		@XmlElement
 	    private AltArea area;
+
+		/**
+		 * The position of the player in the current area.
+		 */
+		@XmlElement
 	    private AltPosition position;
+
+		/**
+		 * The direction which the player is facing.
+		 */
+		@XmlElement
 	    private Direction direction;
 
-	    
+
 	    /**
 	     * This constructor should only be called by an XML marshaller.
 	     */
 	    public AltPlayer(){
-	    	
+
 	    }
-	    
+
 	    /**
 	     * @param The original Player object
 	     */
@@ -54,9 +101,25 @@ public class AltPlayer {
 	        health = player.getHealthLeft();
 	        isAlive = player.isAlive();
 	        inventory = new ArrayList<>();
+
+	        List<Item> playerInventory = player.getInventory();
+	        Item item = null;
 	        //Creates a new AltItem from each item in the inventory.
-	        for(Item i : player.getInventory()){
-	        	inventory.add(new AltItem(i));
+	        for(int i = 0; i < playerInventory.size(); i++){
+	        	item = playerInventory.get(i);
+	        	if(item instanceof Antidote){
+	        		inventory.add(new AltAntidote((Antidote)item));
+	        	}
+	        	else if(item instanceof Key){
+	        		inventory.add(new AltKey((Key)item));
+	        	}
+	        	else if(item instanceof Torch){
+	        		inventory.add(new AltTorch((Torch)item));
+	        	}
+	        	else{
+	        		continue;
+	        	}
+
 	        }
 	        area = new AltArea(player.getArea());
 	        position = new AltPosition(player.getPosition());
@@ -67,7 +130,27 @@ public class AltPlayer {
 	 * @return A Player object.
 	 */
 	public Player getOriginal(){
-		return new Player(this);	//Passing only this object prevents sending 6 arguments.
+		List<Item> newInventory = new ArrayList<>();
+		AltItem item = null;
+		for(int index = 0; index < inventory.size(); index++){
+			item = inventory.get(index);
+        	if(item instanceof AltAntidote){
+        		newInventory.add(((AltAntidote)item).getOriginal());
+        	}
+        	else if(item instanceof AltKey){
+        		newInventory.add(((AltKey)item).getOriginal());
+        	}
+        	else if(item instanceof AltTorch){
+        		newInventory.add(((AltTorch)item).getOriginal());
+        	}
+        	else{
+        		continue;
+        	}
+		}
+		Area newArea = area.getOriginal();
+		Position newPosition = position.getOriginal();
+
+		return new Player(uID, name, virus, newArea, health, isAlive, newInventory, newPosition);	//Passing only this object prevents sending 6 arguments.
 	}
 
 }
