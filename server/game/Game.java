@@ -47,12 +47,19 @@ public class Game {
     /**
      * keep track on each room with its entrance position
      */
-    private Map<Room, RoomEntrance> entrances;
+    private Map<Room, TransitionSpace> entrances;
 
     /**
      * players and their id. Server can find player easily by looking by id.
      */
     private Map<Integer, Player> players;
+
+
+    /**
+     * The player
+     */
+    private Player player;
+
     /**
      * All torches in this world. used to track their burning status.
      */
@@ -99,7 +106,7 @@ public class Game {
      *
      * @param file
      */
-    public Game(World world, Map<Room, RoomEntrance> entrances) {
+    public Game(World world, Map<Room, TransitionSpace> entrances) {
 
         players = new HashMap<>();
         torches = new ArrayList<>();
@@ -109,6 +116,31 @@ public class Game {
 
         // start the world clock
         startTiming();
+    }
+
+
+    /**
+     * @param The world
+     * @param Transition spaces that lead to other areas.
+     * @param The player.
+     */
+    public Game(World world, Map<Room, TransitionSpace> entrances, Player player) {
+
+        this.world = world;
+        this.entrances = entrances;
+        this.player = player;
+
+
+        players = new HashMap<>();
+        torches = new ArrayList<>();
+
+        // start the world clock
+        startTiming();
+    }
+
+
+    public Map<Room, TransitionSpace> getEntrances(){
+    	return this.entrances;
     }
 
     private void startTiming() {
@@ -156,7 +188,7 @@ public class Game {
     }
 
     public void joinPlayer(Player player) {
-        GroundSquare gs;
+
 
         // =======================================
         /*
@@ -182,9 +214,9 @@ public class Game {
 
         // ================================================================
 
-        gs = world.getPlayerSpawnPos(this);
+    	Position pos = world.getPlayerSpawnPos(this);
 
-        if (gs == null) {
+        if (pos == null) {
             /*
              * This should never happen. In theory, if the whole world doesn't have even
              * one empty position left, this could happen. But that is almost impossible.
@@ -192,7 +224,7 @@ public class Game {
             throw new GameError("In theory: World full. More likely, there is a bug.");
         }
 
-        player.setPosition(gs);
+        player.setPosition(pos);
         player.setDirection(Direction.randomDirection());
 
         players.put(player.getId(), player);

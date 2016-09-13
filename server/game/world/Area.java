@@ -11,13 +11,13 @@ import server.game.player.Direction;
 import server.game.player.Player;
 
 /**
- * This abstract class represents an area, which could be either the open world, or a
+ * This class represents an area, which could be either the open world, or a
  * closed space like rooms.
  *
  * @author Hector (Fang Zhao 300364061), Daniel Anastasi 300145878
  *
  */
-public abstract class Area {
+public class Area {
 
     private int width;
     private int height;
@@ -129,6 +129,15 @@ public abstract class Area {
         this.width = board[0].length;
         this.height = board.length;
         playerPortals = new HashSet<>();
+    }
+
+
+    public int getHeight(){
+    	return this.height;
+    }
+
+    public MapElement[][] getBoard(){
+    	return this.board;
     }
 
     /**

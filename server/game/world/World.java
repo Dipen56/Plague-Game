@@ -1,9 +1,11 @@
 package server.game.world;
 
+import server.dataStorage.alternates.AltWorld;
+
 /**
  * This class represents the logic board of the game.
  *
- * @author Hector (Fang Zhao 300364061)
+ * @author Hector (Fang Zhao 300364061), Daniel Anastasi 300145878
  *
  */
 public class World extends Area {

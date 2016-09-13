@@ -39,9 +39,9 @@ public class Room extends Area {
     /**
      * Constructor used in test. Probably will be discarded.
      *
-     * @param width
-     * @param height
-     * @param board
+     * @param The room board.
+     * @param The room key ID.
+     * @param True if the room is locked.
      */
     public Room(MapElement[][] board, int keyID, boolean isLocked) {
         super(board);
@@ -50,6 +50,20 @@ public class Room extends Area {
 
         // remember the exit
         rememberExit();
+    }
+
+    /** Used after XML unmarshalling.
+     * @param The room board.
+     * @param The room key ID
+     * @param True if the room is locked.
+     * @param The room exit.
+     */
+    public Room(MapElement[][] board, int keyID, boolean isLocked, TransitionSpace exit) {
+        super(board);
+        this.keyID = keyID;
+        this.isLocked = isLocked;
+        this.exit = exit;
+
     }
 
     /**

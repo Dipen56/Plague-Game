@@ -25,17 +25,20 @@ public class Obstacle extends MapElement{
      */
 
     private String description;
-    private BufferedImage image;
+
     /**
      * X and Y coordinates of this object in the area map.
      */
     private int x, y;
 
-    public Obstacle(int x, int y, String description, BufferedImage image) {
+    public Obstacle(int x, int y, String description) {
     	this.x = x;
        	this.y = y;
         this.description = description;
-        this.image = image;
+    }
+
+    public String getDescription(){
+    	return this.description;
     }
 
     @Override

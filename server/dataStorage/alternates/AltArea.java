@@ -2,44 +2,28 @@ package server.dataStorage.alternates;
 
 import javax.xml.bind.annotation.XmlElement;
 
+import server.game.world.Area;
 import server.game.world.MapElement;
 import server.game.world.Obstacle;
-import server.game.world.Room;
 import server.game.world.TransitionSpace;
+import server.game.world.World;
 
 /**
- * This class represents the an alternate version of the Room class, specifically for XML parsing.
- *
- * @author Hector (Fang Zhao 300364061), Daniel Anastasi 300145878.
+ * This class represents the an alternate version of the Area class, specifically for XML parsing.
+ * @author Daniel Anastasi 300145878
  *
  */
-public class AltRoom {
-	/**
-	 * The id for the key to this room.
-	 */
-	@XmlElement
-	private int keyID;
-	/**
-	 * Is true when the room is locked.
-	 */
-	@XmlElement
-	boolean isLocked;
-	/**
-	 * The exit out of this room.
-	 */
-	@XmlElement
-	private AltTransitionSpace exit;
+public class AltArea {
 
 	/**
 	 * The area map.
 	 */
-	protected AltMapElement[][] board;
-	public AltRoom(Room room) {
-		keyID = room.getKeyID();
-		isLocked = room.isLocked();
-		exit = new AltTransitionSpace(room.getExit());
+	@XmlElement
+    protected AltMapElement[][] board;
 
-		MapElement[][] board = room.getBoard();
+
+	public AltArea(Area area){
+		MapElement[][] board = area.getBoard();
 		this.board = new AltMapElement[board.length][board[0].length];
 		//Copies orginal MapElements as AltMapElements.
 		for(int row = 0; row < board.length; row++){
@@ -59,17 +43,17 @@ public class AltRoom {
 	}
 
 	/**
-	 * Only to be called by XML parser.
+	 * Only to be called by XML unmarshaller.
 	 */
-	public AltRoom(){
+	public AltArea(){
 
 	}
 
 	/**
-	 * Creates a copy of the original Room which this object was based on.
-	 * @return The Room copy.
+	 * Returns a copy of the world object on which this object was based.
+	 * @return The copy of the World.
 	 */
-	public Room getOriginal(){
+	public Area getOriginal(){
 		MapElement[][] board = new MapElement[this.board.length][this.board[0].length];
 		// Creates copies of the AltMapElements, as MapElements.
 		for(int row = 0; row < board.length; row++){
@@ -86,9 +70,6 @@ public class AltRoom {
 				}
 			}
 		}
-		TransitionSpace ts = exit.getOriginal();
-
-		return new Room(board, keyID, isLocked, ts);
+		return new Area(board);
 	}
-
 }
