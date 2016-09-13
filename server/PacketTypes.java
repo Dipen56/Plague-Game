@@ -14,11 +14,11 @@ public class PacketTypes {
 	
 	public class LogIn extends Packet{
 
+	
 		private String username;
 		public LogIn(byte[] playerName) {
 			super(1);
 			username =  new String(playerName).trim();
-
 			
 		}
 
@@ -27,11 +27,11 @@ public class PacketTypes {
 		 */
 		@Override
 		public byte[] getMessage() {
-			return  ("1"+username).getBytes();
+			return  (username).getBytes();
 		}
 		
 		public String getUserName(){
-			return username;
+			return username.trim().substring(1);
 		}
 	}
 
