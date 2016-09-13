@@ -1,9 +1,7 @@
 package server;
 
 public class Server {
-	public static final int PORTN_NUM = 9876;
-
-	
+	public static final int PORTN_NUM = 6000;
 
 	public Server(){
 		
