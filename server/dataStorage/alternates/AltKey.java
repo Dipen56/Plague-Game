@@ -26,6 +26,8 @@ public class AltKey extends AltItem{
     private String description;
 
 	public AltKey(Key item) {
+		if(item == null)
+			throw new IllegalArgumentException("Argument is null");
 		keyID = item.getKeyID();
 	}
 

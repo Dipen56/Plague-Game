@@ -47,6 +47,8 @@ public class AltChest {
 	int x,y;
 
 	public AltChest(Chest chest){
+		if(chest == null)
+			throw new IllegalArgumentException("Argument is null");
 		keyID = chest.getKeyID();
 		isLocked = chest.isLocked();
 		description = chest.getDescription();

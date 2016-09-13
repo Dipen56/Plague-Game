@@ -95,6 +95,8 @@ public class AltPlayer {
 	     * @param The original Player object
 	     */
 	    public AltPlayer(Player player) {
+	    	if(player == null)
+				throw new IllegalArgumentException("Argument is null");
 	        this.uID = player.getId();
 	        this.name = player.getName();
 	        this.virus = player.getVirus();

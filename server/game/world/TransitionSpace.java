@@ -1,5 +1,6 @@
 package server.game.world;
 
+import server.dataStorage.alternates.AltArea;
 import server.game.player.Direction;
 
 /**
@@ -12,7 +13,7 @@ public class TransitionSpace extends MapElement{
 	/**
 	 * The area which the space resides;
 	 */
-	//public final Area currentArea;
+	public final Area currentArea;
 
 	/**
 	 * The destination Area to be reached from this space.
@@ -36,32 +37,20 @@ public class TransitionSpace extends MapElement{
     public final Direction direction;
 
     /**
-     * Set to true when the parent area has been copied for saving the game.
-     * If another save is initiated, this will be reset to false at the start of the process.
+     * A copy of the area and destination area created when during the game save.
      */
-    private boolean parentCopiedForSave = false;
+    private AltArea areaCopiedForSave = null, destAreaCopiedForSave = null;
+
 
 
     /**
      * @param Destination X coordinate
      * @param Destination Y coordinate
+     * @param The current area of this TransitionSpace
+     * @param The position of this object on the map.
      * @param Destination Area
      * @param Direction to face in order to enter destination area.
-     */
-    public TransitionSpace(int x, int y, Position pos, Area destArea, Direction direction) {
-    	this.position = pos;
-        this.destArea = destArea;
-        this.destX = x;
-        this.destY = y;
-        this.direction = direction;
-    }
-
-    /**
-     * @param Destination X coordinate
-     * @param Destination Y coordinate
-     * @param Destination Area
-     * @param Direction to face in order to enter destination area.
-     */ /*
+     */ 
     public TransitionSpace(int x, int y, Area currentArea, Position pos, Area destArea, Direction direction) {
     	this.currentArea = currentArea;
     	this.position = pos;
@@ -69,13 +58,49 @@ public class TransitionSpace extends MapElement{
         this.destX = x;
         this.destY = y;
         this.direction = direction;
-    }*/
-
-
-    public void setparentCopiedForSave(boolean b){
-    	this.parentCopiedForSave = b;
     }
 
+    public AltArea getAreaCopy(){
+    	return this.areaCopiedForSave;
+    }
+    
+    public AltArea getDestAreaCopy(){
+    	return this.destAreaCopiedForSave;
+    }
+    
+    /**
+     * Argument can be null.
+     */
+    public void setAreaCopiedForSave(AltArea a){
+    	this.areaCopiedForSave = a;
+    }
+
+    /**
+     * Argument can be null.
+     */
+    public void setDestAreaCopiedForSave(AltArea a){
+    	this.destAreaCopiedForSave = a;
+    }
+    
+    
+    /**
+     * Returns true if the current area has been copied.
+     * @return A boolean.
+     */
+    public boolean isAreaCopiedForSave(){
+    	return this.areaCopiedForSave != null;
+    }
+    
+    /**
+     * Returns true if the destination area has been copied.
+     * @return A boolean.
+     */
+    public boolean isDestAreaCopiedForSave(){
+    	return this.destAreaCopiedForSave != null;
+    }
+
+    
+    
     @Override
     public String toString() {
         return "E";

@@ -5,6 +5,7 @@ import java.util.Set;
 
 import javax.xml.bind.annotation.XmlElement;
 
+import server.game.world.Area;
 import server.game.world.MapElement;
 import server.game.world.Obstacle;
 import server.game.world.Position;
@@ -26,6 +27,8 @@ public class AltWorld {
 
 
 	public AltWorld(World world){
+		if(world == null)
+			throw new IllegalArgumentException("Argument is null");
 		MapElement[][] board = world.getBoard();
 		this.board = new AltMapElement[board.length][board[0].length];
 		//Copies orginal MapElements as AltMapElements.

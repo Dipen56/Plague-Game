@@ -35,6 +35,8 @@ public class AltRoom {
 	 */
 	protected AltMapElement[][] board;
 	public AltRoom(Room room) {
+		if(room == null)
+			throw new IllegalArgumentException("Argument is null");
 		keyID = room.getKeyID();
 		isLocked = room.isLocked();
 		exit = new AltTransitionSpace(room.getExit());

@@ -12,8 +12,13 @@ public class TestBasicSaving {
 		//ClockThread ct = new ClockThread(20, game);
 		//ct.start();
 		AltGame agame = new AltGame(game);
+		
+		game = agame.getOriginal();
 		//XmlFunctions.saveFile(agame);
+		
+		
 		int i = 1;
+		agame = null;
 	}
 
 

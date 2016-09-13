@@ -17,6 +17,7 @@ import server.game.items.Key;
 import server.game.items.Torch;
 import server.game.player.Direction;
 import server.game.player.Player;
+import server.game.player.Virus;
 import server.game.world.Area;
 import server.game.world.Chest;
 import server.game.world.GroundSquare;
@@ -115,6 +116,9 @@ public class Game {
         this.world = world;
         this.entrances = entrances;
 
+        
+        this.player = new Player(5, "John Doe", Virus.T_Veronica,world);
+        joinPlayer(this.player);
         // start the world clock
         //startTiming();
     }
@@ -179,7 +183,7 @@ public class Game {
         }, 1000, 1000);
     }
 
-    public Area getWorld() {
+    public World getWorld() {
 		return world;
 	}
 

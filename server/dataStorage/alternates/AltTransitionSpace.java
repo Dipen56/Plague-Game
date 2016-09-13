@@ -24,10 +24,9 @@ public class AltTransitionSpace extends AltMapElement{
 
 	/**
 	 * The area which this space resides.
-	 */ /*
+	 */ 
 	@XmlElement
 	private AltArea currentArea;
-	  */
 
 	/**
 	 * The destination Area to be reached from this space.
@@ -47,9 +46,25 @@ public class AltTransitionSpace extends AltMapElement{
 	private Direction direction;
 
 	public AltTransitionSpace(TransitionSpace ts) {
-		//currentArea = new AltArea(ts.currentArea);
-		destArea = new AltArea(ts.destArea);
+		if(ts == null)
+			throw new IllegalArgumentException("Argument is null");
+		// Checks if the area that the object lies in has been copied.
+		if(ts.isAreaCopiedForSave()){
+			currentArea = ts.getAreaCopy();
+		}
+		else{
+			currentArea = new AltArea(ts.currentArea);
+		}
+		// Checks if destination area from the object has been copied.
+		if(ts.isDestAreaCopiedForSave()){
+			destArea = ts.getDestAreaCopy();
+		}
+		else{
+			destArea = new AltArea(ts.destArea);
+		}
+		
 		position = new AltPosition(ts.position);
+
 		destX = ts.destX;
 		destY = ts.destY;
 		direction = ts.direction;
@@ -64,10 +79,9 @@ public class AltTransitionSpace extends AltMapElement{
 
 	public TransitionSpace getOriginal() {
 		Area areaD = destArea.getOriginal();
-		//Area areaC = currentArea.getOriginal();
+		Area areaC = currentArea.getOriginal();
 		Position pos = position.getOriginal();
-		//return new TransitionSpace(destX, destY, areaC, pos, areaD, direction);
-		return new TransitionSpace(destX, destY, pos, areaD, direction);
+		return new TransitionSpace(destX, destY, areaC, pos, areaD, direction);
 	}
 
 }

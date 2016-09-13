@@ -52,13 +52,20 @@ public class AltGame{
 	*@param The object on which to base this object
 	**/
     public AltGame(Game game){
-    	//resets parentcopied variable for all TransitionSpaces in rooms and the world
+    	if(game == null)
+			throw new IllegalArgumentException("Argument is null");
+    	//resets parentcopied variable for all TransitionSpaces in rooms and the world. 
+    	//This prevents infinite loop from player saving twice or more on a single client.
     	for(TransitionSpace ts : game.getWorld().getExits()){
-    		ts.setparentCopiedForSave(false);
+    		ts.setAreaCopiedForSave(null);
+    		ts.setDestAreaCopiedForSave(null);
     	}
     	for(TransitionSpace ts : game.getEntrances().values()){
-    		ts.setparentCopiedForSave(false);
+    		ts.setAreaCopiedForSave(null);
+    		ts.setDestAreaCopiedForSave(null);
     	}
+    	
+    	this.world = new AltWorld(game.getWorld());
 
 		entrances = new HashMap<>();
 

@@ -15,6 +15,8 @@ public class AltPosition {
 	private int x, y;
 
 	public AltPosition(Position pos){
+		if(pos == null)
+			throw new IllegalArgumentException("Argument is null");
 		x = pos.x;
 		y = pos.y;
 	}

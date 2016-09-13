@@ -1,5 +1,8 @@
 package server.dataStorage.alternates;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.xml.bind.annotation.XmlElement;
 
 import server.game.world.Area;
@@ -23,10 +26,13 @@ public class AltArea {
 
 
 	public AltArea(Area area){
-
+		if(area == null)
+			throw new IllegalArgumentException("Argument is null");
 		MapElement[][] board = area.getBoard();
 		this.board = new AltMapElement[board.length][board[0].length];
 		MapElement me = null;
+		List<TransitionSpace> tsList = new ArrayList<>();
+		
 		//Copies orginal MapElements as AltMapElements.
 		for(int row = 0; row < board.length; row++){
 			for(int col = 0; col < board[0].length; col++){
@@ -35,15 +41,32 @@ public class AltArea {
 					this.board[row][col] = new AltObstacle((Obstacle)board[row][col]);
 				}
 				else if(me instanceof TransitionSpace){
-					//Sets child exit point variable to true, to prevent infinite loop.
-					((TransitionSpace) me).setparentCopiedForSave(true);
-					this.board[row][col] = new AltTransitionSpace((TransitionSpace)board[row][col]);
+					
+					// prevents infinite loop. Condition implies TransitionSpace has been copied itself.
+					TransitionSpace t = (TransitionSpace)me;
+					t.setAreaCopiedForSave(this);	//Sets child exit point variable, to prevent infinite loop
+					AltArea aCopy  = t.getAreaCopy();
+					AltArea dCopy = t.getDestAreaCopy();
+					if(aCopy != null || dCopy != null){
+						this.board[row][col] = aCopy != null ? aCopy.board[row][col] : dCopy.board[row][col];
+					}
+					else{
+						this.board[row][col] = new AltTransitionSpace((TransitionSpace)board[row][col]);
+					}
+					
+					//tsList.add(t);	
+					
 				}
 				else{
 					continue;//This should not happen.
 				}
 			}
 		}
+		/*
+		for(TransitionSpace ts : tsList){
+			ts.setAreaCopiedForSave(this);	//Sets child exit point variable, to prevent infinite loop
+		}
+		*/
 	}
 
 	/**
