@@ -18,7 +18,7 @@ import server.Packet;;
 
 public class ThreadClient extends Thread {
 
-     DatagramSocket clientSocket;
+    private DatagramSocket clientSocket;
 	private InetAddress ipAddress;
 	private GUI gui;
 
@@ -39,7 +39,7 @@ public class ThreadClient extends Thread {
 	public void run() {
 		while (true) {
 			try {
-				sleep(10);
+				sleep(10); //sleep for 10 ms and wait for reply from server
 			} catch (InterruptedException e) {
 				e.getMessage();
 			}
@@ -52,19 +52,23 @@ public class ThreadClient extends Thread {
 			} catch (IOException e) {
 				e.getMessage();
 			}
-			
 			readMessage(packet);
 		}
 	}
 	
-	public void readMessage(DatagramPacket dPacket) {
+	/**
+	 * Extracts the type of packet the client had received and calls the appropriate method 
+	 * to handle the data
+	 * @param dPacket the packet to be read and extracted
+	 */
+	 public void readMessage(DatagramPacket dPacket) {
 		
 		DataType type = Packet.getPacketType(new String(dPacket.getData()).trim().substring(0, 1));
 		
 		if(type.equals(DataType.MESSAGE)){
 			PacketTypes p = new PacketTypes();
 			PacketTypes.Message m = p.new Message(dPacket.getData());
-			System.out.println("From client side\n " + m.toString());
+			System.out.println(m.toString());
 		}
 		
 
@@ -80,7 +84,19 @@ public class ThreadClient extends Thread {
 	        } catch (IOException e) {
 	            e.printStackTrace();
 	        }
-
 	}
 
+	
+	
+	public String getClientAddress(){
+		return this.ipAddress.getHostAddress();
+	}
+	
+	public int getClientPort(){
+		return this.clientSocket.getPort();
+	}
+	
+	public void closeSocket(){
+		this.clientSocket.close();
+	}
 }

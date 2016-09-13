@@ -8,6 +8,7 @@ import client.ThreadClient;
 import client.rendering.rendering;
 import client.view.GUI;
 import server.PacketTypes;
+import sun.rmi.runtime.Log;
 
 /**
  * 
@@ -17,44 +18,40 @@ import server.PacketTypes;
 
 public class Client {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException, InterruptedException {
+		PacketTypes p = new PacketTypes();
 		PacketTypes.Message message;
-		GUI gui;
+		PacketTypes.LogIn login = null;
+		GUI gui = new GUI();
 		rendering renderer;
+		String consoleMessage;
+		String serverMessage;
 
 		/*
 		 * This is just for testing purposes. It reads the input from the
 		 * console and constructs a message or log in packet and broadcasts it
 		 * to each client
 		 */
-		gui = new GUI();
-		ThreadClient c = new ThreadClient(gui); // the name of the address
+		ThreadClient clientThread = new ThreadClient(gui); 
 		BufferedReader bf = new BufferedReader(new InputStreamReader(System.in));
-		c.start(); // start thread
-		PacketTypes p = new PacketTypes();
-		PacketTypes.LogIn login = null;
-		
-		try {
-			login = p.new LogIn(bf.readLine().getBytes()); // try to make a new log in packet and send it to server
-			login.sendMessage(c);
-		} catch (IOException e1) {
-			e1.getMessage();
-		}
-		
-		try {
-			c.sleep(10); // sleep the thread and wait for the server to accept the request
-		} catch (InterruptedException e) {
-			e.getMessage();
-		}
+		clientThread.start(); // start thread
+		consoleMessage = "Welcome to the SERVER!\n" + "IP address is : " + clientThread.getClientAddress()
+				+ " Port number is " + clientThread.getClientPort() + "\n";
+		consoleMessage += "Pls enter a username";
+		System.out.println(consoleMessage);
 
+		login = p.new LogIn( ("1"+bf.readLine()).getBytes());
+		login.sendMessage(clientThread);
 		while (true) {
 			try {
-				message = p.new Message(("[" + login.getUserName() + "]" + bf.readLine()).getBytes()); // send  message to everyone																			// to																					
-				message.sendMessage(c);
+				message = p.new Message(("[" + login.getUserName() + "]: " + bf.readLine()).getBytes()); 
+				message.sendMessage(clientThread);
 			} catch (IOException e) {
 				e.getMessage();
+				break;
 			}
 		}
+		clientThread.closeSocket();
 
 	}
 }

@@ -28,17 +28,19 @@ public class ThreadServer extends Thread {
 	}
 
 	public void run() {
-
+		String consoleMessage;
+		System.out.println("server is up and ready for connections.....");
 		while(true){
 		byte[] buffer = new byte[5000];
-		DatagramPacket data = new DatagramPacket(buffer, buffer.length);
+		DatagramPacket recievedData = new DatagramPacket(buffer, buffer.length);
 		try {
-			System.out.println("server is up and ready for connections.....");
-			serverSocket.receive(data);
+			serverSocket.receive(recievedData);
+			consoleMessage = "Client connected - socket address : " + recievedData.getSocketAddress();
+			System.out.println(consoleMessage);
+			readPacket(recievedData);
 		} catch (IOException e) {
 			e.getMessage();
 		}
-		readPacket(data);
 		}
 	}
 
@@ -68,10 +70,10 @@ public class ThreadServer extends Thread {
 	 * @param ipAddress of the client
 	 * @param portNum port where it came from
 	 */
-	public void handleLogIn(byte[] data, InetAddress ipAddress, int portNum){
+	 public void handleLogIn(byte[] data, InetAddress ipAddress, int portNum){
 		PacketTypes.LogIn log = packetType.new LogIn(data);
 		String newMessage  = "User " + log.getUserName() + " has joined the game";
-		System.out.println(log.getUserName());
+		System.out.println(newMessage);
 		broadcastToAll(packetType. new Message(newMessage.getBytes()).getMessage());
 		addClient(log.getUserName(), ipAddress, portNum);
 	}
