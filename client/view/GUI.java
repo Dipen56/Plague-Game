@@ -26,6 +26,7 @@ import javafx.scene.layout.GridPane;
 import javafx.event.*;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.KeyCode;
 
 /**
  * This class represents the main GUI class this class bring together all the
@@ -46,6 +47,7 @@ public class GUI extends Application {
 	private Label miniMapLable;
 	private Label textAreaLable;
 	private TextField msg;
+	private Button send;
 	// panes
 	// right pane with vertical alligment
 	private VBox vbox;
@@ -83,18 +85,27 @@ public class GUI extends Application {
 		vbox.getStyleClass().add("cotrolvbox");
 		borderPane = new BorderPane();
 		borderPane.setRight(vbox);
+
+		// this starts the action listener
+		actionEventHandler();
+		// this will start the key listener
+		keyEventHander();
+		// this will start the mouse listener
+		mouseEventHander();
 		// creates a scene
 		setMenuBar();
 		setWorldTime();
 		setminiMap();
 		setchat();
 		setItems();
+
 		Group group = new Group();
 		// Calls the rendering
 		render(group);
 		borderPane.setLeft(group);
 		Scene scene = new Scene(borderPane, WIDTH_VALUE, HEIGHT_VALUE);
 		scene.getStylesheets().add(this.getClass().getResource("/main.css").toExternalForm());
+		scene.setOnKeyPressed(keyEvent);
 		window.setScene(scene);
 		window.show();
 
@@ -149,6 +160,7 @@ public class GUI extends Application {
 		menuBar.getMenus().addAll(file, help);
 		// add the layout to the borderPane Layout
 		borderPane.setTop(menuBar);
+
 	}
 
 	/**
@@ -198,7 +210,8 @@ public class GUI extends Application {
 		textAreaLable.getStyleClass().add("chat-display");
 		textAreaLable.setWrapText(true);
 		HBox hbox = new HBox(5);
-		Button send = new Button("Send");
+		send = new Button("Send");
+		send.setOnAction(actionEvent);
 		send.setPrefWidth(100);
 		send.getStyleClass().add("button-send");
 		msg = new TextField();
@@ -222,7 +235,7 @@ public class GUI extends Application {
 		titlePane.setText("Item Inventory");
 		HBox hbox = new HBox(5);
 		itemGrid = new GridPane();
-
+		hbox.setOnMousePressed(mouseEvent);
 		hbox.getStyleClass().add("itempane-background");
 		itemGrid.setGridLinesVisible(true);
 		for (int i = 0; i < 3; i++) {
@@ -275,6 +288,64 @@ public class GUI extends Application {
 		chatText = chatText + "\n";
 		chatText = chatText + user + ": " + text;
 		textAreaLable.setText(chatText);
+	}
+
+	/**
+	 * this method is used to check for action and give a implementation of
+	 * handle method
+	 */
+	private void actionEventHandler() {
+		actionEvent = new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				if (event.getSource() == send) {
+					// send the typed massage and clear text area with ""
+				}
+
+			}
+		};
+	}
+
+	/**
+	 * this methods is used to listen for keys being pressed and will respond
+	 * Accordingly
+	 */
+	private void keyEventHander() {
+		keyEvent = new EventHandler<KeyEvent>() {
+
+			@Override
+			public void handle(KeyEvent event) {
+				// getSorce will give the control which caused the event
+				if (event.getCode() == KeyCode.LEFT) {
+					// this is for moving left
+					System.out.println("left");
+				} else if (event.getCode() == KeyCode.RIGHT) {
+					// this is for moving right
+					System.out.println("right");
+				} else if (event.getCode() == KeyCode.UP) {
+					// this is for moving up
+					System.out.println("up");
+				} else if (event.getCode() == KeyCode.DOWN) {
+					// this is for moving down
+					System.out.println("down");
+				}
+
+			}
+		};
+	}
+
+	/**
+	 * this this is used to listen for mouse clicks on different controls
+	 */
+	private void mouseEventHander() {
+		mouseEvent = new EventHandler<MouseEvent>() {
+
+			@Override
+			public void handle(MouseEvent event) {
+				// Currently this listen to clicks on the items
+				System.out.println("here");
+			}
+		};
 	}
 
 	/**
