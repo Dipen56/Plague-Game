@@ -12,7 +12,7 @@ public class TransitionSpace extends MapElement{
 	/**
 	 * The area which the space resides;
 	 */
-	public final Area currentArea;
+	//public final Area currentArea;
 
 	/**
 	 * The destination Area to be reached from this space.
@@ -36,13 +36,19 @@ public class TransitionSpace extends MapElement{
     public final Direction direction;
 
     /**
+     * Set to true when the parent area has been copied for saving the game.
+     * If another save is initiated, this will be reset to false at the start of the process.
+     */
+    private boolean parentCopiedForSave = false;
+
+
+    /**
      * @param Destination X coordinate
      * @param Destination Y coordinate
      * @param Destination Area
      * @param Direction to face in order to enter destination area.
      */
-    public TransitionSpace(int x, int y, Area currentArea, Position pos, Area destArea, Direction direction) {
-    	this.currentArea = currentArea;
+    public TransitionSpace(int x, int y, Position pos, Area destArea, Direction direction) {
     	this.position = pos;
         this.destArea = destArea;
         this.destX = x;
@@ -50,6 +56,25 @@ public class TransitionSpace extends MapElement{
         this.direction = direction;
     }
 
+    /**
+     * @param Destination X coordinate
+     * @param Destination Y coordinate
+     * @param Destination Area
+     * @param Direction to face in order to enter destination area.
+     */ /*
+    public TransitionSpace(int x, int y, Area currentArea, Position pos, Area destArea, Direction direction) {
+    	this.currentArea = currentArea;
+    	this.position = pos;
+        this.destArea = destArea;
+        this.destX = x;
+        this.destY = y;
+        this.direction = direction;
+    }*/
+
+
+    public void setparentCopiedForSave(boolean b){
+    	this.parentCopiedForSave = b;
+    }
 
     @Override
     public String toString() {

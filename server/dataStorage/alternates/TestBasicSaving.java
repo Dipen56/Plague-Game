@@ -9,9 +9,9 @@ public class TestBasicSaving {
 
 	public TestBasicSaving(){
 		Game game = TextUI.setupGame();
-		ClockThread ct = new ClockThread(20, game);
-		ct.start();
-		//AltGame agame = new AltGame(game);
+		//ClockThread ct = new ClockThread(20, game);
+		//ct.start();
+		AltGame agame = new AltGame(game);
 		//XmlFunctions.saveFile(agame);
 		int i = 1;
 	}

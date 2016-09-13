@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import server.dataStorage.alternates.AltPlayer;
 import server.game.items.Antidote;
 import server.game.items.Destroyable;
 import server.game.items.Item;
@@ -115,7 +116,7 @@ public class Game {
         this.entrances = entrances;
 
         // start the world clock
-        startTiming();
+        //startTiming();
     }
 
 
@@ -178,6 +179,10 @@ public class Game {
         }, 1000, 1000);
     }
 
+    public Area getWorld() {
+		return world;
+	}
+
     /**
      * This method returns the clock of the world. The world time is constantly advancing.
      *
@@ -186,6 +191,10 @@ public class Game {
     public LocalTime getClock() {
         return clock;
     }
+
+    public Player getPlayer() {
+		return player;
+	}
 
     public void joinPlayer(Player player) {
 
@@ -568,5 +577,9 @@ public class Game {
         // TODO Auto-generated method stub
 
     }
+
+
+
+
 
 }

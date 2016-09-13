@@ -23,20 +23,24 @@ public class AltArea {
 
 
 	public AltArea(Area area){
+
 		MapElement[][] board = area.getBoard();
 		this.board = new AltMapElement[board.length][board[0].length];
+		MapElement me = null;
 		//Copies orginal MapElements as AltMapElements.
 		for(int row = 0; row < board.length; row++){
 			for(int col = 0; col < board[0].length; col++){
-				MapElement me = board[row][col];
+				me = board[row][col];
 				if(me instanceof Obstacle){
 					this.board[row][col] = new AltObstacle((Obstacle)board[row][col]);
 				}
 				else if(me instanceof TransitionSpace){
+					//Sets child exit point variable to true, to prevent infinite loop.
+					((TransitionSpace) me).setparentCopiedForSave(true);
 					this.board[row][col] = new AltTransitionSpace((TransitionSpace)board[row][col]);
 				}
 				else{
-					//This should not happen.
+					continue;//This should not happen.
 				}
 			}
 		}

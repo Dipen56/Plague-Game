@@ -45,15 +45,24 @@ public class AltGame{
 	* Only to be called by XML marshaller.
 	**/
     public AltGame(){
-        player = new AltPlayer();
-		entrances = new HashMap<>();
+
     }
 
 	/**
 	*@param The object on which to base this object
 	**/
     public AltGame(Game game){
+    	//resets parentcopied variable for all TransitionSpaces in rooms and the world
+    	for(TransitionSpace ts : game.getWorld().getExits()){
+    		ts.setparentCopiedForSave(false);
+    	}
+    	for(TransitionSpace ts : game.getEntrances().values()){
+    		ts.setparentCopiedForSave(false);
+    	}
+
 		entrances = new HashMap<>();
+
+
 		// Copies all entries from original entrances list, replacing values with alternative objects
 		for(Map.Entry<Room, TransitionSpace> m: game.getEntrances().entrySet()){
 			Room room = m.getKey();
@@ -63,6 +72,8 @@ public class AltGame{
 			entrances.put(aroom, ats);
 			//entrances.put(new AltRoom(m.getKey()), new AltTransitionSpace(m.getValue()));
 		}
+		player = new AltPlayer(game.getPlayer());
+
     }
 
 	/**

@@ -107,11 +107,13 @@ public class TestConst {
 
         // room entrance
         // this has to be remembered by the room
-        TransitionSpace entrance = new TransitionSpace(6, 3, world, new Position(6,3), room, Direction.North);
+       // TransitionSpace entrance = new TransitionSpace(6, 3, world, new Position(6,3), room, Direction.North);
+        TransitionSpace entrance = new TransitionSpace(6, 3, new Position(6,3), room, Direction.North);
         worldBoard[3][6] = entrance;
 
         // room exit
-        roomBoard[2][1] = new TransitionSpace(1, 2, room, new Position(1,2), world, Direction.South);
+        //roomBoard[2][1] = new TransitionSpace(1, 2, room, new Position(1,2), world, Direction.South);
+        roomBoard[2][1] = new TransitionSpace(1, 2, new Position(1,2), world, Direction.South);
 
         // let the room remember exit
         room.rememberExit();
