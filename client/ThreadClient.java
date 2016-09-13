@@ -7,6 +7,7 @@ import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 
+import client.view.GUI;
 import server.Packet.DataType;
 import server.PacketTypes;
 import server.Packet;;
@@ -18,8 +19,10 @@ public class ThreadClient extends Thread {
 
      DatagramSocket clientSocket;
 	private InetAddress ipAddress;
+	private GUI gui;
 
-	public ThreadClient(String addressName) {
+	public ThreadClient(String addressName, GUI g) {
+		this.gui = g;
 		try {
 			clientSocket = new DatagramSocket();
 			this.ipAddress = InetAddress.getByName(addressName);

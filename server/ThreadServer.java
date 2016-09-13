@@ -20,12 +20,13 @@ public class ThreadServer extends Thread {
 
 	private HashMap<String,ClientInformation> connectedClients;
 	private DatagramSocket serversock;
+	private PacketTypes packetType = new PacketTypes();
+
 
 	public ThreadServer() {
 		connectedClients = new HashMap<>();
 		try {
-			serversock = new DatagramSocket(PORTN_NUM);
-
+		serversock = new DatagramSocket(PORTN_NUM);
 		} catch (IOException e) {
 			e.getMessage();
 		}
@@ -52,21 +53,32 @@ public class ThreadServer extends Thread {
 		byte[] data = packet.getData();
 		int portNum = packet.getPort();
 		DataType type = Packet.getPacketType(new String(data).substring(0, 1));
-		PacketTypes p = new PacketTypes();
 		PacketTypes.Message m ;
-		String newMessage ;
 
 
 		if (type.equals(DataType.LOGIN)) {
-			PacketTypes.LogIn log = p.new LogIn(data);
-			 newMessage = "User " + log.getUserName() + " has joined the game";
-			 m  = p.new Message(newMessage.getBytes());
-			broadcastToAll(m.getMessage());
-			addClient(log.getUserName(), address, portNum);
+			handleLogIn(data,address, portNum);
+			
 		} else if (type.equals(DataType.MESSAGE)) {
 			broadcastToAll(data);
 		}
 	}
+	
+	
+	public void handleLogIn(byte[] data, InetAddress ipAddress, int portNum){
+		PacketTypes.LogIn log = packetType.new LogIn(data);
+		String newMessage  = "User " + log.getUserName() + " has joined the game";
+		broadcastToAll(packetType. new Message(newMessage.getBytes()).getMessage());
+		addClient(log.getUserName(), ipAddress, portNum);
+
+	}
+	
+	/**
+	 * Makes a new client information object and adds it to the list of connected clients
+	 * @param username of player
+	 * @param hostAddress IP address of player
+	 * @param port of the player
+	 */
 
 	synchronized private void addClient(String username, InetAddress hostAddress, int port) {
 
@@ -76,7 +88,7 @@ public class ThreadServer extends Thread {
 	}
 
 	/**
-	 * Sends the message to everyone who is connected to the server
+	 * Sends the data to everyone who is connected to the server
 	 * 
 	 * @param message
 	 */
@@ -89,7 +101,7 @@ public class ThreadServer extends Thread {
 	}
 
 	/**
-	 * 
+	 * Sends the data to the client
 	 * @param data
 	 * @param ipAddress
 	 * @param port
