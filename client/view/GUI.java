@@ -19,10 +19,10 @@ import javafx.scene.control.*;
 import javafx.scene.layout.StackPane;
 import javafx.scene.image.ImageView;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.GridPane;
-
 /**
  * This class represents the main GUI class this class bring together all the
  * different components of the GUI.
@@ -49,6 +49,7 @@ public class GUI extends Application {
 	private GridPane iteminfo;
 	// standard layout
 	private BorderPane borderPane;
+	private String chatText = "HARDD: Welcome Players";
 
 	public GUI() {
 	}
@@ -178,9 +179,12 @@ public class GUI extends Application {
 		chatControls.setPrefHeight(200);
 		chatControls.getStyleClass().add("chatarea-background");
 		textAreaLable = new Label();
+		textAreaLable.setAlignment(Pos.TOP_LEFT);
+		textAreaLable.setText(chatText);
 		textAreaLable.setPrefWidth(400);
 		textAreaLable.setPrefHeight(150);
 		textAreaLable.getStyleClass().add("chat-display");
+		textAreaLable.setWrapText(true);
 		HBox hbox = new HBox(5);
 		Button send = new Button("Send");
 		send.setPrefWidth(100);
@@ -195,6 +199,9 @@ public class GUI extends Application {
 		titlePane.setContent(chatControls);
 
 		vbox.getChildren().add(titlePane);
+		
+		//setChatText("fuk this", "dipen");
+		//setChatText("fuk this", "dipen");
 
 	}
 
@@ -253,6 +260,12 @@ public class GUI extends Application {
 
 		vbox.getChildren().add(titlePane);
 
+	}
+
+	public void setChatText(String text, String user) {
+		chatText = chatText + "\n";
+		chatText = chatText + user + ": " + text;
+		textAreaLable.setText(chatText);
 	}
 
 	/**
