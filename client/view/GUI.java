@@ -158,7 +158,7 @@ public class GUI extends Application {
 		iv2.setFitWidth(40);
 		////////////////////////////////////
 		iv2.setX(renderWidth/2);
-		iv2.setY(HEIGHT_VALUE-200);
+		iv2.setY(HEIGHT_VALUE-150);
 		group.getChildren().add(iv2);
 	}
 
