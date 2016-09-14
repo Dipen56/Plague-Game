@@ -74,7 +74,6 @@ public class GUI extends Application {
 	private EventHandler<WindowEvent> windowEvent;
 
 	public GUI() {
-		Button b = new Button();
 	}
 
 	/**
