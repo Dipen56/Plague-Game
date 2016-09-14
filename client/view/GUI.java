@@ -138,14 +138,6 @@ public class GUI extends Application {
 
 
 		//Game field
-//		Rectangle rect = new Rectangle(0, HEIGHT_VALUE / 2 + 50, renderWidth, HEIGHT_VALUE / 2 - 50);
-//		rect.setArcHeight(15);
-//		rect.setArcWidth(15);
-//		rect.setFill(Color.FORESTGREEN);
-//		rect.setStroke(Color.BLACK);
-//		group.getChildren().add(rect);
-
-
 		for (int i = 0; i < dimension;i++){
 			for (int j = 0; j < dimension;j++){
 				Image grass = loadImage("/grass.png");
@@ -161,6 +153,10 @@ public class GUI extends Application {
 		Image player = loadImage("/standingstillrear.png");
 		ImageView iv2 = new ImageView();
 		iv2.setImage(player);
+		//Temporary height of the character
+		iv2.setFitHeight(70);
+		iv2.setFitWidth(40);
+		////////////////////////////////////
 		iv2.setX(renderWidth/2);
 		iv2.setY(HEIGHT_VALUE-200);
 		group.getChildren().add(iv2);
