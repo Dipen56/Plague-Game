@@ -13,6 +13,7 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.paint.Color;
 import javafx.scene.control.*;
@@ -40,6 +41,8 @@ import java.util.TimerTask;
  *
  */
 public class GUI extends Application {
+	private double dimension = 9.1;
+	
 	private static final String GAMEICON_IMAGE = "/game-icon.png";
 	// private static int WIDTH_VALUE = 1500;
 	// private static int HEIGHT_VALUE = 1000;
@@ -112,11 +115,9 @@ public class GUI extends Application {
 		gamePane = new StackPane();
 		Group group = new Group();
 		// Calls the rendering
-
-		//Constant is set to 5 atm
-		render(group,8);
+		render(group,dimension);
+		//////////////////////////
 		borderPane.setLeft(group);
-
 		Scene scene = new Scene(borderPane, WIDTH_VALUE, HEIGHT_VALUE);
 		scene.getStylesheets().add(this.getClass().getResource("/main.css").toExternalForm());
 		scene.setOnKeyPressed(keyEvent);
@@ -125,8 +126,11 @@ public class GUI extends Application {
 
 	}
 
-	private void render(Group group, int dimension) {
-		int renderWidth =610;
+	private void render(Group group, double dimension) {
+		//renderWidth needs revising
+		int renderWidth =630;
+		int charWidth = 40;
+		int charHeight = 70;
 
 		// Night image background
 		Image image = loadImage("/background.gif");
@@ -136,20 +140,22 @@ public class GUI extends Application {
 		iv1.setFitHeight(HEIGHT_VALUE);
 		group.getChildren().add(iv1);
 
-		//Game field
+
+		//Game grass field
 		Image grass = loadImage("/grass border.jpg");
 		// x position on which the grass (board) starts to render
+		//needs revising in accordance to the renderWidth
 		double xPoint = ((renderWidth /2)- (grass.getWidth()*dimension/2));
 		// y position on which the grass (board) starts to render
-		int yPoint = HEIGHT_VALUE / 5 * 3;
+		double yPoint = HEIGHT_VALUE / 5 * 2.5;
 		//height of the grass image
 		int grassHeight;
 		for (int row = 0; row < dimension;row++){
 			grassHeight = (int)(((grass.getHeight()/dimension) * row) + grass.getHeight()/dimension);
 			for (int col = 0; col < dimension;col++){
 				//switch between the border, and no border grass images
-				//grass = loadImage("/grass.png");
-				grass = loadImage("/grass border.jpg");
+				grass = loadImage("/grass.png");
+				//grass = loadImage("/grass border.jpg");
 				ImageView iv3 = new ImageView();
 				iv3.setImage(grass);
 				iv3.setX((xPoint)+(col*grass.getWidth()));
@@ -159,14 +165,34 @@ public class GUI extends Application {
 			}
 			yPoint = yPoint + grassHeight;
 		}
+		
+		//Game grid
+		Line line = new Line();
+		line.setStartX(0.0f);
+		line.setStartY(HEIGHT_VALUE);
+		line.setEndX((renderWidth / 2) - 50);
+		line.setEndY(yPoint);
+		group.getChildren().add(line);
+		
+		//Tree on the board
+		Image tree = loadImage("/tree.png");
+		ImageView iv4 = new ImageView();
+		iv4.setImage(tree);
+		//This will need to be scaled later....
+		iv4.setFitHeight(200);
+		iv4.setFitWidth(170);
+		////////////////////////////////////////////////
+		iv4.setX(100);
+		iv4.setY(HEIGHT_VALUE-500);
+		group.getChildren().add(iv4);
 
 		//Player on the board
 		Image player = loadImage("/standingstillrear.png");
 		ImageView iv2 = new ImageView();
 		iv2.setImage(player);
 		//Temporary height of the character (fix later)
-		iv2.setFitHeight(70);
-		iv2.setFitWidth(40);
+		iv2.setFitHeight(charHeight);
+		iv2.setFitWidth(charWidth);
 		////////////////////////////////////////////////
 		iv2.setX(renderWidth/2);
 		iv2.setY(HEIGHT_VALUE-150);
