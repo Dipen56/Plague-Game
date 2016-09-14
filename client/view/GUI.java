@@ -114,7 +114,7 @@ public class GUI extends Application {
 		// Calls the rendering
 
 		//Constant is set to 5 atm
-		render(group,5);
+		render(group,7);
 		borderPane.setLeft(group);
 
 		Scene scene = new Scene(borderPane, WIDTH_VALUE, HEIGHT_VALUE);
@@ -138,15 +138,21 @@ public class GUI extends Application {
 
 
 		//Game field
-		for (int i = 0; i < dimension;i++){
-			for (int j = 0; j < dimension;j++){
-				Image grass = loadImage("/grass.png");
+		Image grass = loadImage("/grass border.jpg");
+		int y = HEIGHT_VALUE / 5 * 3;
+		int h = 0;
+		for (int row = 0; row < dimension;row++){
+			h = (int)(((grass.getHeight()/dimension) * row) + grass.getHeight()/dimension);
+			for (int col = 0; col < dimension;col++){
+				grass = loadImage("/grass.png");
 				ImageView iv3 = new ImageView();
 				iv3.setImage(grass);
-				iv3.setX(i*grass.getWidth());
-				iv3.setY((HEIGHT_VALUE / 2 + 50)+(j*grass.getHeight()));
+				iv3.setX(col*grass.getWidth());
+				iv3.setY(y);
+				iv3.setFitHeight(h);
 				group.getChildren().add(iv3);
 			}
+			y = y + h;
 		}
 
 		//Player on the board
