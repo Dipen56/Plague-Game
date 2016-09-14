@@ -1,6 +1,7 @@
 package server.game.world;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -19,343 +20,388 @@ import server.game.player.Player;
  */
 public class Area {
 
-    private int width;
-    private int height;
+	private int width;
+	private int height;
 
-    protected MapElement[][] board;
+	protected MapElement[][] board;
 
-    /**
-     * Empty position, which can be used to spawn players.
-     */
-    private Set<Position> playerPortals;
+	/**
+	 * Empty position, which can be used to spawn players.
+	 */
+	private Set<Position> playerPortals;
 
-    /**
-     * Constructor
-     *
-     * FOR Team: This the proper constructor we use, although the argument could be
-     * different. The basic idea is we read in a file, parse it, and construct the world
-     * with what's in the file. The file could be XML, or simple text file. It's still to
-     * be decided.
-     *
-     * @param filename
-     */
-    public Area(String filename) {
+	/**
+	 * All exits from this area.
+	 */
+	private Set<TransitionSpace> exits;
 
-        // FIXME: Not useful yet
+	/**
+	 * Constructor
+	 *
+	 * FOR Team: This the proper constructor we use, although the argument could be
+	 * different. The basic idea is we read in a file, parse it, and construct the world
+	 * with what's in the file. The file could be XML, or simple text file. It's still to
+	 * be decided.
+	 *
+	 * @param filename
+	 */
+	public Area(String filename) {
 
-        // List<String> lines = null;
-        // try {
-        // // List<String> lines = Files.readAllLines(Paths.get(filename),
-        // // StandardCharsets.UTF_8);
-        // lines = Files.readAllLines(Paths.get(PATH), StandardCharsets.UTF_8);
-        // } catch (IOException e) {
-        // System.out.println("[IO Exception] " + e.getMessage());
-        // e.printStackTrace();
-        // System.exit(1);
-        // }
-        //
-        // height = lines.size();
-        // width = -1;
-        // board = new Position[height][width];
-        //
-        // for (int y = 0; y < lines.size(); y++) {
-        // String line = lines.get(y);
-        //
-        // // sanity check
-        // if (width == -1) {
-        // width = line.length();
-        // } else if (width != line.length()) {
-        // throw new IllegalArgumentException("Input file \"" + filename
-        // + "\" is malformed; line " + lines.size() + " incorrect width.");
-        // }
-        //
-        // for (int x = 0; x < line.length(); x++) {
-        // switch (line.charAt(x)) {
-        // case ' ':
-        // board[y][x] = new GroundSquare(x, y);
-        // break;
-        //
-        // /*
-        // * lower case letter: obstacles.
-        // *
-        // * 'c': Chest. 'r': Rock. 't': Tree. 'a': Table.
-        // */
-        // case 'c':
-        // // TODO
-        // // board[y][x] = new Chest(x, y, "Chest", null, , isLocked, loot);
-        // break;
-        //
-        // // case ' ':
-        // // board[y][x] = new GroundSquare(x, y);
-        // // break;
-        // // case ' ':
-        // // board[y][x] = new GroundSquare(x, y);
-        // // break;
-        // // case ' ':
-        // // board[y][x] = new GroundSquare(x, y);
-        // // break;
-        // // case ' ':
-        // // board[y][x] = new GroundSquare(x, y);
-        // // break;
-        // // case ' ':
-        // // board[y][x] = new GroundSquare(x, y);
-        // // break;
-        // // case ' ':
-        // // board[y][x] = new GroundSquare(x, y);
-        // // break;
-        // // case ' ':
-        // // board[y][x] = new GroundSquare(x, y);
-        // // break;
-        //
-        // }
-        //
-        // }
-        // }
+		// FIXME: Not useful yet
 
-        // playerPortals = new ArrayList<>();
-        //
+		// List<String> lines = null;
+		// try {
+		// // List<String> lines = Files.readAllLines(Paths.get(filename),
+		// // StandardCharsets.UTF_8);
+		// lines = Files.readAllLines(Paths.get(PATH), StandardCharsets.UTF_8);
+		// } catch (IOException e) {
+		// System.out.println("[IO Exception] " + e.getMessage());
+		// e.printStackTrace();
+		// System.exit(1);
+		// }
+		//
+		// height = lines.size();
+		// width = -1;
+		// board = new Position[height][width];
+		//
+		// for (int y = 0; y < lines.size(); y++) {
+		// String line = lines.get(y);
+		//
+		// // sanity check
+		// if (width == -1) {
+		// width = line.length();
+		// } else if (width != line.length()) {
+		// throw new IllegalArgumentException("Input file \"" + filename
+		// + "\" is malformed; line " + lines.size() + " incorrect width.");
+		// }
+		//
+		// for (int x = 0; x < line.length(); x++) {
+		// switch (line.charAt(x)) {
+		// case ' ':
+		// board[y][x] = new GroundSquare(x, y);
+		// break;
+		//
+		// /*
+		// * lower case letter: obstacles.
+		// *
+		// * 'c': Chest. 'r': Rock. 't': Tree. 'a': Table.
+		// */
+		// case 'c':
+		// // TODO
+		// // board[y][x] = new Chest(x, y, "Chest", null, , isLocked, loot);
+		// break;
+		//
+		// // case ' ':
+		// // board[y][x] = new GroundSquare(x, y);
+		// // break;
+		// // case ' ':
+		// // board[y][x] = new GroundSquare(x, y);
+		// // break;
+		// // case ' ':
+		// // board[y][x] = new GroundSquare(x, y);
+		// // break;
+		// // case ' ':
+		// // board[y][x] = new GroundSquare(x, y);
+		// // break;
+		// // case ' ':
+		// // board[y][x] = new GroundSquare(x, y);
+		// // break;
+		// // case ' ':
+		// // board[y][x] = new GroundSquare(x, y);
+		// // break;
+		// // case ' ':
+		// // board[y][x] = new GroundSquare(x, y);
+		// // break;
+		//
+		// }
+		//
+		// }
+		// }
 
-    }
+		// playerPortals = new ArrayList<>();
+		//
 
-    /**
-     * Constructor used in test. Probably will be discarded.
-     *
-     * @param width
-     * @param height
-     * @param board
-     */
-    public Area(MapElement[][] board) {
-        this.board = board;
-        this.width = board[0].length;
-        this.height = board.length;
-        playerPortals = new HashSet<>();
-    }
+	}
 
+	/**
+	 * Constructor used in test. Probably will be discarded.
+	 *
+	 * @param width
+	 * @param height
+	 * @param board
+	 */
+	public Area(MapElement[][] board) {
+		this.board = board;
+		this.width = board[0].length;
+		this.height = board.length;
+		playerPortals = new HashSet<>();
+		this.exits = new HashSet<>();
+		//fills the exits set
+		for(MapElement[] row : board){
+			for(MapElement m : row){
+				if(m instanceof TransitionSpace){
+					this.exits.add((TransitionSpace)m);
+				}
+			}
+		}
+	}
 
-    public int getHeight(){
-    	return this.height;
-    }
+	public Set<TransitionSpace> getExits(){
+		return this.exits;
+	}
 
-    public MapElement[][] getBoard(){
-    	return this.board;
-    }
+	public int getHeight(){
+		return this.height;
+	}
 
-    /**
-     * let this area remember where empty positions are, so that player can be spawned
-     * from one of them.
-     */
-    public void registerPortals() {
-        for (int row = 0; row < board.length; row++) {
-            for(int col = 0; col < board[0].length; col++) {
-                if (!(board[row][col] instanceof Obstacle)) {
-                    playerPortals.add(new Position(col,row));
-                }
-            }
-        }
-    }
+	public MapElement[][] getBoard(){
+		return this.board;
+	}
 
-    /**
-     * Get a random empty position to spawn a player.
-     *
-     * @param game
-     * @return --- an empty position to spawn player. If this area is so occupied that
-     *         there is no empty space, null will be returned.
-     */
-    public Position getPlayerSpawnPos(Game game) {
+	/**
+	 * let this area remember where empty positions are, so that player can be spawned
+	 * from one of them.
+	 */
+	public void registerPortals() {
+		for (int row = 0; row < board.length; row++) {
+			for(int col = 0; col < board[0].length; col++) {
+				if (!(board[row][col] instanceof Obstacle)) {
+					playerPortals.add(new Position(col,row));
+				}
+			}
+		}
+	}
 
-        List<Position> portalList = new ArrayList<>(playerPortals);
+	/**
+	 * Get a random empty position to spawn a player.
+	 *
+	 * @param game
+	 * @return --- an empty position to spawn player. If this area is so occupied that
+	 *         there is no empty space, null will be returned.
+	 */
+	public Position getPlayerSpawnPos(Game game) {
 
-        Collections.shuffle(portalList);
+		List<Position> portalList = new ArrayList<>(playerPortals);
 
-        for (Position p : portalList) {
-            if (game.isEmptyPosition(p)) {
-                return p;
-            }
-        }
+		Collections.shuffle(portalList);
 
-        return null;
-    }
+		for (Position p : portalList) {
+			if (game.isEmptyPosition(p)) {
+				return p;
+			}
+		}
 
-    /**
-     * Get MapElement at coordinate (x, y)
-     *
-     * @param x
-     * @param y
-     * @return --- the ground type at coordinate (x, y); or null if the given (x, y) is
-     *         out of current map.
-     */
-    public MapElement getMapElementAtIndex(int x, int y) {
-        if (x < 0 || x >= width) {
-            return null;
-        }
+		return null;
+	}
 
-        if (y < 0 || y >= height) {
-            return null;
-        }
+	/**
+	 * Get MapElement at coordinate (x, y)
+	 *
+	 * @param x
+	 * @param y
+	 * @return --- the ground type at coordinate (x, y); or null if the given (x, y) is
+	 *         out of current map.
+	 */
+	public MapElement getMapElementAtIndex(int x, int y) {
+		if (x < 0 || x >= width) {
+			return null;
+		}
 
-        return board[y][x];
-    }
+		if (y < 0 || y >= height) {
+			return null;
+		}
 
-    /**
-     * Get the ground type in front of the player.
-     *
-     * @param player
-     * @return A mapElement
-     */
-    public Position getFrontPos(Player player) {
+		return board[y][x];
+	}
 
-        Position currentPos = player.getPosition();
-        Direction direction = player.getDirection();
-        Position forwardPos;
+	/**
+	 * Get the ground type in front of the player.
+	 *
+	 * @param player
+	 * @return A mapElement
+	 */
+	public Position getFrontPos(Player player) {
 
-        switch (direction) {
-        case East:
-            forwardPos = new Position(currentPos.x + 1, currentPos.y);
-            break;
-        case North:
-            forwardPos = new Position(currentPos.x, currentPos.y - 1);
-            break;
-        case South:
-            forwardPos = new Position(currentPos.x, currentPos.y + 1);
-            break;
-        case West:
-            forwardPos = new Position(currentPos.x - 1, currentPos.y);
-            break;
-        default:
-            // this should not happen
-            forwardPos = null;
-            break;
-        }
+		Position currentPos = player.getPosition();
+		Direction direction = player.getDirection();
+		Position forwardPos;
 
-        return forwardPos;
-    }
+		switch (direction) {
+		case East:
+			forwardPos = new Position(currentPos.x + 1, currentPos.y);
+			break;
+		case North:
+			forwardPos = new Position(currentPos.x, currentPos.y - 1);
+			break;
+		case South:
+			forwardPos = new Position(currentPos.x, currentPos.y + 1);
+			break;
+		case West:
+			forwardPos = new Position(currentPos.x - 1, currentPos.y);
+			break;
+		default:
+			// this should not happen
+			forwardPos = null;
+			break;
+		}
 
-    /**
-     * Get the ground type behind the player.
-     *
-     * @param player
-     * @return --- the ground type behind the player; or null if that position is out of
-     *         current map.
-     */
-    public Position getBackPos(Player player) {
+		return forwardPos;
+	}
 
-    	Position currentPos = player.getPosition();
-        Direction direction = player.getDirection();
-        Position backPos;
+	/**
+	 * Get the ground type behind the player.
+	 *
+	 * @param player
+	 * @return --- the ground type behind the player; or null if that position is out of
+	 *         current map.
+	 */
+	public Position getBackPos(Player player) {
 
-        switch (direction) {
-        case East:
-            backPos = new Position(currentPos.x - 1, currentPos.y);
-            break;
-        case North:
-            backPos = new Position(currentPos.x, currentPos.y + 1);
-            break;
-        case South:
-            backPos = new Position(currentPos.x, currentPos.y - 1);
-            break;
-        case West:
-            backPos = new Position(currentPos.x + 1, currentPos.y);
-            break;
-        default:
-            // this should not happen
-            backPos = null;
-            break;
-        }
+		Position currentPos = player.getPosition();
+		Direction direction = player.getDirection();
+		Position backPos;
 
-        return backPos;
-    }
+		switch (direction) {
+		case East:
+			backPos = new Position(currentPos.x - 1, currentPos.y);
+			break;
+		case North:
+			backPos = new Position(currentPos.x, currentPos.y + 1);
+			break;
+		case South:
+			backPos = new Position(currentPos.x, currentPos.y - 1);
+			break;
+		case West:
+			backPos = new Position(currentPos.x + 1, currentPos.y);
+			break;
+		default:
+			// this should not happen
+			backPos = null;
+			break;
+		}
 
-    /**
-     * Get the ground type on the left of the player.
-     *
-     * @param player
-     * @return --- the ground type on the left of the player; or null if that position is
-     *         out of current map.
-     */
-    public Position getLeftPos(Player player) {
+		return backPos;
+	}
 
-    	Position currentPos = player.getPosition();
-        Direction direction = player.getDirection();
-        Position leftPos;
+	/**
+	 * Get the ground type on the left of the player.
+	 *
+	 * @param player
+	 * @return --- the ground type on the left of the player; or null if that position is
+	 *         out of current map.
+	 */
+	public Position getLeftPos(Player player) {
 
-        switch (direction) {
-        case East:
-            leftPos = new Position(currentPos.x, currentPos.y - 1);
-            break;
-        case North:
-            leftPos = new Position(currentPos.x - 1, currentPos.y);
-            break;
-        case South:
-            leftPos = new Position(currentPos.x + 1, currentPos.y);
-            break;
-        case West:
-            leftPos = new Position(currentPos.x, currentPos.y + 1);
-            break;
-        default:
-            // this should not happen
-            leftPos = null;
-            break;
-        }
+		Position currentPos = player.getPosition();
+		Direction direction = player.getDirection();
+		Position leftPos;
 
-        return leftPos;
-    }
+		switch (direction) {
+		case East:
+			leftPos = new Position(currentPos.x, currentPos.y - 1);
+			break;
+		case North:
+			leftPos = new Position(currentPos.x - 1, currentPos.y);
+			break;
+		case South:
+			leftPos = new Position(currentPos.x + 1, currentPos.y);
+			break;
+		case West:
+			leftPos = new Position(currentPos.x, currentPos.y + 1);
+			break;
+		default:
+			// this should not happen
+			leftPos = null;
+			break;
+		}
 
-    /**
-     * Get the ground type on the right of the player.
-     *
-     * @param player
-     * @return --- the ground type on the right of the player; or null if that position is
-     *         out of current map.
-     */
-    public Position getRightPos(Player player) {
+		return leftPos;
+	}
 
-    	Position currentPos = player.getPosition();
-        Direction direction = player.getDirection();
-        Position rightPos;
+	/**
+	 * Get the ground type on the right of the player.
+	 *
+	 * @param player
+	 * @return --- the ground type on the right of the player; or null if that position is
+	 *         out of current map.
+	 */
+	public Position getRightPos(Player player) {
 
-        switch (direction) {
-        case East:
-            rightPos = new Position(currentPos.x, currentPos.y + 1);
-            break;
-        case North:
-            rightPos = new Position(currentPos.x + 1, currentPos.y);
-            break;
-        case South:
-            rightPos = new Position(currentPos.x - 1, currentPos.y);
-            break;
-        case West:
-            rightPos = new Position(currentPos.x, currentPos.y - 1);
-            break;
-        default:
-            // this should not happen
-            rightPos = null;
-            break;
-        }
+		Position currentPos = player.getPosition();
+		Direction direction = player.getDirection();
+		Position rightPos;
 
-        return rightPos;
-    }
+		switch (direction) {
+		case East:
+			rightPos = new Position(currentPos.x, currentPos.y + 1);
+			break;
+		case North:
+			rightPos = new Position(currentPos.x + 1, currentPos.y);
+			break;
+		case South:
+			rightPos = new Position(currentPos.x - 1, currentPos.y);
+			break;
+		case West:
+			rightPos = new Position(currentPos.x, currentPos.y - 1);
+			break;
+		default:
+			// this should not happen
+			rightPos = null;
+			break;
+		}
 
-    public void playerMoveTo(Player player, GroundSquare position) {
+		return rightPos;
+	}
 
-    }
+	public void playerMoveTo(Player player, GroundSquare position) {
 
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
+	}
 
-        for (MapElement[] row : board) {
-            for (MapElement col : row) {
-                sb.append(col.toString());
-            }
-            sb.append("\n");
-        }
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Area other = (Area) obj;
+		if (!Arrays.deepEquals(board, other.board))
+			return false;
+		if (exits == null) {
+			if (other.exits != null)
+				return false;
+		} else if (!exits.equals(other.exits))
+			return false;
+		if (height != other.height)
+			return false;
+		if (playerPortals == null) {
+			if (other.playerPortals != null)
+				return false;
+		} else if (!playerPortals.equals(other.playerPortals))
+			return false;
+		if (width != other.width)
+			return false;
+		return true;
+	}
 
-        return sb.toString();
-    }
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
 
-    // =======The following methods will be deleted =================
-    public int getWidth() {
-        return width;
-    }
+		for (MapElement[] row : board) {
+			for (MapElement col : row) {
+				sb.append(col.toString());
+			}
+			sb.append("\n");
+		}
+
+		return sb.toString();
+	}
+
+	// =======The following methods will be deleted =================
+	public int getWidth() {
+		return width;
+	}
 
 }

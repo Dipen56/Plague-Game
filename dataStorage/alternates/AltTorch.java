@@ -1,4 +1,4 @@
-package server.dataStorage.alternates;
+package dataStorage.alternates;
 
 import javax.xml.bind.annotation.XmlElement;
 
@@ -31,6 +31,8 @@ public class AltTorch extends AltItem{
     private String description;
 
 	public AltTorch(Torch item) {
+		if(item == null)
+			throw new IllegalArgumentException("Argument is null");
 		this.timeLimit = item.getTimeLeft();
 		this.isFlaming = item.isFlaming();
 		this.description = item.getDescription();
@@ -39,7 +41,7 @@ public class AltTorch extends AltItem{
 	/**
 	 * Only to be called by XML parser.
 	 */
-	public AltTorch() {
+	AltTorch() {
 
 	}
 

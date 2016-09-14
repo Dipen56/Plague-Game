@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import dataStorage.alternates.AltPlayer;
 import server.game.items.Antidote;
 import server.game.items.Destroyable;
 import server.game.items.Item;
@@ -16,6 +17,7 @@ import server.game.items.Key;
 import server.game.items.Torch;
 import server.game.player.Direction;
 import server.game.player.Player;
+import server.game.player.Virus;
 import server.game.world.Area;
 import server.game.world.Chest;
 import server.game.world.GroundSquare;
@@ -70,7 +72,40 @@ public class Game {
      */
     private Timer timer;
 
-    // the world clock starts from 00:00
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Game other = (Game) obj;
+		if (player == null) {
+			if (other.player != null)
+				return false;
+		} else if (!player.equals(other.player))
+			return false;
+		if (players == null) {
+			if (other.players != null)
+				return false;
+		} else if (!players.equals(other.players))
+			return false;
+		if (world == null) {
+			if (other.world != null)
+				return false;
+		} else if (!world.equals(other.world))
+			return false;
+		if (entrances == null) {
+			if (other.entrances != null)
+				return false;
+		} else if (!entrances.equals(other.entrances))
+			return false;
+		return true;
+	}
+
+	// the world clock starts from 00:00
     private LocalTime clock = LocalTime.of(0, 0, 0);
 
     /*
@@ -114,8 +149,11 @@ public class Game {
         this.world = world;
         this.entrances = entrances;
 
+
+        this.player = new Player(5, "John Doe", Virus.T_Veronica,world);
+        joinPlayer(this.player);
         // start the world clock
-        startTiming();
+        //startTiming();
     }
 
 
@@ -178,6 +216,10 @@ public class Game {
         }, 1000, 1000);
     }
 
+    public World getWorld() {
+		return world;
+	}
+
     /**
      * This method returns the clock of the world. The world time is constantly advancing.
      *
@@ -186,6 +228,10 @@ public class Game {
     public LocalTime getClock() {
         return clock;
     }
+
+    public Player getPlayer() {
+		return player;
+	}
 
     public void joinPlayer(Player player) {
 
@@ -568,5 +614,9 @@ public class Game {
         // TODO Auto-generated method stub
 
     }
+
+
+
+
 
 }

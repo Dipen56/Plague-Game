@@ -1,7 +1,8 @@
-package server.dataStorage.alternates;
+package dataStorage.alternates;
 
 import javax.xml.bind.annotation.XmlElement;
 
+import server.game.world.Area;
 import server.game.world.MapElement;
 import server.game.world.Obstacle;
 import server.game.world.Room;
@@ -13,7 +14,7 @@ import server.game.world.TransitionSpace;
  * @author Hector (Fang Zhao 300364061), Daniel Anastasi 300145878.
  *
  */
-public class AltRoom {
+public class AltRoom extends AltArea{
 	/**
 	 * The id for the key to this room.
 	 */
@@ -33,13 +34,17 @@ public class AltRoom {
 	/**
 	 * The area map.
 	 */
+	@XmlElement
 	protected AltMapElement[][] board;
-	public AltRoom(Room room) {
-		keyID = room.getKeyID();
-		isLocked = room.isLocked();
-		exit = new AltTransitionSpace(room.getExit());
 
-		MapElement[][] board = room.getBoard();
+	public AltRoom(Area area) {
+		if(area == null)
+			throw new IllegalArgumentException("Argument is null");
+		keyID = ((Room)area).getKeyID();
+		isLocked = ((Room)area).isLocked();
+		exit = new AltTransitionSpace(((Room)area).getExit());
+
+		MapElement[][] board = area.getBoard();
 		this.board = new AltMapElement[board.length][board[0].length];
 		//Copies orginal MapElements as AltMapElements.
 		for(int row = 0; row < board.length; row++){
@@ -61,7 +66,7 @@ public class AltRoom {
 	/**
 	 * Only to be called by XML parser.
 	 */
-	public AltRoom(){
+	AltRoom(){
 
 	}
 
@@ -70,6 +75,8 @@ public class AltRoom {
 	 * @return The Room copy.
 	 */
 	public Room getOriginal(){
+		int i = this.board.length;		//testline
+		int j = this.board[0].length; 	//testline
 		MapElement[][] board = new MapElement[this.board.length][this.board[0].length];
 		// Creates copies of the AltMapElements, as MapElements.
 		for(int row = 0; row < board.length; row++){

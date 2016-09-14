@@ -1,6 +1,6 @@
 package server.game;
 
-import server.dataStorage.alternates.AltGame;
+import dataStorage.alternates.AltGame;
 
 /**
  * The Clock Thread is responsible for producing a consistent "pulse" which is used to
@@ -41,10 +41,7 @@ public class ClockThread extends Thread {
     @Override
     public void run() {
 
-    	//Dan: This is me messing around testing the saving.
-    	AltGame agame = new AltGame(game);
-    	int i = 2;
-        /*while (true) {
+        while (true) {
             // Loop forever
             try {
                 Thread.sleep(delay);
@@ -52,6 +49,6 @@ public class ClockThread extends Thread {
             } catch (InterruptedException e) {
                 // should never happen
             }
-        }*/
+        }
     }
 }

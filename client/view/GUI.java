@@ -35,7 +35,7 @@ import java.util.TimerTask;
 /**
  * This class represents the main GUI class this class bring together all the
  * different components of the GUI.
- * 
+ *
  * @author Dipen
  *
  */
@@ -111,9 +111,11 @@ public class GUI extends Application {
 		gamePane = new StackPane();
 		Group group = new Group();
 		// Calls the rendering
-		render(group);
-		gamePane.getChildren().add(group);
-		borderPane.setLeft(gamePane);
+
+		//Constant is set to 5 atm
+		render(group,5);
+		borderPane.setLeft(group);
+
 		Scene scene = new Scene(borderPane, WIDTH_VALUE, HEIGHT_VALUE);
 		scene.getStylesheets().add(this.getClass().getResource("/main.css").toExternalForm());
 		scene.setOnKeyPressed(keyEvent);
@@ -122,28 +124,41 @@ public class GUI extends Application {
 
 	}
 
-	private void render(Group group) {
+	private void render(Group group, int dimension) {
 		int renderWidth = WIDTH_VALUE - 400;
 
 		// Night image background
-		Image image = new Image("/background.gif");
+		Image image = loadImage("/background.gif");
 		ImageView iv1 = new ImageView();
 		iv1.setImage(image);
 		iv1.setFitWidth(renderWidth);
 		iv1.setFitHeight(HEIGHT_VALUE);
 		group.getChildren().add(iv1);
 
-		// Game field
-		Rectangle rect = new Rectangle(0, HEIGHT_VALUE / 2 + 50, renderWidth, HEIGHT_VALUE / 2 - 50);
-		rect.setArcHeight(15);
-		rect.setArcWidth(15);
-		rect.setFill(Color.FORESTGREEN);
-		rect.setStroke(Color.BLACK);
-		group.getChildren().add(rect);
 
-		// Player on the board
-		Circle player = new Circle(renderWidth / 2, HEIGHT_VALUE - 75, 10, Color.RED);
-		group.getChildren().add(player);
+		//Game field
+		for (int i = 0; i < dimension;i++){
+			for (int j = 0; j < dimension;j++){
+				Image grass = loadImage("/grass.png");
+				ImageView iv3 = new ImageView();
+				iv3.setImage(grass);
+				iv3.setX(i*grass.getWidth());
+				iv3.setY((HEIGHT_VALUE / 2 + 50)+(j*grass.getHeight()));
+				group.getChildren().add(iv3);
+			}
+		}
+
+		//Player on the board
+		Image player = loadImage("/standingstillrear.png");
+		ImageView iv2 = new ImageView();
+		iv2.setImage(player);
+		//Temporary height of the character
+		iv2.setFitHeight(70);
+		iv2.setFitWidth(40);
+		////////////////////////////////////
+		iv2.setX(renderWidth/2);
+		iv2.setY(HEIGHT_VALUE-150);
+		group.getChildren().add(iv2);
 	}
 
 	/**
@@ -297,7 +312,7 @@ public class GUI extends Application {
 
 	/**
 	 * this method is used to set the chat message the text area in the gui
-	 * 
+	 *
 	 * @param text
 	 * @param user
 	 */
@@ -367,7 +382,7 @@ public class GUI extends Application {
 
 	/**
 	 * this is a helper method used to load images
-	 * 
+	 *
 	 * @param name
 	 * @return
 	 */
@@ -378,7 +393,7 @@ public class GUI extends Application {
 
 	/**
 	 * this method is just here for testing the gui
-	 * 
+	 *
 	 * @param args
 	 */
 	public static void main(String[] args) {

@@ -1,4 +1,4 @@
-package server.dataStorage.alternates;
+package dataStorage.alternates;
 
 import server.game.world.MapElement;
 
@@ -9,4 +9,7 @@ import server.game.world.MapElement;
  */
 public class AltMapElement {
 
+	AltMapElement(){
+
+	}
 }

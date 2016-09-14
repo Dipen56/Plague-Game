@@ -1,10 +1,11 @@
-package server.dataStorage.alternates;
+package dataStorage.alternates;
 
 import java.util.HashSet;
 import java.util.Set;
 
 import javax.xml.bind.annotation.XmlElement;
 
+import server.game.world.Area;
 import server.game.world.MapElement;
 import server.game.world.Obstacle;
 import server.game.world.Position;
@@ -17,7 +18,7 @@ import server.game.world.World;
  * @author Hector (Fang Zhao 300364061), Daniel Anastasi 300145878
  *
  */
-public class AltWorld {
+public class AltWorld extends AltArea{
 	/**
 	 * The area map.
 	 */
@@ -25,8 +26,10 @@ public class AltWorld {
 	protected AltMapElement[][] board;
 
 
-	public AltWorld(World world){
-		MapElement[][] board = world.getBoard();
+	public AltWorld(Area area){
+		if(area == null)
+			throw new IllegalArgumentException("Argument is null");
+		MapElement[][] board = area.getBoard();
 		this.board = new AltMapElement[board.length][board[0].length];
 		//Copies orginal MapElements as AltMapElements.
 		for(int row = 0; row < board.length; row++){
@@ -48,7 +51,7 @@ public class AltWorld {
 	/**
 	 * Only to be called by XML unmarshaller.
 	 */
-	public AltWorld(){
+	AltWorld(){
 
 	}
 

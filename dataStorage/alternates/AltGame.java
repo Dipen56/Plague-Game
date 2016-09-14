@@ -1,4 +1,4 @@
-package server.dataStorage.alternates;
+package dataStorage.alternates;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -44,16 +44,32 @@ public class AltGame{
 	/**
 	* Only to be called by XML marshaller.
 	**/
-    public AltGame(){
-        player = new AltPlayer();
-		entrances = new HashMap<>();
+    AltGame(){
+
     }
 
 	/**
 	*@param The object on which to base this object
 	**/
     public AltGame(Game game){
+    	if(game == null)
+			throw new IllegalArgumentException("Argument is null");
+    	//resets parentcopied variable for all TransitionSpaces in rooms and the world.
+    	//This prevents infinite loop from player saving twice or more on a single client.
+    	for(TransitionSpace ts : game.getWorld().getExits()){
+    		ts.setAreaCopiedForSave(null);
+    		ts.setDestAreaCopiedForSave(null);
+    	}
+    	for(TransitionSpace ts : game.getEntrances().values()){
+    		ts.setAreaCopiedForSave(null);
+    		ts.setDestAreaCopiedForSave(null);
+    	}
+
+    	this.world = new AltWorld(game.getWorld());
+
 		entrances = new HashMap<>();
+
+
 		// Copies all entries from original entrances list, replacing values with alternative objects
 		for(Map.Entry<Room, TransitionSpace> m: game.getEntrances().entrySet()){
 			Room room = m.getKey();
@@ -63,6 +79,8 @@ public class AltGame{
 			entrances.put(aroom, ats);
 			//entrances.put(new AltRoom(m.getKey()), new AltTransitionSpace(m.getValue()));
 		}
+		player = new AltPlayer(game.getPlayer());
+
     }
 
 	/**

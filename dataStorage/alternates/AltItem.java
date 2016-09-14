@@ -1,4 +1,4 @@
-package server.dataStorage.alternates;
+package dataStorage.alternates;
 
 /**
  * Used as a supertype over alternate classes to game items. Intended for use with XML parsing only.
@@ -6,5 +6,7 @@ package server.dataStorage.alternates;
  *
  */
 public class AltItem {
+	AltItem(){
 
+	}
 }
