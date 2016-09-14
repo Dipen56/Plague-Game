@@ -25,8 +25,6 @@ public class Client {
 		GUI gui = new GUI();
 		rendering renderer;
 		String consoleMessage;
-		String serverMessage;
-
 		/*
 		 * This is just for testing purposes. It reads the input from the
 		 * console and constructs a message or log in packet and broadcasts it
