@@ -41,7 +41,7 @@ public class AltTorch extends AltItem{
 	/**
 	 * Only to be called by XML parser.
 	 */
-	public AltTorch() {
+	AltTorch() {
 
 	}
 

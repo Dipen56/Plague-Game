@@ -65,7 +65,7 @@ public class AltRoom {
 	/**
 	 * Only to be called by XML parser.
 	 */
-	public AltRoom(){
+	AltRoom(){
 
 	}
 

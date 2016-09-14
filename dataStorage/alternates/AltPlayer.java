@@ -87,7 +87,7 @@ public class AltPlayer {
 	/**
 	 * This constructor should only be called by an XML marshaller.
 	 */
-	public AltPlayer(){
+	AltPlayer(){
 
 	}
 

@@ -32,7 +32,7 @@ public class AltAntidote extends AltItem{
 	/**
 	 * Only to be called by XML parser.
 	 */
-	public AltAntidote(){
+	AltAntidote(){
 
 	}
 

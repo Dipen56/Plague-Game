@@ -34,7 +34,7 @@ public class AltKey extends AltItem{
 	/**
 	 * Only to be used by XML parser.
 	 */
-	public AltKey(){
+	AltKey(){
 
 	}
 

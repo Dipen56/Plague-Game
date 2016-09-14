@@ -51,7 +51,7 @@ public class AltWorld {
 	/**
 	 * Only to be called by XML unmarshaller.
 	 */
-	public AltWorld(){
+	AltWorld(){
 
 	}
 

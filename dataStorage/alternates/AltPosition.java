@@ -24,10 +24,10 @@ public class AltPosition {
 	/**
 	 * Only to be used by XML parser
 	 */
-	public AltPosition(){
-		
+	AltPosition(){
+
 	}
-	
+
 	/**
 	 * Returns a copy of the original Position object which this was based on.
 	 * @return A Position object.
