@@ -8,11 +8,12 @@ import server.game.player.Player;
 import server.game.player.Virus;
 import server.game.world.Area;
 import server.game.world.GroundSquare;
+import server.game.world.Position;
 
 /**
  * This is a text-based UI client. It provides a tiny (hard-coded) world and a simple text
  * UI. It's playable. It will NOT be used in our final game. It is only here for testing.
- * 
+ *
  * @author Hector (Fang Zhao 300364061)
  *
  */
@@ -33,12 +34,12 @@ public class TextUI {
         SCANNER.close();
     }
 
-    private Game setupGame() {
+    public static Game setupGame() {
         // mock up a world
         Game game = new Game(TestConst.world, TestConst.entrances);
 
         // mock player
-        Player player = new Player(1, "Hector", Virus.T_Virus);
+        Player player = new Player(1, "Hector", Virus.T_Virus, TestConst.world);
         game.joinPlayer(player);
 
         return game;
@@ -50,8 +51,8 @@ public class TextUI {
 
         while (true) {
             // print board
-            GroundSquare currentPosition = player.getPosition();
-            Area currentArea = currentPosition.getArea();
+            Position currentPosition = player.getPosition();
+            Area currentArea = player.getArea();
             int width = currentArea.getWidth();
             int replaceIndex = currentPosition.y * (width + 1) + currentPosition.x;
             char[] chars = currentArea.toString().toCharArray();

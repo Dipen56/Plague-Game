@@ -1,10 +1,9 @@
-package game.control;
+package client;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-import client.ThreadClient;
 import client.rendering.rendering;
 import client.view.GUI;
 import server.PacketTypes;

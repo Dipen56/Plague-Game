@@ -1,5 +1,6 @@
 package server;
 
+import client.ClientInformation;
 import server.game.player.Player;
 
 /**

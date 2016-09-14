@@ -2,8 +2,8 @@ package server.game.world;
 
 /**
  * This class represents a room.
- * 
- * 
+ *
+ *
  * @author Hector (Fang Zhao 300364061)
  *
  */
@@ -17,11 +17,11 @@ public class Room extends Area {
 
     private boolean isLocked;
 
-    private RoomExit exit;
+    private TransitionSpace exit;
 
     /**
      * Constructor
-     * 
+     *
      * @param filename
      * @param roomID
      * @param keyID
@@ -33,33 +33,47 @@ public class Room extends Area {
         this.isLocked = isLocked;
 
         // remember the exit
-        rememberEixt();
+        rememberExit();
     }
 
     /**
      * Constructor used in test. Probably will be discarded.
-     * 
-     * @param width
-     * @param height
-     * @param board
+     *
+     * @param The room board.
+     * @param The room key ID.
+     * @param True if the room is locked.
      */
-    public Room(Position[][] board, int keyID, boolean isLocked) {
+    public Room(MapElement[][] board, int keyID, boolean isLocked) {
         super(board);
         this.keyID = keyID;
         this.isLocked = isLocked;
 
         // remember the exit
-        rememberEixt();
+        rememberExit();
+    }
+
+    /** Used after XML unmarshalling.
+     * @param The room board.
+     * @param The room key ID
+     * @param True if the room is locked.
+     * @param The room exit.
+     */
+    public Room(MapElement[][] board, int keyID, boolean isLocked, TransitionSpace exit) {
+        super(board);
+        this.keyID = keyID;
+        this.isLocked = isLocked;
+        this.exit = exit;
+
     }
 
     /**
      * let the room remember where the exit is.
      */
-    public void rememberEixt() {
-        for (Position[] row : board) {
-            for (Position col : row) {
-                if (col instanceof RoomExit) {
-                    this.exit = (RoomExit) col;
+    public void rememberExit() {
+        for (MapElement[] row : board) {
+            for (MapElement col : row) {
+                if (col instanceof TransitionSpace) {
+                    this.exit = (TransitionSpace) col;
                     return;
                 }
             }
@@ -78,7 +92,7 @@ public class Room extends Area {
         isLocked = boo;
     }
 
-    public RoomExit getExit() {
+    public TransitionSpace getExit() {
         return exit;
     }
 

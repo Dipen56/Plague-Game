@@ -8,10 +8,11 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 
 import client.view.GUI;
-import game.control.Server;
-import server.Packet.DataType;
+import server.Packet;
 import server.PacketTypes;
-import server.Packet;;
+import server.Server;
+import server.Packet.DataType;
+import server.PacketTypes.Message;;
 
 
 //import game.control.Packet.DataType;

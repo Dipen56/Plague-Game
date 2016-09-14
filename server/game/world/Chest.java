@@ -8,7 +8,7 @@ import server.game.items.Item;
 /**
  * This class represents a chest. A chest can be locked or unlocked. If it is locked, a
  * key is required to unlock it. Each chest contains at least one loot.
- * 
+ *
  * @author Hector (Fang Zhao 300364061)
  *
  */
@@ -22,9 +22,9 @@ public class Chest extends Obstacle {
 
     private List<Item> loot;
 
-    public Chest(int x, int y, String description, BufferedImage image, int keyID,
+    public Chest(int x, int y, String description, int keyID,
             boolean isLocked, List<Item> loot) {
-        super(x, y, description, image);
+        super(x, y, description);
         this.keyID = keyID;
         this.isLocked = isLocked;
         this.loot = loot;

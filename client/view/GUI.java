@@ -19,21 +19,32 @@ import javafx.scene.control.*;
 import javafx.scene.layout.StackPane;
 import javafx.scene.image.ImageView;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.GridPane;
+import javafx.event.*;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.input.KeyCode;
+import javafx.stage.WindowEvent;
+import javafx.beans.value.*;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * This class represents the main GUI class this class bring together all the
  * different components of the GUI.
- * 
+ *
  * @author Dipen
  *
  */
 public class GUI extends Application {
 	private static final String GAMEICON_IMAGE = "/game-icon.png";
-	private static int WIDTH_VALUE = 1500;
-	private static int HEIGHT_VALUE = 1000;
+	// private static int WIDTH_VALUE = 1500;
+	// private static int HEIGHT_VALUE = 1000;
+	private int WIDTH_VALUE = 1000;
+	private int HEIGHT_VALUE = 700;
 	// main window
 	private Stage window;
 	// controls
@@ -42,6 +53,7 @@ public class GUI extends Application {
 	private Label miniMapLable;
 	private Label textAreaLable;
 	private TextField msg;
+	private Button send;
 	// panes
 	// right pane with vertical alligment
 	private VBox vbox;
@@ -49,8 +61,20 @@ public class GUI extends Application {
 	private GridPane iteminfo;
 	// standard layout
 	private BorderPane borderPane;
+	private String chatText = "HARDD: Welcome Players";
+	private StackPane gamePane;
+	// Event Handlers
+	// for clicks
+	private EventHandler<ActionEvent> actionEvent;
+	// for keys inputs
+	private EventHandler<KeyEvent> keyEvent;
+	// for mouse events
+	private EventHandler<MouseEvent> mouseEvent;
+	// for window resizing not really need else where
+	private EventHandler<WindowEvent> windowEvent;
 
 	public GUI() {
+		Button b = new Button();
 	}
 
 	/**
@@ -62,6 +86,8 @@ public class GUI extends Application {
 		this.window = mainWindow;
 		window.setTitle("Plague Game");
 		window.getIcons().add(loadImage(GAMEICON_IMAGE));
+		// this will disable and enable resizing so when we have a working
+		// version we can just set this to false;
 		window.setResizable(false);
 
 		// Create a VBox which is just layout manger and adds gap of 10
@@ -70,45 +96,70 @@ public class GUI extends Application {
 		vbox.getStyleClass().add("cotrolvbox");
 		borderPane = new BorderPane();
 		borderPane.setRight(vbox);
+
+		// this starts the action listener
+		actionEventHandler();
+		// this will start the key listener
+		keyEventHander();
+		// this will start the mouse listener
+		mouseEventHander();
 		// creates a scene
 		setMenuBar();
 		setWorldTime();
 		setminiMap();
 		setchat();
 		setItems();
+		gamePane = new StackPane();
 		Group group = new Group();
 		// Calls the rendering
-		render(group);
+
+		//Constant is set to 5 atm
+		render(group,5);
 		borderPane.setLeft(group);
+
 		Scene scene = new Scene(borderPane, WIDTH_VALUE, HEIGHT_VALUE);
 		scene.getStylesheets().add(this.getClass().getResource("/main.css").toExternalForm());
+		scene.setOnKeyPressed(keyEvent);
 		window.setScene(scene);
 		window.show();
 
 	}
 
-	private void render(Group group) {
+	private void render(Group group, int dimension) {
 		int renderWidth = WIDTH_VALUE - 400;
 
 		// Night image background
-		Image image = new Image("/background.gif");
+		Image image = loadImage("/background.gif");
 		ImageView iv1 = new ImageView();
 		iv1.setImage(image);
 		iv1.setFitWidth(renderWidth);
 		iv1.setFitHeight(HEIGHT_VALUE);
 		group.getChildren().add(iv1);
 
-		// Game field
-		Rectangle rect = new Rectangle(0, HEIGHT_VALUE / 2 + 50, renderWidth, HEIGHT_VALUE / 2 - 50);
-		rect.setArcHeight(15);
-		rect.setArcWidth(15);
-		rect.setFill(Color.FORESTGREEN);
-		rect.setStroke(Color.BLACK);
-		group.getChildren().add(rect);
 
-		// Player on the board
-		Circle player = new Circle(renderWidth / 2, HEIGHT_VALUE - 75, 10, Color.RED);
-		group.getChildren().add(player);
+		//Game field
+		for (int i = 0; i < dimension;i++){
+			for (int j = 0; j < dimension;j++){
+				Image grass = loadImage("/grass.png");
+				ImageView iv3 = new ImageView();
+				iv3.setImage(grass);
+				iv3.setX(i*grass.getWidth());
+				iv3.setY((HEIGHT_VALUE / 2 + 50)+(j*grass.getHeight()));
+				group.getChildren().add(iv3);
+			}
+		}
+
+		//Player on the board
+		Image player = loadImage("/standingstillrear.png");
+		ImageView iv2 = new ImageView();
+		iv2.setImage(player);
+		//Temporary height of the character
+		iv2.setFitHeight(70);
+		iv2.setFitWidth(40);
+		////////////////////////////////////
+		iv2.setX(renderWidth/2);
+		iv2.setY(HEIGHT_VALUE-150);
+		group.getChildren().add(iv2);
 	}
 
 	/**
@@ -136,6 +187,7 @@ public class GUI extends Application {
 		menuBar.getMenus().addAll(file, help);
 		// add the layout to the borderPane Layout
 		borderPane.setTop(menuBar);
+
 	}
 
 	/**
@@ -178,11 +230,15 @@ public class GUI extends Application {
 		chatControls.setPrefHeight(200);
 		chatControls.getStyleClass().add("chatarea-background");
 		textAreaLable = new Label();
+		textAreaLable.setAlignment(Pos.TOP_LEFT);
+		textAreaLable.setText(chatText);
 		textAreaLable.setPrefWidth(400);
 		textAreaLable.setPrefHeight(150);
 		textAreaLable.getStyleClass().add("chat-display");
+		textAreaLable.setWrapText(true);
 		HBox hbox = new HBox(5);
-		Button send = new Button("Send");
+		send = new Button("Send");
+		send.setOnAction(actionEvent);
 		send.setPrefWidth(100);
 		send.getStyleClass().add("button-send");
 		msg = new TextField();
@@ -206,7 +262,7 @@ public class GUI extends Application {
 		titlePane.setText("Item Inventory");
 		HBox hbox = new HBox(5);
 		itemGrid = new GridPane();
-
+		hbox.setOnMousePressed(mouseEvent);
 		hbox.getStyleClass().add("itempane-background");
 		itemGrid.setGridLinesVisible(true);
 		for (int i = 0; i < 3; i++) {
@@ -256,8 +312,78 @@ public class GUI extends Application {
 	}
 
 	/**
+	 * this method is used to set the chat message the text area in the gui
+	 *
+	 * @param text
+	 * @param user
+	 */
+	public void setChatText(String text, String user) {
+		chatText = chatText + "\n";
+		chatText = chatText + user + ": " + text;
+		textAreaLable.setText(chatText);
+	}
+
+	/**
+	 * this method is used to check for action and give a implementation of
+	 * handle method
+	 */
+	private void actionEventHandler() {
+		actionEvent = new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				if (event.getSource() == send) {
+					// send the typed massage and clear text area with ""
+				}
+
+			}
+		};
+	}
+
+	/**
+	 * this methods is used to listen for keys being pressed and will respond
+	 * Accordingly
+	 */
+	private void keyEventHander() {
+		keyEvent = new EventHandler<KeyEvent>() {
+
+			@Override
+			public void handle(KeyEvent event) {
+				// getSorce will give the control which caused the event
+				if (event.getCode() == KeyCode.LEFT) {
+					// this is for moving left
+					System.out.println("left");
+				} else if (event.getCode() == KeyCode.RIGHT) {
+					// this is for moving right
+					System.out.println("right");
+				} else if (event.getCode() == KeyCode.UP) {
+					// this is for moving up
+					System.out.println("up");
+				} else if (event.getCode() == KeyCode.DOWN) {
+					// this is for moving down
+					System.out.println("down");
+				}
+
+			}
+		};
+	}
+
+	/**
+	 * this this is used to listen for mouse clicks on different controls
+	 */
+	private void mouseEventHander() {
+		mouseEvent = new EventHandler<MouseEvent>() {
+
+			@Override
+			public void handle(MouseEvent event) {
+				// Currently this listen to clicks on the items
+				System.out.println("here");
+			}
+		};
+	}
+
+	/**
 	 * this is a helper method used to load images
-	 * 
+	 *
 	 * @param name
 	 * @return
 	 */
@@ -268,11 +394,12 @@ public class GUI extends Application {
 
 	/**
 	 * this method is just here for testing the gui
-	 * 
+	 *
 	 * @param args
 	 */
 	public static void main(String[] args) {
 		// this lunch's the window which will end up call the start method above
 		launch(args);
+
 	}
 }

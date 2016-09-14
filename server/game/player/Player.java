@@ -10,15 +10,18 @@ import server.game.items.Item;
 import server.game.items.Key;
 import server.game.items.Torch;
 import server.game.items.Tradable;
+import server.game.world.Area;
 import server.game.world.Chest;
 import server.game.world.GroundSquare;
+import server.game.world.Position;
 import server.game.world.Room;
 import server.game.world.RoomEntrance;
+import server.game.world.TransitionSpace;
 
 /**
  * This class represents a player.
- * 
- * @author Hector (Fang Zhao 300364061)
+ *
+ * @author Hector (Fang Zhao 300364061), Daniel Anastasi 300145878
  *
  */
 public class Player {
@@ -36,36 +39,73 @@ public class Player {
     private int health;
     private boolean isAlive;
     private List<Item> inventory;
+    private Area area;
 
     // Geographical infos
-    private GroundSquare position;
+    private Position position;
     private Direction direction;
 
     /**
      * Constructor
-     * 
+     *
      * @param uID
      * @param name
      * @param virus
      */
-    public Player(int uID, String name, Virus virus) {
+    public Player(int uID, String name, Virus virus, Area area) {
         this.uID = uID;
         this.name = name;
         this.virus = virus;
         health = MAX_HEALTH;
         isAlive = true;
         inventory = new ArrayList<>();
+        this.area = area;
     }
+
+    /**
+     * The builder pattern was considered as an alternative to this constructor.
+     * As this will only be constructed once per game load, that pattern was considered unnecessary.
+     * @param ID
+     * @param name
+     * @param virus
+     * @param area
+     * @param health
+     * @param True if the player is alive.
+     * @param The player's Inventory
+     * @param The player's position.
+     * @param The direction which the player is facing.
+     */
+    public Player(int ID, String name, Virus virus, Area area, int health, boolean isAlive,
+			List<Item> newInventory, Position newPosition, Direction direction) {
+    	this.uID = ID;
+    	this.name = name;
+    	this.virus = virus;
+    	this.area = area;
+    	this.health = health;
+    	this.isAlive = isAlive;
+    	this.inventory = newInventory;
+    	this.position = newPosition;
+    	this.direction = direction;
+	}
+
+	public String getName() {
+		return this.name;
+	}
+
 
     public int getId() {
         return uID;
     }
 
-    public GroundSquare getPosition() {
+    public Position getPosition() {
         return position;
     }
 
-    public void setPosition(GroundSquare pos) {
+    public Area getArea(){
+    	return area;
+    }
+
+    public void setPosition(Position pos) {
         this.position = pos;
     }
 
@@ -101,10 +141,14 @@ public class Player {
         return health;
     }
 
+    public void setArea(Area area){
+    	this.area = area;
+    }
+
     /**
      * This method increases (or decrease if the argument is a negative integer) player's
      * health (time left).
-     * 
+     *
      * @param effect
      *            --- how much time could the antidote give to player. if this argument is
      *            negative, it decreases player's life.
@@ -123,10 +167,10 @@ public class Player {
      * matches the player's virus, then it prolongs the player's life. Otherwise it has
      * 80% chance to lessen the player's life for the same amount, and 20% chance to
      * prolong twice the amount of a right antidote.
-     * 
+     *
      * Note this method doesn't check if the player has this antidote in inventory. This
      * should be done before this method is called.
-     * 
+     *
      * @param antidote
      */
     public void drinkAntidote(Antidote antidote) {
@@ -156,10 +200,10 @@ public class Player {
 
     /**
      * This method let the player to light up a torch.
-     * 
+     *
      * Note this method doesn't check if the player has this torch in inventory. This
      * should be done before this method is called.
-     * 
+     *
      * @param torch
      */
     public void lightUpTorch(Torch torch) {
@@ -177,7 +221,7 @@ public class Player {
 
     /**
      * This method breaks the specified item in player's inventory.
-     * 
+     *
      * @param destroyable
      * @return
      */
@@ -196,7 +240,7 @@ public class Player {
 
     /**
      * This method let the player to pick up an item.
-     * 
+     *
      * @param item
      * @return
      */
@@ -237,7 +281,7 @@ public class Player {
 
     /**
      * Let the player give an item to another player
-     * 
+     *
      * @param other
      * @param item
      * @return
@@ -288,7 +332,7 @@ public class Player {
     /**
      * This method let the player try to unlock a room. If the player has the key to open
      * this room, then it is unlocked. Notice door unlocked != room entered.
-     * 
+     *
      * @param room
      * @return
      */
@@ -316,7 +360,7 @@ public class Player {
 
     /**
      * This method let the player try to enter the room.
-     * 
+     *
      * @param room
      * @return
      */
@@ -332,7 +376,8 @@ public class Player {
         }
 
         // OK, let move player into the room
-        position = room.getExit();
+        position = room.getExit().position;	//Changes the player's position field.
+    	this.area = room; 					//Changes the player's area field.
         return true;
     }
 
@@ -347,7 +392,7 @@ public class Player {
          * for sure. The reason is that the key to unlock the room is never going to be
          * located inside the room. The following check is redundant because it will
          * always be false.
-         * 
+         *
          * If we decide to spawn player inside rooms (the key has to be inside the room),
          * the following check is not redundant any more.
          */
@@ -363,7 +408,7 @@ public class Player {
     /**
      * This method let the player try to unlock a chest. If the player has the key to open
      * this chest, then it is unlocked. Notice chest unlocked != items inside picked up.
-     * 
+     *
      * @param chest
      * @return
      */
@@ -391,7 +436,7 @@ public class Player {
      * This method let the player try to take items from the chest in front. If the
      * player's inventory can contain all items, he will take them all; otherwise he will
      * take as many as he can until his inventory is full.
-     * 
+     *
      * @param chest
      * @return --- true if he has taken at least one item from the chest, or false if he
      *         has taken none from the chest.
@@ -424,5 +469,50 @@ public class Player {
 
         return tookAtLeastOne;
     }
+
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Player other = (Player) obj;
+
+		if (direction != other.direction)
+			return false;
+		if (health != other.health)
+			return false;
+		if (inventory == null) {
+			if (other.inventory != null)
+				return false;
+		} else if (!inventory.equals(other.inventory))
+			return false;
+		if (isAlive != other.isAlive)
+			return false;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		if (position == null) {
+			if (other.position != null)
+				return false;
+		} else if (!position.equals(other.position))
+			return false;
+		if (uID != other.uID)
+			return false;
+		if (virus != other.virus)
+			return false;
+		if (area == null) {
+			if (other.area != null)
+				return false;
+		} else if (!area.equals(other.area))
+			return false;
+		return true;
+	}
+
 
 }
