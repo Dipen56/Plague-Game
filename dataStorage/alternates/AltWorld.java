@@ -22,30 +22,9 @@ public class AltWorld extends AltArea{
 	/**
 	 * The area map.
 	 */
-	@XmlElement
-	protected AltMapElement[][] board;
-
 
 	public AltWorld(Area area){
-		if(area == null)
-			throw new IllegalArgumentException("Argument is null");
-		MapElement[][] board = area.getBoard();
-		this.board = new AltMapElement[board.length][board[0].length];
-		//Copies orginal MapElements as AltMapElements.
-		for(int row = 0; row < board.length; row++){
-			for(int col = 0; col < board[0].length; col++){
-				MapElement me = board[row][col];
-				if(me instanceof Obstacle){
-					this.board[row][col] = new AltObstacle((Obstacle)board[row][col]);
-				}
-				else if(me instanceof TransitionSpace){
-					this.board[row][col] = new AltTransitionSpace((TransitionSpace)board[row][col]);
-				}
-				else{
-					//This should not happen.
-				}
-			}
-		}
+		super(area);
 	}
 
 	/**

@@ -31,36 +31,11 @@ public class AltRoom extends AltArea{
 	@XmlElement
 	private AltTransitionSpace exit;
 
-	/**
-	 * The area map.
-	 */
-	@XmlElement
-	protected AltMapElement[][] board;
-
 	public AltRoom(Area area) {
-		if(area == null)
-			throw new IllegalArgumentException("Argument is null");
+		super(area);
 		keyID = ((Room)area).getKeyID();
 		isLocked = ((Room)area).isLocked();
 		exit = new AltTransitionSpace(((Room)area).getExit());
-
-		MapElement[][] board = area.getBoard();
-		this.board = new AltMapElement[board.length][board[0].length];
-		//Copies orginal MapElements as AltMapElements.
-		for(int row = 0; row < board.length; row++){
-			for(int col = 0; col < board[0].length; col++){
-				MapElement me = board[row][col];
-				if(me instanceof Obstacle){
-					this.board[row][col] = new AltObstacle((Obstacle)board[row][col]);
-				}
-				else if(me instanceof TransitionSpace){
-					this.board[row][col] = new AltTransitionSpace((TransitionSpace)board[row][col]);
-				}
-				else{
-					//This should not happen.
-				}
-			}
-		}
 	}
 
 	/**
