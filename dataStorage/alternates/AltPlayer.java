@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 
 import server.game.items.Antidote;
@@ -21,6 +22,7 @@ import server.game.world.GroundSquare;
 import server.game.world.Position;
 import server.game.world.Room;
 import server.game.world.RoomEntrance;
+import server.game.world.World;
 /**
  * This class represents the an alternate version of the Player class, specifically for XML parsing.
  *
@@ -69,7 +71,7 @@ public class AltPlayer {
 	 * The area in which the player currently resides.
 	 */
 	@XmlElement
-	private AltArea area;
+	private AltArea altArea;
 
 	/**
 	 * The position of the player in the current area.
@@ -80,6 +82,7 @@ public class AltPlayer {
 	/**
 	 * The direction which the player is facing.
 	 */
+	//@XmlAttribute
 	@XmlElement
 	private Direction direction;
 
@@ -124,8 +127,20 @@ public class AltPlayer {
 			}
 
 		}
-		area = new AltArea(player.getArea());
+		Area area = player.getArea();
+		if(area instanceof World){
+			altArea = new AltWorld(area);
+		}
+		else if(area instanceof Room){
+			altArea = new AltRoom(area);
+		}
+		else{
+			//This should not happen.
+		}
+
+		altArea = new AltArea(player.getArea());
 		position = new AltPosition(player.getPosition());
+		direction = player.getDirection();
 	}
 
 	/**
@@ -153,10 +168,12 @@ public class AltPlayer {
 				}
 			}
 		}
-		Area newArea = area.getOriginal();
-		Position newPosition = position.getOriginal();
 
-		return new Player(uID, name, virus, newArea, health, isAlive, newInventory, newPosition);	//Passing only this object prevents sending 6 arguments.
+		Area newArea = altArea.getOriginal();
+		Position newPosition = position.getOriginal();
+		Direction direction = this.direction;
+
+		return new Player(uID, name, virus, newArea, health, isAlive, newInventory, newPosition, direction);	//Passing only this object prevents sending 6 arguments.
 	}
 
 }

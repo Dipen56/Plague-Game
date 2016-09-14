@@ -18,7 +18,7 @@ import server.game.world.World;
  * @author Hector (Fang Zhao 300364061), Daniel Anastasi 300145878
  *
  */
-public class AltWorld {
+public class AltWorld extends AltArea{
 	/**
 	 * The area map.
 	 */
@@ -26,10 +26,10 @@ public class AltWorld {
 	protected AltMapElement[][] board;
 
 
-	public AltWorld(World world){
-		if(world == null)
+	public AltWorld(Area area){
+		if(area == null)
 			throw new IllegalArgumentException("Argument is null");
-		MapElement[][] board = world.getBoard();
+		MapElement[][] board = area.getBoard();
 		this.board = new AltMapElement[board.length][board[0].length];
 		//Copies orginal MapElements as AltMapElements.
 		for(int row = 0; row < board.length; row++){

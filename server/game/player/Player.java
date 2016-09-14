@@ -73,15 +73,19 @@ public class Player {
      * @param True if the player is alive.
      * @param The player's Inventory
      * @param The player's position.
+     * @param The direction which the player is facing.
      */
     public Player(int ID, String name, Virus virus, Area area, int health, boolean isAlive,
-			List<Item> newInventory, Position newPosition) {
+			List<Item> newInventory, Position newPosition, Direction direction) {
     	this.uID = ID;
     	this.name = name;
     	this.virus = virus;
     	this.area = area;
     	this.health = health;
     	this.isAlive = isAlive;
+    	this.inventory = newInventory;
+    	this.position = newPosition;
+    	this.direction = direction;
 	}
 
 	public String getName() {
@@ -465,4 +469,50 @@ public class Player {
 
         return tookAtLeastOne;
     }
+
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Player other = (Player) obj;
+
+		if (direction != other.direction)
+			return false;
+		if (health != other.health)
+			return false;
+		if (inventory == null) {
+			if (other.inventory != null)
+				return false;
+		} else if (!inventory.equals(other.inventory))
+			return false;
+		if (isAlive != other.isAlive)
+			return false;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		if (position == null) {
+			if (other.position != null)
+				return false;
+		} else if (!position.equals(other.position))
+			return false;
+		if (uID != other.uID)
+			return false;
+		if (virus != other.virus)
+			return false;
+		if (area == null) {
+			if (other.area != null)
+				return false;
+		} else if (!area.equals(other.area))
+			return false;
+		return true;
+	}
+
+
 }

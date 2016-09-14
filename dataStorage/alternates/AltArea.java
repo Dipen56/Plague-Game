@@ -16,7 +16,7 @@ import server.game.world.World;
  * @author Daniel Anastasi 300145878
  *
  */
-public class AltArea {
+public class AltArea{
 
 	/**
 	 * The area map.
@@ -31,7 +31,6 @@ public class AltArea {
 		MapElement[][] board = area.getBoard();
 		this.board = new AltMapElement[board.length][board[0].length];
 		MapElement me = null;
-		List<TransitionSpace> tsList = new ArrayList<>();
 
 		//Copies orginal MapElements as AltMapElements.
 		for(int row = 0; row < board.length; row++){
@@ -53,20 +52,12 @@ public class AltArea {
 					else{
 						this.board[row][col] = new AltTransitionSpace((TransitionSpace)board[row][col]);
 					}
-
-					//tsList.add(t);
-
 				}
 				else{
 					continue;//This should not happen.
 				}
 			}
 		}
-		/*
-		for(TransitionSpace ts : tsList){
-			ts.setAreaCopiedForSave(this);	//Sets child exit point variable, to prevent infinite loop
-		}
-		*/
 	}
 
 	/**

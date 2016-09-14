@@ -72,7 +72,40 @@ public class Game {
      */
     private Timer timer;
 
-    // the world clock starts from 00:00
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Game other = (Game) obj;
+		if (player == null) {
+			if (other.player != null)
+				return false;
+		} else if (!player.equals(other.player))
+			return false;
+		if (players == null) {
+			if (other.players != null)
+				return false;
+		} else if (!players.equals(other.players))
+			return false;
+		if (world == null) {
+			if (other.world != null)
+				return false;
+		} else if (!world.equals(other.world))
+			return false;
+		if (entrances == null) {
+			if (other.entrances != null)
+				return false;
+		} else if (!entrances.equals(other.entrances))
+			return false;
+		return true;
+	}
+
+	// the world clock starts from 00:00
     private LocalTime clock = LocalTime.of(0, 0, 0);
 
     /*
@@ -116,7 +149,7 @@ public class Game {
         this.world = world;
         this.entrances = entrances;
 
-        
+
         this.player = new Player(5, "John Doe", Virus.T_Veronica,world);
         joinPlayer(this.player);
         // start the world clock

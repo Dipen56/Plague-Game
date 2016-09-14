@@ -564,8 +564,9 @@
             </board>
         </area>
         <position>
-            <x>6</x>
-            <y>3</y>
+            <x>1</x>
+            <y>0</y>
         </position>
+        <direction>South</direction>
     </player>
 </altGame>
