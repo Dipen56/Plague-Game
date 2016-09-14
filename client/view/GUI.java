@@ -114,7 +114,7 @@ public class GUI extends Application {
 		// Calls the rendering
 
 		//Constant is set to 5 atm
-		render(group,7);
+		render(group,8);
 		borderPane.setLeft(group);
 
 		Scene scene = new Scene(borderPane, WIDTH_VALUE, HEIGHT_VALUE);
@@ -126,7 +126,7 @@ public class GUI extends Application {
 	}
 
 	private void render(Group group, int dimension) {
-		int renderWidth = WIDTH_VALUE - 400;
+		int renderWidth =610;
 
 		// Night image background
 		Image image = loadImage("/background.gif");
@@ -136,33 +136,38 @@ public class GUI extends Application {
 		iv1.setFitHeight(HEIGHT_VALUE);
 		group.getChildren().add(iv1);
 
-
 		//Game field
 		Image grass = loadImage("/grass border.jpg");
-		int y = HEIGHT_VALUE / 5 * 3;
-		int h = 0;
+		// x position on which the grass (board) starts to render
+		double xPoint = ((renderWidth /2)- (grass.getWidth()*dimension/2));
+		// y position on which the grass (board) starts to render
+		int yPoint = HEIGHT_VALUE / 5 * 3;
+		//height of the grass image
+		int grassHeight;
 		for (int row = 0; row < dimension;row++){
-			h = (int)(((grass.getHeight()/dimension) * row) + grass.getHeight()/dimension);
+			grassHeight = (int)(((grass.getHeight()/dimension) * row) + grass.getHeight()/dimension);
 			for (int col = 0; col < dimension;col++){
-				grass = loadImage("/grass.png");
+				//switch between the border, and no border grass images
+				//grass = loadImage("/grass.png");
+				grass = loadImage("/grass border.jpg");
 				ImageView iv3 = new ImageView();
 				iv3.setImage(grass);
-				iv3.setX(col*grass.getWidth());
-				iv3.setY(y);
-				iv3.setFitHeight(h);
+				iv3.setX((xPoint)+(col*grass.getWidth()));
+				iv3.setY(yPoint);
+				iv3.setFitHeight(grassHeight);
 				group.getChildren().add(iv3);
 			}
-			y = y + h;
+			yPoint = yPoint + grassHeight;
 		}
 
 		//Player on the board
 		Image player = loadImage("/standingstillrear.png");
 		ImageView iv2 = new ImageView();
 		iv2.setImage(player);
-		//Temporary height of the character
+		//Temporary height of the character (fix later)
 		iv2.setFitHeight(70);
 		iv2.setFitWidth(40);
-		////////////////////////////////////
+		////////////////////////////////////////////////
 		iv2.setX(renderWidth/2);
 		iv2.setY(HEIGHT_VALUE-150);
 		group.getChildren().add(iv2);
