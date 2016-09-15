@@ -189,7 +189,6 @@ public class Area {
 				return p;
 			}
 		}
-
 		return null;
 	}
 

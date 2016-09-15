@@ -45,15 +45,16 @@ public class AltWorld extends AltArea{
 		for(int row = 0; row < board.length; row++){
 			for(int col = 0; col < board[0].length; col++){
 				AltMapElement ame = this.board[row][col];
-				if(ame instanceof AltObstacle){
+				if(ame instanceof AltChest){
+					board[row][col] = ((AltChest)this.board[row][col]).getOriginal();
+				}
+				else if(ame instanceof AltObstacle){
 					board[row][col] = ((AltObstacle)this.board[row][col]).getOriginal();
 				}
 				else if(ame instanceof AltTransitionSpace){
 					board[row][col] = ((AltTransitionSpace)this.board[row][col]).getOriginal();
 				}
-				else if(ame instanceof AltChest){
-					board[row][col] = ((AltChest)this.board[row][col]).getOriginal();
-				}
+				
 				else{
 					//This should not happen.
 				}

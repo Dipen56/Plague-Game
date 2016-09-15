@@ -38,7 +38,7 @@ public class AltObstacle extends AltMapElement{
 	 * Only to be used by XML parser.
 	 * @param obstacle
 	 */
-	AltObstacle() {
+	AltObstacle(){
 
 	}
 
