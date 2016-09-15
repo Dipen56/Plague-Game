@@ -13,6 +13,7 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.paint.Color;
 import javafx.scene.control.*;
@@ -31,6 +32,9 @@ import javafx.stage.WindowEvent;
 import javafx.beans.value.*;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * This class represents the main GUI class this class bring together all the
@@ -40,6 +44,17 @@ import java.util.TimerTask;
  *
  */
 public class GUI extends Application {
+	//Angelo's constants
+	private double dimension = 9.1;
+	private Image player = loadImage("/standingstillrear.png");
+	private ImageView imageViewCharacter = new ImageView();
+	private Thread thread = new Thread();
+	// renderWidth needs revising
+	private int renderWidth = 630;
+	private int charWidth = 40;
+	private int charHeight = 70;
+	private Group group = new Group();
+	/////////////////////////////////////////////////
 	private static final String GAMEICON_IMAGE = "/game-icon.png";
 	// private static int WIDTH_VALUE = 1500;
 	// private static int HEIGHT_VALUE = 1000;
@@ -109,13 +124,12 @@ public class GUI extends Application {
 		setchat();
 		setItems();
 		gamePane = new StackPane();
-		Group group = new Group();
+		
 		// Calls the rendering
-
-		//Constant is set to 5 atm
-		render(group,5);
+		render(group, dimension);
+		//////////////////////////
+		
 		borderPane.setLeft(group);
-
 		Scene scene = new Scene(borderPane, WIDTH_VALUE, HEIGHT_VALUE);
 		scene.getStylesheets().add(this.getClass().getResource("/main.css").toExternalForm());
 		scene.setOnKeyPressed(keyEvent);
@@ -124,41 +138,81 @@ public class GUI extends Application {
 
 	}
 
-	private void render(Group group, int dimension) {
-		int renderWidth = WIDTH_VALUE - 400;
-
+	private void render(Group group, double dimension) {
 		// Night image background
 		Image image = loadImage("/background.gif");
-		ImageView iv1 = new ImageView();
-		iv1.setImage(image);
-		iv1.setFitWidth(renderWidth);
-		iv1.setFitHeight(HEIGHT_VALUE);
-		group.getChildren().add(iv1);
+		ImageView imageViewNight = new ImageView();
+		imageViewNight.setImage(image);
+		imageViewNight.setFitWidth(renderWidth);
+		imageViewNight.setFitHeight(HEIGHT_VALUE);
+		group.getChildren().add(imageViewNight);
 
-
-		//Game field
-		for (int i = 0; i < dimension;i++){
-			for (int j = 0; j < dimension;j++){
-				Image grass = loadImage("/grass.png");
-				ImageView iv3 = new ImageView();
-				iv3.setImage(grass);
-				iv3.setX(i*grass.getWidth());
-				iv3.setY((HEIGHT_VALUE / 2 + 50)+(j*grass.getHeight()));
-				group.getChildren().add(iv3);
+		// Game grass field
+		Image grass = loadImage("/grass border.jpg");
+		// x position on which the grass (board) starts to render
+		// needs revising in accordance to the renderWidth
+		double xPoint = ((renderWidth / 2) - (grass.getWidth() * dimension / 2));
+		// y position on which the grass (board) starts to render
+		double yPoint = HEIGHT_VALUE / 5 * 2.5;
+		// height of the grass image
+		int grassHeight;
+		for (int row = 0; row < dimension; row++) {
+			grassHeight = (int) (((grass.getHeight() / dimension) * row) + grass.getHeight() / dimension);
+			for (int col = 0; col < dimension; col++) {
+				// switch between the border, and no border grass images
+				grass = loadImage("/grass.png");
+				// grass = loadImage("/grass border.jpg");
+				ImageView imageViewGrass = new ImageView();
+				imageViewGrass.setImage(grass);
+				imageViewGrass.setX((xPoint) + (col * grass.getWidth()));
+				imageViewGrass.setY(yPoint);
+				imageViewGrass.setFitHeight(grassHeight);
+				group.getChildren().add(imageViewGrass);
 			}
+			yPoint = yPoint + grassHeight;
 		}
 
-		//Player on the board
-		Image player = loadImage("/standingstillrear.png");
-		ImageView iv2 = new ImageView();
-		iv2.setImage(player);
-		//Temporary height of the character
-		iv2.setFitHeight(70);
-		iv2.setFitWidth(40);
-		////////////////////////////////////
-		iv2.setX(renderWidth/2);
-		iv2.setY(HEIGHT_VALUE-150);
-		group.getChildren().add(iv2);
+		// Tree on the board
+		Image tree = loadImage("/tree.png");
+		ImageView imageViewTree = new ImageView();
+		imageViewTree.setImage(tree);
+		// This will need to be scaled later....
+		imageViewTree.setFitHeight(200);
+		imageViewTree.setFitWidth(170);
+		////////////////////////////////////////////////
+		imageViewTree.setX(100);
+		imageViewTree.setY(HEIGHT_VALUE - 500);
+		group.getChildren().add(imageViewTree);
+
+		// Player on the board
+		imageViewCharacter.setImage(player);
+		// Temporary height of the character (fix later)
+		imageViewCharacter.setFitHeight(charHeight);
+		imageViewCharacter.setFitWidth(charWidth);
+		////////////////////////////////////////////////
+		imageViewCharacter.setX(renderWidth / 2);
+		imageViewCharacter.setY(HEIGHT_VALUE - 150);
+		group.getChildren().add(imageViewCharacter);
+	}
+
+	private void movePlayerUp() {
+		for (int i = 1; i <= 2; i++) {
+			try {
+				player = loadImage("/walking"+i+".png");
+				imageViewCharacter = new ImageView();
+				imageViewCharacter.setImage(player);
+				// Temporary height of the character (fix later)
+				imageViewCharacter.setFitHeight(charHeight);
+				imageViewCharacter.setFitWidth(charWidth);
+				////////////////////////////////////////////////
+				imageViewCharacter.setX(renderWidth / 2);
+				imageViewCharacter.setY(HEIGHT_VALUE - 150);
+				group.getChildren().add(imageViewCharacter);
+				thread.sleep(3000);
+			} catch (InterruptedException e1) {
+				e1.printStackTrace();
+			}
+		}
 	}
 
 	/**
@@ -356,6 +410,7 @@ public class GUI extends Application {
 					System.out.println("right");
 				} else if (event.getCode() == KeyCode.UP) {
 					// this is for moving up
+					movePlayerUp();
 					System.out.println("up");
 				} else if (event.getCode() == KeyCode.DOWN) {
 					// this is for moving down
