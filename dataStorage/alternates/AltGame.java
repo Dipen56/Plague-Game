@@ -8,6 +8,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import server.game.Game;
 import server.game.player.Player;
+import server.game.world.Area;
 import server.game.world.GroundSquare;
 import server.game.world.Room;
 import server.game.world.RoomEntrance;
@@ -33,7 +34,7 @@ public class AltGame{
      * keep track on each room with its entrance position
      */
 	@XmlElement
-    private Map<AltRoom, AltTransitionSpace> entrances;
+    private Map<AltTransitionSpace, AltArea> entrances;
 
     /**
      * An alternate version of a Player object.
@@ -54,30 +55,18 @@ public class AltGame{
     public AltGame(Game game){
     	if(game == null)
 			throw new IllegalArgumentException("Argument is null");
-    	//resets parentcopied variable for all TransitionSpaces in rooms and the world.
-    	//This prevents infinite loop from player saving twice or more on a single client.
-    	for(TransitionSpace ts : game.getWorld().getExits()){
-    		ts.setAreaCopiedForSave(null);
-    		ts.setDestAreaCopiedForSave(null);
-    	}
-    	for(TransitionSpace ts : game.getEntrances().values()){
-    		ts.setAreaCopiedForSave(null);
-    		ts.setDestAreaCopiedForSave(null);
-    	}
-
     	this.world = new AltWorld(game.getWorld());
 
 		entrances = new HashMap<>();
 
 
 		// Copies all entries from original entrances list, replacing values with alternative objects
-		for(Map.Entry<Room, TransitionSpace> m: game.getEntrances().entrySet()){
-			Room room = m.getKey();
-			AltRoom aroom = new AltRoom(room);
-			TransitionSpace ts = m.getValue();
+		for(Map.Entry<TransitionSpace, Area> m: game.getEntrances().entrySet()){
+			TransitionSpace ts = m.getKey();
+			Area area = m.getValue();
+			AltArea altArea = new AltWorld(area);
 			AltTransitionSpace ats = new AltTransitionSpace(ts);
-			entrances.put(aroom, ats);
-			//entrances.put(new AltRoom(m.getKey()), new AltTransitionSpace(m.getValue()));
+			entrances.put(ats, altArea);
 		}
 		player = new AltPlayer(game.getPlayer());
 
@@ -89,10 +78,10 @@ public class AltGame{
 	**/
 	public Game getOriginal(){
 		World world = this.world.getOriginal();
-		Map<Room, TransitionSpace> entrances = new HashMap<>();
+		Map<TransitionSpace, Area> entrances = new HashMap<>();
 		Player player = this.player.getOriginal();
-		for(Map.Entry<AltRoom, AltTransitionSpace> m: this.entrances.entrySet()){
-			entrances.put(((AltRoom)m.getKey()).getOriginal(), ((AltTransitionSpace)m.getValue()).getOriginal());
+		for(Map.Entry<AltTransitionSpace, AltArea> m: this.entrances.entrySet()){
+			entrances.put(((AltTransitionSpace)m.getKey()).getOriginal(), ((AltArea)m.getValue()).getOriginal());
 		}
 		return new Game(world, entrances, player);
 	}

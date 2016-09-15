@@ -34,7 +34,8 @@ public class TestConst {
 
     public static World world;
 
-    public static Map<Room, TransitionSpace> entrances;
+    //public static Map<Room, TransitionSpace> entrances;
+    public static Map<TransitionSpace, Area> entrances;
 
     static {
 
@@ -43,13 +44,6 @@ public class TestConst {
         // first make the world map
         MapElement[][] worldBoard = new MapElement[7][8];
         world = new World(worldBoard);
-
-        // ground squares (positions we can enter)
-        for (int y = 0; y < 7; y++) {
-            for (int x = 0; x < 8; x++) {
-                worldBoard[y][x] = new MapElement();
-            }
-        }
 
         // obstacles
         int[][] obstacleCoords = { { 3, 0 }, { 4, 0 }, { 5, 0 }, { 6, 0 }, { 7, 0 },
@@ -88,12 +82,6 @@ public class TestConst {
         MapElement[][] roomBoard = new MapElement[3][3];
         Room room = new Room(roomBoard, 11111, true);
 
-        // ground squares (positions we can enter)
-        for (int y = 0; y < 3; y++) {
-            for (int x = 0; x < 3; x++) {
-                roomBoard[y][x] = new MapElement();
-            }
-        }
 
         // obstacles
         roomBoard[1][1] = new Obstacle(1, 1, "obstacle");
@@ -105,24 +93,24 @@ public class TestConst {
         lootInRoom.add(new Torch("A Torch."));
         roomBoard[0][2] = new Chest(2, 0, "chest in room", 123, false, lootInRoom);
 
-        // room entrance
-        // this has to be remembered by the room
-        TransitionSpace entrance = new TransitionSpace(6, 3, world, new Position(6,3), room, Direction.North);
-        worldBoard[3][6] = entrance;
+        Position worldPos = new Position(6,3); //room entrance position in world
+        Position roomPos = new Position(1,2);	//world entrance position in room.
+        // room entrance from world, this has to be remembered by the room
+        TransitionSpace roomEntrance = new TransitionSpace(worldPos, roomPos, Direction.North);
+        worldBoard[3][6] = roomEntrance;
+        //adds the entrance to the entrances map.
+        entrances.put(roomEntrance, world);
 
         // room exit
-        roomBoard[2][1] = new TransitionSpace(1, 2, room, new Position(1,2), world, Direction.South);
-
+        TransitionSpace roomExit = new TransitionSpace(roomPos, worldPos, Direction.South);
+        roomBoard[2][1] = roomExit;
+        entrances.put(roomExit, room);
 
         // let the room remember exit
         room.rememberExit();
 
-        // resister portals
-        world.registerPortals();
-        room.registerPortals();
+        
 
-        // remember entrances.
-        entrances.put(room, entrance);
 
     }
 
