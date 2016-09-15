@@ -8,6 +8,7 @@ import javax.xml.bind.annotation.XmlElement;
 import server.game.world.Area;
 import server.game.world.MapElement;
 import server.game.world.Obstacle;
+import server.game.world.Room;
 import server.game.world.TransitionSpace;
 import server.game.world.World;
 
@@ -24,6 +25,29 @@ public class AltArea{
 	@XmlElement
     protected AltMapElement[][] board;
 
+	// Other fields are for subtyping from copied class
+
+	/**
+	 * Record of whether original Area was a subtype of area. Value can be world, room, or none.
+	 */
+	@XmlElement
+	private String subtype = null;
+
+	/**
+	 * For room id. -1 if this area is not a room.
+	 */
+	private int keyID = -1;
+
+	/**
+	 * For room field. isLocked. Always false if this area is not a room.
+	 */
+	@XmlElement
+	boolean isLocked = false;
+	/**
+	 * The exit out of this room.
+	 */
+	@XmlElement
+	private AltTransitionSpace exit;
 
 	public AltArea(Area area){
 		if(area == null)
@@ -40,23 +64,19 @@ public class AltArea{
 					this.board[row][col] = new AltObstacle((Obstacle)board[row][col]);
 				}
 				else if(me instanceof TransitionSpace){
-
-					// prevents infinite loop. Condition implies TransitionSpace has been copied itself.
-					TransitionSpace t = (TransitionSpace)me;
-					t.setAreaCopiedForSave(this);	//Sets child exit point variable, to prevent infinite loop
-					AltArea aCopy  = t.getAreaCopy();
-					AltArea dCopy = t.getDestAreaCopy();
-					if(aCopy != null || dCopy != null){
-						this.board[row][col] = aCopy != null ? aCopy.board[row][col] : dCopy.board[row][col];
-					}
-					else{
-						this.board[row][col] = new AltTransitionSpace((TransitionSpace)board[row][col]);
-					}
+					this.board[row][col] = new AltTransitionSpace((TransitionSpace)board[row][col]);
 				}
 				else{
 					continue;//This should not happen.
 				}
 			}
+		}
+		if(area instanceof World){
+			this.subtype = "world";
+		}else if(area instanceof Room){
+			this.subtype = "room";
+			this.keyID = ((Room)area).getKeyID();
+			this.isLocked = ((Room)area).isLocked();
 		}
 	}
 
@@ -65,6 +85,10 @@ public class AltArea{
 	 */
 	AltArea(){
 
+	}
+
+	public String getSubtype(){
+		return this.subtype;
 	}
 
 	/**
@@ -88,6 +112,14 @@ public class AltArea{
 				}
 			}
 		}
-		return new Area(board);
+		Area newArea = null;
+		if(this.subtype.equals("world")){
+			newArea = new World(board);
+		}else if(this.subtype.equals("room")){
+			newArea = new Room(board, this.keyID, this.isLocked);
+		}else{
+			newArea = new Area(board);
+		}
+		return newArea;
 	}
 }

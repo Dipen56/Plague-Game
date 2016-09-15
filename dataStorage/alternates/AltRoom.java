@@ -1,6 +1,7 @@
 package dataStorage.alternates;
 
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 
 import server.game.world.Area;
 import server.game.world.MapElement;

@@ -43,97 +43,10 @@
                     <x>6</x>
                     <y>3</y>
                 </position>
-                <currentArea>
-                    <board>
-                        <item/>
-                        <item/>
-                        <item/>
-                        <item/>
-                        <item/>
-                        <item/>
-                        <item/>
-                        <item/>
-                    </board>
-                    <board>
-                        <item/>
-                        <item/>
-                        <item/>
-                        <item/>
-                        <item/>
-                        <item/>
-                        <item/>
-                        <item/>
-                    </board>
-                    <board>
-                        <item/>
-                        <item/>
-                        <item/>
-                        <item/>
-                        <item/>
-                        <item/>
-                        <item/>
-                        <item/>
-                    </board>
-                    <board>
-                        <item/>
-                        <item/>
-                        <item/>
-                        <item/>
-                        <item/>
-                        <item/>
-                        <item/>
-                        <item/>
-                    </board>
-                    <board>
-                        <item/>
-                        <item/>
-                        <item/>
-                        <item/>
-                        <item/>
-                        <item/>
-                        <item/>
-                        <item/>
-                    </board>
-                    <board>
-                        <item/>
-                        <item/>
-                        <item/>
-                        <item/>
-                        <item/>
-                        <item/>
-                        <item/>
-                        <item/>
-                    </board>
-                    <board>
-                        <item/>
-                        <item/>
-                        <item/>
-                        <item/>
-                        <item/>
-                        <item/>
-                        <item/>
-                        <item/>
-                    </board>
-                </currentArea>
-                <destArea>
-                    <board>
-                        <item/>
-                        <item/>
-                        <item/>
-                    </board>
-                    <board>
-                        <item/>
-                        <item/>
-                        <item/>
-                    </board>
-                    <board>
-                        <item/>
-                        <item/>
-                        <item/>
-                    </board>
-                </destArea>
-                <destX>6</destX>
-                <destY>3</destY>
+                <destPos>
+                    <x>1</x>
+                    <y>2</y>
+                </destPos>
                 <direction>North</direction>
             </item>
             <item/>
@@ -168,110 +81,23 @@
             <item/>
             <item/>
         </board>
+        <subtype>world</subtype>
+        <isLocked>false</isLocked>
     </world>
     <entrances>
         <entry>
             <key>
-                <keyID>11111</keyID>
-                <isLocked>true</isLocked>
-                <exit>
-                    <position>
-                        <x>1</x>
-                        <y>2</y>
-                    </position>
-                    <currentArea>
-                        <board>
-                            <item/>
-                            <item/>
-                            <item/>
-                        </board>
-                        <board>
-                            <item/>
-                            <item/>
-                            <item/>
-                        </board>
-                        <board>
-                            <item/>
-                            <item/>
-                            <item/>
-                        </board>
-                    </currentArea>
-                    <destArea>
-                        <board>
-                            <item/>
-                            <item/>
-                            <item/>
-                            <item/>
-                            <item/>
-                            <item/>
-                            <item/>
-                            <item/>
-                        </board>
-                        <board>
-                            <item/>
-                            <item/>
-                            <item/>
-                            <item/>
-                            <item/>
-                            <item/>
-                            <item/>
-                            <item/>
-                        </board>
-                        <board>
-                            <item/>
-                            <item/>
-                            <item/>
-                            <item/>
-                            <item/>
-                            <item/>
-                            <item/>
-                            <item/>
-                        </board>
-                        <board>
-                            <item/>
-                            <item/>
-                            <item/>
-                            <item/>
-                            <item/>
-                            <item/>
-                            <item/>
-                            <item/>
-                        </board>
-                        <board>
-                            <item/>
-                            <item/>
-                            <item/>
-                            <item/>
-                            <item/>
-                            <item/>
-                            <item/>
-                            <item/>
-                        </board>
-                        <board>
-                            <item/>
-                            <item/>
-                            <item/>
-                            <item/>
-                            <item/>
-                            <item/>
-                            <item/>
-                            <item/>
-                        </board>
-                        <board>
-                            <item/>
-                            <item/>
-                            <item/>
-                            <item/>
-                            <item/>
-                            <item/>
-                            <item/>
-                            <item/>
-                        </board>
-                    </destArea>
-                    <destX>1</destX>
-                    <destY>2</destY>
-                    <direction>South</direction>
-                </exit>
+                <position>
+                    <x>1</x>
+                    <y>2</y>
+                </position>
+                <destPos>
+                    <x>6</x>
+                    <y>3</y>
+                </destPos>
+                <direction>South</direction>
+            </key>
+            <value xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="altWorld">
                 <board>
                     <item/>
                     <item/>
@@ -284,204 +110,118 @@
                 </board>
                 <board>
                     <item/>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="altTransitionSpace">
+                    <item xsi:type="altTransitionSpace">
                         <position>
                             <x>1</x>
                             <y>2</y>
                         </position>
-                        <currentArea>
-                            <board>
-<item/>
-<item/>
-<item/>
-                            </board>
-                            <board>
-<item/>
-<item/>
-<item/>
-                            </board>
-                            <board>
-<item/>
-<item/>
-<item/>
-                            </board>
-                        </currentArea>
-                        <destArea>
-                            <board>
-<item/>
-<item/>
-<item/>
-<item/>
-<item/>
-<item/>
-<item/>
-<item/>
-                            </board>
-                            <board>
-<item/>
-<item/>
-<item/>
-<item/>
-<item/>
-<item/>
-<item/>
-<item/>
-                            </board>
-                            <board>
-<item/>
-<item/>
-<item/>
-<item/>
-<item/>
-<item/>
-<item/>
-<item/>
-                            </board>
-                            <board>
-<item/>
-<item/>
-<item/>
-<item/>
-<item/>
-<item/>
-<item/>
-<item/>
-                            </board>
-                            <board>
-<item/>
-<item/>
-<item/>
-<item/>
-<item/>
-<item/>
-<item/>
-<item/>
-                            </board>
-                            <board>
-<item/>
-<item/>
-<item/>
-<item/>
-<item/>
-<item/>
-<item/>
-<item/>
-                            </board>
-                            <board>
-<item/>
-<item/>
-<item/>
-<item/>
-<item/>
-<item/>
-<item/>
-<item/>
-                            </board>
-                        </destArea>
-                        <destX>1</destX>
-                        <destY>2</destY>
+                        <destPos>
+                            <x>6</x>
+                            <y>3</y>
+                        </destPos>
                         <direction>South</direction>
                     </item>
                     <item/>
                 </board>
-            </key>
-            <value>
+                <subtype>room</subtype>
+                <isLocked>true</isLocked>
+            </value>
+        </entry>
+        <entry>
+            <key>
                 <position>
                     <x>6</x>
                     <y>3</y>
                 </position>
-                <currentArea>
-                    <board>
-                        <item/>
-                        <item/>
-                        <item/>
-                        <item/>
-                        <item/>
-                        <item/>
-                        <item/>
-                        <item/>
-                    </board>
-                    <board>
-                        <item/>
-                        <item/>
-                        <item/>
-                        <item/>
-                        <item/>
-                        <item/>
-                        <item/>
-                        <item/>
-                    </board>
-                    <board>
-                        <item/>
-                        <item/>
-                        <item/>
-                        <item/>
-                        <item/>
-                        <item/>
-                        <item/>
-                        <item/>
-                    </board>
-                    <board>
-                        <item/>
-                        <item/>
-                        <item/>
-                        <item/>
-                        <item/>
-                        <item/>
-                        <item/>
-                        <item/>
-                    </board>
-                    <board>
-                        <item/>
-                        <item/>
-                        <item/>
-                        <item/>
-                        <item/>
-                        <item/>
-                        <item/>
-                        <item/>
-                    </board>
-                    <board>
-                        <item/>
-                        <item/>
-                        <item/>
-                        <item/>
-                        <item/>
-                        <item/>
-                        <item/>
-                        <item/>
-                    </board>
-                    <board>
-                        <item/>
-                        <item/>
-                        <item/>
-                        <item/>
-                        <item/>
-                        <item/>
-                        <item/>
-                        <item/>
-                    </board>
-                </currentArea>
-                <destArea>
-                    <board>
-                        <item/>
-                        <item/>
-                        <item/>
-                    </board>
-                    <board>
-                        <item/>
-                        <item/>
-                        <item/>
-                    </board>
-                    <board>
-                        <item/>
-                        <item/>
-                        <item/>
-                    </board>
-                </destArea>
-                <destX>6</destX>
-                <destY>3</destY>
+                <destPos>
+                    <x>1</x>
+                    <y>2</y>
+                </destPos>
                 <direction>North</direction>
+            </key>
+            <value xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="altWorld">
+                <board>
+                    <item/>
+                    <item/>
+                    <item/>
+                    <item/>
+                    <item/>
+                    <item/>
+                    <item/>
+                    <item/>
+                </board>
+                <board>
+                    <item/>
+                    <item/>
+                    <item/>
+                    <item/>
+                    <item/>
+                    <item/>
+                    <item/>
+                    <item/>
+                </board>
+                <board>
+                    <item/>
+                    <item/>
+                    <item/>
+                    <item/>
+                    <item/>
+                    <item/>
+                    <item/>
+                    <item/>
+                </board>
+                <board>
+                    <item/>
+                    <item/>
+                    <item/>
+                    <item/>
+                    <item/>
+                    <item/>
+                    <item xsi:type="altTransitionSpace">
+                        <position>
+                            <x>6</x>
+                            <y>3</y>
+                        </position>
+                        <destPos>
+                            <x>1</x>
+                            <y>2</y>
+                        </destPos>
+                        <direction>North</direction>
+                    </item>
+                    <item/>
+                </board>
+                <board>
+                    <item/>
+                    <item/>
+                    <item/>
+                    <item/>
+                    <item/>
+                    <item/>
+                    <item/>
+                    <item/>
+                </board>
+                <board>
+                    <item/>
+                    <item/>
+                    <item/>
+                    <item/>
+                    <item/>
+                    <item/>
+                    <item/>
+                    <item/>
+                </board>
+                <board>
+                    <item/>
+                    <item/>
+                    <item/>
+                    <item/>
+                    <item/>
+                    <item/>
+                    <item/>
+                    <item/>
+                </board>
+                <subtype>world</subtype>
+                <isLocked>false</isLocked>
             </value>
         </entry>
     </entrances>
@@ -491,7 +231,7 @@
         <virus>T_Veronica</virus>
         <health>600</health>
         <isAlive>true</isAlive>
-        <area>
+        <altArea>
             <board>
                 <item/>
                 <item/>
@@ -529,6 +269,26 @@
                 <item/>
                 <item/>
                 <item/>
+                <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="altTransitionSpace">
+                    <position>
+                        <x>6</x>
+                        <y>3</y>
+                    </position>
+                    <destPos>
+                        <x>1</x>
+                        <y>2</y>
+                    </destPos>
+                    <direction>North</direction>
+                </item>
+                <item/>
+            </board>
+            <board>
+                <item/>
+                <item/>
+                <item/>
+                <item/>
+                <item/>
+                <item/>
                 <item/>
                 <item/>
             </board>
@@ -552,21 +312,13 @@
                 <item/>
                 <item/>
             </board>
-            <board>
-                <item/>
-                <item/>
-                <item/>
-                <item/>
-                <item/>
-                <item/>
-                <item/>
-                <item/>
-            </board>
-        </area>
+            <subtype>world</subtype>
+            <isLocked>false</isLocked>
+        </altArea>
         <position>
-            <x>1</x>
-            <y>0</y>
+            <x>4</x>
+            <y>5</y>
         </position>
-        <direction>South</direction>
+        <direction>West</direction>
     </player>
 </altGame>

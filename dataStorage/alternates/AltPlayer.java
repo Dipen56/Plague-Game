@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementRef;
 
 import server.game.items.Antidote;
 import server.game.items.Destroyable;
@@ -127,7 +128,10 @@ public class AltPlayer {
 			}
 
 		}
-		Area area = player.getArea();
+		//Area area = player.getArea();
+
+		Area area = new Room(player.getArea().getBoard(), 4999, true); 			//test line to test using room object
+
 		if(area instanceof World){
 			altArea = new AltWorld(area);
 		}
@@ -168,7 +172,6 @@ public class AltPlayer {
 				}
 			}
 		}
-
 		Area newArea = altArea.getOriginal();
 		Position newPosition = position.getOriginal();
 		Direction direction = this.direction;

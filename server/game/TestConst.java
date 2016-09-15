@@ -34,7 +34,8 @@ public class TestConst {
 
     public static World world;
 
-    public static Map<Room, TransitionSpace> entrances;
+    //public static Map<Room, TransitionSpace> entrances;
+    public static Map<TransitionSpace, Area> entrances;
 
     static {
 
@@ -105,13 +106,18 @@ public class TestConst {
         lootInRoom.add(new Torch("A Torch."));
         roomBoard[0][2] = new Chest(2, 0, "chest in room", 123, false, lootInRoom);
 
-        // room entrance
-        // this has to be remembered by the room
-        TransitionSpace entrance = new TransitionSpace(6, 3, world, new Position(6,3), room, Direction.North);
-        worldBoard[3][6] = entrance;
+        Position worldPos = new Position(6,3); //room entrance position in world
+        Position roomPos = new Position(1,2);	//world entrance position in room.
+        // room entrance from world, this has to be remembered by the room
+        TransitionSpace roomEntrance = new TransitionSpace(worldPos, roomPos, Direction.North);
+        worldBoard[3][6] = roomEntrance;
+        //adds the entrance to the entrances map.
+        entrances.put(roomEntrance, world);
 
         // room exit
-        roomBoard[2][1] = new TransitionSpace(1, 2, room, new Position(1,2), world, Direction.South);
+        TransitionSpace roomExit = new TransitionSpace(roomPos, worldPos, Direction.South);
+        roomBoard[2][1] = roomExit;
+        entrances.put(roomExit, room);
 
 
         // let the room remember exit
@@ -121,8 +127,7 @@ public class TestConst {
         world.registerPortals();
         room.registerPortals();
 
-        // remember entrances.
-        entrances.put(room, entrance);
+
 
     }
 

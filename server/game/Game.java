@@ -47,9 +47,9 @@ public class Game {
     private World world;
 
     /**
-     * keep track on each room with its entrance position
+     * Maps each transition space to the area which contains it.
      */
-    private Map<Room, TransitionSpace> entrances;
+    private Map<TransitionSpace, Area> entrances;
 
     /**
      * players and their id. Server can find player easily by looking by id.
@@ -141,14 +141,13 @@ public class Game {
      *
      * @param file
      */
-    public Game(World world, Map<Room, TransitionSpace> entrances) {
+    public Game(World world, Map<TransitionSpace, Area> entrances) {
 
         players = new HashMap<>();
         torches = new ArrayList<>();
 
         this.world = world;
         this.entrances = entrances;
-
 
         this.player = new Player(5, "John Doe", Virus.T_Veronica,world);
         joinPlayer(this.player);
@@ -162,7 +161,7 @@ public class Game {
      * @param Transition spaces that lead to other areas.
      * @param The player.
      */
-    public Game(World world, Map<Room, TransitionSpace> entrances, Player player) {
+    public Game(World world, Map<TransitionSpace, Area> entrances, Player player) {
 
         this.world = world;
         this.entrances = entrances;
@@ -177,7 +176,7 @@ public class Game {
     }
 
 
-    public Map<Room, TransitionSpace> getEntrances(){
+    public Map<TransitionSpace, Area> getEntrances(){
     	return this.entrances;
     }
 
@@ -514,7 +513,7 @@ public class Game {
         }
 
         TransitionSpace rt = (TransitionSpace)entrance;
-        Room room = (Room)rt.destArea;
+        Room room = (Room)this.entrances.get(rt);
         return player.tryUnlockDoor(room);
     }
 
@@ -539,7 +538,7 @@ public class Game {
                 return false;
             }
         }
-        Room room = (Room) entrance.destArea;
+        Room room = (Room)this.entrances.get(entrance);
         return player.tryEnterRoom(room);
     }
 

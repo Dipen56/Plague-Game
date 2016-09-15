@@ -113,7 +113,7 @@ public class Area {
 		// // board[y][x] = new GroundSquare(x, y);
 		// // break;
 		//
-		// }
+		// }Game
 		//
 		// }
 		// }
@@ -363,8 +363,17 @@ public class Area {
 			return true;
 		if (obj == null)
 			return false;
-		if (getClass() != obj.getClass())
+
+		Class objclass = obj.getClass();
+		boolean b = obj instanceof World;
+
+
+		//This area could be subclass
+		if((this instanceof World && ((World)this).getClass() != obj.getClass())
+				||(this instanceof Room && ((Room)this).getClass() != obj.getClass())
+				||(getClass() != obj.getClass())){
 			return false;
+		}
 		Area other = (Area) obj;
 		if (!Arrays.deepEquals(board, other.board))
 			return false;
