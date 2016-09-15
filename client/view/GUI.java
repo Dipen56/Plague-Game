@@ -47,7 +47,7 @@ public class GUI extends Application {
 	//Angelo's constants
 	private double dimension = 9.1;
 	private Image player = loadImage("/standingstillrear.png");
-	private ImageView iv2 = new ImageView();
+	private ImageView imageViewCharacter = new ImageView();
 	private Thread thread = new Thread();
 	// renderWidth needs revising
 	private int renderWidth = 630;
@@ -129,6 +129,7 @@ public class GUI extends Application {
 		// Calls the rendering
 		render(group, dimension);
 		//////////////////////////
+		
 		borderPane.setLeft(group);
 		Scene scene = new Scene(borderPane, WIDTH_VALUE, HEIGHT_VALUE);
 		scene.getStylesheets().add(this.getClass().getResource("/main.css").toExternalForm());
@@ -141,11 +142,11 @@ public class GUI extends Application {
 	private void render(Group group, double dimension) {
 		// Night image background
 		Image image = loadImage("/background.gif");
-		ImageView iv1 = new ImageView();
-		iv1.setImage(image);
-		iv1.setFitWidth(renderWidth);
-		iv1.setFitHeight(HEIGHT_VALUE);
-		group.getChildren().add(iv1);
+		ImageView imageViewNight = new ImageView();
+		imageViewNight.setImage(image);
+		imageViewNight.setFitWidth(renderWidth);
+		imageViewNight.setFitHeight(HEIGHT_VALUE);
+		group.getChildren().add(imageViewNight);
 
 		// Game grass field
 		Image grass = loadImage("/grass border.jpg");
@@ -162,63 +163,52 @@ public class GUI extends Application {
 				// switch between the border, and no border grass images
 				grass = loadImage("/grass.png");
 				// grass = loadImage("/grass border.jpg");
-				ImageView iv3 = new ImageView();
-				iv3.setImage(grass);
-				iv3.setX((xPoint) + (col * grass.getWidth()));
-				iv3.setY(yPoint);
-				iv3.setFitHeight(grassHeight);
-				group.getChildren().add(iv3);
+				ImageView imageViewGrass = new ImageView();
+				imageViewGrass.setImage(grass);
+				imageViewGrass.setX((xPoint) + (col * grass.getWidth()));
+				imageViewGrass.setY(yPoint);
+				imageViewGrass.setFitHeight(grassHeight);
+				group.getChildren().add(imageViewGrass);
 			}
 			yPoint = yPoint + grassHeight;
 		}
 
-		// Game grid
-		Line line = new Line();
-		line.setStartX(0.0f);
-		line.setStartY(HEIGHT_VALUE);
-		line.setEndX((renderWidth / 2) - 50);
-		line.setEndY(yPoint);
-		group.getChildren().add(line);
-
 		// Tree on the board
 		Image tree = loadImage("/tree.png");
-		ImageView iv4 = new ImageView();
-		iv4.setImage(tree);
+		ImageView imageViewTree = new ImageView();
+		imageViewTree.setImage(tree);
 		// This will need to be scaled later....
-		iv4.setFitHeight(200);
-		iv4.setFitWidth(170);
+		imageViewTree.setFitHeight(200);
+		imageViewTree.setFitWidth(170);
 		////////////////////////////////////////////////
-		iv4.setX(100);
-		iv4.setY(HEIGHT_VALUE - 500);
-		group.getChildren().add(iv4);
+		imageViewTree.setX(100);
+		imageViewTree.setY(HEIGHT_VALUE - 500);
+		group.getChildren().add(imageViewTree);
 
 		// Player on the board
-		// Image player = loadImage("/standingstillrear.png");
-		// ImageView iv2 = new ImageView();
-		iv2.setImage(player);
+		imageViewCharacter.setImage(player);
 		// Temporary height of the character (fix later)
-		iv2.setFitHeight(charHeight);
-		iv2.setFitWidth(charWidth);
+		imageViewCharacter.setFitHeight(charHeight);
+		imageViewCharacter.setFitWidth(charWidth);
 		////////////////////////////////////////////////
-		iv2.setX(renderWidth / 2);
-		iv2.setY(HEIGHT_VALUE - 150);
-		group.getChildren().add(iv2);
+		imageViewCharacter.setX(renderWidth / 2);
+		imageViewCharacter.setY(HEIGHT_VALUE - 150);
+		group.getChildren().add(imageViewCharacter);
 	}
 
 	private void movePlayerUp() {
 		for (int i = 1; i <= 2; i++) {
-			//System.out.println("here");
 			try {
 				player = loadImage("/walking"+i+".png");
-				iv2 = new ImageView();
-				iv2.setImage(player);
+				imageViewCharacter = new ImageView();
+				imageViewCharacter.setImage(player);
 				// Temporary height of the character (fix later)
-				iv2.setFitHeight(charHeight);
-				iv2.setFitWidth(charWidth);
+				imageViewCharacter.setFitHeight(charHeight);
+				imageViewCharacter.setFitWidth(charWidth);
 				////////////////////////////////////////////////
-				iv2.setX(renderWidth / 2);
-				iv2.setY(HEIGHT_VALUE - 150);
-				group.getChildren().add(iv2);
+				imageViewCharacter.setX(renderWidth / 2);
+				imageViewCharacter.setY(HEIGHT_VALUE - 150);
+				group.getChildren().add(imageViewCharacter);
 				thread.sleep(3000);
 			} catch (InterruptedException e1) {
 				e1.printStackTrace();
