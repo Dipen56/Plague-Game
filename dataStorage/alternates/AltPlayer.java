@@ -128,9 +128,7 @@ public class AltPlayer {
 			}
 
 		}
-		//Area area = player.getArea();
-
-		Area area = new Room(player.getArea().getBoard(), 4999, true); 			//test line to test using room object
+		Area area = player.getArea();
 
 		if(area instanceof World){
 			altArea = new AltWorld(area);

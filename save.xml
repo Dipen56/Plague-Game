@@ -316,9 +316,9 @@
             <isLocked>false</isLocked>
         </altArea>
         <position>
-            <x>4</x>
-            <y>5</y>
+            <x>2</x>
+            <y>6</y>
         </position>
-        <direction>West</direction>
+        <direction>East</direction>
     </player>
 </altGame>

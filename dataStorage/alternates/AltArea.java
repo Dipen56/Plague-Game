@@ -107,6 +107,9 @@ public class AltArea{
 				else if(ame instanceof AltTransitionSpace){
 					board[row][col] = ((AltTransitionSpace)this.board[row][col]).getOriginal();
 				}
+				else if(ame instanceof AltChest){
+					board[row][col] = ((AltChest)this.board[row][col]).getOriginal();
+				}
 				else{
 					//This should not happen.
 				}

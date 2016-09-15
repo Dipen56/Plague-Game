@@ -381,7 +381,7 @@ public class Area {
 			if (other.exits != null)
 				return false;
 		} else if (!exits.equals(other.exits))
-			return false;
+			return false;	
 		if (height != other.height)
 			return false;
 		if (playerPortals == null) {
