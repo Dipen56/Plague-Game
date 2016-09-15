@@ -32,6 +32,9 @@ import javafx.stage.WindowEvent;
 import javafx.beans.value.*;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * This class represents the main GUI class this class bring together all the
@@ -41,8 +44,17 @@ import java.util.TimerTask;
  *
  */
 public class GUI extends Application {
+	//Angelo's constants
 	private double dimension = 9.1;
-	
+	private Image player = loadImage("/standingstillrear.png");
+	private ImageView iv2 = new ImageView();
+	private Thread thread = new Thread();
+	// renderWidth needs revising
+	private int renderWidth = 630;
+	private int charWidth = 40;
+	private int charHeight = 70;
+	private Group group = new Group();
+	/////////////////////////////////////////////////
 	private static final String GAMEICON_IMAGE = "/game-icon.png";
 	// private static int WIDTH_VALUE = 1500;
 	// private static int HEIGHT_VALUE = 1000;
@@ -113,9 +125,9 @@ public class GUI extends Application {
 		setchat();
 		setItems();
 		gamePane = new StackPane();
-		Group group = new Group();
+		
 		// Calls the rendering
-		render(group,dimension);
+		render(group, dimension);
 		//////////////////////////
 		borderPane.setLeft(group);
 		Scene scene = new Scene(borderPane, WIDTH_VALUE, HEIGHT_VALUE);
@@ -127,11 +139,6 @@ public class GUI extends Application {
 	}
 
 	private void render(Group group, double dimension) {
-		//renderWidth needs revising
-		int renderWidth =630;
-		int charWidth = 40;
-		int charHeight = 70;
-
 		// Night image background
 		Image image = loadImage("/background.gif");
 		ImageView iv1 = new ImageView();
@@ -140,63 +147,83 @@ public class GUI extends Application {
 		iv1.setFitHeight(HEIGHT_VALUE);
 		group.getChildren().add(iv1);
 
-
-		//Game grass field
+		// Game grass field
 		Image grass = loadImage("/grass border.jpg");
 		// x position on which the grass (board) starts to render
-		//needs revising in accordance to the renderWidth
-		double xPoint = ((renderWidth /2)- (grass.getWidth()*dimension/2));
+		// needs revising in accordance to the renderWidth
+		double xPoint = ((renderWidth / 2) - (grass.getWidth() * dimension / 2));
 		// y position on which the grass (board) starts to render
 		double yPoint = HEIGHT_VALUE / 5 * 2.5;
-		//height of the grass image
+		// height of the grass image
 		int grassHeight;
-		for (int row = 0; row < dimension;row++){
-			grassHeight = (int)(((grass.getHeight()/dimension) * row) + grass.getHeight()/dimension);
-			for (int col = 0; col < dimension;col++){
-				//switch between the border, and no border grass images
+		for (int row = 0; row < dimension; row++) {
+			grassHeight = (int) (((grass.getHeight() / dimension) * row) + grass.getHeight() / dimension);
+			for (int col = 0; col < dimension; col++) {
+				// switch between the border, and no border grass images
 				grass = loadImage("/grass.png");
-				//grass = loadImage("/grass border.jpg");
+				// grass = loadImage("/grass border.jpg");
 				ImageView iv3 = new ImageView();
 				iv3.setImage(grass);
-				iv3.setX((xPoint)+(col*grass.getWidth()));
+				iv3.setX((xPoint) + (col * grass.getWidth()));
 				iv3.setY(yPoint);
 				iv3.setFitHeight(grassHeight);
 				group.getChildren().add(iv3);
 			}
 			yPoint = yPoint + grassHeight;
 		}
-		
-		//Game grid
+
+		// Game grid
 		Line line = new Line();
 		line.setStartX(0.0f);
 		line.setStartY(HEIGHT_VALUE);
 		line.setEndX((renderWidth / 2) - 50);
 		line.setEndY(yPoint);
 		group.getChildren().add(line);
-		
-		//Tree on the board
+
+		// Tree on the board
 		Image tree = loadImage("/tree.png");
 		ImageView iv4 = new ImageView();
 		iv4.setImage(tree);
-		//This will need to be scaled later....
+		// This will need to be scaled later....
 		iv4.setFitHeight(200);
 		iv4.setFitWidth(170);
 		////////////////////////////////////////////////
 		iv4.setX(100);
-		iv4.setY(HEIGHT_VALUE-500);
+		iv4.setY(HEIGHT_VALUE - 500);
 		group.getChildren().add(iv4);
 
-		//Player on the board
-		Image player = loadImage("/standingstillrear.png");
-		ImageView iv2 = new ImageView();
+		// Player on the board
+		// Image player = loadImage("/standingstillrear.png");
+		// ImageView iv2 = new ImageView();
 		iv2.setImage(player);
-		//Temporary height of the character (fix later)
+		// Temporary height of the character (fix later)
 		iv2.setFitHeight(charHeight);
 		iv2.setFitWidth(charWidth);
 		////////////////////////////////////////////////
-		iv2.setX(renderWidth/2);
-		iv2.setY(HEIGHT_VALUE-150);
+		iv2.setX(renderWidth / 2);
+		iv2.setY(HEIGHT_VALUE - 150);
 		group.getChildren().add(iv2);
+	}
+
+	private void movePlayerUp() {
+		for (int i = 1; i <= 2; i++) {
+			//System.out.println("here");
+			try {
+				player = loadImage("/walking"+i+".png");
+				iv2 = new ImageView();
+				iv2.setImage(player);
+				// Temporary height of the character (fix later)
+				iv2.setFitHeight(charHeight);
+				iv2.setFitWidth(charWidth);
+				////////////////////////////////////////////////
+				iv2.setX(renderWidth / 2);
+				iv2.setY(HEIGHT_VALUE - 150);
+				group.getChildren().add(iv2);
+				thread.sleep(3000);
+			} catch (InterruptedException e1) {
+				e1.printStackTrace();
+			}
+		}
 	}
 
 	/**
@@ -394,6 +421,7 @@ public class GUI extends Application {
 					System.out.println("right");
 				} else if (event.getCode() == KeyCode.UP) {
 					// this is for moving up
+					movePlayerUp();
 					System.out.println("up");
 				} else if (event.getCode() == KeyCode.DOWN) {
 					// this is for moving down
