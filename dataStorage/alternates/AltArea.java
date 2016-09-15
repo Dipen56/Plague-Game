@@ -1,11 +1,14 @@
 package dataStorage.alternates;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.xml.bind.annotation.XmlElement;
 
 import server.game.world.Area;
+import server.game.world.Chest;
 import server.game.world.MapElement;
 import server.game.world.Obstacle;
 import server.game.world.Room;
@@ -43,11 +46,13 @@ public class AltArea{
 	 */
 	@XmlElement
 	boolean isLocked = false;
+	
 	/**
-	 * The exit out of this room.
+	 * The exits out of this area.
 	 */
-	@XmlElement
-	private AltTransitionSpace exit;
+	private Set<AltTransitionSpace> exits;
+	
+	
 
 	public AltArea(Area area){
 		if(area == null)
@@ -60,7 +65,10 @@ public class AltArea{
 		for(int row = 0; row < board.length; row++){
 			for(int col = 0; col < board[0].length; col++){
 				me = board[row][col];
-				if(me instanceof Obstacle){
+				if(me instanceof Chest){
+					this.board[row][col] = new AltChest((Chest)board[row][col]);
+				}
+				else if(me instanceof Obstacle){
 					this.board[row][col] = new AltObstacle((Obstacle)board[row][col]);
 				}
 				else if(me instanceof TransitionSpace){
@@ -123,6 +131,7 @@ public class AltArea{
 		}else{
 			newArea = new Area(board);
 		}
+		newArea.registerPortals();
 		return newArea;
 	}
 }

@@ -12,6 +12,7 @@ import server.game.Game;
 import server.game.TestConst;
 import server.game.player.Player;
 import server.game.player.Virus;
+import server.game.world.Area;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class SaveTests {
@@ -20,7 +21,10 @@ public class SaveTests {
 	private static AltGame altGame;
 
 	static{
+		for(Area a: TestConst.entrances.values())
+        	a.registerPortals();
 		gameA = new Game(TestConst.world, TestConst.entrances);
+		
 		altGame = new AltGame(gameA);
 	}
 

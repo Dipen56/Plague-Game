@@ -45,13 +45,6 @@ public class TestConst {
         MapElement[][] worldBoard = new MapElement[7][8];
         world = new World(worldBoard);
 
-        // ground squares (positions we can enter)
-        for (int y = 0; y < 7; y++) {
-            for (int x = 0; x < 8; x++) {
-                worldBoard[y][x] = new MapElement();
-            }
-        }
-
         // obstacles
         int[][] obstacleCoords = { { 3, 0 }, { 4, 0 }, { 5, 0 }, { 6, 0 }, { 7, 0 },
                 { 1, 1 }, { 2, 1 }, { 3, 1 }, { 5, 1 }, { 6, 1 }, { 7, 1 }, { 5, 2 },
@@ -89,12 +82,6 @@ public class TestConst {
         MapElement[][] roomBoard = new MapElement[3][3];
         Room room = new Room(roomBoard, 11111, true);
 
-        // ground squares (positions we can enter)
-        for (int y = 0; y < 3; y++) {
-            for (int x = 0; x < 3; x++) {
-                roomBoard[y][x] = new MapElement();
-            }
-        }
 
         // obstacles
         roomBoard[1][1] = new Obstacle(1, 1, "obstacle");
@@ -119,14 +106,10 @@ public class TestConst {
         roomBoard[2][1] = roomExit;
         entrances.put(roomExit, room);
 
-
         // let the room remember exit
         room.rememberExit();
 
-        // resister portals
-        world.registerPortals();
-        room.registerPortals();
-
+        
 
 
     }

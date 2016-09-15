@@ -170,6 +170,7 @@ public class AltPlayer {
 				}
 			}
 		}
+		
 		Area newArea = altArea.getOriginal();
 		Position newPosition = position.getOriginal();
 		Direction direction = this.direction;

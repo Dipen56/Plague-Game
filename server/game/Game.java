@@ -166,10 +166,8 @@ public class Game {
         this.world = world;
         this.entrances = entrances;
         this.player = player;
-
-
-        players = new HashMap<>();
-        torches = new ArrayList<>();
+        this.players = new HashMap<>();
+        this.torches = new ArrayList<>();
 
         // start the world clock
         startTiming();
@@ -346,11 +344,8 @@ public class Game {
             return false;
         }
 
-        // After canMove() check, it's safe to cast
-        GroundSquare gs = (GroundSquare) backPos;
-
         // OK we can move him forward
-        player.setPosition(gs);
+        player.setPosition(backPos);
         return true;
     }
 
@@ -370,11 +365,8 @@ public class Game {
             return false;
         }
 
-        // After canMove() check, it's safe to cast
-        GroundSquare gs = (GroundSquare) leftPos;
-
         // OK we can move him forward
-        player.setPosition(gs);
+        player.setPosition(leftPos);
         return true;
     }
 
@@ -394,11 +386,8 @@ public class Game {
             return false;
         }
 
-        // After canMove() check, it's safe to cast
-        GroundSquare gs = (GroundSquare) rightPos;
-
         // OK we can move him forward
-        player.setPosition(gs);
+        player.setPosition(rightPos);
         return true;
     }
 
@@ -413,7 +402,7 @@ public class Game {
     private boolean canMoveTo(Player player, Position position) {
     	MapElement element = player.getArea().getMapElementAtIndex(position.x, position.y);
         // we cannot let him move out of board or move into obstacles
-        if (position == null || element == null || element instanceof Obstacle) {
+        if (position == null || (element == null && element instanceof Obstacle)) {
             return false;
         }
 
