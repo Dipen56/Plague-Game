@@ -24,7 +24,7 @@ public class AltTransitionSpace extends AltMapElement{
 
 	/**
 	 * The area which this space resides.
-	 */ 
+	 */
 	@XmlElement
 	private AltArea currentArea;
 
@@ -62,7 +62,7 @@ public class AltTransitionSpace extends AltMapElement{
 		else{
 			destArea = new AltArea(ts.destArea);
 		}
-		
+
 		position = new AltPosition(ts.position);
 
 		destX = ts.destX;
@@ -73,7 +73,7 @@ public class AltTransitionSpace extends AltMapElement{
 	/**
 	 * Only to be used by XML marshaller.
 	 */
-	public AltTransitionSpace(){
+	AltTransitionSpace(){
 
 	}
 

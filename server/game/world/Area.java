@@ -1,6 +1,7 @@
 package server.game.world;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -354,6 +355,34 @@ public class Area {
 
 	public void playerMoveTo(Player player, GroundSquare position) {
 
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Area other = (Area) obj;
+		if (!Arrays.deepEquals(board, other.board))
+			return false;
+		if (exits == null) {
+			if (other.exits != null)
+				return false;
+		} else if (!exits.equals(other.exits))
+			return false;
+		if (height != other.height)
+			return false;
+		if (playerPortals == null) {
+			if (other.playerPortals != null)
+				return false;
+		} else if (!playerPortals.equals(other.playerPortals))
+			return false;
+		if (width != other.width)
+			return false;
+		return true;
 	}
 
 	@Override

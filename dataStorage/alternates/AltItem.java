@@ -6,5 +6,7 @@ package dataStorage.alternates;
  *
  */
 public class AltItem {
+	AltItem(){
 
+	}
 }

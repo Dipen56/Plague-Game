@@ -9,4 +9,7 @@ import server.game.world.MapElement;
  */
 public class AltMapElement {
 
+	AltMapElement(){
+
+	}
 }

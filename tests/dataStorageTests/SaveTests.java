@@ -68,6 +68,7 @@ public class SaveTests {
 			XmlFunctions.saveFile(altGame);
 			altGame = XmlFunctions.loadFile();
 			gameB = altGame.getOriginal();
+			int i = 0;
 		}catch(RuntimeException e){
 				e.printStackTrace();
 				fail();

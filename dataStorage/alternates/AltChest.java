@@ -78,7 +78,7 @@ public class AltChest {
 	/**
 	 * Only to be called by XML parser.
 	 */
-	public AltChest(){
+	AltChest(){
 
 	}
 
