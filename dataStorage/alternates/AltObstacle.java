@@ -18,7 +18,7 @@ public class AltObstacle extends AltMapElement{
 	 * Describes the obstacle.
 	 */
 	@XmlElement
-	private String description;
+	protected String description;
 
 	public AltObstacle(Obstacle obstacle) {
 		if(obstacle == null)
@@ -35,6 +35,10 @@ public class AltObstacle extends AltMapElement{
 
 	}
 
+	
+	public void setDescrption(String description){
+		this.description = description;
+	}
 
 	/**
 	 * Return a copy of the object which this object was based on.
@@ -43,6 +47,8 @@ public class AltObstacle extends AltMapElement{
 	public Obstacle getOriginal() {
 		return new Obstacle(description);
 	}
+	
+	
 	
 	/**
 	 * Returns a string representation of this object's fields.

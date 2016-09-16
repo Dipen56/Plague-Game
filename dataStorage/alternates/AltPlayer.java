@@ -57,7 +57,7 @@ public class AltPlayer {
 	 */
 	@XmlElement
 	private int health;
-
+	
 	/**
 	 * True if the player is still alive.
 	 */
@@ -104,6 +104,7 @@ public class AltPlayer {
 	public AltPlayer(Player player) {
 		if(player == null)
 			throw new IllegalArgumentException("Argument is null");
+		player.saveRecordOfHealth();	//records player health as unchanging int for testing game save validity.
 		this.uID = player.getId();
 		this.name = player.getName();
 		this.virus = player.getVirus();

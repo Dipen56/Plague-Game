@@ -113,7 +113,9 @@ public class AltGame{
 		for(Map.Entry<AltTransitionSpace, AltArea> m: this.entrances.entrySet()){
 			entrances.put(((AltTransitionSpace)m.getKey()).getOriginal(), ((AltArea)m.getValue()).getOriginal());
 		}
-		return new Game(world, entrances, player);
+		Game game =  new Game(world, entrances, player);
+		
+		return game;
 	}
 	
 

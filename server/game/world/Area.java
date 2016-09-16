@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Set;
 
 import server.game.Game;
+import server.game.items.Item;
 import server.game.player.Direction;
 import server.game.player.Player;
 
@@ -389,6 +390,23 @@ public class Area {
 			return false;
 		if (width != other.width)
 			return false;
+		
+		
+		List<Item> a =((Chest)board[0][2]).getLoot();
+		List<Item> n =((Chest)other.getBoard()[0][2]).getLoot();
+		for(int i = 0; i < a.size(); i ++){
+			if(!a.get(i).equals(n.get(i)))
+				return false;
+		}
+			
+		
+		for(int i = 0; i < board.length; i ++){
+			for(int j = 0; j < board[0].length; j++){
+				if(board[i][j] != null && !board[i][j].equals(other.board[i][j]))
+					return false;
+			}
+		}
+		
 		if (!Arrays.deepEquals(board, other.board))
 			return false;
 		return true;

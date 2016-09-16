@@ -72,39 +72,6 @@ public class Game {
      */
     private Timer timer;
 
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Game other = (Game) obj;
-		if (player == null) {
-			if (other.player != null)
-				return false;
-		} else if (!player.equals(other.player))
-			return false;
-		if (players == null) {
-			if (other.players != null)
-				return false;
-		} else if (!players.equals(other.players))
-			return false;
-		if (world == null) {
-			if (other.world != null)
-				return false;
-		} else if (!world.equals(other.world))
-			return false;
-		if (entrances == null) {
-			if (other.entrances != null)
-				return false;
-		} else if (!entrances.equals(other.entrances))
-			return false;
-		return true;
-	}
-
 	// the world clock starts from 00:00
     private LocalTime clock = LocalTime.of(0, 0, 0);
 
@@ -168,6 +135,7 @@ public class Game {
         this.player = player;
         this.players = new HashMap<>();
         this.torches = new ArrayList<>();
+        joinPlayer(this.player);
 
         // start the world clock
         startTiming();
@@ -256,9 +224,12 @@ public class Game {
         // }
 
         // ================================================================
-
+        players.put(player.getId(), player);
+        //If player has a position, then it has been loaded from a previous game, and does not need a new position.
+        if(player.getPosition() != null){
+        	return;
+        }
     	Position pos = world.getPlayerSpawnPos(this);
-
         if (pos == null) {
             /*
              * This should never happen. In theory, if the whole world doesn't have even
@@ -268,9 +239,7 @@ public class Game {
         }
 
         player.setPosition(pos);
-        player.setDirection(Direction.randomDirection());
-
-        players.put(player.getId(), player);
+       
 
     }
 
@@ -298,8 +267,9 @@ public class Game {
      * @return
      */
     public boolean isEmptyPosition(Position position) {
+    	
         for (Player p : players.values()) {
-            if (p.getPosition().equals(position)) {
+            if (p.getPosition() != null && p.getPosition().equals(position)) {
                 return false;
             }
         }
@@ -604,6 +574,79 @@ public class Game {
     }
 
 
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Game other = (Game) obj;
+		if (player == null) {
+			if (other.player != null)
+				return false;
+		} else if (!player.equals(other.player))
+			return false;
+		
+		//Players map comparisons
+		if(players.size() != other.players.size())
+			return false;
+		for(Map.Entry<Integer, Player> e : players.entrySet()){
+			if(!other.players.containsKey(e.getKey()))
+				return false;
+			if(!e.getValue().equals(other.players.get(e.getKey())))
+				return false;
+		}
+		for(Map.Entry<Integer, Player> e : other.players.entrySet()){
+			if(!players.containsKey(e.getKey()))
+				return false;
+			if(!e.getValue().equals(players.get(e.getKey())))
+				return false;
+		}
+		
+		if (players == null) {
+			if (other.players != null)
+				return false;
+		} else if (!players.equals(other.players))
+			return false;
+		
+		if (world == null) {
+			if (other.world != null)
+				return false;
+		} else if (!world.equals(other.world))
+			return false;
+		
+		//Entrances  map comparison
+		if(entrances.size() != other.entrances.size())
+			return false;
+		
+		if(!other.entrances.keySet().equals(entrances.keySet())){
+			return false;
+		}
+		if(!other.entrances.values().equals(entrances.values())){
+			return false;
+		}
+		
+		for(Map.Entry<TransitionSpace, Area> e : entrances.entrySet()){
+			
+			if(!e.getValue().equals(other.entrances.get(e.getKey())))
+				return false;
+		}
+		for(Map.Entry<TransitionSpace, Area> e : other.entrances.entrySet()){
+			if(!entrances.containsKey(e.getKey()))
+				return false;
+			if(!e.getValue().equals(entrances.get(e.getKey())))
+				return false;
+		}
+		
+		if (entrances == null) {
+			if (other.entrances != null)
+				return false;
+		} else if (!entrances.equals(other.entrances))
+			return false;
+		return true;
+	}
 
 
 

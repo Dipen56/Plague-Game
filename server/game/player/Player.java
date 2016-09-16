@@ -33,6 +33,8 @@ public class Player {
      */
     private static final int MAX_HEALTH = 10 * 60;
 
+    private int healthSavingConstant = 0;	//Only used for testing validity of game load.
+    
     private final int uID;
     private final String name;
     private final Virus virus;
@@ -60,6 +62,7 @@ public class Player {
         isAlive = true;
         inventory = new ArrayList<>();
         this.area = area;
+        setDirection(Direction.randomDirection());
     }
 
     /**
@@ -77,6 +80,7 @@ public class Player {
      */
     public Player(int ID, String name, Virus virus, Area area, int health, boolean isAlive,
 			List<Item> newInventory, Position newPosition, Direction direction) {
+    	this.healthSavingConstant = health;	//kept for testing game load. Health field is decremented with time, so can't use for test.
     	this.uID = ID;
     	this.name = name;
     	this.virus = virus;
@@ -86,6 +90,7 @@ public class Player {
     	this.inventory = newInventory;
     	this.position = newPosition;
     	this.direction = direction;
+    	
 	}
 
 	public String getName() {
@@ -470,6 +475,13 @@ public class Player {
         return tookAtLeastOne;
     }
 
+    /**
+     * Saves a record of the player's current health.
+     * This method is for use in comparing game states from before and after a game load.
+     */
+    public void saveRecordOfHealth(){
+    	this.healthSavingConstant = health;
+    }
 
 	@Override
 	public boolean equals(Object obj) {
@@ -483,7 +495,7 @@ public class Player {
 
 		if (direction != other.direction)
 			return false;
-		if (health != other.health)
+		if (healthSavingConstant != other.healthSavingConstant)
 			return false;
 		if (inventory == null) {
 			if (other.inventory != null)
