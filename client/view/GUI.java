@@ -303,9 +303,7 @@ public class GUI extends Application {
 		chatControls.getChildren().add(textAreaLable);
 		chatControls.getChildren().add(hbox);
 		titlePane.setContent(chatControls);
-
 		vbox.getChildren().add(titlePane);
-
 	}
 
 	/**
