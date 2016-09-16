@@ -18,7 +18,7 @@ import server.game.world.Chest;
  * @author Daniel Anastasi 300145878
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-public class AltChest extends AltMapElement{
+public class AltChest extends AltObstacle{
 	/**
 	 * The id for the key that unlocks this chest.
 	 */
@@ -42,12 +42,6 @@ public class AltChest extends AltMapElement{
 	 */
 	@XmlElement
 	private String description;
-
-	/**
-	 * The x and y coordinates of this chest in the area which it resides.
-	 */
-	@XmlElement
-	int x,y;
 
 	public AltChest(Chest chest){
 		if(chest == null)

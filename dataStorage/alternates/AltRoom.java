@@ -11,6 +11,7 @@ import server.game.world.MapElement;
 import server.game.world.Obstacle;
 import server.game.world.Room;
 import server.game.world.TransitionSpace;
+import server.game.world.World;
 
 /**
  * This class represents the an alternate version of the Room class, specifically for XML parsing.
@@ -79,8 +80,11 @@ public class AltRoom extends AltArea{
 			}
 		}
 		TransitionSpace ts = exit.getOriginal();
-
-		return new Room(board, keyID, isLocked, ts);
+		
+		//Fills the player portals list
+		Room newArea = new Room(board, keyID, isLocked, ts);
+		newArea.registerPortals();			//Fills the player portals list
+		return newArea;
 	}
 
 }

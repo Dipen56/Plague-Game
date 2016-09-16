@@ -35,7 +35,7 @@ public class AltWorld extends AltArea{
 	AltWorld(){
 		
 	}
-
+	
 	/**
 	 * Returns a copy of the world object on which this object was based.
 	 * @return The copy of the World.
@@ -61,6 +61,9 @@ public class AltWorld extends AltArea{
 				}
 			}
 		}
-		return new World(board);
+		World newArea = new World(board);
+		newArea.registerPortals();			//Fills the player portals list
+		return newArea;
 	}
+	
 }

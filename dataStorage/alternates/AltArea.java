@@ -106,7 +106,7 @@ public abstract class AltArea{
 	 * @return The copy of the World.
 	 */
 	public Area getOriginal(){
-		/*
+		
 		MapElement[][] board = new MapElement[this.board.length][this.board[0].length];
 		// Creates copies of the AltMapElements, as MapElements.
 		for(int row = 0; row < board.length; row++){
@@ -134,9 +134,8 @@ public abstract class AltArea{
 		}else{
 			newArea = new Area(board);
 		}
-		newArea.registerPortals();
+		newArea.registerPortals();		//Fills the player portals list
 		return newArea;
-		*/
-		return null;
+	 
 	}
 }
