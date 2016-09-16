@@ -59,4 +59,14 @@ public class AltTransitionSpace extends AltMapElement{
 		return new TransitionSpace(pos, destPos, direction);
 	}
 
+	/**
+	 * Returns a string representation of this object's fields.
+	 */
+	public String toString(){
+		StringBuffer b = new StringBuffer("");
+		b.append(position + " ");
+		b.append(destPos + " ");
+		b.append(direction + " ");
+		return b.toString();
+	}
 }

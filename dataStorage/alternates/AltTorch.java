@@ -56,4 +56,15 @@ public class AltTorch extends AltItem{
 		return new Torch(description, timeLimit, isFlaming);
 	}
 
+	
+	/**
+	 * Returns a string representation of this object's fields.
+	 */
+	public String toString(){
+		StringBuffer b = new StringBuffer("");
+		b.append("TORCH: ");
+		b.append(this.timeLimit + " ");
+		b.append(this.isFlaming + " ");
+		return b.toString();
+	}
 }

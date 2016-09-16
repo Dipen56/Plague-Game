@@ -43,4 +43,11 @@ public class AltObstacle extends AltMapElement{
 	public Obstacle getOriginal() {
 		return new Obstacle(description);
 	}
+	
+	/**
+	 * Returns a string representation of this object's fields.
+	 */
+	public String toString(){
+		return "OBSTACLE: "+this.description + " ";
+	}
 }

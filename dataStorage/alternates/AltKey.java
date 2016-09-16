@@ -32,6 +32,7 @@ public class AltKey extends AltItem{
 		if(item == null)
 			throw new IllegalArgumentException("Argument is null");
 		keyID = item.getKeyID();
+		description = item.getDescription();
 	}
 
 	/**
@@ -48,5 +49,15 @@ public class AltKey extends AltItem{
 	public Key getOriginal(){
 		return new Key(description, keyID);
 	}
-
+	
+	/**
+	 * Returns a string representation of this object's fields.
+	 */
+	public String toString(){
+		StringBuffer b = new StringBuffer("");
+		b.append("KEY: ");
+		b.append(this.keyID + " ");
+		b.append(this.description + " ");
+		return b.toString();
+	}
 }

@@ -394,6 +394,7 @@ public class Area {
 		return true;
 	}
 
+	/*
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
@@ -409,9 +410,21 @@ public class Area {
 		}
 
 		return sb.toString();
-	}
+	}*/
 
-	// =======The following methods will be deleted =================
+	/**
+	 * Returns a string representation of this object's fields.
+	 */
+	public String toString(){
+		StringBuffer b = new StringBuffer("");
+		for(int i = 0; i < board.length; i++){
+			for(int j = 0; j < board[0].length; j++){
+				b.append(board[i][j]);
+			}
+		}
+		return b.toString();
+	}
+	
 	public int getWidth() {
 		return width;
 	}

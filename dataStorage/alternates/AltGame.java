@@ -37,13 +37,20 @@ public class AltGame{
 	
 	
 	/**
-	 * Whatever you do don't delete either this altObstTypeProtector or altChestTypeProtector. I don't know why but them being here allows the parser to recognise AltObstacle and AltChest objects.
-	 * Without it, the parser does not recognise this type of object, and they will not be written to the game save. 
+	 * Whatever you do don't delete either this altObstTypeProtector or altChestTypeProtector. 
+	 * I don't know why but them being here allows the parser to put objects of their types into the xml file.
+	 * Without it, the parser does not recognise these types of object, and they will not be written to the game save. 
 	 */
 	@XmlElement
-	private AltObstacle altObstTypeProtector = new AltObstacle(new Obstacle("My Test Obstacle"));
+	private AltObstacle altObstTypeProtector = new AltObstacle();
 	@XmlElement
-	private AltChest altChestTypeProtector = new AltChest(new Chest("Plerp", -2, true, new ArrayList<Item>()));
+	private AltChest altChestTypeProtector = new AltChest();
+	@XmlElement
+	private AltAntidote altAntidote = new AltAntidote();
+	@XmlElement
+	private AltKey aKey = new AltKey();
+	@XmlElement
+	private AltTorch aTorch = new AltTorch();
 	
 	
 	
@@ -108,5 +115,7 @@ public class AltGame{
 		}
 		return new Game(world, entrances, player);
 	}
+	
+
 }
 

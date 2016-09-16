@@ -39,4 +39,11 @@ public class AltPosition {
 		return new Position(x,y);
 	}
 
+	public String toString(){
+		StringBuffer b = new StringBuffer();
+		b.append("POSITION:");
+		b.append(x + " ");
+		b.append(y + " ");
+		return b.toString();
+	}
 }

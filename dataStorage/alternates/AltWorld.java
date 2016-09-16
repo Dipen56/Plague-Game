@@ -24,7 +24,7 @@ import server.game.world.World;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 public class AltWorld extends AltArea{
-	
+
 	public AltWorld(Area area){
 		super(area);
 	}
@@ -33,9 +33,9 @@ public class AltWorld extends AltArea{
 	 * Only to be called by XML unmarshaller.
 	 */
 	AltWorld(){
-		
+
 	}
-	
+
 	/**
 	 * Returns a copy of the world object on which this object was based.
 	 * @return The copy of the World.
@@ -55,7 +55,7 @@ public class AltWorld extends AltArea{
 				else if(ame instanceof AltTransitionSpace){
 					board[row][col] = ((AltTransitionSpace)this.board[row][col]).getOriginal();
 				}
-				
+
 				else{
 					//This should not happen.
 				}
@@ -65,5 +65,18 @@ public class AltWorld extends AltArea{
 		newArea.registerPortals();			//Fills the player portals list
 		return newArea;
 	}
-	
+
+
+	/**
+	 * Returns a string representation of this object's fields.
+	 */
+	public String toString(){
+		StringBuffer b = new StringBuffer("");
+		for(int i = 0; i < board.length; i++){
+			for(int j = 0; j < board[0].length; j++){
+				b.append(board[i][j]);
+			}
+		}
+		return b.toString();
+	}
 }

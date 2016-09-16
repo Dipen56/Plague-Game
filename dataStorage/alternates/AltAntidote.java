@@ -26,10 +26,12 @@ public class AltAntidote extends AltItem{
 	 */
 	@XmlElement
 	private String description;
+	
 	public AltAntidote(Antidote a) {
 		if(a == null)
 			throw new IllegalArgumentException("Argument is null");
 		virus = a.getVirus();
+		description = a.getDescription();
 	}
 
 	/**
@@ -47,5 +49,14 @@ public class AltAntidote extends AltItem{
 		return new Antidote(description, virus);
 	}
 
-
+	/**
+	 * Returns a string representation of this object's fields.
+	 */
+	public String toString(){
+		StringBuffer b = new StringBuffer("");
+		b.append("ANTIDOTE: ");
+		b.append(this.virus + " ");
+		b.append(this.description + " ");
+		return b.toString();
+	}
 }

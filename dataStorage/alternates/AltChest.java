@@ -103,4 +103,19 @@ public class AltChest extends AltObstacle{
 		return new Chest(description, keyID, isLocked, newLoot);
 	}
 
+	/**
+	 * Returns a string representation of this object's fields.
+	 */
+	public String toString(){
+		StringBuffer b = new StringBuffer();
+		b.append("CHEST: ");
+		b.append(keyID + " ");
+		b.append(isLocked + " ");
+		
+		for(int i = 0; i < loot.length; i ++){
+			b.append(loot[i] + " ");
+		}
+		b.append(description + " ");
+		return b.toString();
+	}
 }

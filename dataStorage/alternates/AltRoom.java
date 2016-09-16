@@ -86,5 +86,6 @@ public class AltRoom extends AltArea{
 		newArea.registerPortals();			//Fills the player portals list
 		return newArea;
 	}
+	
 
 }
