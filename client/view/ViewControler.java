@@ -13,10 +13,12 @@ public class ViewControler {
 	public ViewControler(String[] args) {
 		gui = new GUI(this);
 		GUI.launch(GUI.class, args);
+		//GUI.viewControler = this; //WTF LINE
 
 	}
 
 	public String getChatMsg(String msg) {
+		System.out.println(msg);
 		return msg;
 	}
 

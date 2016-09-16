@@ -94,4 +94,10 @@ public class Rendering {
 		return image;
 	}
 
+	@Override
+	public String toString() {
+
+		return "renderclass";
+	}
+
 }

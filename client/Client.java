@@ -25,8 +25,6 @@ public class Client {
 		// GUI gui = new GUI(); i think this is not needed instead
 
 		ViewControler viewControler = new ViewControler(args);
-		// GUI gui = new GUI(); // i think this is not needed instead
-		// GUI.launch(GUI.class, args);
 		Rendering renderer;
 		String consoleMessage;
 		BufferedReader bf = new BufferedReader(new InputStreamReader(System.in));

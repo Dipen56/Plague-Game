@@ -88,16 +88,16 @@ public class GUI extends Application {
 	private EventHandler<WindowEvent> windowEvent;
 	private Rendering render = new Rendering();
 
-	private ViewControler viewControler;
+	public static ViewControler viewControler;
 
 	public GUI(ViewControler viewControler) {
 		this.viewControler = viewControler;
+		//GUI.launch(GUI.class);
 
 	}
+
 	public GUI() {
-		//lunchGUI(args);
-		//this.viewControler = viewControler;
-		
+		// leave this constructor in here need to run the gui.
 	}
 
 	/**
@@ -316,6 +316,7 @@ public class GUI extends Application {
 	 * @return
 	 */
 	public String getChatMsg() {
+		//System.out.println(render);
 		String msgToSend = msg.getText();
 		return msgToSend;
 	}
@@ -390,18 +391,4 @@ public class GUI extends Application {
 		return image;
 	}
 
-	public static void lunchGUI(String[] args) {
-		launch(args);
-	}
-
-	// /**
-	// * this method is just here for testing the gui
-	// *
-	// * @param args
-	// */
-	// public static void main(String[] args) {
-	// // this lunch's the window which will end up call the start method above
-	// launch(args);
-	//
-	// }
 }
