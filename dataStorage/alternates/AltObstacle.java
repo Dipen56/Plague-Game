@@ -1,5 +1,8 @@
 package dataStorage.alternates;
 
+
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlElement;
 
 import server.game.world.MapElement;
@@ -10,6 +13,7 @@ import server.game.world.Obstacle;
  * @author Daniel Anastasi 300145878
  *
  */
+@XmlAccessorType(XmlAccessType.FIELD)
 public class AltObstacle extends AltMapElement{
 
 	/**
@@ -18,23 +22,14 @@ public class AltObstacle extends AltMapElement{
 	@XmlElement
 	private String description;
 
-	/**
-	 * X an Y coordinates for this obstacle on the map.
-	 */
-	@XmlElement
-	private int x,y;
-
-
 	public AltObstacle(Obstacle obstacle) {
 		if(obstacle == null)
 			throw new IllegalArgumentException("Argument is null");
 		this.description = obstacle.getDescription();
-		this.x = obstacle.getX();
-		this.y = obstacle.getY();
 	}
 
 
-	/**
+	/*
 	 * Only to be used by XML parser.
 	 * @param obstacle
 	 */
@@ -48,8 +43,6 @@ public class AltObstacle extends AltMapElement{
 	 * @return The Obstacle copy.
 	 */
 	public Obstacle getOriginal() {
-		return new Obstacle(x,y,description);
+		return new Obstacle(description);
 	}
-
-
 }

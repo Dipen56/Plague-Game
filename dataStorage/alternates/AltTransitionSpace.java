@@ -1,5 +1,7 @@
 package dataStorage.alternates;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 
 import server.game.player.Direction;
@@ -14,6 +16,7 @@ import server.game.world.TransitionSpace;
  * @author Daniel Anastasi 300145878
  *
  */
+@XmlAccessorType(XmlAccessType.FIELD)
 public class AltTransitionSpace extends AltMapElement{
 
 	/**

@@ -3,6 +3,8 @@ package dataStorage.alternates;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -10,6 +12,7 @@ import server.game.Game;
 import server.game.player.Player;
 import server.game.world.Area;
 import server.game.world.GroundSquare;
+import server.game.world.Obstacle;
 import server.game.world.Room;
 import server.game.world.RoomEntrance;
 import server.game.world.TransitionSpace;
@@ -22,8 +25,12 @@ import server.game.world.World;
  *
  */
 @XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
 public class AltGame{
 
+	@XmlElement
+	private AltObstacle o = new AltObstacle(new Obstacle("Plerp"));
+	
 	/**
 	 * An alternate version of a World object.
 	 */

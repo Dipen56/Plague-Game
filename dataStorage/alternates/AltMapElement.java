@@ -1,5 +1,8 @@
 package dataStorage.alternates;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+
 import server.game.world.MapElement;
 
 /**

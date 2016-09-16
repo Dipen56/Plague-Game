@@ -1,5 +1,7 @@
 package dataStorage.alternates;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 
 import server.game.items.Item;
@@ -10,6 +12,7 @@ import server.game.items.Torch;
  * A copy of a Key object, for use in parsing the object into XML.
  * @author Hector (Fang Zhao 300364061), Daniel Anastasi 300145878
  */
+@XmlAccessorType(XmlAccessType.FIELD)
 public class AltKey extends AltItem{
 
 	 /**

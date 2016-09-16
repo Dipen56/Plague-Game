@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 
 import server.game.world.Area;
@@ -20,12 +22,13 @@ import server.game.world.World;
  * @author Daniel Anastasi 300145878
  *
  */
-public class AltArea{
+@XmlAccessorType( XmlAccessType.FIELD )
+public abstract class AltArea{
 
 	/**
 	 * The area map.
 	 */
-	@XmlElement
+	@XmlElement(name="map")
     protected AltMapElement[][] board;
 
 	// Other fields are for subtyping from copied class
@@ -48,16 +51,12 @@ public class AltArea{
 	@XmlElement
 	boolean isLocked = false;
 	
-	/**
-	 * The exits out of this area.
-	 */
-	private Set<AltTransitionSpace> exits;
-	
 	
 
 	public AltArea(Area area){
 		if(area == null)
 			throw new IllegalArgumentException("Argument is null");
+		
 		MapElement[][] board = area.getBoard();
 		this.board = new AltMapElement[board.length][board[0].length];
 		MapElement me = null;
@@ -80,6 +79,7 @@ public class AltArea{
 				}
 			}
 		}
+		
 		if(area instanceof World){
 			this.subtype = "world";
 		}else if(area instanceof Room){
@@ -87,13 +87,14 @@ public class AltArea{
 			this.keyID = ((Room)area).getKeyID();
 			this.isLocked = ((Room)area).isLocked();
 		}
+		
 	}
 
 	/**
 	 * Only to be called by XML unmarshaller.
 	 */
 	AltArea(){
-
+		
 	}
 
 	public String getSubtype(){
@@ -105,6 +106,7 @@ public class AltArea{
 	 * @return The copy of the World.
 	 */
 	public Area getOriginal(){
+		/*
 		MapElement[][] board = new MapElement[this.board.length][this.board[0].length];
 		// Creates copies of the AltMapElements, as MapElements.
 		for(int row = 0; row < board.length; row++){
@@ -134,5 +136,7 @@ public class AltArea{
 		}
 		newArea.registerPortals();
 		return newArea;
+		*/
+		return null;
 	}
 }

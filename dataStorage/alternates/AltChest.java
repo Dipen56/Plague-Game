@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 
 import server.game.items.Antidote;
 import server.game.items.Item;
@@ -15,6 +17,7 @@ import server.game.world.Chest;
  * A copy of a Chest object, for use in parsing the object into XML.
  * @author Daniel Anastasi 300145878
  */
+@XmlAccessorType(XmlAccessType.FIELD)
 public class AltChest extends AltMapElement{
 	/**
 	 * The id for the key that unlocks this chest.
@@ -103,7 +106,7 @@ public class AltChest extends AltMapElement{
 			}
 		}
 
-		return new Chest(x,y,description, keyID, isLocked, newLoot);
+		return new Chest(description, keyID, isLocked, newLoot);
 	}
 
 }

@@ -1,9 +1,12 @@
 package dataStorage.alternates;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import server.game.world.Area;
+import server.game.world.Chest;
 import server.game.world.MapElement;
 import server.game.world.Obstacle;
 import server.game.world.Room;
@@ -15,7 +18,9 @@ import server.game.world.TransitionSpace;
  * @author Hector (Fang Zhao 300364061), Daniel Anastasi 300145878.
  *
  */
+@XmlAccessorType(XmlAccessType.FIELD)
 public class AltRoom extends AltArea{
+
 	/**
 	 * The id for the key to this room.
 	 */
@@ -33,7 +38,7 @@ public class AltRoom extends AltArea{
 	private AltTransitionSpace exit;
 
 	public AltRoom(Area area) {
-		super(area);
+		super(area);						//testing
 		keyID = ((Room)area).getKeyID();
 		isLocked = ((Room)area).isLocked();
 		exit = new AltTransitionSpace(((Room)area).getExit());

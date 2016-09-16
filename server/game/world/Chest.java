@@ -22,9 +22,9 @@ public class Chest extends Obstacle {
 
     private List<Item> loot;
 
-    public Chest(int x, int y, String description, int keyID,
+    public Chest(String description, int keyID,
             boolean isLocked, List<Item> loot) {
-        super(x, y, description);
+        super(description);
         this.keyID = keyID;
         this.isLocked = isLocked;
         this.loot = loot;

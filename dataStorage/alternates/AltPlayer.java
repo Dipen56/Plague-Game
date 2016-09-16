@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementRef;
@@ -30,6 +32,7 @@ import server.game.world.World;
  * @author Hector (Fang Zhao 300364061), Daniel Anastasi 300145878
  *
  */
+@XmlAccessorType(XmlAccessType.FIELD)
 public class AltPlayer {
 	/**
 	 * The player's user ID
@@ -139,8 +142,7 @@ public class AltPlayer {
 		else{
 			//This should not happen.
 		}
-
-		altArea = new AltArea(player.getArea());
+		
 		position = new AltPosition(player.getPosition());
 		direction = player.getDirection();
 	}
