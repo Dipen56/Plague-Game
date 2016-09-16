@@ -47,9 +47,9 @@ public class Game {
     private World world;
 
     /**
-     * keep track on each room with its entrance position
+     * Maps each transition space to the area which contains it.
      */
-    private Map<Room, TransitionSpace> entrances;
+    private Map<TransitionSpace, Area> entrances;
 
     /**
      * players and their id. Server can find player easily by looking by id.
@@ -141,14 +141,13 @@ public class Game {
      *
      * @param file
      */
-    public Game(World world, Map<Room, TransitionSpace> entrances) {
+    public Game(World world, Map<TransitionSpace, Area> entrances) {
 
         players = new HashMap<>();
         torches = new ArrayList<>();
 
         this.world = world;
         this.entrances = entrances;
-
 
         this.player = new Player(5, "John Doe", Virus.T_Veronica,world);
         joinPlayer(this.player);
@@ -162,22 +161,20 @@ public class Game {
      * @param Transition spaces that lead to other areas.
      * @param The player.
      */
-    public Game(World world, Map<Room, TransitionSpace> entrances, Player player) {
+    public Game(World world, Map<TransitionSpace, Area> entrances, Player player) {
 
         this.world = world;
         this.entrances = entrances;
         this.player = player;
-
-
-        players = new HashMap<>();
-        torches = new ArrayList<>();
+        this.players = new HashMap<>();
+        this.torches = new ArrayList<>();
 
         // start the world clock
         startTiming();
     }
 
 
-    public Map<Room, TransitionSpace> getEntrances(){
+    public Map<TransitionSpace, Area> getEntrances(){
     	return this.entrances;
     }
 
@@ -347,11 +344,8 @@ public class Game {
             return false;
         }
 
-        // After canMove() check, it's safe to cast
-        GroundSquare gs = (GroundSquare) backPos;
-
         // OK we can move him forward
-        player.setPosition(gs);
+        player.setPosition(backPos);
         return true;
     }
 
@@ -371,11 +365,8 @@ public class Game {
             return false;
         }
 
-        // After canMove() check, it's safe to cast
-        GroundSquare gs = (GroundSquare) leftPos;
-
         // OK we can move him forward
-        player.setPosition(gs);
+        player.setPosition(leftPos);
         return true;
     }
 
@@ -395,11 +386,8 @@ public class Game {
             return false;
         }
 
-        // After canMove() check, it's safe to cast
-        GroundSquare gs = (GroundSquare) rightPos;
-
         // OK we can move him forward
-        player.setPosition(gs);
+        player.setPosition(rightPos);
         return true;
     }
 
@@ -414,7 +402,7 @@ public class Game {
     private boolean canMoveTo(Player player, Position position) {
     	MapElement element = player.getArea().getMapElementAtIndex(position.x, position.y);
         // we cannot let him move out of board or move into obstacles
-        if (position == null || element == null || element instanceof Obstacle) {
+        if (position == null || (element == null && element instanceof Obstacle)) {
             return false;
         }
 
@@ -514,7 +502,7 @@ public class Game {
         }
 
         TransitionSpace rt = (TransitionSpace)entrance;
-        Room room = (Room)rt.destArea;
+        Room room = (Room)this.entrances.get(rt);
         return player.tryUnlockDoor(room);
     }
 
@@ -539,7 +527,7 @@ public class Game {
                 return false;
             }
         }
-        Room room = (Room) entrance.destArea;
+        Room room = (Room)this.entrances.get(entrance);
         return player.tryEnterRoom(room);
     }
 

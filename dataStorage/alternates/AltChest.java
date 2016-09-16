@@ -15,7 +15,7 @@ import server.game.world.Chest;
  * A copy of a Chest object, for use in parsing the object into XML.
  * @author Daniel Anastasi 300145878
  */
-public class AltChest {
+public class AltChest extends AltMapElement{
 	/**
 	 * The id for the key that unlocks this chest.
 	 */

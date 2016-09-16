@@ -9,22 +9,24 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 
 import client.view.GUI;
+import client.view.ViewControler;
 import server.Packet.DataType;
 import server.PacketTypes;
 import server.Server;
 import server.Packet;;
 
-
 //import game.control.Packet.DataType;
 
 public class ThreadClient extends Thread {
 
-    private DatagramSocket clientSocket;
+	private DatagramSocket clientSocket;
 	private InetAddress ipAddress;
-	private GUI gui;
+	private ViewControler viewControler;
 
-	public ThreadClient(String add, GUI g) {
-		this.gui = g;
+	public ThreadClient(String add, ViewControler viewControler) {
+		// andrew clark uses this to get the sent msg call a method called
+		// getChatMsg it returns the string which is the msg.
+		this.viewControler = viewControler;
 		try {
 			clientSocket = new DatagramSocket();
 			ipAddress = InetAddress.getByName(add);
@@ -40,7 +42,7 @@ public class ThreadClient extends Thread {
 	public void run() {
 		while (true) {
 			try {
-				sleep(10); //sleep for 10 ms and wait for reply from server
+				sleep(10); // sleep for 10 ms and wait for reply from server
 
 			} catch (InterruptedException e) {
 				e.getMessage();
@@ -57,60 +59,59 @@ public class ThreadClient extends Thread {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			//clientSocket.close();
+			// clientSocket.close();
 			readMessage(packet);
 		}
 	}
 
 	/**
-	 * Extracts the type of packet the client had received and calls the appropriate method
-	 * to handle the data
-	 * @param dPacket the packet to be read and extracted
+	 * Extracts the type of packet the client had received and calls the
+	 * appropriate method to handle the data
+	 * 
+	 * @param dPacket
+	 *            the packet to be read and extracted
 	 */
-	 public void readMessage(DatagramPacket dPacket) {
+	public void readMessage(DatagramPacket dPacket) {
 
-		 System.out.println("recieved");
-
+		System.out.println("recieved");
 
 		DataType type = Packet.getPacketType(new String(dPacket.getData()).trim().substring(0, 1));
 
-		if(type.equals(DataType.MESSAGE)){
+		if (type.equals(DataType.MESSAGE)) {
 			PacketTypes p = new PacketTypes();
 			PacketTypes.Message m = p.new Message(dPacket.getData());
 			System.out.println(m.toString());
 		}
 
-
 	}
+
 	/**
-	 * 	Makes a new Datagram object and sends it to the server
-	 * @param data bytes of information to be sent
+	 * Makes a new Datagram object and sends it to the server
+	 * 
+	 * @param data
+	 *            bytes of information to be sent
 	 */
-	 public void sendDataToServer(byte[] message) {
-		  DatagramPacket packet = new DatagramPacket(message, message.length, ipAddress, Server.PORTN_NUM);
-	        try {
-	            clientSocket.send(packet);
-	        } catch (IOException e) {
-	            e.printStackTrace();
-	        }
+	public void sendDataToServer(byte[] message) {
+		DatagramPacket packet = new DatagramPacket(message, message.length, ipAddress, Server.PORTN_NUM);
+		try {
+			clientSocket.send(packet);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
-
-
-	public InetAddress getClientAddress(){
-	try {
-		return InetAddress.getLocalHost();
-	} catch (UnknownHostException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}
-	return null;
+	public InetAddress getClientAddress() {
+		try {
+			return InetAddress.getLocalHost();
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
 	}
 
-
-	public int getClientPort(){
+	public int getClientPort() {
 		return this.clientSocket.getPort();
 	}
-
 
 }
