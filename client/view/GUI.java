@@ -88,7 +88,16 @@ public class GUI extends Application {
 	private EventHandler<WindowEvent> windowEvent;
 	private Rendering render = new Rendering();
 
+	private ViewControler viewControler;
+
+	public GUI(ViewControler viewControler) {
+		this.viewControler = viewControler;
+
+	}
 	public GUI() {
+		//lunchGUI(args);
+		//this.viewControler = viewControler;
+		
 	}
 
 	/**
@@ -128,7 +137,7 @@ public class GUI extends Application {
 		gamePane.setPrefWidth(GAMEPANE_WIDTH_VALUE);
 
 		// Calls the rendering
-		render.render(group);
+		// render.render(group);
 		gamePane.getChildren().add(group);
 		borderPane.setLeft(gamePane);
 		Scene scene = new Scene(borderPane, WIDTH_VALUE, HEIGHT_VALUE);
@@ -301,6 +310,17 @@ public class GUI extends Application {
 	}
 
 	/**
+	 * this method will return the masg type in the chat box apon clicking the
+	 * send button.
+	 * 
+	 * @return
+	 */
+	public String getChatMsg() {
+		String msgToSend = msg.getText();
+		return msgToSend;
+	}
+
+	/**
 	 * this method is used to check for action and give a implementation of
 	 * handle method
 	 */
@@ -309,7 +329,8 @@ public class GUI extends Application {
 			@Override
 			public void handle(ActionEvent event) {
 				if (event.getSource() == send) {
-					// send the typed massage and clear text area with ""
+					viewControler.getChatMsg(getChatMsg());
+
 				}
 
 			}
@@ -369,14 +390,18 @@ public class GUI extends Application {
 		return image;
 	}
 
-	/**
-	 * this method is just here for testing the gui
-	 *
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		// this lunch's the window which will end up call the start method above
+	public static void lunchGUI(String[] args) {
 		launch(args);
-
 	}
+
+	// /**
+	// * this method is just here for testing the gui
+	// *
+	// * @param args
+	// */
+	// public static void main(String[] args) {
+	// // this lunch's the window which will end up call the start method above
+	// launch(args);
+	//
+	// }
 }

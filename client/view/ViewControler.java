@@ -10,8 +10,14 @@ package client.view;
 public class ViewControler {
 	GUI gui;
 
-	public ViewControler(GUI gui) {
-		this.gui = gui;
+	public ViewControler(String[] args) {
+		gui = new GUI(this);
+		GUI.launch(GUI.class, args);
+
+	}
+
+	public String getChatMsg(String msg) {
+		return msg;
 	}
 
 }
