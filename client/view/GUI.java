@@ -36,6 +36,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import client.rendering.Rendering;
+
 /**
  * This class represents the main GUI class this class bring together all the
  * different components of the GUI.
@@ -44,22 +46,18 @@ import java.util.concurrent.TimeUnit;
  *
  */
 public class GUI extends Application {
-	//Angelo's constants
-	private double dimension = 9.1;
-	private Image player = loadImage("/standingstillrear.png");
-	private ImageView imageViewCharacter = new ImageView();
-	private Thread thread = new Thread();
-	// renderWidth needs revising
-	private int renderWidth = 630;
-	private int charWidth = 40;
-	private int charHeight = 70;
-	private Group group = new Group();
-	/////////////////////////////////////////////////
+	// GUI Style CSS
+	private static final String STYLE_CSS = "/main.css";
+	// Constants Images
 	private static final String GAMEICON_IMAGE = "/game-icon.png";
-	// private static int WIDTH_VALUE = 1500;
-	// private static int HEIGHT_VALUE = 1000;
-	private int WIDTH_VALUE = 1000;
-	private int HEIGHT_VALUE = 700;
+	private static final String INVENTORY_IMAGE = "/item-tray.png";
+
+	// Constants Dimensions
+	public static final int WIDTH_VALUE = 1000;
+	public static final int HEIGHT_VALUE = 700;
+	private static final int RIGHTPANE_WIDTH_VALUE = WIDTH_VALUE - 600;
+	public static final int GAMEPANE_WIDTH_VALUE = WIDTH_VALUE - 400;
+
 	// main window
 	private Stage window;
 	// controls
@@ -69,9 +67,10 @@ public class GUI extends Application {
 	private Label textAreaLable;
 	private TextField msg;
 	private Button send;
+	private Group group = new Group();
 	// panes
 	// right pane with vertical alligment
-	private VBox vbox;
+	private VBox rightPanel;
 	private GridPane itemGrid;
 	private GridPane iteminfo;
 	// standard layout
@@ -87,6 +86,7 @@ public class GUI extends Application {
 	private EventHandler<MouseEvent> mouseEvent;
 	// for window resizing not really need else where
 	private EventHandler<WindowEvent> windowEvent;
+	private Rendering render = new Rendering();
 
 	public GUI() {
 	}
@@ -105,11 +105,11 @@ public class GUI extends Application {
 		window.setResizable(false);
 
 		// Create a VBox which is just layout manger and adds gap of 10
-		vbox = new VBox(10);
-		vbox.setPrefSize(400, 1000);
-		vbox.getStyleClass().add("cotrolvbox");
+		rightPanel = new VBox(10);
+		rightPanel.setPrefSize(RIGHTPANE_WIDTH_VALUE, HEIGHT_VALUE);
+		rightPanel.getStyleClass().add("cotrolvbox");
 		borderPane = new BorderPane();
-		borderPane.setRight(vbox);
+		borderPane.setRight(rightPanel);
 
 		// this starts the action listener
 		actionEventHandler();
@@ -124,95 +124,19 @@ public class GUI extends Application {
 		setchat();
 		setItems();
 		gamePane = new StackPane();
-		
+		gamePane.setPrefHeight(HEIGHT_VALUE);
+		gamePane.setPrefWidth(GAMEPANE_WIDTH_VALUE);
+
 		// Calls the rendering
-		render(group, dimension);
-		//////////////////////////
-		
-		borderPane.setLeft(group);
+		render.render(group);
+		gamePane.getChildren().add(group);
+		borderPane.setLeft(gamePane);
 		Scene scene = new Scene(borderPane, WIDTH_VALUE, HEIGHT_VALUE);
-		scene.getStylesheets().add(this.getClass().getResource("/main.css").toExternalForm());
+		scene.getStylesheets().add(this.getClass().getResource(STYLE_CSS).toExternalForm());
 		scene.setOnKeyPressed(keyEvent);
 		window.setScene(scene);
 		window.show();
 
-	}
-
-	private void render(Group group, double dimension) {
-		// Night image background
-		Image image = loadImage("/background.gif");
-		ImageView imageViewNight = new ImageView();
-		imageViewNight.setImage(image);
-		imageViewNight.setFitWidth(renderWidth);
-		imageViewNight.setFitHeight(HEIGHT_VALUE);
-		group.getChildren().add(imageViewNight);
-
-		// Game grass field
-		Image grass = loadImage("/grass border.jpg");
-		// x position on which the grass (board) starts to render
-		// needs revising in accordance to the renderWidth
-		double xPoint = ((renderWidth / 2) - (grass.getWidth() * dimension / 2));
-		// y position on which the grass (board) starts to render
-		double yPoint = HEIGHT_VALUE / 5 * 2.5;
-		// height of the grass image
-		int grassHeight;
-		for (int row = 0; row < dimension; row++) {
-			grassHeight = (int) (((grass.getHeight() / dimension) * row) + grass.getHeight() / dimension);
-			for (int col = 0; col < dimension; col++) {
-				// switch between the border, and no border grass images
-				grass = loadImage("/grass.png");
-				// grass = loadImage("/grass border.jpg");
-				ImageView imageViewGrass = new ImageView();
-				imageViewGrass.setImage(grass);
-				imageViewGrass.setX((xPoint) + (col * grass.getWidth()));
-				imageViewGrass.setY(yPoint);
-				imageViewGrass.setFitHeight(grassHeight);
-				group.getChildren().add(imageViewGrass);
-			}
-			yPoint = yPoint + grassHeight;
-		}
-
-		// Tree on the board
-		Image tree = loadImage("/tree.png");
-		ImageView imageViewTree = new ImageView();
-		imageViewTree.setImage(tree);
-		// This will need to be scaled later....
-		imageViewTree.setFitHeight(200);
-		imageViewTree.setFitWidth(170);
-		////////////////////////////////////////////////
-		imageViewTree.setX(100);
-		imageViewTree.setY(HEIGHT_VALUE - 500);
-		group.getChildren().add(imageViewTree);
-
-		// Player on the board
-		imageViewCharacter.setImage(player);
-		// Temporary height of the character (fix later)
-		imageViewCharacter.setFitHeight(charHeight);
-		imageViewCharacter.setFitWidth(charWidth);
-		////////////////////////////////////////////////
-		imageViewCharacter.setX(renderWidth / 2);
-		imageViewCharacter.setY(HEIGHT_VALUE - 150);
-		group.getChildren().add(imageViewCharacter);
-	}
-
-	private void movePlayerUp() {
-		for (int i = 1; i <= 2; i++) {
-			try {
-				player = loadImage("/walking"+i+".png");
-				imageViewCharacter = new ImageView();
-				imageViewCharacter.setImage(player);
-				// Temporary height of the character (fix later)
-				imageViewCharacter.setFitHeight(charHeight);
-				imageViewCharacter.setFitWidth(charWidth);
-				////////////////////////////////////////////////
-				imageViewCharacter.setX(renderWidth / 2);
-				imageViewCharacter.setY(HEIGHT_VALUE - 150);
-				group.getChildren().add(imageViewCharacter);
-				thread.sleep(3000);
-			} catch (InterruptedException e1) {
-				e1.printStackTrace();
-			}
-		}
 	}
 
 	/**
@@ -255,7 +179,7 @@ public class GUI extends Application {
 		timeLable.setPrefHeight(50);
 		timeLable.getStyleClass().add("world-time-lable");
 		timeLable.setText("00:00");
-		vbox.getChildren().add(titlePane);
+		rightPanel.getChildren().add(titlePane);
 	}
 
 	/**
@@ -269,7 +193,7 @@ public class GUI extends Application {
 		miniMapLable.setPrefWidth(400);
 		miniMapLable.setPrefHeight(370);
 		miniMapLable.getStyleClass().add("minimap-lable");
-		vbox.getChildren().add(titlePane);
+		rightPanel.getChildren().add(titlePane);
 	}
 
 	/**
@@ -303,7 +227,7 @@ public class GUI extends Application {
 		chatControls.getChildren().add(hbox);
 		titlePane.setContent(chatControls);
 
-		vbox.getChildren().add(titlePane);
+		rightPanel.getChildren().add(titlePane);
 
 	}
 
@@ -322,7 +246,7 @@ public class GUI extends Application {
 			for (int j = 0; j < 4; j++) {
 				Label item = new Label();
 				item.getStyleClass().add("item-grid");
-				Image img = loadImage("/item-tray.png");
+				Image img = loadImage(INVENTORY_IMAGE);
 				ImageView image = new ImageView();
 				image.setFitWidth(60);
 				image.setFitHeight(60);
@@ -339,7 +263,7 @@ public class GUI extends Application {
 		iteminfo = new GridPane();
 		iteminfo.setGridLinesVisible(true);
 		Label zoomedItem = new Label();
-		Image img = loadImage("/item-tray.png");
+		Image img = loadImage(INVENTORY_IMAGE);
 		ImageView image = new ImageView();
 		image.setFitWidth(100);
 		image.setFitHeight(100);
@@ -360,7 +284,7 @@ public class GUI extends Application {
 		hbox.getChildren().add(iteminfo);
 		titlePane.setContent(hbox);
 
-		vbox.getChildren().add(titlePane);
+		rightPanel.getChildren().add(titlePane);
 
 	}
 
@@ -410,7 +334,6 @@ public class GUI extends Application {
 					System.out.println("right");
 				} else if (event.getCode() == KeyCode.UP) {
 					// this is for moving up
-					movePlayerUp();
 					System.out.println("up");
 				} else if (event.getCode() == KeyCode.DOWN) {
 					// this is for moving down

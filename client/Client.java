@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 import client.ThreadClient;
-import client.rendering.rendering;
+import client.rendering.Rendering;
 import client.view.GUI;
 import server.PacketTypes;
 
@@ -22,7 +22,7 @@ public class Client {
 		PacketTypes.Message message;
 		PacketTypes.LogIn login = null;
 		GUI gui = new GUI();
-		rendering renderer;
+		Rendering renderer;
 		String consoleMessage;
 		BufferedReader bf = new BufferedReader(new InputStreamReader(System.in));
 
