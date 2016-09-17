@@ -35,7 +35,6 @@ import server.game.world.World;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class AltGame{
 	
-	
 	/**
 	 * Whatever you do don't delete either this altObstTypeProtector or altChestTypeProtector. 
 	 * I don't know why but them being here allows the parser to put objects of their types into the xml file.
@@ -51,8 +50,6 @@ public class AltGame{
 	private AltKey aKey = new AltKey();
 	@XmlElement
 	private AltTorch aTorch = new AltTorch();
-	
-	
 	
 	/**
 	 * An alternate version of a World object.
@@ -89,12 +86,20 @@ public class AltGame{
 
 		entrances = new HashMap<>();
 
-
 		// Copies all entries from original entrances list, replacing values with alternative objects
 		for(Map.Entry<TransitionSpace, Area> m: game.getEntrances().entrySet()){
 			TransitionSpace ts = m.getKey();
+
 			Area area = m.getValue();
-			AltArea altArea = new AltWorld(area);
+			AltArea altArea = null;
+			if(area instanceof World){
+				altArea = new AltWorld(area);
+			}
+			else if(area instanceof Room){
+				altArea = new AltRoom(area);
+			}
+			else
+				throw new IllegalArgumentException("Area in game entrances is not of known type.");
 			AltTransitionSpace ats = new AltTransitionSpace(ts);
 			entrances.put(ats, altArea);
 		}
@@ -111,7 +116,8 @@ public class AltGame{
 		Map<TransitionSpace, Area> entrances = new HashMap<>();
 		Player player = this.player.getOriginal();
 		for(Map.Entry<AltTransitionSpace, AltArea> m: this.entrances.entrySet()){
-			entrances.put(((AltTransitionSpace)m.getKey()).getOriginal(), ((AltArea)m.getValue()).getOriginal());
+			Area area = ((AltArea)m.getValue()).getOriginal();
+			entrances.put(((AltTransitionSpace)m.getKey()).getOriginal(), area);
 		}
 		Game game =  new Game(world, entrances, player);
 		

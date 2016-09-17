@@ -141,7 +141,7 @@ public class AltPlayer {
 			altArea = new AltRoom(area);
 		}
 		else{
-			//This should not happen.
+			throw new IllegalArgumentException("Unknown subtype of Area");
 		}
 		
 		position = new AltPosition(player.getPosition());

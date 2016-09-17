@@ -356,66 +356,11 @@ public class Area {
 
 	}
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-
-		Class objclass = obj.getClass();
-		boolean b = obj instanceof World;
-
-		//This area could be subclass
-		if((this instanceof World && ((World)this).getClass() != obj.getClass())
-				||(this instanceof Room && ((Room)this).getClass() != obj.getClass())
-				||(getClass() != obj.getClass())){
-			return false;
-		}
-		Area other = (Area) obj;
-		//not needed at this stage of testing
-		/*if (exits == null) {
-			if (other.exits != null)
-				return false;
-		} else if (!exits.equals(other.exits))
-			return false;	
-		 */	
-		if (height != other.height)
-			return false;
-
-		if (playerPortals == null) {
-			if (other.playerPortals != null)
-				return false;
-		} else if (!playerPortals.equals(other.playerPortals))
-			return false;
-		if (width != other.width)
-			return false;
-		
-		
-		List<Item> a =((Chest)board[0][2]).getLoot();
-		List<Item> n =((Chest)other.getBoard()[0][2]).getLoot();
-		for(int i = 0; i < a.size(); i ++){
-			if(!a.get(i).equals(n.get(i)))
-				return false;
-		}
-			
-		
-		for(int i = 0; i < board.length; i ++){
-			for(int j = 0; j < board[0].length; j++){
-				if(board[i][j] != null && !board[i][j].equals(other.board[i][j]))
-					return false;
-			}
-		}
-		
-		if (!Arrays.deepEquals(board, other.board))
-			return false;
-		return true;
-	}
 
 	/*
 	@Override
 	public String toString() {
-		StringBuilder sb = new StringBuilder();
+		StringBuilder sb = new StringBuilder();			//turned off to test map save contents. Can be turned on afterwards
 
 		for (MapElement[] row : board) {
 			for (MapElement col : row) {
@@ -445,6 +390,50 @@ public class Area {
 	
 	public int getWidth() {
 		return width;
+	}
+	
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+
+		Class objclass = obj.getClass();
+		boolean b = obj instanceof World;
+
+		if(getClass() != obj.getClass()){
+			return false;
+		}
+		
+		Area other = (Area) obj;
+		//not needed at this stage of testing
+		/*if (exits == null) {
+			if (other.exits != null)
+				return false;
+		} else if (!exits.equals(other.exits))
+			return false;	
+		 */	
+		if (height != other.height)
+			return false;
+
+		if (playerPortals == null) {
+			if (other.playerPortals != null)
+				return false;
+		} else if (!playerPortals.equals(other.playerPortals))
+			return false;
+		if (width != other.width)
+			return false;
+		
+		
+		List<Item> a =((Chest)board[0][2]).getLoot();
+		List<Item> n =((Chest)other.getBoard()[0][2]).getLoot();
+		for(int i = 0; i < a.size(); i ++){
+			if(!a.get(i).equals(n.get(i)))
+				return false;
+		}
+		return true;
 	}
 
 }

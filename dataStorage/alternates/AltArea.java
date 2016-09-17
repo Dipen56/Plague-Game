@@ -23,7 +23,7 @@ import server.game.world.World;
  *
  */
 @XmlAccessorType( XmlAccessType.FIELD )
-public abstract class AltArea{
+public class AltArea{
 
 	/**
 	 * The area map.
@@ -43,7 +43,7 @@ public abstract class AltArea{
 	 * For room id. -1 if this area is not a room.
 	 */
 	@XmlElement
-	private int keyID = -1;
+	protected int keyID = -1;
 
 	/**
 	 * For room field. isLocked. Always false if this area is not a room.
@@ -86,6 +86,8 @@ public abstract class AltArea{
 			this.subtype = "room";
 			this.keyID = ((Room)area).getKeyID();
 			this.isLocked = ((Room)area).isLocked();
+		}else{
+			throw new IllegalArgumentException("Unrecognised Area subtype");
 		}
 		
 	}
@@ -102,7 +104,7 @@ public abstract class AltArea{
 	}
 
 	/**
-	 * Returns a copy of the world object on which this object was based.
+	 * Returns a copy of the area object on which this object was based.
 	 * @return The copy of the World.
 	 */
 	public Area getOriginal(){
@@ -132,7 +134,7 @@ public abstract class AltArea{
 		}else if(this.subtype.equals("room")){
 			newArea = new Room(board, this.keyID, this.isLocked);
 		}else{
-			newArea = new Area(board);
+			throw new RuntimeException("Error loading Area. Object is not of recognised subtype.");
 		}
 		newArea.registerPortals();		//Fills the player portals list
 		return newArea;

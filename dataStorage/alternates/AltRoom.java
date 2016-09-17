@@ -21,28 +21,24 @@ import server.game.world.World;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 public class AltRoom extends AltArea{
-
+	
 	/**
 	 * The id for the key to this room.
 	 */
-	@XmlElement
-	private int keyID;
+	//@XmlElement
+	//private int keyID;
 	/**
 	 * Is true when the room is locked.
 	 */
-	@XmlElement
-	boolean isLocked;
-	/**
-	 * The exit out of this room.
-	 */
-	@XmlElement
-	private AltTransitionSpace exit;
+	//@XmlElement
+	//boolean isLocked;
+
 
 	public AltRoom(Area area) {
-		super(area);						//testing
-		keyID = ((Room)area).getKeyID();
+		super(area);						
+		/*keyID = ((Room)area).getKeyID();
 		isLocked = ((Room)area).isLocked();
-		exit = new AltTransitionSpace(((Room)area).getExit());
+		*/
 	}
 
 	/**
@@ -79,10 +75,9 @@ public class AltRoom extends AltArea{
 				}
 			}
 		}
-		TransitionSpace ts = exit.getOriginal();
 		
 		//Fills the player portals list
-		Room newArea = new Room(board, keyID, isLocked, ts);
+		Room newArea = new Room(board, keyID, isLocked);
 		newArea.registerPortals();			//Fills the player portals list
 		return newArea;
 	}
