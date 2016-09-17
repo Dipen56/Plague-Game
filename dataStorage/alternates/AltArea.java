@@ -57,7 +57,7 @@ public class AltArea{
 		if(area == null)
 			throw new IllegalArgumentException("Argument is null");
 		
-		MapElement[][] board = area.getBoard();
+		MapElement[][] board = area.getMap();
 		this.board = new AltMapElement[board.length][board[0].length];
 		MapElement me = null;
 

@@ -70,7 +70,7 @@ public class Room extends Area {
      * let the room remember where the exit is.
      */
     public void rememberExit() {
-        for (MapElement[] row : board) {
+        for (MapElement[] row : map) {
             for (MapElement col : row) {
                 if (col instanceof TransitionSpace) {
                     this.exit = (TransitionSpace) col;
