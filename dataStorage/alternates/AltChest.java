@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 
 import server.game.items.Antidote;
 import server.game.items.Item;
@@ -15,7 +17,8 @@ import server.game.world.Chest;
  * A copy of a Chest object, for use in parsing the object into XML.
  * @author Daniel Anastasi 300145878
  */
-public class AltChest extends AltMapElement{
+@XmlAccessorType(XmlAccessType.FIELD)
+public class AltChest extends AltObstacle{
 	/**
 	 * The id for the key that unlocks this chest.
 	 */
@@ -37,21 +40,16 @@ public class AltChest extends AltMapElement{
 	/**
 	 * A description of this chest.
 	 */
-	@XmlElement
-	private String description;
-
-	/**
-	 * The x and y coordinates of this chest in the area which it resides.
-	 */
-	@XmlElement
-	int x,y;
+	//@XmlElement
+	//private String description;
 
 	public AltChest(Chest chest){
 		if(chest == null)
 			throw new IllegalArgumentException("Argument is null");
 		keyID = chest.getKeyID();
 		isLocked = chest.isLocked();
-		description = chest.getDescription();
+		//description = chest.getDescription();
+		this.setDescrption(chest.getDescription());
 
 		//Array is used, as List cannot have JAXB annotations.
 		List<Item> chestLoot = chest.getLoot();
@@ -103,7 +101,22 @@ public class AltChest extends AltMapElement{
 			}
 		}
 
-		return new Chest(x,y,description, keyID, isLocked, newLoot);
+		return new Chest(description, keyID, isLocked, newLoot);
 	}
 
+	/**
+	 * Returns a string representation of this object's fields.
+	 */
+	public String toString(){
+		StringBuffer b = new StringBuffer();
+		b.append("CHEST: ");
+		b.append(keyID + " ");
+		b.append(isLocked + " ");
+		
+		for(int i = 0; i < loot.length; i ++){
+			b.append(loot[i] + " ");
+		}
+		b.append(description + " ");
+		return b.toString();
+	}
 }

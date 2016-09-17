@@ -55,26 +55,26 @@ public class TestConst {
         for (int[] coord : obstacleCoords) {
             int x = coord[0];
             int y = coord[1];
-            worldBoard[y][x] = new Obstacle(x, y, "obstacle");
+            worldBoard[y][x] = new Obstacle("obstacle");
         }
 
         // chest 1
         List<Item> loot1 = new ArrayList<>();
         loot1.add(new Antidote("A potion of antidote.", Virus.T_Virus));
         loot1.add(new Key("A key.", 456));
-        worldBoard[0][2] = new Chest(2, 0, "chest 1", 123, false, loot1);
+        worldBoard[0][2] = new Chest("chest 1", 123, false, loot1);
 
         // chest2
         List<Item> loot2 = new ArrayList<>();
         loot2.add(new Antidote("A potion of antidote.", Virus.T_Virus));
         loot2.add(new Key("A key.", 11111));
         loot2.add(new Key("A key.", 789));
-        worldBoard[3][5] = new Chest(5, 3, "chest 2", 456, true, loot2);
+        worldBoard[3][5] = new Chest("chest 2", 456, true, loot2);
 
         // chest3
         List<Item> loot3 = new ArrayList<>();
         loot3.add(new Antidote("A potion of antidote.", Virus.G_Virus));
-        worldBoard[6][0] = new Chest(0, 6, "chest 3", 789, true, loot3);
+        worldBoard[6][0] = new Chest("chest 3", 789, true, loot3);
 
         // ===============================
 
@@ -84,14 +84,14 @@ public class TestConst {
 
 
         // obstacles
-        roomBoard[1][1] = new Obstacle(1, 1, "obstacle");
-        roomBoard[1][2] = new Obstacle(2, 1, "Table");
+        roomBoard[1][1] = new Obstacle("obstacle");
+        roomBoard[1][2] = new Obstacle("Table");
 
         // chest in room
         List<Item> lootInRoom = new ArrayList<>();
         lootInRoom.add(new Antidote("A potion of antidote.", Virus.G_Virus));
         lootInRoom.add(new Torch("A Torch."));
-        roomBoard[0][2] = new Chest(2, 0, "chest in room", 123, false, lootInRoom);
+        roomBoard[0][2] = new Chest("chest in room", 123, false, lootInRoom);
 
         Position worldPos = new Position(6,3); //room entrance position in world
         Position roomPos = new Position(1,2);	//world entrance position in room.

@@ -7,8 +7,13 @@ package server.game.world;
  *
  */
 public class Position {
-
+	/**
+	 * X coordinate of the object located with this position.
+	 */
     public final int x;
+    /**
+	 * Y coordinate of the object located with this position.
+	 */
     public final int y;
 
     public Position(int x, int y) {
@@ -33,5 +38,11 @@ public class Position {
 	}
 
 
-
+	public String toString(){
+		StringBuffer b = new StringBuffer("");
+		b.append("Position: ");
+		b.append(x +" ");
+		b.append(y + " ");
+		return b.toString();
+	}
 }

@@ -1,5 +1,7 @@
 package dataStorage.alternates;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 
 import server.game.world.Position;
@@ -9,6 +11,7 @@ import server.game.world.Position;
  * @author anastadani
  *
  */
+@XmlAccessorType(XmlAccessType.FIELD)
 public class AltPosition {
 
 	@XmlElement
@@ -36,4 +39,11 @@ public class AltPosition {
 		return new Position(x,y);
 	}
 
+	public String toString(){
+		StringBuffer b = new StringBuffer();
+		b.append("POSITION:");
+		b.append(x + " ");
+		b.append(y + " ");
+		return b.toString();
+	}
 }
