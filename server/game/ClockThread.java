@@ -1,9 +1,4 @@
 package server.game;
-<<<<<<< HEAD:server/game/ClockThread.java
-=======
-
-import dataStorage.alternates.AltGame;
->>>>>>> master:server/game/ClockThread.java
 
 /**
  * The Clock Thread is responsible for producing a consistent "pulse" which is used to

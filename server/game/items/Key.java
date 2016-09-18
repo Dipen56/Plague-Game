@@ -1,7 +1,5 @@
 package server.game.items;
 
-import java.awt.image.BufferedImage;
-
 /**
  * This class represents a key.
  *
@@ -25,30 +23,29 @@ public class Key extends Item implements Tradable {
         return keyID;
     }
 
-    
     @Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + keyID;
-		return result;
-	}
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + keyID;
+        return result;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Key other = (Key) obj;
-		if (keyID != other.keyID)
-			return false;
-		return true;
-	}
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Key other = (Key) obj;
+        if (keyID != other.keyID)
+            return false;
+        return true;
+    }
 
-	@Override
+    @Override
     public String toString() {
         return super.toString() + " A number is engraved on it: " + keyID + ".";
     }

@@ -69,7 +69,6 @@ public enum Direction {
     public char getChar() {
         switch (this) {
         case East:
-<<<<<<< HEAD:server/game/player/Direction.java
             return '>';
         case North:
             return '^';
@@ -77,15 +76,6 @@ public enum Direction {
             return 'v';
         case West:
             return '<';
-=======
-            return 'e';
-        case North:
-            return 'n';
-        case South:
-            return 's';
-        case West:
-            return 'w';
->>>>>>> master:server/game/player/Direction.java
         default:
             return ' '; // dead code
         }

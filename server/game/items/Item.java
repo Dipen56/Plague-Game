@@ -1,9 +1,4 @@
 package server.game.items;
-<<<<<<< HEAD:server/game/items/Item.java
-=======
-
-import java.awt.image.BufferedImage;
->>>>>>> master:server/game/items/Item.java
 
 /**
  * This class represents a pick-up object. A pick-up object is whatever a player can pick
@@ -25,13 +20,8 @@ public abstract class Item {
         this.description = description;
     }
 
-<<<<<<< HEAD:server/game/items/Item.java
     public String getDescription() {
         return this.description;
-=======
-    public String getDescription(){
-    	return this.description;
->>>>>>> master:server/game/items/Item.java
     }
 
     /**
@@ -48,5 +38,5 @@ public abstract class Item {
     public String toString() {
         return description;
     }
-    
+
 }
