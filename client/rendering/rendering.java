@@ -30,9 +30,9 @@ public class Rendering {
 	// // going to do this with poly gones and then add images on top of them
 	// // done.
 	// this.group = group;
-	//
-	//
+
 	// }
+	
 	public void render(Group group) {
 		this.group = group;
 		// Night image background
@@ -96,7 +96,6 @@ public class Rendering {
 
 	@Override
 	public String toString() {
-
 		return "renderclass";
 	}
 

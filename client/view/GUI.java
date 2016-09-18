@@ -92,7 +92,7 @@ public class GUI extends Application {
 
 	public GUI(ViewControler viewControler) {
 		this.viewControler = viewControler;
-		//GUI.launch(GUI.class);
+		// GUI.launch(GUI.class);
 
 	}
 
@@ -137,7 +137,7 @@ public class GUI extends Application {
 		gamePane.setPrefWidth(GAMEPANE_WIDTH_VALUE);
 
 		// Calls the rendering
-		// render.render(group);
+		render.render(group);
 		gamePane.getChildren().add(group);
 		borderPane.setLeft(gamePane);
 		Scene scene = new Scene(borderPane, WIDTH_VALUE, HEIGHT_VALUE);
@@ -315,7 +315,7 @@ public class GUI extends Application {
 	 * @return
 	 */
 	public String getChatMsg() {
-		//System.out.println(render);
+		// System.out.println(render);
 		String msgToSend = msg.getText();
 		return msgToSend;
 	}
