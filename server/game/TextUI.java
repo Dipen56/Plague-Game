@@ -5,8 +5,16 @@ import java.util.Scanner;
 
 import server.game.items.Item;
 import server.game.player.Player;
+<<<<<<< HEAD:server/game/TextUI.java
 import server.game.player.Position;
 import server.game.world.Area;
+=======
+import server.game.player.Virus;
+import server.game.world.Area;
+import server.game.world.GroundSquare;
+import server.game.world.Position;
+import server.game.world.World;
+>>>>>>> master:server/game/TextUI.java
 
 /**
  * This is a text-based UI client. It provides a tiny (hard-coded) world and a simple text
@@ -32,6 +40,7 @@ public class TextUI {
         SCANNER.close();
     }
 
+<<<<<<< HEAD:server/game/TextUI.java
     private Game setupGame() {
         // resister portals for each area in the game
         for (Area a : TestConst.areas.values()) {
@@ -42,6 +51,17 @@ public class TextUI {
 
         // mock player
         Player player = new Player(1, "Hector");
+=======
+    public static Game setupGame() {
+    	 // resister portals for each area in the game
+    	for(Area a: TestConst.entrances.values())
+    		a.registerPortals();
+        Game game = new Game(TestConst.world, TestConst.entrances);
+       
+ 
+        // mock player
+        Player player = new Player(1, "Hector", Virus.T_Virus, TestConst.world);
+>>>>>>> master:server/game/TextUI.java
         game.joinPlayer(player);
 
         return game;
@@ -54,9 +74,13 @@ public class TextUI {
         while (true) {
             // print board
             Position currentPosition = player.getPosition();
+<<<<<<< HEAD:server/game/TextUI.java
             Area currentArea = game.getAreas().get(currentPosition.areaId);
+=======
+            Area currentArea = player.getArea();
+>>>>>>> master:server/game/TextUI.java
             int width = currentArea.getWidth();
-            int replaceIndex = currentPosition.y * (width + 1) + currentPosition.x;
+            int replaceIndex = currentPosition.y * width + currentPosition.x;	//initial formula currentPosition.y * (width + 1) + currentPosition.x;
             char[] chars = currentArea.toString().toCharArray();
             chars[replaceIndex] = player.getDirection().getChar();
             String boardString = new String(chars);

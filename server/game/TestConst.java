@@ -10,6 +10,7 @@ import server.game.items.Item;
 import server.game.items.Key;
 import server.game.items.Torch;
 import server.game.player.Direction;
+<<<<<<< HEAD
 import server.game.player.Position;
 import server.game.player.Virus;
 import server.game.world.Area;
@@ -21,6 +22,20 @@ import server.game.world.Obstacle;
 import server.game.world.Room;
 import server.game.world.ScrapPile;
 import server.game.world.TransitionSpace;
+=======
+import server.game.player.Virus;
+import server.game.world.Area;
+import server.game.world.Chest;
+import server.game.world.GroundSquare;
+import server.game.world.MapElement;
+import server.game.world.Obstacle;
+import server.game.world.Position;
+import server.game.world.Room;
+import server.game.world.RoomEntrance;
+import server.game.world.RoomExit;
+import server.game.world.TransitionSpace;
+import server.game.world.World;
+>>>>>>> master
 
 /**
  * OK, this class will NOT be used in our final game. It is created to provide a tiny game
@@ -31,6 +46,7 @@ import server.game.world.TransitionSpace;
  */
 public class TestConst {
 
+<<<<<<< HEAD
     /*
      * world area id: 0, the room area id: 1
      */
@@ -55,6 +71,20 @@ public class TestConst {
                 worldBoard[y][x] = new GroundSpace();
             }
         }
+=======
+    public static World world;
+
+    //public static Map<Room, TransitionSpace> entrances;
+    public static Map<TransitionSpace, Area> entrances;
+
+    static {
+
+        entrances = new HashMap<>();
+
+        // first make the world map
+        MapElement[][] worldBoard = new MapElement[7][8];
+        world = new World(worldBoard);
+>>>>>>> master
 
         // obstacles
         int[][] obstacleCoords = { { 3, 0 }, { 4, 0 }, { 5, 0 }, { 6, 0 }, { 7, 0 },
@@ -87,6 +117,7 @@ public class TestConst {
         loot3.add(new Antidote("A potion of antidote.", Virus.G_Virus));
         worldBoard[6][0] = new Chest("chest 3", 789, true, loot3);
 
+<<<<<<< HEAD
         // transition space
         Position p1 = new Position(6, 3, 0);
         Position p2 = new Position(1, 2, 1);
@@ -117,6 +148,18 @@ public class TestConst {
         loot5.add(new Antidote("A potion of antidote.", Virus.G_Virus));
         loot5.add(new Antidote("A potion of antidote.", Virus.G_Virus));
         roomBoard[1][2] = new Cupboard("A cupboard", 999, true, loot5);
+=======
+        // ===============================
+
+        // room
+        MapElement[][] roomBoard = new MapElement[3][3];
+        Room room = new Room(roomBoard, 11111, true);
+
+
+        // obstacles
+        roomBoard[1][1] = new Obstacle("obstacle");
+        roomBoard[1][2] = new Obstacle("Table");
+>>>>>>> master
 
         // chest in room
         List<Item> lootInRoom = new ArrayList<>();
@@ -124,6 +167,7 @@ public class TestConst {
         lootInRoom.add(new Torch("A Torch."));
         roomBoard[0][2] = new Chest("chest in room", 123, false, lootInRoom);
 
+<<<<<<< HEAD
         // transition space
         TransitionSpace tsRoom = new TransitionSpace(p2, p1, Direction.South);
         roomBoard[2][1] = tsRoom;
@@ -131,6 +175,27 @@ public class TestConst {
         // the Hashmap
         areas.put(0, world);
         areas.put(1, room);
+=======
+        Position worldPos = new Position(6,3); //room entrance position in world
+        Position roomPos = new Position(1,2);	//world entrance position in room.
+        // room entrance from world, this has to be remembered by the room
+        TransitionSpace roomEntrance = new TransitionSpace(worldPos, roomPos, Direction.North);
+        worldBoard[3][6] = roomEntrance;
+        //adds the entrance to the entrances map.
+        entrances.put(roomEntrance, world);
+
+        // room exit
+        TransitionSpace roomExit = new TransitionSpace(roomPos, worldPos, Direction.South);
+        roomBoard[2][1] = roomExit;
+        entrances.put(roomExit, room);
+
+        // let the room remember exit
+        room.rememberExit();
+
+        
+
+
+>>>>>>> master
     }
 
 }
