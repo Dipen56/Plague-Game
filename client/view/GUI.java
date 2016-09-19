@@ -294,9 +294,9 @@ public class GUI extends Application {
 	 * @param text
 	 * @param user
 	 */
-	public void setChatText(String text, String user) {
+	public void setChatText(String text) {
 		chatText = chatText + "\n";
-		chatText = chatText + user + ": " + text;
+		chatText = chatText +text;
 		textAreaLable.setText(chatText);
 	}
 
