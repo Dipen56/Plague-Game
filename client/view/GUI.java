@@ -31,6 +31,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.input.KeyCode;
 import javafx.stage.WindowEvent;
 import javafx.beans.value.*;
+
+import java.awt.Point;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.Executors;
@@ -47,6 +49,8 @@ import client.rendering.Rendering;
  *
  */
 public class GUI extends Application {
+	// Point on center of the board
+	private Point playerLoc = new Point(5, 0);
 	// GUI Style CSS
 	private static final String STYLE_CSS = "/main.css";
 	// Constants Images
@@ -138,15 +142,15 @@ public class GUI extends Application {
 		group.prefHeight(HEIGHT_VALUE);
 
 		// Calls the rendering
-		render.render(group);
+		render.render(group, playerLoc);
 		group.setLayoutX(3);
 		group.setLayoutY(35);
 		// only anchor sort of works
-		//AnchorPane temp = new AnchorPane();
-		//temp.setPrefWidth(GAMEPANE_WIDTH_VALUE);
-		//temp.getChildren().add(group);
+		// AnchorPane temp = new AnchorPane();
+		// temp.setPrefWidth(GAMEPANE_WIDTH_VALUE);
+		// temp.getChildren().add(group);
 		borderPane.getChildren().add(group);
-		//borderPane.getChildren().add(temp);
+		// borderPane.getChildren().add(temp);
 		Scene scene = new Scene(borderPane, WIDTH_VALUE, HEIGHT_VALUE);
 		scene.getStylesheets().add(this.getClass().getResource(STYLE_CSS).toExternalForm());
 		scene.setOnKeyPressed(keyEvent);
@@ -318,7 +322,7 @@ public class GUI extends Application {
 	/**
 	 * this method will return the masg type in the chat box apon clicking the
 	 * send button.
-	 * 
+	 *
 	 * @return
 	 */
 	public String getChatMsg() {
@@ -357,15 +361,23 @@ public class GUI extends Application {
 				if (event.getCode() == KeyCode.LEFT) {
 					// this is for moving left
 					System.out.println("left");
+					playerLoc.setLocation(playerLoc.getX() + 1, playerLoc.getY());
+					render.render(group, playerLoc);
 				} else if (event.getCode() == KeyCode.RIGHT) {
 					// this is for moving right
 					System.out.println("right");
+					playerLoc.setLocation(playerLoc.getX() - 1, playerLoc.getY());
+					render.render(group, playerLoc);
 				} else if (event.getCode() == KeyCode.UP) {
 					// this is for moving up
 					System.out.println("up");
+					playerLoc.setLocation(playerLoc.getX(), playerLoc.getY() + 1);
+					render.render(group, playerLoc);
 				} else if (event.getCode() == KeyCode.DOWN) {
 					// this is for moving down
 					System.out.println("down");
+					playerLoc.setLocation(playerLoc.getX(), playerLoc.getY() - 1);
+					render.render(group, playerLoc);
 				}
 
 			}

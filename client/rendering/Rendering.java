@@ -16,14 +16,15 @@ import javafx.scene.paint.ImagePattern;
 /**
  * This class represents the main rendering class, this class will control the
  * rendering of the game board, character, and objects.
- * 
+ *
  * @author Dipen
  *
  */
 
 public class Rendering {
 	private static final String PLAYER_IMAGE = "/standingstillrear.png";
-	private static final String BACKGROUND_IMAGE = "/background.gif";
+	//private static final String BACKGROUND_IMAGE = "/background.gif";
+	private static final String BACKGROUND_IMAGE = "/night.jpg";
 	private static final String GRASS_IMAGE = "/grass.png";
 	private Group group;
 
@@ -42,12 +43,12 @@ public class Rendering {
 
 	/**
 	 * this method is used to render the game
-	 * 
+	 *
 	 * @param group
 	 */
-	public void render(Group renderGroup) {
+	public void render(Group renderGroup,Point playerLoc) {
 		this.group = renderGroup;
-
+		Image character =  loadImage(PLAYER_IMAGE);
 		Image image = loadImage(BACKGROUND_IMAGE);
 		Image grass = loadImage(GRASS_IMAGE);
 		ImageView imageViewNight = new ImageView();
@@ -61,7 +62,7 @@ public class Rendering {
 		// side
 		int squaresToRight = 0;// //the number of squares on the player's
 		// right side
-		Point playerLoc = new Point(0, 0); // center
+		//Point playerLoc = new Point(5, 0); // center
 		int boardSize = 10;
 		squaresInFront = boardSize - playerLoc.y;
 		squaresToLeft = (boardSize - playerLoc.x) - 1;
@@ -202,11 +203,10 @@ public class Rendering {
 			//Renders the player onto the board
 			charRender();
 		}
-
 	}
-	
+
 	public void charRender(){
-		
+
 	}
 
 	private Image loadImage(String name) {
