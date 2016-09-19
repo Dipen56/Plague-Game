@@ -1,5 +1,7 @@
 package dataStorage.alternates;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 
 import server.game.items.Antidote;
@@ -10,6 +12,7 @@ import server.game.items.Torch;
  * A copy of a Torch object, for use in parsing the object into XML.
  * @author Daniel Anastasi 300145878
  */
+@XmlAccessorType(XmlAccessType.FIELD)
 public class AltTorch extends AltItem{
 
 	/**
@@ -53,4 +56,15 @@ public class AltTorch extends AltItem{
 		return new Torch(description, timeLimit, isFlaming);
 	}
 
+	
+	/**
+	 * Returns a string representation of this object's fields.
+	 */
+	public String toString(){
+		StringBuffer b = new StringBuffer("");
+		b.append("TORCH: ");
+		b.append(this.timeLimit + " ");
+		b.append(this.isFlaming + " ");
+		return b.toString();
+	}
 }

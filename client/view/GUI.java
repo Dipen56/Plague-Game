@@ -7,9 +7,10 @@ import javafx.scene.image.Image;
 import javafx.application.*;
 import javafx.stage.Stage;
 import javafx.scene.Group;
-
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
@@ -88,7 +89,16 @@ public class GUI extends Application {
 	private EventHandler<WindowEvent> windowEvent;
 	private rendering render = new rendering();
 
+	public static ViewControler viewControler;
+
+	public GUI(ViewControler viewControler) {
+		this.viewControler = viewControler;
+		// GUI.launch(GUI.class);
+
+	}
+
 	public GUI() {
+		// leave this constructor in here need to run the gui.
 	}
 
 	/**
@@ -123,14 +133,21 @@ public class GUI extends Application {
 		setminiMap();
 		setchat();
 		setItems();
-		gamePane = new StackPane();
-		gamePane.setPrefHeight(HEIGHT_VALUE);
-		gamePane.setPrefWidth(GAMEPANE_WIDTH_VALUE);
+
+		group.prefWidth(GAMEPANE_WIDTH_VALUE);
+		group.prefHeight(HEIGHT_VALUE);
 
 		// Calls the rendering
 		render.render(group);
-		gamePane.getChildren().add(group);
-		borderPane.setLeft(gamePane);
+		group.setLayoutX(3);
+		group.setLayoutY(35);
+		// only anchor sort of works
+		AnchorPane temp = new AnchorPane();
+		//temp.setPrefWidth(GAMEPANE_WIDTH_VALUE);
+		//temp.getChildren().add(group);
+		borderPane.getChildren().add(group);
+		//borderPane.getChildren().add(temp);
+		
 		Scene scene = new Scene(borderPane, WIDTH_VALUE, HEIGHT_VALUE);
 		scene.getStylesheets().add(this.getClass().getResource(STYLE_CSS).toExternalForm());
 		scene.setOnKeyPressed(keyEvent);
@@ -301,6 +318,18 @@ public class GUI extends Application {
 	}
 
 	/**
+	 * this method will return the masg type in the chat box apon clicking the
+	 * send button.
+	 * 
+	 * @return
+	 */
+	public String getChatMsg() {
+		// System.out.println(render);
+		String msgToSend = msg.getText();
+		return msgToSend;
+	}
+
+	/**
 	 * this method is used to check for action and give a implementation of
 	 * handle method
 	 */
@@ -309,7 +338,8 @@ public class GUI extends Application {
 			@Override
 			public void handle(ActionEvent event) {
 				if (event.getSource() == send) {
-					// send the typed massage and clear text area with ""
+					viewControler.getChatMsg(getChatMsg());
+
 				}
 
 			}
@@ -369,14 +399,4 @@ public class GUI extends Application {
 		return image;
 	}
 
-	/**
-	 * this method is just here for testing the gui
-	 *
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		// this lunch's the window which will end up call the start method above
-		launch(args);
-
-	}
 }

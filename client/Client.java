@@ -22,8 +22,15 @@ public class Client {
 		PacketTypes p = new PacketTypes();
 		PacketTypes.Message message;
 		PacketTypes.LogIn login = null;
+<<<<<<< HEAD
 		ViewControler viewControl = new ViewControler(null);
 		rendering renderer;
+=======
+		// GUI gui = new GUI(); i think this is not needed instead
+
+		ViewControler viewControler = new ViewControler(args);
+		Rendering renderer;
+>>>>>>> master
 		String consoleMessage;
 		BufferedReader bf = new BufferedReader(new InputStreamReader(System.in));
 
@@ -33,14 +40,18 @@ public class Client {
 		 * to each client
 		 */
 		String servername = bf.readLine().trim();
+<<<<<<< HEAD
 		ThreadClient clientThread = new ThreadClient(servername,viewControl);
+=======
+		ThreadClient clientThread = new ThreadClient(servername, viewControler);
+>>>>>>> master
 		clientThread.start(); // start thread
 		consoleMessage = "Welcome to the SERVER!\n" + "IP address is : " + clientThread.getClientAddress()
 				+ " Port number is " + clientThread.getClientPort() + "\n";
 		consoleMessage += "Pls enter a username";
 		System.out.println(consoleMessage);
 
-		login = p.new LogIn( ("1"+bf.readLine()).getBytes());
+		login = p.new LogIn(("1" + bf.readLine()).getBytes());
 		login.sendMessage(clientThread);
 		while (true) {
 			try {

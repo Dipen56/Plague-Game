@@ -1,15 +1,25 @@
 package dataStorage.alternates;
 
+import java.awt.List;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 import server.game.Game;
+import server.game.items.Antidote;
+import server.game.items.Item;
 import server.game.player.Player;
+import server.game.player.Virus;
 import server.game.world.Area;
+import server.game.world.Chest;
 import server.game.world.GroundSquare;
+import server.game.world.Obstacle;
 import server.game.world.Room;
 import server.game.world.RoomEntrance;
 import server.game.world.TransitionSpace;
@@ -22,8 +32,25 @@ import server.game.world.World;
  *
  */
 @XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
 public class AltGame{
-
+	
+	/**
+	 * Whatever you do don't delete either this altObstTypeProtector or altChestTypeProtector. 
+	 * I don't know why but them being here allows the parser to put objects of their types into the xml file.
+	 * Without it, the parser does not recognise these types of object, and they will not be written to the game save. 
+	 */
+	@XmlElement
+	private AltObstacle altObstTypeProtector = new AltObstacle();
+	@XmlElement
+	private AltChest altChestTypeProtector = new AltChest();
+	@XmlElement
+	private AltAntidote altAntidote = new AltAntidote();
+	@XmlElement
+	private AltKey aKey = new AltKey();
+	@XmlElement
+	private AltTorch aTorch = new AltTorch();
+	
 	/**
 	 * An alternate version of a World object.
 	 */
@@ -59,12 +86,20 @@ public class AltGame{
 
 		entrances = new HashMap<>();
 
-
 		// Copies all entries from original entrances list, replacing values with alternative objects
 		for(Map.Entry<TransitionSpace, Area> m: game.getEntrances().entrySet()){
 			TransitionSpace ts = m.getKey();
+
 			Area area = m.getValue();
-			AltArea altArea = new AltWorld(area);
+			AltArea altArea = null;
+			if(area instanceof World){
+				altArea = new AltWorld(area);
+			}
+			else if(area instanceof Room){
+				altArea = new AltRoom(area);
+			}
+			else
+				throw new IllegalArgumentException("Area in game entrances is not of known type.");
 			AltTransitionSpace ats = new AltTransitionSpace(ts);
 			entrances.put(ats, altArea);
 		}
@@ -81,9 +116,14 @@ public class AltGame{
 		Map<TransitionSpace, Area> entrances = new HashMap<>();
 		Player player = this.player.getOriginal();
 		for(Map.Entry<AltTransitionSpace, AltArea> m: this.entrances.entrySet()){
-			entrances.put(((AltTransitionSpace)m.getKey()).getOriginal(), ((AltArea)m.getValue()).getOriginal());
+			Area area = ((AltArea)m.getValue()).getOriginal();
+			entrances.put(((AltTransitionSpace)m.getKey()).getOriginal(), area);
 		}
-		return new Game(world, entrances, player);
+		Game game =  new Game(world, entrances, player);
+		
+		return game;
 	}
+	
+
 }
 
