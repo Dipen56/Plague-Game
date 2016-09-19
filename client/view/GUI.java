@@ -36,7 +36,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import client.rendering.Rendering;
+import client.rendering.rendering;
 
 /**
  * This class represents the main GUI class this class bring together all the
@@ -86,7 +86,7 @@ public class GUI extends Application {
 	private EventHandler<MouseEvent> mouseEvent;
 	// for window resizing not really need else where
 	private EventHandler<WindowEvent> windowEvent;
-	private Rendering render = new Rendering();
+	private rendering render = new rendering();
 
 	public GUI() {
 	}

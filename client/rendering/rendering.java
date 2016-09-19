@@ -8,12 +8,12 @@ import javafx.scene.image.ImageView;
 /**
  * This class represents the main rendering class, this class will control the
  * rendering of the game board, character, and objects.
- * 
+ *
  * @author Angelo & Dipen
  *
  */
 
-public class Rendering {
+public class rendering {
 	private double dimension = 9.1;
 	private int renderWidth = 630;
 	private int charWidth = 40;
@@ -22,13 +22,13 @@ public class Rendering {
 	private ImageView imageViewCharacter = new ImageView();
 	private Thread thread = new Thread();
 
-	public Rendering() {
+	public rendering() {
 	}
 
 //	public void render(Group group) {
 //		// going to do this with poly gones and then add images on top of them
 //		// done.
-//		
+//
 //	}
 	 public void render(Group group) {
 	 // Night image background
@@ -38,7 +38,7 @@ public class Rendering {
 	 imageViewNight.setFitWidth(renderWidth);
 	 imageViewNight.setFitHeight(GUI.HEIGHT_VALUE/2);
 	 group.getChildren().add(imageViewNight);
-	
+
 	 // Game grass field
 	 Image grass = loadImage("/grass border.jpg");
 	 // x position on which the grass (board) starts to render
@@ -64,7 +64,7 @@ public class Rendering {
 	 }
 	 yPoint = yPoint + grassHeight;
 	 }
-	
+
 	 // Tree on the board
 	 Image tree = loadImage("/tree.png");
 	 ImageView imageViewTree = new ImageView();
@@ -76,7 +76,7 @@ public class Rendering {
 	 imageViewTree.setX(100);
 	 imageViewTree.setY(GUI.HEIGHT_VALUE - 500);
 	 group.getChildren().add(imageViewTree);
-	
+
 	 // Player on the board
 	 imageViewCharacter.setImage(player);
 	 // Temporary height of the character (fix later)
