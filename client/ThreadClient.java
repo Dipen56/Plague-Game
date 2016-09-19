@@ -9,6 +9,7 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 
 import client.view.GUI;
+import client.view.ViewController;
 import server.Packet.DataType;
 import server.PacketTypes;
 import server.Server;
@@ -21,10 +22,10 @@ public class ThreadClient extends Thread {
 
     private DatagramSocket clientSocket;
 	private InetAddress ipAddress;
-	private GUI gui;
+	private ViewController GUIController;
 
-	public ThreadClient(String add, GUI g) {
-		this.gui = g;
+	public ThreadClient(String add,ViewController view) {
+		this.GUIController = view;
 		try {
 			clientSocket = new DatagramSocket();
 			ipAddress = InetAddress.getByName(add);

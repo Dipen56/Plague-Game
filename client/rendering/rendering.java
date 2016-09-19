@@ -11,7 +11,7 @@ import javafx.scene.image.ImageView;
  *
  */
 
-public class rendering{
+public class Rendering{
 
 	public void draw(ImageView v) {
 
