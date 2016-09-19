@@ -203,7 +203,7 @@ public class Rendering {
 			// also be the top left part in the prevous tile
 			x3 = nowStartX;
 			y3 = topLine - tileHeight * Math.pow(scaleY, i + 1);
-			
+
 			// update the bot left point to the previous tiles top part which
 			// will also be the top right part in the previous tile
 			x2 = nowStartX + nowWidthOfSquare;
@@ -214,43 +214,45 @@ public class Rendering {
 			topLine = topLine - tileHeight * Math.pow(scaleY, i + 1);
 
 		}
-		renderObjects();
+		// renderObjects();
+		
 	}
 
 	/**
 	 * this method is used to render the object in the game.
 	 */
-	public void renderObjects() {
-		String[][] worldMap = mapParser.getMap();
-		double objectHight = tileHeight;
-		double objectWidth = tileWidth;
-		double objectStringPos = centerHeght - objectHight;
-		double topLine=centerHeght;
-		// for (int row = 0; row < playerLoc.y; row++) {
-		// for (int col = 0; col < playerLoc.x; col++) {
-		//
-		// }
-		// }
-		for (int row = 0; row < 1; row++) {
-			for (int col = 0; col < 1; col++) {
-				Image tree = loadImage(TREE_IMAGE);
-				ImageView imageViewTree = new ImageView();
-				imageViewTree.setImage(tree);
-				
-				
-				imageViewTree.setFitHeight(topLine - objectHight * Math.pow(scaleY, col + 1));
-				imageViewTree.setFitWidth(objectWidth);
-				// here is where we need to do the logic
-				imageViewTree.setX(100);
-
-				imageViewTree.setY(centerHeght-200);
-
-				group.getChildren().add(imageViewTree);
-				topLine =topLine - objectHight * Math.pow(scaleY, col + 1);
-				
-			}
-		}
-	}
+	// public void renderObjects() {
+	// String[][] worldMap = mapParser.getMap();
+	// double objectHight = tileHeight;
+	// double objectWidth = tileWidth;
+	// double objectStringPos = centerHeght - objectHight;
+	// double topLine=centerHeght;
+	// // for (int row = 0; row < playerLoc.y; row++) {
+	// // for (int col = 0; col < playerLoc.x; col++) {
+	// //
+	// // }
+	// // }
+	// for (int row = 0; row < 1; row++) {
+	// for (int col = 0; col < 1; col++) {
+	// Image tree = loadImage(TREE_IMAGE);
+	// ImageView imageViewTree = new ImageView();
+	// imageViewTree.setImage(tree);
+	//
+	//
+	// imageViewTree.setFitHeight(topLine - objectHight * Math.pow(scaleY, col +
+	// 1));
+	// imageViewTree.setFitWidth(objectWidth);
+	// // here is where we need to do the logic
+	// imageViewTree.setX(100);
+	//
+	// imageViewTree.setY(centerHeght-200);
+	//
+	// group.getChildren().add(imageViewTree);
+	// topLine =topLine - objectHight * Math.pow(scaleY, col + 1);
+	//
+	// }
+	// }
+	// }
 
 	private Image loadImage(String name) {
 		Image image = new Image(this.getClass().getResourceAsStream(name));
