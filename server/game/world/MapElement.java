@@ -6,5 +6,16 @@ package server.game.world;
  *
  */
 public class MapElement {
-
+	
+	@Override
+	public boolean equals(Object obj){
+		if(this instanceof Chest)
+			return ((Chest)this).equals(obj);
+		if(this instanceof Obstacle)
+			return ((Obstacle)this).equals(obj);
+		if(this instanceof TransitionSpace)
+			return ((TransitionSpace)this).equals(obj);
+		return false;
+		
+	}
 }

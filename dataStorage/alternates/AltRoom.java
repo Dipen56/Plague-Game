@@ -1,13 +1,17 @@
 package dataStorage.alternates;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import server.game.world.Area;
+import server.game.world.Chest;
 import server.game.world.MapElement;
 import server.game.world.Obstacle;
 import server.game.world.Room;
 import server.game.world.TransitionSpace;
+import server.game.world.World;
 
 /**
  * This class represents the an alternate version of the Room class, specifically for XML parsing.
@@ -15,28 +19,26 @@ import server.game.world.TransitionSpace;
  * @author Hector (Fang Zhao 300364061), Daniel Anastasi 300145878.
  *
  */
+@XmlAccessorType(XmlAccessType.FIELD)
 public class AltRoom extends AltArea{
+	
 	/**
 	 * The id for the key to this room.
 	 */
-	@XmlElement
-	private int keyID;
+	//@XmlElement
+	//private int keyID;
 	/**
 	 * Is true when the room is locked.
 	 */
-	@XmlElement
-	boolean isLocked;
-	/**
-	 * The exit out of this room.
-	 */
-	@XmlElement
-	private AltTransitionSpace exit;
+	//@XmlElement
+	//boolean isLocked;
+
 
 	public AltRoom(Area area) {
-		super(area);
-		keyID = ((Room)area).getKeyID();
+		super(area);						
+		/*keyID = ((Room)area).getKeyID();
 		isLocked = ((Room)area).isLocked();
-		exit = new AltTransitionSpace(((Room)area).getExit());
+		*/
 	}
 
 	/**
@@ -58,23 +60,27 @@ public class AltRoom extends AltArea{
 		for(int row = 0; row < board.length; row++){
 			for(int col = 0; col < board[0].length; col++){
 				AltMapElement ame = this.board[row][col];
-				if(ame instanceof AltObstacle){
+				if(ame instanceof AltChest){
+					board[row][col] = ((AltChest)this.board[row][col]).getOriginal();
+				}
+				else if(ame instanceof AltObstacle){
 					board[row][col] = ((AltObstacle)this.board[row][col]).getOriginal();
 				}
 				else if(ame instanceof AltTransitionSpace){
 					board[row][col] = ((AltTransitionSpace)this.board[row][col]).getOriginal();
 				}
-				else if(ame instanceof AltChest){
-					board[row][col] = ((AltChest)this.board[row][col]).getOriginal();
-				}
+				
 				else{
 					//This should not happen.
 				}
 			}
 		}
-		TransitionSpace ts = exit.getOriginal();
-
-		return new Room(board, keyID, isLocked, ts);
+		
+		//Fills the player portals list
+		Room newArea = new Room(board, keyID, isLocked);
+		newArea.registerPortals();			//Fills the player portals list
+		return newArea;
 	}
+	
 
 }

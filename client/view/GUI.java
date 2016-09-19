@@ -7,9 +7,10 @@ import javafx.scene.image.Image;
 import javafx.application.*;
 import javafx.stage.Stage;
 import javafx.scene.Group;
-
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
@@ -132,14 +133,20 @@ public class GUI extends Application {
 		setminiMap();
 		setchat();
 		setItems();
-		gamePane = new StackPane();
-		gamePane.setPrefHeight(HEIGHT_VALUE);
-		gamePane.setPrefWidth(GAMEPANE_WIDTH_VALUE);
+
+		group.prefWidth(GAMEPANE_WIDTH_VALUE);
+		group.prefHeight(HEIGHT_VALUE);
 
 		// Calls the rendering
 		render.render(group);
-		gamePane.getChildren().add(group);
-		borderPane.setLeft(gamePane);
+		group.setLayoutX(3);
+		group.setLayoutY(35);
+		// only anchor sort of works
+		//AnchorPane temp = new AnchorPane();
+		//temp.setPrefWidth(GAMEPANE_WIDTH_VALUE);
+		//temp.getChildren().add(group);
+		borderPane.getChildren().add(group);
+		//borderPane.getChildren().add(temp);
 		Scene scene = new Scene(borderPane, WIDTH_VALUE, HEIGHT_VALUE);
 		scene.getStylesheets().add(this.getClass().getResource(STYLE_CSS).toExternalForm());
 		scene.setOnKeyPressed(keyEvent);

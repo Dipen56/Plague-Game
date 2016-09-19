@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementRef;
@@ -30,6 +32,7 @@ import server.game.world.World;
  * @author Hector (Fang Zhao 300364061), Daniel Anastasi 300145878
  *
  */
+@XmlAccessorType(XmlAccessType.FIELD)
 public class AltPlayer {
 	/**
 	 * The player's user ID
@@ -54,7 +57,7 @@ public class AltPlayer {
 	 */
 	@XmlElement
 	private int health;
-
+	
 	/**
 	 * True if the player is still alive.
 	 */
@@ -101,6 +104,7 @@ public class AltPlayer {
 	public AltPlayer(Player player) {
 		if(player == null)
 			throw new IllegalArgumentException("Argument is null");
+		player.saveRecordOfHealth();	//records player health as unchanging int for testing game save validity.
 		this.uID = player.getId();
 		this.name = player.getName();
 		this.virus = player.getVirus();
@@ -137,10 +141,9 @@ public class AltPlayer {
 			altArea = new AltRoom(area);
 		}
 		else{
-			//This should not happen.
+			throw new IllegalArgumentException("Unknown subtype of Area");
 		}
-
-		altArea = new AltArea(player.getArea());
+		
 		position = new AltPosition(player.getPosition());
 		direction = player.getDirection();
 	}

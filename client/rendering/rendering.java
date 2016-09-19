@@ -1,92 +1,212 @@
 package client.rendering;
 
+import java.awt.Color;
+import java.awt.Point;
+
+import javax.swing.JLabel;
+
 import client.view.GUI;
+
 import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.shape.Polygon;
+import javafx.scene.paint.ImagePattern;
 
 /**
  * This class represents the main rendering class, this class will control the
  * rendering of the game board, character, and objects.
  * 
- * @author Angelo & Dipen
+ * @author Dipen
  *
  */
 
 public class Rendering {
-	private double dimension = 9.1;
-	private int renderWidth = 630;
-	private int charWidth = 40;
-	private int charHeight = 70;
-	private Image player = loadImage("/standingstillrear.png");
-	private ImageView imageViewCharacter = new ImageView();
-	private Thread thread = new Thread();
+	private static final String PLAYER_IMAGE = "/standingstillrear.png";
+	private static final String BACKGROUND_IMAGE = "/background.gif";
+	private static final String GRASS_IMAGE = "/grass.png";
 	private Group group;
+
+	public double scaleY = 0.85; // lower number less scaling
+	private int gamePaneHeight = GUI.HEIGHT_VALUE - 35; // 35 y alignment of
+														// group
+	private int gamePaneWidth = GUI.GAMEPANE_WIDTH_VALUE - 3; // 3 x alignment
+																// of group
+	private int tileWidth = 200;
+	private int tileHeight = 60;
+	public int centerWidth = gamePaneWidth / 2;
+	public int centerHeght = gamePaneHeight;
 
 	public Rendering() {
 	}
 
-	// public void render(Group group) {
-	// // going to do this with poly gones and then add images on top of them
-	// // done.
-	// this.group = group;
+	/**
+	 * this method is used to render the game
+	 * 
+	 * @param group
+	 */
+	public void render(Group renderGroup) {
+		this.group = renderGroup;
 
-	// }
-	
-	public void render(Group group) {
-		this.group = group;
-		// Night image background
-		Image image = loadImage("/background.gif");
+		Image image = loadImage(BACKGROUND_IMAGE);
+		Image grass = loadImage(GRASS_IMAGE);
 		ImageView imageViewNight = new ImageView();
 		imageViewNight.setImage(image);
-		imageViewNight.setFitWidth(renderWidth);
-		imageViewNight.setFitHeight(GUI.HEIGHT_VALUE / 2);
+		imageViewNight.setFitWidth(gamePaneWidth + 3);
+		imageViewNight.setFitHeight(gamePaneHeight + 35);
 		group.getChildren().add(imageViewNight);
+		int squaresInFront = 0;// the number of squares on the player's face
+		// side
+		int squaresToLeft = 0;// the number of squares on the player's left
+		// side
+		int squaresToRight = 0;// //the number of squares on the player's
+		// right side
+		Point playerLoc = new Point(0, 0); // center
+		int boardSize = 10;
+		squaresInFront = boardSize - playerLoc.y;
+		squaresToLeft = (boardSize - playerLoc.x) - 1;
+		squaresToRight = (boardSize - squaresToLeft);
 
-		// Game grass field
-		Image grass = loadImage("/grass border.jpg");
-		// x position on which the grass (board) starts to render
-		// needs revising in accordance to the renderWidth
-		double xPoint = ((renderWidth / 2) - (grass.getWidth() * dimension / 2));
-		// y position on which the grass (board) starts to render
-		double yPoint = GUI.HEIGHT_VALUE / 5 * 2.5;
-		// height of the grass image
-		int grassHeight;
-		for (int row = 0; row < dimension; row++) {
-			grassHeight = (int) (((grass.getHeight() / dimension) * row) + grass.getHeight() / dimension);
-			for (int col = 0; col < dimension; col++) {
-				// switch between the border, and no border grass images
-				grass = loadImage("/grass.png");
-				// grass = loadImage("/grass border.jpg");
-				ImageView imageViewGrass = new ImageView();
-				imageViewGrass.setImage(grass);
-				imageViewGrass.setX((xPoint) + (col * grass.getWidth()));
-				imageViewGrass.setY(yPoint);
-				imageViewGrass.setFitHeight(grassHeight);
-				group.getChildren().add(imageViewGrass);
+		// this is used to for the top line points x0 and x1 which will be
+		// scaled from larger to smaller
+		double topLine = centerHeght;
+		// double prevTopLine = centerHeght;
+		// this point is the bot right and will also got from larger to smaller
+		// int previouX1
+		// it's twice the size of the set tile width
+		double x2 = centerWidth + tileWidth / 2;
+		// this point is is the bot right and is set it the height of the game
+		// pane so at the bottom of window.
+		double y2 = centerHeght;
+		// this point is the bot lift and will also got from larger to smaller
+		// int previouX0
+		// it's twice the size of the set tile width
+		double x3 = centerWidth - tileWidth / 2;
+		// this point is is the bot lift and is set it the height of the game
+		// pane so at the bottom of window.
+		double y3 = centerHeght;
+		// ===================================================================================================
+		// Below this is point is the code for all the rendering for first
+		// person
+		// ====================================================================================================
+		for (int i = 0; i < squaresInFront; i++) {
+			// tiles in front of the player is rendered first
+			Polygon p = new Polygon();
+
+			p.setFill(new ImagePattern(grass));
+			// origins
+			p.setLayoutY(10);
+			// current scaled width of the top part of the tile
+			double nowWidthOfSquare = tileWidth * Math.pow(scaleY, i + 1);
+			// this is the top part of the tile starting x pos
+			double nowStartX = centerWidth - nowWidthOfSquare / 2;
+			// this is the bot part of the tile which is just the previous tiles
+			// top part
+			p.getPoints().add(x3);
+			p.getPoints().add(y3);
+			p.getPoints().add(x2);
+			p.getPoints().add(y2);
+			// this is the top part to the tile and will be scaled from larger
+			// to smaller
+			// /__\
+			p.getPoints().add(nowStartX + nowWidthOfSquare);
+			p.getPoints().add(topLine - tileHeight * Math.pow(scaleY, i + 1));
+			p.getPoints().add(nowStartX);
+			p.getPoints().add(topLine - tileHeight * Math.pow(scaleY, i + 1));
+			group.getChildren().add(p);
+			// tiles on the lift of the players are render second for ever 1
+			// tile that in front of them
+			for (int j = 0; j < squaresToLeft; j++) {
+				Polygon p2 = new Polygon();
+				// this just push it down by 10
+				p2.setLayoutY(10);
+				// adds the grass image
+				p2.setFill(new ImagePattern(grass));
+				// this will get the width of the square that is the on facing
+				// the player
+				double previouWidthOfSquare = (x2 - x3);
+				// this is the bot part of the tile which is just placed to the
+				// left of the facing tile.
+				p2.getPoints().add(x3 - (j * previouWidthOfSquare));
+				p2.getPoints().add(y3);
+				p2.getPoints().add(x2 - (j * previouWidthOfSquare));
+				p2.getPoints().add(y2);
+				// this is the top part to the tile and will be scaled on the
+				// left from larger
+				// to smaller
+				p2.getPoints().add(nowStartX + nowWidthOfSquare - j * nowWidthOfSquare);
+				p2.getPoints().add(topLine - tileHeight * Math.pow(scaleY, i + 1));
+				p2.getPoints().add(nowStartX - j * nowWidthOfSquare);
+				p2.getPoints().add(topLine - tileHeight * Math.pow(scaleY, i + 1));
+				group.getChildren().add(p2);
 			}
-			yPoint = yPoint + grassHeight;
+			// tiles on the right of the players are render second for ever 1
+			// tile that in front of them
+			for (int j = 0; j < squaresToRight; j++) {
+
+				Polygon p3 = new Polygon();
+				// adds the grass image
+				p3.setFill(new ImagePattern(grass));
+				// this just push it down by 10
+				p3.setLayoutY(10);
+				// this will get the width of the square that is the on facing
+				// the player, the width will be the bot part of the facing
+				// player square.
+				double previouWidthOfSquare = (x2 - x3);
+				// this is the bot part of the tile which is just placed to the
+				// left of the facing tile.
+				double tempx3 = x3 + (j * previouWidthOfSquare);
+				// this is to force the polygons to draw in range of the screen
+				if (tempx3 > gamePaneWidth) {
+					tempx3 = gamePaneWidth;
+				}
+				p3.getPoints().add(tempx3);
+				p3.getPoints().add(y3);
+				double tempx2 = x2 + (j * previouWidthOfSquare);
+				if (tempx2 > gamePaneWidth) {
+					tempx2 = gamePaneWidth;
+				}
+
+				p3.getPoints().add(tempx2);
+				p3.getPoints().add(y2);
+				double tempx1 = nowStartX + nowWidthOfSquare + j * nowWidthOfSquare;
+				if (tempx1 > gamePaneWidth) {
+					tempx1 = gamePaneWidth;
+				}
+				// this is the top part to the tile and will be scaled on the
+				// left from larger
+				// to smaller
+				p3.getPoints().add(tempx1);
+				p3.getPoints().add(topLine - tileHeight * Math.pow(scaleY, i + 1));
+				double tempx0 = nowStartX + j * nowWidthOfSquare;
+				if (tempx0 > gamePaneWidth) {
+					tempx0 = gamePaneWidth;
+				}
+				p3.getPoints().add(tempx0);
+				p3.getPoints().add(topLine - tileHeight * Math.pow(scaleY, i + 1));
+				group.getChildren().add(p3);
+			}
+
+			// update the bot right point to previous tiles top part which will
+			// also be the top left part in the prevous tile
+			x3 = nowStartX;
+			y3 = topLine - tileHeight * Math.pow(scaleY, i + 1);
+			// update the bot left point to the previous tiles top part which
+			// will also be the top right part in the previous tile
+			x2 = nowStartX + nowWidthOfSquare;
+			y2 = topLine - tileHeight * Math.pow(scaleY, i + 1);
+			// prevTopLine = topLine;
+			// this updates the width of the next topline which will be used to
+			// calc x0 , x1 so the top part
+			topLine = topLine - tileHeight * Math.pow(scaleY, i + 1);
+			//Renders the player onto the board
+			charRender();
 		}
 
-		// Tree on the board
-		Image tree = loadImage("/tree.png");
-		ImageView imageViewTree = new ImageView();
-		imageViewTree.setImage(tree);
-		// This will need to be scaled later....
-		imageViewTree.setFitHeight(200);
-		imageViewTree.setFitWidth(170);
-		////////////////////////////////////////////////
-		imageViewTree.setX(100);
-		imageViewTree.setY(GUI.HEIGHT_VALUE - 500);
-		group.getChildren().add(imageViewTree);
-
-		// Player on the board
-		imageViewCharacter.setImage(player);
-		imageViewCharacter.setFitHeight(charHeight);
-		imageViewCharacter.setFitWidth(charWidth);
-		imageViewCharacter.setX(renderWidth / 2);
-		imageViewCharacter.setY(GUI.HEIGHT_VALUE - 150);
-		group.getChildren().add(imageViewCharacter);
+	}
+	
+	public void charRender(){
+		
 	}
 
 	private Image loadImage(String name) {

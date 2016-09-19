@@ -70,7 +70,7 @@ public class Room extends Area {
      * let the room remember where the exit is.
      */
     public void rememberExit() {
-        for (MapElement[] row : board) {
+        for (MapElement[] row : map) {
             for (MapElement col : row) {
                 if (col instanceof TransitionSpace) {
                     this.exit = (TransitionSpace) col;
@@ -95,5 +95,38 @@ public class Room extends Area {
     public TransitionSpace getExit() {
         return exit;
     }
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((exit == null) ? 0 : exit.hashCode());
+		result = prime * result + (isLocked ? 1231 : 1237);
+		result = prime * result + keyID;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (getClass() != obj.getClass())
+			return false;
+		Room other = (Room) obj;
+		if (exit == null) {
+			if (other.exit != null)
+				return false;
+		} else if (!exit.equals(other.exit))
+			return false;
+		if (isLocked != other.isLocked)
+			return false;
+		if (keyID != other.keyID)
+			return false;
+		if (!super.equals(obj))
+			return false;
+		return true;
+	}
+    
+    
 
 }

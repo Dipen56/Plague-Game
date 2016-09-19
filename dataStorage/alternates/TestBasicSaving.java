@@ -10,16 +10,18 @@ import server.game.world.Area;
 public class TestBasicSaving {
 
 	public TestBasicSaving(){
-
-		Game gameA = new Game(TestConst.world, TestConst.entrances);
-		for(Area a: gameA.getEntrances().values())
+		for(Area a: TestConst.entrances.values())
         	a.registerPortals();
+		Game gameA = new Game(TestConst.world, TestConst.entrances);
 		AltGame altGame = new AltGame(gameA);
 		XmlFunctions.saveFile(altGame);
 		altGame = XmlFunctions.loadFile();
+
 		Game gameB = altGame.getOriginal();
 		int i = 0;
-
+		
+		
+		
 	}
 
 

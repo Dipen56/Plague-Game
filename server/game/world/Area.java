@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Set;
 
 import server.game.Game;
+import server.game.items.Item;
 import server.game.player.Direction;
 import server.game.player.Player;
 
@@ -19,11 +20,19 @@ import server.game.player.Player;
  *
  */
 public class Area {
-
+	/**
+	 * Width of the map.
+	 */
 	private int width;
+	/**
+	 * Height of the map.
+	 */
 	private int height;
 
-	protected MapElement[][] board;
+	/**
+	 * The map itself.
+	 */
+	protected MapElement[][] map;
 
 	/**
 	 * Empty position, which can be used to spawn players.
@@ -131,7 +140,7 @@ public class Area {
 	 * @param board
 	 */
 	public Area(MapElement[][] board) {
-		this.board = board;
+		this.map = board;
 		this.width = board[0].length;
 		this.height = board.length;
 		this.exits = new HashSet<>();
@@ -153,8 +162,8 @@ public class Area {
 		return this.height;
 	}
 
-	public MapElement[][] getBoard(){
-		return this.board;
+	public MapElement[][] getMap(){
+		return this.map;
 	}
 
 	/**
@@ -162,9 +171,9 @@ public class Area {
 	 * from one of them.
 	 */
 	public void registerPortals() {
-		for (int row = 0; row < board.length; row++) {
-			for(int col = 0; col < board[0].length; col++) {
-				if(!(board[row][col] instanceof Obstacle)) {
+		for (int row = 0; row < map.length; row++) {
+			for(int col = 0; col < map[0].length; col++) {
+				if(!(map[row][col] instanceof Obstacle)) {
 					playerPortals.add(new Position(col,row));
 				}
 			}
@@ -189,7 +198,6 @@ public class Area {
 				return p;
 			}
 		}
-
 		return null;
 	}
 
@@ -210,7 +218,7 @@ public class Area {
 			return null;
 		}
 
-		return board[y][x];
+		return map[y][x];
 	}
 
 	/**
@@ -357,49 +365,10 @@ public class Area {
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-
-		Class objclass = obj.getClass();
-		boolean b = obj instanceof World;
-
-		//This area could be subclass
-		if((this instanceof World && ((World)this).getClass() != obj.getClass())
-				||(this instanceof Room && ((Room)this).getClass() != obj.getClass())
-				||(getClass() != obj.getClass())){
-			return false;
-		}
-		Area other = (Area) obj;
-		//not needed at this stage of testing
-		/*if (exits == null) {
-			if (other.exits != null)
-				return false;
-		} else if (!exits.equals(other.exits))
-			return false;	
-		 */	
-		if (height != other.height)
-			return false;
-
-		if (playerPortals == null) {
-			if (other.playerPortals != null)
-				return false;
-		} else if (!playerPortals.equals(other.playerPortals))
-			return false;
-		if (width != other.width)
-			return false;
-		if (!Arrays.deepEquals(board, other.board))
-			return false;
-		return true;
-	}
-
-	@Override
 	public String toString() {
-		StringBuilder sb = new StringBuilder();
+		StringBuilder sb = new StringBuilder();	
 
-		for (MapElement[] row : board) {
+		for (MapElement[] row : map) {
 			for (MapElement col : row) {
 				if(col != null)
 					sb.append(col.toString());
@@ -411,10 +380,42 @@ public class Area {
 
 		return sb.toString();
 	}
+	
 
-	// =======The following methods will be deleted =================
-	public int getWidth() {
-		return width;
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+
+		Class objclass = obj.getClass();
+		boolean b = obj instanceof World;
+
+		if(getClass() != obj.getClass()){
+			return false;
+		}
+		
+		Area other = (Area) obj;
+		if (height != other.height)
+			return false;
+
+		if (playerPortals == null) {
+			if (other.playerPortals != null)
+				return false;
+		} else if (!playerPortals.equals(other.playerPortals))
+			return false;
+		if (width != other.width)
+			return false;
+		
+		
+		List<Item> a =((Chest)map[0][2]).getLoot();
+		List<Item> n =((Chest)other.getMap()[0][2]).getLoot();
+		for(int i = 0; i < a.size(); i ++){
+			if(!a.get(i).equals(n.get(i)))
+				return false;
+		}
+		return true;
 	}
 
 }
