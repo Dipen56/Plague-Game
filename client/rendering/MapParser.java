@@ -39,7 +39,7 @@ public class MapParser {
 					if (lineChar[col].equals("T")) {
 						map[row][col] = "tree";
 					} else if (lineChar[col].equals("C")) {
-						map[row][col] = "col";
+						map[row][col] = "chest";
 					} else if (lineChar[col].equals("-")) {
 						map[row][col] = "grass";
 					}

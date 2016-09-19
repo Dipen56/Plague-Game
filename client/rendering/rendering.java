@@ -12,6 +12,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.shape.Polygon;
 import javafx.scene.paint.ImagePattern;
+import javafx.scene.paint.*;
 
 /**
  * This class represents the main rendering class, this class will control the
@@ -25,6 +26,7 @@ public class Rendering {
 	private static final String PLAYER_IMAGE = "/standingstillrear.png";
 	private static final String BACKGROUND_IMAGE = "/background.gif";
 	private static final String GRASS_IMAGE = "/grass.png";
+	private static final String TREE_IMAGE = "/tree.png";
 	private Group group;
 
 	public double scaleY = 0.85; // lower number less scaling
@@ -36,9 +38,12 @@ public class Rendering {
 	private int tileHeight = 60;
 	public int centerWidth = gamePaneWidth / 2;
 	public int centerHeght = gamePaneHeight;
+	private MapParser mapParser;
+	private Point playerLoc;
 
 	public Rendering() {
-		MapParser mapParser = new MapParser(10, 10);
+		// will need to get board size passed in
+		mapParser = new MapParser(10, 10);
 	}
 
 	/**
@@ -48,7 +53,6 @@ public class Rendering {
 	 */
 	public void render(Group renderGroup) {
 		this.group = renderGroup;
-
 		Image image = loadImage(BACKGROUND_IMAGE);
 		Image grass = loadImage(GRASS_IMAGE);
 		ImageView imageViewNight = new ImageView();
@@ -62,7 +66,8 @@ public class Rendering {
 		// side
 		int squaresToRight = 0;// //the number of squares on the player's
 		// right side
-		Point playerLoc = new Point(5, 0); // center
+		// this will be changed to the real players pos apon integration
+		playerLoc = new Point(5, 0);
 		int boardSize = 10;
 		squaresInFront = boardSize - playerLoc.y;
 		squaresToLeft = (boardSize - playerLoc.x) - 1;
@@ -114,6 +119,8 @@ public class Rendering {
 			p.getPoints().add(topLine - tileHeight * Math.pow(scaleY, i + 1));
 			p.getPoints().add(nowStartX);
 			p.getPoints().add(topLine - tileHeight * Math.pow(scaleY, i + 1));
+			p.setStroke(javafx.scene.paint.Color.AQUA);
+			p.setStrokeWidth(1);
 			group.getChildren().add(p);
 			// tiles on the lift of the players are render second for ever 1
 			// tile that in front of them
@@ -139,6 +146,8 @@ public class Rendering {
 				p2.getPoints().add(topLine - tileHeight * Math.pow(scaleY, i + 1));
 				p2.getPoints().add(nowStartX - j * nowWidthOfSquare);
 				p2.getPoints().add(topLine - tileHeight * Math.pow(scaleY, i + 1));
+				p2.setStroke(javafx.scene.paint.Color.AQUA);
+				p2.setStrokeWidth(1);
 				group.getChildren().add(p2);
 			}
 			// tiles on the right of the players are render second for ever 1
@@ -185,6 +194,8 @@ public class Rendering {
 				}
 				p3.getPoints().add(tempx0);
 				p3.getPoints().add(topLine - tileHeight * Math.pow(scaleY, i + 1));
+				p3.setStroke(javafx.scene.paint.Color.AQUA);
+				p3.setStrokeWidth(1);
 				group.getChildren().add(p3);
 			}
 
@@ -192,6 +203,7 @@ public class Rendering {
 			// also be the top left part in the prevous tile
 			x3 = nowStartX;
 			y3 = topLine - tileHeight * Math.pow(scaleY, i + 1);
+			
 			// update the bot left point to the previous tiles top part which
 			// will also be the top right part in the previous tile
 			x2 = nowStartX + nowWidthOfSquare;
@@ -202,7 +214,42 @@ public class Rendering {
 			topLine = topLine - tileHeight * Math.pow(scaleY, i + 1);
 
 		}
+		renderObjects();
+	}
 
+	/**
+	 * this method is used to render the object in the game.
+	 */
+	public void renderObjects() {
+		String[][] worldMap = mapParser.getMap();
+		double objectHight = tileHeight;
+		double objectWidth = tileWidth;
+		double objectStringPos = centerHeght - objectHight;
+		double topLine=centerHeght;
+		// for (int row = 0; row < playerLoc.y; row++) {
+		// for (int col = 0; col < playerLoc.x; col++) {
+		//
+		// }
+		// }
+		for (int row = 0; row < 1; row++) {
+			for (int col = 0; col < 1; col++) {
+				Image tree = loadImage(TREE_IMAGE);
+				ImageView imageViewTree = new ImageView();
+				imageViewTree.setImage(tree);
+				
+				
+				imageViewTree.setFitHeight(topLine - objectHight * Math.pow(scaleY, col + 1));
+				imageViewTree.setFitWidth(objectWidth);
+				// here is where we need to do the logic
+				imageViewTree.setX(100);
+
+				imageViewTree.setY(centerHeght-200);
+
+				group.getChildren().add(imageViewTree);
+				topLine =topLine - objectHight * Math.pow(scaleY, col + 1);
+				
+			}
+		}
 	}
 
 	private Image loadImage(String name) {
