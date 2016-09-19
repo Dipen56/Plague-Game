@@ -111,8 +111,6 @@ public class Game {
         // 1. remember all containers (for key re-distribution)
         // 2.
 
-        // start the world clock
-        startTiming();
     }
 
     /**
@@ -128,9 +126,6 @@ public class Game {
 
         this.world = world;
         this.areas = areas;
-
-        // start the world clock
-        startTiming();
     }
 
     /**
@@ -148,44 +143,6 @@ public class Game {
         this.players = new HashMap<>();
         this.torches = new ArrayList<>();
         joinPlayer(this.player);
-
-        // start the world clock
-        startTiming();
-    }
-
-    /**
-     * Start the world time. The world time is constantly advancing. As long as the server
-     * is running, no other events will stop it.
-     */
-    private void startTiming() {
-        // the world clock starts from a random time from 00:00:00 to 23:59:59
-        Random ran = new Random();
-        int hour = ran.nextInt(24);
-        int minute = ran.nextInt(60);
-        int second = ran.nextInt(60);
-        clock = LocalTime.of(hour, minute, second);
-
-        // start ticking
-        timer = new Timer();
-        timer.scheduleAtFixedRate(new TimerTask() {
-            @Override
-            public void run() {
-                // decrease every player's life
-                for (Player p : players.values()) {
-                    p.increaseHealth(-1);
-                }
-
-                // decrease every torch's time left
-                for (Torch t : torches) {
-                    if (t.isFlaming()) {
-                        t.Burn();
-                    }
-                }
-
-                // time advance by 1 second
-                clock = clock.plusSeconds(1);
-            }
-        }, 1000, 1000);
     }
 
     /**
@@ -244,13 +201,48 @@ public class Game {
     }
 
     /**
+     * Start the world time. The world time is constantly advancing. As long as the server
+     * is running, no other events will stop it.
+     */
+    public void startTiming() {
+        // the world clock starts from a random time from 00:00:00 to 23:59:59
+        Random ran = new Random();
+        int hour = ran.nextInt(24);
+        int minute = ran.nextInt(60);
+        int second = ran.nextInt(60);
+        clock = LocalTime.of(hour, minute, second);
+
+        // start ticking
+        timer = new Timer();
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                // decrease every player's life
+                for (Player p : players.values()) {
+                    p.increaseHealth(-1);
+                }
+
+                // decrease every torch's time left
+                for (Torch t : torches) {
+                    if (t.isFlaming()) {
+                        t.Burn();
+                    }
+                }
+
+                // time advance by 1 second
+                clock = clock.plusSeconds(1);
+            }
+        }, 1000, 1000);
+    }
+
+    /**
      * Disconnect the player, and re-distribute all his keys to locked containers.
      * 
      * @param player
      */
-    public void disconnectPlayer(Player player) {
+    public void disconnectPlayer(int playerId) {
         // delete player from player list.
-        players.remove(player);
+        Player player = players.remove(playerId);
 
         // delete his torch from torch list.
         List<Torch> hisTorches = player.getAllTorches();

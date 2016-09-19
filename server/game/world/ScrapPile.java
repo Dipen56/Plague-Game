@@ -40,4 +40,9 @@ public class ScrapPile extends Obstacle implements Container {
         return loot.add(item);
     }
 
+    @Override
+    public String toString() {
+        return "S";
+    }
+
 }

@@ -66,4 +66,9 @@ public class Cupboard extends Obstacle implements Container, Lockable {
         return loot.add(item);
     }
 
+    @Override
+    public String toString() {
+        return "C";
+    }
+
 }
