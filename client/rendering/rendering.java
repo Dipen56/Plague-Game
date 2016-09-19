@@ -38,6 +38,7 @@ public class Rendering {
 	public int centerHeght = gamePaneHeight;
 
 	public Rendering() {
+		MapParser mapParser = new MapParser(10, 10);
 	}
 
 	/**
