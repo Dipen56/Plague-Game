@@ -37,7 +37,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import client.rendering.rendering;
+import client.rendering.Rendering;
 
 /**
  * This class represents the main GUI class this class bring together all the
@@ -87,7 +87,7 @@ public class GUI extends Application {
 	private EventHandler<MouseEvent> mouseEvent;
 	// for window resizing not really need else where
 	private EventHandler<WindowEvent> windowEvent;
-	private rendering render = new rendering();
+	private Rendering render = new Rendering();
 
 	public static ViewControler viewControler;
 
@@ -147,7 +147,7 @@ public class GUI extends Application {
 		//temp.getChildren().add(group);
 		borderPane.getChildren().add(group);
 		//borderPane.getChildren().add(temp);
-		
+
 		Scene scene = new Scene(borderPane, WIDTH_VALUE, HEIGHT_VALUE);
 		scene.getStylesheets().add(this.getClass().getResource(STYLE_CSS).toExternalForm());
 		scene.setOnKeyPressed(keyEvent);
@@ -320,7 +320,7 @@ public class GUI extends Application {
 	/**
 	 * this method will return the masg type in the chat box apon clicking the
 	 * send button.
-	 * 
+	 *
 	 * @return
 	 */
 	public String getChatMsg() {

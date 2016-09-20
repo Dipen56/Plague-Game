@@ -21,19 +21,14 @@ public class ThreadClient extends Thread {
 
 	private DatagramSocket clientSocket;
 	private InetAddress ipAddress;
-<<<<<<< HEAD
 	private ViewControler GUIController;
 
-	public ThreadClient(String add,ViewControler view) {
-		this.GUIController = view;
-=======
 	private ViewControler viewControler;
 
 	public ThreadClient(String add, ViewControler viewControler) {
 		// andrew clark uses this to get the sent msg call a method called
 		// getChatMsg it returns the string which is the msg.
 		this.viewControler = viewControler;
->>>>>>> master
 		try {
 			clientSocket = new DatagramSocket();
 			ipAddress = InetAddress.getByName(add);
@@ -74,7 +69,7 @@ public class ThreadClient extends Thread {
 	/**
 	 * Extracts the type of packet the client had received and calls the
 	 * appropriate method to handle the data
-	 * 
+	 *
 	 * @param dPacket
 	 *            the packet to be read and extracted
 	 */
@@ -94,7 +89,7 @@ public class ThreadClient extends Thread {
 
 	/**
 	 * Makes a new Datagram object and sends it to the server
-	 * 
+	 *
 	 * @param data
 	 *            bytes of information to be sent
 	 */

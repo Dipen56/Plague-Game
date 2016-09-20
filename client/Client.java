@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 import client.ThreadClient;
-import client.rendering.rendering;
+import client.rendering.Rendering;
 import client.view.GUI;
 import client.view.ViewControler;
 import server.PacketTypes;
@@ -22,15 +22,11 @@ public class Client {
 		PacketTypes p = new PacketTypes();
 		PacketTypes.Message message;
 		PacketTypes.LogIn login = null;
-<<<<<<< HEAD
-		ViewControler viewControl = new ViewControler(null);
-		rendering renderer;
-=======
+
 		// GUI gui = new GUI(); i think this is not needed instead
 
 		ViewControler viewControler = new ViewControler(args);
 		Rendering renderer;
->>>>>>> master
 		String consoleMessage;
 		BufferedReader bf = new BufferedReader(new InputStreamReader(System.in));
 
@@ -40,11 +36,8 @@ public class Client {
 		 * to each client
 		 */
 		String servername = bf.readLine().trim();
-<<<<<<< HEAD
-		ThreadClient clientThread = new ThreadClient(servername,viewControl);
-=======
+
 		ThreadClient clientThread = new ThreadClient(servername, viewControler);
->>>>>>> master
 		clientThread.start(); // start thread
 		consoleMessage = "Welcome to the SERVER!\n" + "IP address is : " + clientThread.getClientAddress()
 				+ " Port number is " + clientThread.getClientPort() + "\n";
