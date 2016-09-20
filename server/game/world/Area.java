@@ -92,7 +92,7 @@ public class Area {
      * @return --- an empty position to spawn player. If this area is so occupied that
      *         there is no empty space, null will be returned.
      */
-    public Position getPlayerSpawnPos(Game game) {
+    public synchronized Position getPlayerSpawnPos(Game game) {
         List<Position> portalList = new ArrayList<>(playerPortals);
         Collections.shuffle(portalList);
 

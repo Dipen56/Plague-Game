@@ -11,7 +11,7 @@ import server.game.Game;
  * 
  * needs to be decided.
  * 
- * @author Hector
+ * @author Rafaela (Just put your Id here)
  *
  */
 public class ClockThread extends Thread {

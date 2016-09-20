@@ -1,10 +1,10 @@
 package anotherServer;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
-import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -15,18 +15,18 @@ import server.game.TestConst;
 /**
  * This is a server main class I (Hector) copied from Rafaela's code. Some modifications.
  * 
- * @author Hector
+ * @author Rafaela (Just put your Id here)
  *
  */
 public class ServerMain {
     /**
      * The period between every update
      */
-    public static final int DEFAULT_CLK_PERIOD = 20;
+    public static final int DEFAULT_CLK_PERIOD = 100;
     /**
      * The period between every broadcast
      */
-    private static final int DEFAULT_BROADCAST_CLK_PERIOD = 5;
+    private static final int DEFAULT_BROADCAST_CLK_PERIOD = 50;
     /**
      * A series of port number, in case the port is used.
      */
@@ -42,7 +42,7 @@ public class ServerMain {
     /**
      * A thread pool handling all clients
      */
-    private ExecutorService pool;
+    private ExecutorService clientsPool;
     /**
      * The game
      */
@@ -53,17 +53,14 @@ public class ServerMain {
     private HashMap<Integer, Receptionist> receptionists;
 
     /**
-     * System.in wrapped in scanner to get user input.
-     */
-    private static final Scanner SCANNER = new Scanner(System.in);
-
-    /**
      * Constructor
      */
     public ServerMain() {
+        receptionists = new HashMap<>();
+        
         // how many players?
         System.out.println("How many players (between 2 and 4):");
-        int numPlayers = parseInt(2, 4);
+        int numPlayers = ParserUtilities.parseInt(2, 4);
 
         // Parsing a file to construct the world
         // game = new Game(file);
@@ -71,7 +68,7 @@ public class ServerMain {
         // create the game world
         game = new Game(TestConst.world, TestConst.areas);
         clockThread = new ClockThread(DEFAULT_CLK_PERIOD, game);
-        pool = Executors.newFixedThreadPool(numPlayers);
+        clientsPool = Executors.newFixedThreadPool(numPlayers);
 
         runServer(numPlayers);
     }
@@ -116,12 +113,20 @@ public class ServerMain {
         System.out.println("All clients accepted, GAME ON!");
         runGame();
         System.out.println("All clients disconnected.");
+
+        // shut down the thread pool and server socket.
+        clientsPool.shutdown();
+        try {
+            serverSocket.close();
+        } catch (IOException e) {
+            System.err.println("I/O error: " + e.getMessage());
+        }
     }
 
     private void runGame() {
         // Now get those clients busy
         for (Receptionist r : receptionists.values()) {
-            pool.submit(r);
+            clientsPool.submit(r);
         }
 
         game.startTiming();
@@ -130,6 +135,7 @@ public class ServerMain {
         // loop forever until game ends.
         while (atleastOneConnection()) {
             Thread.yield();
+            System.out.println("Running");
         }
     }
 
@@ -145,7 +151,9 @@ public class ServerMain {
         // try to create a server with port number from pre-defined array.
         for (int i = 0; i < PORT_NUM.length; i++) {
             try {
-                s = new ServerSocket(PORT_NUM[i]);
+                // s = new ServerSocket(PORT_NUM[i]);
+                
+                s = new ServerSocket(PORT_NUM[i], 50, InetAddress.getLocalHost());
                 break;
             } catch (IOException e) {
                 continue;
@@ -172,40 +180,6 @@ public class ServerMain {
             }
         }
         return false;
-    }
-
-    /**
-     * This helper method parse user's input as integer, and limits the maximum and
-     * minimum boundary of it.
-     * 
-     * @param min
-     *            --- the minimum boundary of input as an integer
-     * @param max
-     *            --- the maximum boundary of input as an integer
-     * @return --- the parsed integer
-     */
-    private int parseInt(int min, int max) {
-        while (true) {
-            String line = SCANNER.nextLine();
-
-            try {
-                // parse the input
-                int i = Integer.valueOf(line);
-                if (i >= min && i <= max) {
-                    // a good input
-                    return i;
-                } else {
-                    // a out of boundary input, let the user retry.
-                    System.out.println(
-                            "Please choose between " + min + " and " + max + ":");
-                    continue;
-                }
-            } catch (NumberFormatException e) {
-                // the input is not an integer
-                System.out.println("Please enter an integer:");
-                continue;
-            }
-        }
     }
 
     /**

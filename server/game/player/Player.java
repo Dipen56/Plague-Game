@@ -34,6 +34,10 @@ public class Player {
      */
     private final int uID;
     /**
+     * User Id to identify this player.
+     */
+    private final Avatar avatar;
+    /**
      * player's name
      */
     private final String name;
@@ -77,8 +81,9 @@ public class Player {
      * @param name
      * @param virus
      */
-    public Player(int uID, String name) {
+    public Player(int uID, Avatar avatar, String name) {
         this.uID = uID;
+        this.avatar = avatar;
         this.name = name;
         health = MAX_HEALTH;
         isAlive = true;
@@ -108,8 +113,9 @@ public class Player {
      * @param newPosition
      * @param direction
      */
-    public Player(int ID, String name, Virus virus, int health, boolean isAlive,
-            List<Item> newInventory, Position newPosition, Direction direction) {
+    public Player(int ID, Avatar avatar, String name, Virus virus, int health,
+            boolean isAlive, List<Item> newInventory, Position newPosition,
+            Direction direction) {
 
         /*
          * kept for testing game load. Health field is decremented with time, so can't use
@@ -117,6 +123,7 @@ public class Player {
          */
         this.healthSavingConstant = health;
         this.uID = ID;
+        this.avatar = avatar;
         this.name = name;
         this.virus = virus;
         this.health = health;
@@ -467,6 +474,22 @@ public class Player {
 
     public int getHealthLeft() {
         return health;
+    }
+
+    /**
+     * This method is used to generate the string for broadcasting player's position to
+     * clients. The String has the following format:
+     * 
+     * <p>
+     * Say Player(uId: 123) is in area(areaId: 456), and his coordinates is (78, 90):
+     * 
+     * <p>
+     * The string will be <i>"123,456,78,90"</i>
+     * 
+     * @return
+     */
+    public String getPositionString() {
+        return "" + uID + "," + position.areaId + "," + position.x + "," + position.y;
     }
 
     @Override
