@@ -12,6 +12,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.shape.Polygon;
 import javafx.scene.paint.ImagePattern;
+import javafx.scene.paint.*;
 
 /**
  * This class represents the main rendering class, this class will control the
@@ -26,6 +27,8 @@ public class Rendering {
 	//private static final String BACKGROUND_IMAGE = "/background.gif";
 	private static final String BACKGROUND_IMAGE = "/night.jpg";
 	private static final String GRASS_IMAGE = "/grass.png";
+	private static final String TREE_IMAGE = "/tree.png";
+	private static final String CHEST_IMAGE = "/chest.png";
 	private Group group;
 
 	public double scaleY = 0.85; // lower number less scaling
@@ -37,8 +40,12 @@ public class Rendering {
 	private int tileHeight = 60;
 	public int centerWidth = gamePaneWidth / 2;
 	public int centerHeght = gamePaneHeight;
+	private MapParser mapParser;
+	private Point playerLoc;
 
 	public Rendering() {
+		// will need to get board size passed in
+		mapParser = new MapParser(10, 10);
 	}
 
 	/**
@@ -62,7 +69,8 @@ public class Rendering {
 		// side
 		int squaresToRight = 0;// //the number of squares on the player's
 		// right side
-		//Point playerLoc = new Point(5, 0); // center
+		// this will be changed to the real players pos apon integration
+		playerLoc = new Point(5, 0);
 		int boardSize = 10;
 		squaresInFront = boardSize - playerLoc.y;
 		squaresToLeft = (boardSize - playerLoc.x) - 1;
@@ -114,6 +122,8 @@ public class Rendering {
 			p.getPoints().add(topLine - tileHeight * Math.pow(scaleY, i + 1));
 			p.getPoints().add(nowStartX);
 			p.getPoints().add(topLine - tileHeight * Math.pow(scaleY, i + 1));
+			p.setStroke(javafx.scene.paint.Color.AQUA);
+			p.setStrokeWidth(1);
 			group.getChildren().add(p);
 			// tiles on the lift of the players are render second for ever 1
 			// tile that in front of them
@@ -139,6 +149,8 @@ public class Rendering {
 				p2.getPoints().add(topLine - tileHeight * Math.pow(scaleY, i + 1));
 				p2.getPoints().add(nowStartX - j * nowWidthOfSquare);
 				p2.getPoints().add(topLine - tileHeight * Math.pow(scaleY, i + 1));
+				p2.setStroke(javafx.scene.paint.Color.AQUA);
+				p2.setStrokeWidth(1);
 				group.getChildren().add(p2);
 			}
 			// tiles on the right of the players are render second for ever 1
@@ -185,6 +197,8 @@ public class Rendering {
 				}
 				p3.getPoints().add(tempx0);
 				p3.getPoints().add(topLine - tileHeight * Math.pow(scaleY, i + 1));
+				p3.setStroke(javafx.scene.paint.Color.AQUA);
+				p3.setStrokeWidth(1);
 				group.getChildren().add(p3);
 			}
 
@@ -192,6 +206,7 @@ public class Rendering {
 			// also be the top left part in the prevous tile
 			x3 = nowStartX;
 			y3 = topLine - tileHeight * Math.pow(scaleY, i + 1);
+
 			// update the bot left point to the previous tiles top part which
 			// will also be the top right part in the previous tile
 			x2 = nowStartX + nowWidthOfSquare;
@@ -203,10 +218,94 @@ public class Rendering {
 			//Renders the player onto the board
 			charRender();
 		}
+		renderObjects();
 	}
 
 	public void charRender(){
 
+
+	}
+
+	/**
+	 * this method is used to render the object in the game.
+	 */
+	public void renderObjects() {
+		String[][] worldMap = mapParser.getMap();
+		// this is used to for the top line points x0 and x1 which will be
+		// scaled from larger to smaller
+		double topLine = centerHeght;
+		// double prevTopLine = centerHeght;
+		// this point is the bot right and will also got from larger to smaller
+		// int previouX1
+		// it's twice the size of the set tile width
+		double x2 = centerWidth + tileWidth / 2;
+		// this point is is the bot right and is set it the height of the game
+		// pane so at the bottom of window.
+		double y2 = centerHeght;
+		// this point is the bot lift and will also got from larger to smaller
+		// int previouX0
+		// it's twice the size of the set tile width
+		double x3 = centerWidth - tileWidth / 2;
+		// this point is is the bot lift and is set it the height of the game
+		// pane so at the bottom of window.
+		double y3 = centerHeght;
+		int col = playerLoc.x;
+		// the 10 will be the sqare in front of the players
+		for (int row = 0; row < 10; row++) {
+			double nowWidthOfSquare = tileWidth * Math.pow(scaleY, row + 1);
+			// this is the top part of the tile starting x pos
+			double nowStartX = centerWidth - nowWidthOfSquare / 2;
+			// front view
+			if (worldMap[row][col].equals("tree") || worldMap[row][col].equals("chest")) {
+				// this will draw the object that are in front
+				double x1 = nowStartX + nowWidthOfSquare;
+				double y1 = topLine - tileHeight * Math.pow(scaleY, row + 1);
+				double x0 = nowStartX;
+				double y0 = topLine - tileHeight * Math.pow(scaleY, row + 1);
+				double height = (y3 - y0);
+				double width = (x2 - x3);
+				System.out.println(worldMap[row][col]);
+				if (worldMap[row][col].equals("tree")) {
+					Image tree = loadImage(TREE_IMAGE);
+					ImageView imageViewTree = new ImageView();
+					imageViewTree.setImage(tree);
+
+					imageViewTree.setFitHeight(height);
+					imageViewTree.setFitWidth(width);
+					// here is where we need to do the logic
+					imageViewTree.setX(x0);
+					imageViewTree.setY(y0);
+					group.getChildren().add(imageViewTree);
+				} else if (worldMap[row][col].equals("chest")) {
+					Image tree = loadImage(CHEST_IMAGE);
+					ImageView imageViewTree = new ImageView();
+					imageViewTree.setImage(tree);
+
+					imageViewTree.setFitHeight(height);
+					imageViewTree.setFitWidth(width);
+					// here is where we need to do the logic
+					imageViewTree.setX(x0);
+					imageViewTree.setY(y0);
+					group.getChildren().add(imageViewTree);
+				}
+				//this will be the sqares to the left
+			}
+
+			// update the bot right point to previous tiles top part which will
+			// also be the top left part in the prevous tile
+			x3 = nowStartX;
+			y3 = topLine - tileHeight * Math.pow(scaleY, row + 1);
+
+			// update the bot left point to the previous tiles top part which
+			// will also be the top right part in the previous tile
+			x2 = nowStartX + nowWidthOfSquare;
+			y2 = topLine - tileHeight * Math.pow(scaleY, row + 1);
+			// prevTopLine = topLine;
+			// this updates the width of the next topline which will be used to
+			// calc x0 , x1 so the top part
+			topLine = topLine - tileHeight * Math.pow(scaleY, row + 1);
+
+		}
 	}
 
 	private Image loadImage(String name) {

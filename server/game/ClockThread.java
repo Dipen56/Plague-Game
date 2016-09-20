@@ -1,7 +1,5 @@
 package server.game;
 
-import dataStorage.alternates.AltGame;
-
 /**
  * The Clock Thread is responsible for producing a consistent "pulse" which is used to
  * update the game state, and refresh the display. Setting the pulse rate too high may
@@ -21,8 +19,6 @@ public class ClockThread extends Thread {
 
     private final int delay;
     private final Game game;
-
-    // another field, rendering panel.
 
     /**
      * Constructor
@@ -45,7 +41,10 @@ public class ClockThread extends Thread {
             // Loop forever
             try {
                 Thread.sleep(delay);
-                game.update();
+
+                // do something to update the game status, like:
+                // game.update();
+
             } catch (InterruptedException e) {
                 // should never happen
             }

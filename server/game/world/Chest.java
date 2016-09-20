@@ -1,8 +1,8 @@
 package server.game.world;
 
-import java.awt.image.BufferedImage;
 import java.util.List;
 
+import server.game.GameError;
 import server.game.items.Item;
 
 /**
@@ -12,82 +12,93 @@ import server.game.items.Item;
  * @author Hector (Fang Zhao 300364061)
  *
  */
-public class Chest extends Obstacle {
-	/**
-	 * The keyID specifies which key can open the door to this room. Only the key with the
-	 * same keyID can open the door to this room.
-	 */
-	private int keyID;
-	private boolean isLocked;
+public class Chest extends Obstacle implements Container, Lockable {
 
-	private List<Item> loot;
+    /**
+     * The keyID specifies which key can open this chest. Only the key with the same keyID
+     * can open it.
+     */
+    private int keyID;
+    private boolean isLocked;
 
-	public Chest(String description, int keyID,
-			boolean isLocked, List<Item> loot) {
-		super(description);
-		this.keyID = keyID;
-		this.isLocked = isLocked;
-		this.loot = loot;
-	}
+    private List<Item> loot;
 
-	public int getKeyID() {
-		return keyID;
-	}
+    public Chest(String description, int keyID, boolean isLocked, List<Item> loot) {
+        super(description);
+        this.keyID = keyID;
+        this.isLocked = isLocked;
 
-	public String getDescription() {
-		return description;
-	}
+        if (loot.size() > Container.CHEST_SIZE) {
+            throw new GameError(
+                    "Chest can only contain " + Container.CHEST_SIZE + " items.");
+        }
 
-	public List<Item> getLoot() {
-		return loot;
-	}
+        this.loot = loot;
+    }
 
+    @Override
+    public List<Item> getLoot() {
+        return loot;
+    }
 
-	public boolean isLocked() {
-		return isLocked;
-	}
+    @Override
+    public boolean putItemIn(Item item) {
+        if (loot.size() >= Container.CHEST_SIZE) {
+            return false;
+        }
+    
+        return loot.add(item);
+    }
 
-	public void setLocked(boolean boo) {
-		isLocked = boo;
-	}
+    @Override
+    public int getKeyID() {
+        return keyID;
+    }
 
+    @Override
+    public boolean isLocked() {
+        return isLocked;
+    }
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + (isLocked ? 1231 : 1237);
-		result = prime * result + keyID;
-		result = prime * result + ((loot == null) ? 0 : loot.hashCode());
-		return result;
-	}
+    @Override
+    public void setLocked(boolean isLocked) {
+        this.isLocked = isLocked;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Chest other = (Chest) obj;
-		if (isLocked != other.isLocked)
-			return false;
-		if (keyID != other.keyID)
-			return false;
-		if (loot == null) {
-			if (other.loot != null)
-				return false;
-		} else if (!loot.equals(other.loot))
-			return false;
-		return true;
-	}
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + (isLocked ? 1231 : 1237);
+        result = prime * result + keyID;
+        result = prime * result + ((loot == null) ? 0 : loot.hashCode());
+        return result;
+    }
 
-	@Override
-	public String toString() {
-		return "c";
-	}
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Chest other = (Chest) obj;
+        if (isLocked != other.isLocked)
+            return false;
+        if (keyID != other.keyID)
+            return false;
+        if (loot == null) {
+            if (other.loot != null)
+                return false;
+        } else if (!loot.equals(other.loot))
+            return false;
+        return true;
+    }
 
-
+    @Override
+    public String toString() {
+        return "c";
+    }
 
 }

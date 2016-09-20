@@ -5,11 +5,8 @@ import java.util.Scanner;
 
 import server.game.items.Item;
 import server.game.player.Player;
-import server.game.player.Virus;
+import server.game.player.Position;
 import server.game.world.Area;
-import server.game.world.GroundSquare;
-import server.game.world.Position;
-import server.game.world.World;
 
 /**
  * This is a text-based UI client. It provides a tiny (hard-coded) world and a simple text
@@ -35,15 +32,16 @@ public class TextUI {
         SCANNER.close();
     }
 
-    public static Game setupGame() {
-    	 // resister portals for each area in the game
-    	for(Area a: TestConst.entrances.values())
-    		a.registerPortals();
-        Game game = new Game(TestConst.world, TestConst.entrances);
-       
- 
+    private Game setupGame() {
+        // resister portals for each area in the game
+        for (Area a : TestConst.areas.values()) {
+            a.registerPortals();
+        }
+
+        Game game = new Game(TestConst.world, TestConst.areas);
+
         // mock player
-        Player player = new Player(1, "Hector", Virus.T_Virus, TestConst.world);
+        Player player = new Player(1, "Hector");
         game.joinPlayer(player);
 
         return game;
@@ -56,9 +54,9 @@ public class TextUI {
         while (true) {
             // print board
             Position currentPosition = player.getPosition();
-            Area currentArea = player.getArea();
+            Area currentArea = game.getAreas().get(currentPosition.areaId);
             int width = currentArea.getWidth();
-            int replaceIndex = currentPosition.y * width + currentPosition.x;	//initial formula currentPosition.y * (width + 1) + currentPosition.x;
+            int replaceIndex = currentPosition.y * (width + 1) + currentPosition.x;
             char[] chars = currentArea.toString().toCharArray();
             chars[replaceIndex] = player.getDirection().getChar();
             String boardString = new String(chars);
@@ -108,25 +106,19 @@ public class TextUI {
             break;
         case 'f':
             // the player wants to unlock a chest
-            if (!game.playerUnlockChest(player)) {
-                System.out.println("Failed to unlock the chest");
+            if (!game.playerUnlockLockable(player)) {
+                System.out.println("Failed to unlock the Lockable");
             }
             break;
         case 'g':
             // the player wants to take items in a chest in front
-            if (!game.playerTakeItemsInChest(player)) {
+            if (!game.playerTakeItemsFromContainer(player)) {
                 System.out.println("No items was taken from chest");
             }
             break;
         case 'r':
-            // the player wants to unlock a room
-            if (!game.playerUnlockRoom(player)) {
-                System.out.println("Failed to unlock the room");
-            }
-            break;
-        case 't':
             // the player wants to enter a room
-            if (!game.playerEnterExitRoom(player)) {
+            if (!game.playerTransit(player)) {
                 System.out.println("Failed to enter/exit the room");
             }
             break;
@@ -147,7 +139,7 @@ public class TextUI {
                 Item item = game.getPlayerInventory(player).get(0);
                 game.playerUseItem(player, item);
             } else {
-                System.out.println("Player has no time in inventory");
+                System.out.println("Player has no item in inventory");
             }
             break;
         case '2':
@@ -206,17 +198,16 @@ public class TextUI {
      */
     private static void helpMessage() {
         String s = "[Help]\n"
-                + "Only lower case, and only one character.\n"
+                + "Only type in lower case, and only one character.\n"
                 + "Move forward: w\n"
                 + "Move backward: s\n"
                 + "Move left: a\n"
                 + "Move right: d\n"
                 + "Turn left: q\n"
                 + "Trun right: e\n"
-                + "Unlock chest: f\n"
-                + "Take items in chest: g\n"
-                + "Unlock door: r\n"
-                + "Enter door: t\n"
+                + "Unlock Lockable: f\n"
+                + "Take items in Container: g\n"
+                + "Enter/Exit room: r\n"
                 + "Open inventory: i\n"
                 + "Clock & Time left: c\n"
                 + "Use the 1st item in inventory: 1\n"
