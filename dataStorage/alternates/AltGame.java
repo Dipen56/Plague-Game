@@ -1,8 +1,8 @@
 package dataStorage.alternates;
 
-import java.awt.List;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -14,16 +14,14 @@ import javax.xml.bind.annotation.XmlTransient;
 import server.game.Game;
 import server.game.items.Antidote;
 import server.game.items.Item;
+import server.game.items.Torch;
 import server.game.player.Player;
 import server.game.player.Virus;
 import server.game.world.Area;
 import server.game.world.Chest;
-import server.game.world.GroundSquare;
 import server.game.world.Obstacle;
 import server.game.world.Room;
-import server.game.world.RoomEntrance;
 import server.game.world.TransitionSpace;
-import server.game.world.World;
 
 /**
  * This class represents the an alternate version of the Game class, specifically for XML parsing.
@@ -55,14 +53,27 @@ public class AltGame{
 	 * An alternate version of a World object.
 	 */
 	@XmlElement
-    private AltWorld world = null;
+    private AltArea world = null;
 
     /**
-     * keep track on each room with its entrance position
+     * Keep track on each room with its entrance position.
      */
 	@XmlElement
-    private Map<AltTransitionSpace, AltArea> entrances;
+    private Map<Integer, AltArea> areas;
 
+	
+	/**
+     * Players and their id. Server can find player easily by looking by id.
+     */
+	@XmlElement
+    private Map<Integer, Player> players;
+	
+	/**
+     * All torches in this world. It is used to track torch burning status in timer.
+     */
+    private AltTorch[] torches;
+	
+	
     /**
      * An alternate version of a Player object.
      */
@@ -84,27 +95,31 @@ public class AltGame{
 			throw new IllegalArgumentException("Argument is null");
     	this.world = new AltWorld(game.getWorld());
 
-		entrances = new HashMap<>();
+		areas = new HashMap<>();
 
 		// Copies all entries from original entrances list, replacing values with alternative objects
-		for(Map.Entry<TransitionSpace, Area> m: game.getEntrances().entrySet()){
-			TransitionSpace ts = m.getKey();
+		for(Map.Entry<Integer, Area> m: game.getAreas().entrySet()){
+			Integer i = m.getKey();
 
 			Area area = m.getValue();
 			AltArea altArea = null;
-			if(area instanceof World){
-				altArea = new AltWorld(area);
+			if(area == null){
+				throw new RuntimeException("Integer mapped to null");
 			}
 			else if(area instanceof Room){
 				altArea = new AltRoom(area);
 			}
 			else
-				throw new IllegalArgumentException("Area in game entrances is not of known type.");
-			AltTransitionSpace ats = new AltTransitionSpace(ts);
-			entrances.put(ats, altArea);
+				altArea = new AltArea(area);
+			areas.put(i, altArea);
 		}
 		player = new AltPlayer(game.getPlayer());
-
+		// Copies all torches to the torches array. Field cannot be list due to xml complications.
+		List<Torch> gameTorches = game.getTorches();
+		AltTorch[] torches = new AltTorch[gameTorches.size()];
+		for(int i = 0; i < gameTorches.size();i++){
+			torches[i] = new AltTorch(gameTorches.get(i));
+		}
     }
 
 	/**
@@ -112,14 +127,14 @@ public class AltGame{
 	*@return The Game
 	**/
 	public Game getOriginal(){
-		World world = this.world.getOriginal();
-		Map<TransitionSpace, Area> entrances = new HashMap<>();
+		Area world = this.world.getOriginal();
+		Map<Integer, Area> entrances = new HashMap<>();
 		Player player = this.player.getOriginal();
-		for(Map.Entry<AltTransitionSpace, AltArea> m: this.entrances.entrySet()){
+		for(Map.Entry<Integer, AltArea> m: this.areas.entrySet()){
 			Area area = ((AltArea)m.getValue()).getOriginal();
-			entrances.put(((AltTransitionSpace)m.getKey()).getOriginal(), area);
+			entrances.put(m.getKey(), area);
 		}
-		Game game =  new Game(world, entrances, player);
+		Game game =  new Game(world, entrances, torches);	//NNNNNNNNNNNEED to wait for player load solution decision.
 		
 		return game;
 	}

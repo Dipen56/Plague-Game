@@ -19,8 +19,15 @@ public class Chest extends Obstacle implements Container, Lockable {
      * can open it.
      */
     private int keyID;
+    
+    /**
+     * True if the chest is locked.
+     */
     private boolean isLocked;
 
+    /**
+     * Items in the chest.
+     */
     private List<Item> loot;
 
     public Chest(String description, int keyID, boolean isLocked, List<Item> loot) {
