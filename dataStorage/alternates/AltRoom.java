@@ -55,6 +55,7 @@ public class AltRoom extends AltArea{
 	public Room getOriginal(){
 		int i = this.board.length;		//testline
 		int j = this.board[0].length; 	//testline
+		//Restores the game map
 		MapElement[][] board = new MapElement[this.board.length][this.board[0].length];
 		// Creates copies of the AltMapElements, as MapElements.
 		for(int row = 0; row < board.length; row++){
@@ -77,7 +78,7 @@ public class AltRoom extends AltArea{
 		}
 		
 		//Fills the player portals list
-		Room newArea = new Room(board, keyID, isLocked);
+		Room newArea = new Room(board, areaId, keyID, isLocked);
 		newArea.registerPortals();			//Fills the player portals list
 		return newArea;
 	}

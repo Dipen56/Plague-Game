@@ -66,19 +66,12 @@ public class AltGame{
      * Players and their id. Server can find player easily by looking by id.
      */
 	@XmlElement
-    private Map<Integer, Player> players;
+    private Map<Integer, AltPlayer> players;
 	
 	/**
      * All torches in this world. It is used to track torch burning status in timer.
      */
     private AltTorch[] torches;
-	
-	
-    /**
-     * An alternate version of a Player object.
-     */
-	@XmlElement
-    AltPlayer player;
 
 	/**
 	* Only to be called by XML marshaller.
@@ -96,12 +89,11 @@ public class AltGame{
     	this.world = new AltWorld(game.getWorld());
 
 		areas = new HashMap<>();
-
+		Area area = null;
 		// Copies all entries from original entrances list, replacing values with alternative objects
 		for(Map.Entry<Integer, Area> m: game.getAreas().entrySet()){
-			Integer i = m.getKey();
-
-			Area area = m.getValue();
+			Integer i = m.getKey();	//The key from the entry.
+			area = m.getValue();	//The value from the entry.
 			AltArea altArea = null;
 			if(area == null){
 				throw new RuntimeException("Integer mapped to null");
@@ -113,7 +105,19 @@ public class AltGame{
 				altArea = new AltArea(area);
 			areas.put(i, altArea);
 		}
-		player = new AltPlayer(game.getPlayer());
+		//Copies all players to the player array.
+		this.players = new HashMap<>();
+		Player p = null;
+		Integer myInt = -1;
+		for(Map.Entry<Integer, Player> m: game.getPlayers().entrySet().size()){
+			myInt = m.getKey();	//The key from the entry.
+			p = m.getValue();	//The value from the entry.
+			if(p == null){
+				throw new RuntimeException("Integer mapped to null");
+			this.players.put(myInt, new AltPlayer(p));
+		}
+		
+		
 		// Copies all torches to the torches array. Field cannot be list due to xml complications.
 		List<Torch> gameTorches = game.getTorches();
 		AltTorch[] torches = new AltTorch[gameTorches.size()];
@@ -128,13 +132,25 @@ public class AltGame{
 	**/
 	public Game getOriginal(){
 		Area world = this.world.getOriginal();
-		Map<Integer, Area> entrances = new HashMap<>();
-		Player player = this.player.getOriginal();
+		Map<Integer, Area> areas = new HashMap<>();
 		for(Map.Entry<Integer, AltArea> m: this.areas.entrySet()){
 			Area area = ((AltArea)m.getValue()).getOriginal();
-			entrances.put(m.getKey(), area);
+			areas.put(m.getKey(), area);
 		}
-		Game game =  new Game(world, entrances, torches);	//NNNNNNNNNNNEED to wait for player load solution decision.
+		
+		//Restores Players
+		Map<Integer, Player> players = new HashMap<>();
+		for(Map.Entry<Integer, AltPlayer> m: this.players.entrySet()){
+			Player p = ((AltPlayer)m.getValue()).getOriginal();
+			players.put(m.getKey(), p);
+		}
+		//Restores Torches
+		List<Torch>torches = new ArrayList<>();
+		for(int i = 0; i < this.torches.length;i++){
+			torches.add(this.torches[i].getOriginal());
+		}
+		
+		Game game =  new Game(world, areas, players, torches);	//NNNNNNNNNNNEED to wait for player load solution decision.
 		
 		return game;
 	}

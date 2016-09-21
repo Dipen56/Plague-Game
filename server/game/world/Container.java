@@ -2,8 +2,10 @@ package server.game.world;
 
 import java.util.List;
 
-import server.game.items.Item;
+import javax.xml.bind.annotation.XmlRootElement;
 
+import server.game.items.Item;
+@XmlRootElement
 public interface Container {
 
     /**

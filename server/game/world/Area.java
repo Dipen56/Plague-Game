@@ -71,6 +71,10 @@ public class Area {
         return this.map;
     }
 
+    public int getAreaID(){
+    	return this.areaId;
+    }
+    
     /**
      * let this area remember where empty positions are, so that player can be spawned
      * from one of them.

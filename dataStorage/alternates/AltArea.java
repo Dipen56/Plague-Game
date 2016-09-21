@@ -1,10 +1,5 @@
 package dataStorage.alternates;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -85,6 +80,7 @@ public class AltArea{
 				}
 			}
 		}
+		this.areaId = area.getAreaID();
 
 		if(area instanceof Room){
 			this.subtype = "room";
@@ -138,13 +134,13 @@ public class AltArea{
 		}
 		Area newArea = null;
 		if(this.subtype.equals("room")){
-			newArea = new Room(board, this.keyID, this.isLocked);
+			newArea = new Room(board, this.areaId, this.keyID, this.isLocked);
 		}
-		else
-			newArea = new Area(board, this.areaId);
+		else{
+			newArea = new Area(board, this.areaId); 
 		}
+
 		newArea.registerPortals();		//Fills the player portals list
 		return newArea;
-	 
 	}
 }
