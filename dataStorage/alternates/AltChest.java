@@ -37,12 +37,6 @@ public class AltChest extends AltObstacle{
 	@XmlElement
 	private AltItem[] loot;
 
-	/**
-	 * A description of this chest.
-	 */
-	//@XmlElement
-	//private String description;
-
 	public AltChest(Chest chest){
 		if(chest == null)
 			throw new IllegalArgumentException("Argument is null");
@@ -51,7 +45,7 @@ public class AltChest extends AltObstacle{
 		//description = chest.getDescription();
 		this.setDescrption(chest.getDescription());
 
-		//Array is used, as List cannot have JAXB annotations.
+		//Array is used, as List cannot have the same JAXB annotation.
 		List<Item> chestLoot = chest.getLoot();
 		loot = new AltItem[chestLoot.size()];
 
