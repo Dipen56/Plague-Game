@@ -23,7 +23,7 @@ public class MapParser {
 	}
 
 	public void parse() {
-		File file = new File("D:/UNI 2016 T2 COMPLETED/Swen 222 Project v2/rec/worldmap.txt");
+		File file = new File("C:/Users/Angelo/Documents/University/SWEN221/Workspace/Plague Project/resource/worldmap.txt");
 		String line;
 		int row = 0;
 		try {
