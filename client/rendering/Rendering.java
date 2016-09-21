@@ -31,6 +31,7 @@ public class Rendering {
 	private static final String TREE_IMAGE = "/tree.png";
 	private static final String CHEST_IMAGE = "/chest.png";
 	private Group group;
+	
 
 	public double scaleY = 0.85; // lower number less scaling
 	private int gamePaneHeight = GUI.HEIGHT_VALUE - 35; // 35 y alignment of
@@ -42,7 +43,7 @@ public class Rendering {
 	public int centerWidth = gamePaneWidth / 2;
 	public int centerHeght = gamePaneHeight;
 	private MapParser mapParser;
-	private Point playerLoc = new Point (5,0);
+	private Point playerLoc = new Point (7,2);
 
 
 	public Rendering() {
@@ -80,21 +81,46 @@ public class Rendering {
 			squaresInFront = boardSize - playerLoc.y;
 			squaresToLeft = (boardSize - playerLoc.x) - 1;
 			squaresToRight = (boardSize - squaresToLeft);
+			String values = "squares in front " + squaresInFront +"\n";
+			values+= "squares to the left" + squaresToLeft + "\n";
+			values+= "squares to the right " + squaresToRight + "\n";
+			System.out.println(values);
+			System.out.println("Loc Y " + playerLoc.y);
+			System.out.println("Loc X " + playerLoc.x);
+
 		}
 		else if (direction.equals("down")){
-			squaresInFront = boardSize - playerLoc.y;
-			squaresToLeft = (boardSize - playerLoc.x) - 1;
-			squaresToRight = (boardSize - squaresToLeft);
+			//Assumes that when player wants to move south
+			//player will always turn right to face south
+			squaresInFront = (boardSize - playerLoc.y);
+			squaresToRight = (boardSize - playerLoc.x) - 1;
+			squaresToLeft = (boardSize - squaresToRight);
+			String values = "squares in front " + squaresInFront +"\n";
+			values+= "squares to the left" + squaresToLeft + "\n";
+			values+= "squares to the right " + squaresToRight + "\n";
+			System.out.println("down \n" + values);
+			
 		}
 		else if(direction.equals("left")){
-			squaresInFront = boardSize - playerLoc.y;
-			squaresToLeft = (boardSize - playerLoc.x) - 1;
-			squaresToRight = (boardSize - squaresToLeft);
+			squaresInFront = (boardSize - playerLoc.x) - 1;;
+			squaresToRight =  boardSize - playerLoc.y;
+			squaresToLeft = boardSize - squaresInFront;
+			
+			String values = "squares in front " + squaresInFront +"\n";
+			values+= "squares to the left" + squaresToLeft + "\n";
+			values+= "squares to the right " + squaresToRight + "\n";
+			System.out.println(values);
+
 		}
 		else if (direction.equals("right")){
-			squaresInFront = boardSize - playerLoc.y;
-			squaresToLeft = (boardSize - playerLoc.x) - 1;
-			squaresToRight = (boardSize - squaresToLeft);
+			squaresToLeft =  boardSize - playerLoc.y;
+			squaresToRight =(boardSize - playerLoc.x) - 1;
+			squaresInFront = (boardSize - squaresToRight);
+			String values = "squares in front " + squaresInFront +"\n";
+			values+= "squares to the left" + squaresToLeft + "\n";
+			values+= "squares to the right " + squaresToRight + "\n";
+			System.out.println(values);
+
 		}
 		//////////////////////////////////////////////////
 		// this is used to for the top line points x0 and x1 which will be
