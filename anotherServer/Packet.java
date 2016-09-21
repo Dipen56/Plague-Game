@@ -82,6 +82,10 @@ public enum Packet {
      * 
      * If new packet type is added, the long nasty switch statement in Receptionist and
      * Client should both be added.
+     * 
+     * TODO:
+     * 
+     * need to add: Put_Items_in_container
      */
 
     /**

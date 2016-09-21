@@ -3,6 +3,7 @@ package server.game.world;
 import java.util.List;
 
 import server.game.items.Item;
+import server.game.player.Player;
 
 public interface Container {
 
@@ -32,5 +33,14 @@ public interface Container {
      * @return --- true if this item is put in; false if this action failed.
      */
     public boolean putItemIn(Item item);
+
+    /**
+     * let a player try to take items out from this container.
+     * 
+     * @param player
+     * @return --- true if the player has taken at least one item from this container, or
+     *         false if he has taken none from the container.
+     */
+    public boolean lootTakenOutByPlayer(Player player);
 
 }

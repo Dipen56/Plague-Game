@@ -50,6 +50,11 @@ public enum Direction {
         }
     }
 
+    /**
+     * Generate a random direction
+     * 
+     * @return
+     */
     public static Direction randomDirection() {
         int i = (int) (Math.random() * 4);
         switch (i) {
@@ -61,6 +66,32 @@ public enum Direction {
             return West;
         case 3:
             return North;
+        default:
+            return null; // dead code
+        }
+    }
+
+    /**
+     * Get the direction whose ordinal number is equal to the given index. If the index is
+     * illegal, an <i>IndexOutOfBoundsException</i> is thrown.
+     * 
+     * @param index
+     * @return
+     */
+    public static Direction fromOrdinal(int index) {
+        if (index < 0 || index >= Direction.values().length) {
+            throw new IndexOutOfBoundsException();
+        }
+
+        switch (index) {
+        case 0:
+            return North;
+        case 1:
+            return East;
+        case 2:
+            return South;
+        case 3:
+            return West;
         default:
             return null; // dead code
         }

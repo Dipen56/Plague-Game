@@ -2,14 +2,9 @@ package anotherServer;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
 import java.net.Socket;
 
 import server.game.Game;
@@ -41,8 +36,10 @@ public class Receptionist extends Thread {
     @Override
     public void run() {
         try {
-            DataInputStream input = new DataInputStream(socket.getInputStream());
-            DataOutputStream output = new DataOutputStream(socket.getOutputStream());
+            DataInputStream input = new DataInputStream(
+                    new BufferedInputStream(socket.getInputStream()));
+            DataOutputStream output = new DataOutputStream(
+                    new BufferedOutputStream(socket.getOutputStream()));
 
             // First, tell the client about the game world
             // TODO should write a method to convert the map directly into string
@@ -61,17 +58,21 @@ public class Receptionist extends Thread {
             game.joinPlayer(new Player(uid, Avatar.get(avatarIndex), name));
             System.out.println("initialisation done. joined player: " + uid
                     + " with avatar " + avatarIndex);
+
+            // tell the client his uid
             output.writeInt(uid);
             output.flush();
 
+            // TODO tell the client his virus type (Packet type need to add)
+
             // ============= [DEBUG] =======================
-            System.out.println("initialisation done. joined player: " + uid
-                    + " with avatar " + avatarIndex);
             System.out.println("Ready to start the game.");
             System.out.println("Server now has players:");
             for (Player p : game.getPlayers().values()) {
-                System.out.println("Player: [" + p.getPositionString() + "]");
+                System.out.println("Player: [" + p.getGeographicString() + "]");
             }
+
+            System.out.println("Now entering while(connected) loop");
 
             // last, a while true loop to let the receptionist communicate with clients.
             boolean connected = true;
@@ -84,16 +85,28 @@ public class Receptionist extends Thread {
 
                     switch (packet) {
                     case Forward:
-                        game.playerMoveForward(uid);
+                        System.out.println("received forward from: " + uid);
+                        if (!game.playerMoveForward(uid)) {
+                            System.out.println("Failed to move forward: " + uid);
+                        }
                         break;
                     case Backward:
-                        game.playerMoveBackward(uid);
+                        System.out.println("received backward from: " + uid);
+                        if (!game.playerMoveBackward(uid)) {
+                            System.out.println("Failed to move backward: " + uid);
+                        }
                         break;
                     case Left:
-                        game.playerMoveLeft(uid);
+                        System.out.println("received left from: " + uid);
+                        if (!game.playerMoveLeft(uid)) {
+                            System.out.println("Failed to move left: " + uid);
+                        }
                         break;
                     case Right:
-                        game.playerMoveRight(uid);
+                        System.out.println("received right from: " + uid);
+                        if (!game.playerMoveRight(uid)) {
+                            System.out.println("Failed to move right: " + uid);
+                        }
                         break;
                     case TurnLeft:
                         game.playerTurnLeft(uid);
@@ -106,19 +119,11 @@ public class Receptionist extends Thread {
                         break;
                     case UseItem:
                         int index_1 = input.readInt();
-                        boolean result_1 = game.playerUseItem(uid, index_1);
-                        byte by_1 = result_1 ? Packet.Success.toByte()
-                                : Packet.Failure.toByte();
-                        output.writeByte(by_1);
-                        output.flush();
+                        game.playerUseItem(uid, index_1);
                         break;
                     case DestroyItem:
                         int index_2 = input.readInt();
-                        boolean result_2 = game.playerDestroyItem(uid, index_2);
-                        byte by_2 = result_2 ? Packet.Success.toByte()
-                                : Packet.Failure.toByte();
-                        output.writeByte(by_2);
-                        output.flush();
+                        game.playerDestroyItem(uid, index_2);
                         break;
                     case TakeOutItem:
                         game.playerTakeItemsFromContainer(uid);
@@ -144,22 +149,32 @@ public class Receptionist extends Thread {
 
                 // then broadcast the game status
                 if (connected) {
-                    // first, tell the client all players' position.
+                    // 1, tell the client all players' position.
                     for (Player p : game.getPlayers().values()) {
-                        String s = p.getPositionString();
+                        String s = p.getGeographicString();
                         output.writeUTF(s);
                     }
 
                     output.writeUTF("Fin");
                     output.flush();
 
-                    // second, tell the client the world time
-
-                    // third, tell the client the player's health
-
-                    // last, tell the client all
-
+                    // 2, tell the client the world time
+                    String time = game.getClockString();
+                    output.writeUTF(time);
                     output.flush();
+
+                    // 3, tell the client the player's health
+                    output.writeInt(game.getPlayerHealth(uid));
+                    output.flush();
+
+                    // 4, tell the client the player's visibility
+                    output.writeInt(game.getPlayerVisibility(uid));
+                    output.flush();
+
+                    // 5, tell the client the player's inventory
+                    output.writeUTF(game.getPlayerInventoryString(uid));
+                    output.flush();
+
                     Thread.sleep(broadcastClock);
                 }
 

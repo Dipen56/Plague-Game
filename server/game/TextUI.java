@@ -34,10 +34,6 @@ public class TextUI {
     }
 
     private Game setupGame() {
-        // resister portals for each area in the game
-        for (Area a : TestConst.areas.values()) {
-            a.registerPortals();
-        }
 
         Game game = new Game(TestConst.world, TestConst.areas);
 
@@ -50,7 +46,7 @@ public class TextUI {
 
     private void runGame(Game game) {
 
-        Player player = game.getPlayerById(1);
+        Player player = game.getPlayerById(MOCK_UID);
 
         while (true) {
             // print board

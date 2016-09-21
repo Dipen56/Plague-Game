@@ -1,7 +1,7 @@
 package dataStorage.alternates;
 
-import anotherServer.ClockThreadFromPacman;
 import dataStorage.XmlFunctions;
+import server.game.ClockThread;
 import server.game.Game;
 import server.game.TestConst;
 import server.game.TextUI;

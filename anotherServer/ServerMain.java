@@ -57,7 +57,7 @@ public class ServerMain {
      */
     public ServerMain() {
         receptionists = new HashMap<>();
-        
+
         // how many players?
         System.out.println("How many players (between 2 and 4):");
         int numPlayers = ParserUtilities.parseInt(2, 4);
@@ -112,6 +112,10 @@ public class ServerMain {
 
         System.out.println("All clients accepted, GAME ON!");
         runGame();
+
+        /**
+         * XXX runGame() ends so quickly, and "All clients disconnected." was printed
+         */
         System.out.println("All clients disconnected.");
 
         // shut down the thread pool and server socket.
@@ -129,6 +133,7 @@ public class ServerMain {
             clientsPool.submit(r);
         }
 
+        // FIXME Start timing should be somewhere else
         game.startTiming();
         clockThread.start();
 
@@ -152,7 +157,7 @@ public class ServerMain {
         for (int i = 0; i < PORT_NUM.length; i++) {
             try {
                 // s = new ServerSocket(PORT_NUM[i]);
-                
+
                 s = new ServerSocket(PORT_NUM[i], 50, InetAddress.getLocalHost());
                 break;
             } catch (IOException e) {

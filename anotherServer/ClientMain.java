@@ -9,9 +9,10 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.time.LocalTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-
 import javax.swing.JFrame;
 import javax.swing.JTextArea;
 
@@ -27,10 +28,52 @@ import server.game.player.Position;
 @SuppressWarnings("serial")
 public class ClientMain extends JFrame implements Runnable, KeyListener {
 
+    private static final Map<Character, String> MAP_OBJECTS_TABLE;
+
+    // It's not a good idea. leave it aside for now.
+    // private static final Map<Character, Item> ITEM_TABLE;
+
+    /*
+     * Initialise the table for Renderer. Each table contains a map which maps a char to
+     * the corresponding object, so the Renderer knows what to render by knowing what char
+     * was sent by server.
+     */
+    static {
+
+        MAP_OBJECTS_TABLE = new HashMap<>();
+
+        /**
+         * TODO initialise these maps, use whatever way you like to link the char to
+         * resource picture, so the renderer knows what to render if he knows the char.
+         * 
+         * possible solution: Map<Character, String> where the value is the resource path
+         * 
+         * for MAP_OBJECTS_TABLE: <br>
+         * <br>
+         * E: Empty space <br>
+         * T: Tree<br>
+         * R: Rock<br>
+         * B: Cupboard<br>
+         * S: ScrapPile<br>
+         * 1-9: Room<br>
+         * a-z: if our world is so big that 1-9 can't represent them all.<br>
+         * D: a door. This should be rendered as ground, but it indicates which direction
+         * the room should be facing.<br>
+         * 
+         * 
+         * 
+         * 
+         */
+
+    }
+
     private final Socket socket;
     private DataOutputStream output;
     private DataInputStream input;
     private int uid;
+    private LocalTime time;
+    private int health;
+    private int visibility;
 
     /**
      * This map keeps track of all player's avatars.
@@ -41,6 +84,11 @@ public class ClientMain extends JFrame implements Runnable, KeyListener {
      * This map keeps track of all player's Positions.
      */
     private Map<Integer, Position> positions;
+
+    /**
+     * TODO this should change.
+     */
+    private List<String> inventory;
 
     /**
      * This is a mirror of the field, Map<Integer, Area> areas, in Game class, except the
@@ -64,20 +112,25 @@ public class ClientMain extends JFrame implements Runnable, KeyListener {
         this.setLayout(new BorderLayout(3, 3));
         window = new JTextArea(30, 50);
         window.setEditable(false);
+
+        window.addKeyListener(this);
+
         this.add(window, BorderLayout.CENTER);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.pack();
         this.validate();
         this.setResizable(true);
         this.setVisible(true);
+
         this.run();
     }
 
     @Override
     public void run() {
         try {
-            output = new DataOutputStream(socket.getOutputStream());
-            input = new DataInputStream(socket.getInputStream());
+            output = new DataOutputStream(
+                    new BufferedOutputStream(socket.getOutputStream()));
+            input = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
 
             // First, receive from server about the game world
             String incoming = input.readUTF();
@@ -105,7 +158,15 @@ public class ClientMain extends JFrame implements Runnable, KeyListener {
              * FIXME so readInt is not blocking and waiting for another int to come in, it
              * throws EOF exception if it meets the end.
              */
+
             uid = input.readInt();
+
+            // while (true) {
+            // if (input.available() > 0) {
+            // uid = input.readInt();
+            // break;
+            // }
+            // }
 
             System.out.println("Your uId is: " + uid);
 
@@ -122,15 +183,38 @@ public class ClientMain extends JFrame implements Runnable, KeyListener {
                 System.out.println(sb.toString());
             }
 
+            System.out.println("Now entering while(connected) loop");
+
             // last, a while true loop to let the client communicate with server.
             boolean connected = true;
             while (connected) {
 
                 // read in broadcast
 
-                // update gui
+                // 1. all players' position.
+                incoming = input.readUTF();
+                while (!incoming.equals("Fin")) {
+                    ParserUtilities.parsePosition(positions, incoming);
+                    incoming = input.readUTF();
+                }
 
-                // when the client sent an disconnect flag, set connected = false
+                // 2. the world time
+                incoming = input.readUTF();
+                time = ParserUtilities.parseTime(incoming);
+
+                // 3. the player's health
+                health = input.readInt();
+
+                // 4. the player's visibility
+                visibility = input.readInt();
+
+                // 5. the player's inventory
+                // XXX This should not be a list of Item.
+                incoming = input.readUTF();
+                inventory = ParserUtilities.parseInventory(incoming);
+
+                // update gui
+                window.setText(toTextUI());
 
             }
 
@@ -139,6 +223,8 @@ public class ClientMain extends JFrame implements Runnable, KeyListener {
             e.printStackTrace();
         } finally {
             try {
+                // TODO when the client sent an disconnect flag, set connected = false
+
                 socket.close();
             } catch (IOException e) {
                 System.out.println("I/O error. But who cares, disconnected anyway. ");
@@ -147,105 +233,182 @@ public class ClientMain extends JFrame implements Runnable, KeyListener {
 
     }
 
+    private String toTextUI() {
+
+        StringBuilder sb = new StringBuilder();
+
+        // get current area
+        Position currentPos = positions.get(uid);
+        int areaId = currentPos.areaId;
+        char[][] currentArea = areas.get(areaId);
+
+        // need a clone of this area map.
+        char[][] clone = deepClone2DArray(currentArea);
+
+        // draw self
+        replaceCharAtPosition(clone, currentPos);
+
+        // look for other players, and put them in char[][] (like draw them)
+        for (Position p : positions.values()) {
+            // skip self
+            if (p.equals(currentPos)) {
+                continue;
+            }
+
+            /*
+             * TODO In GUI rendering, we should add visibility into consideration as well.
+             * e.g. if he is out of my visibility, no need to render him.
+             */
+            // no need to draw the player in other areas.
+            int hisAreaId = p.areaId;
+            if (hisAreaId != areaId) {
+                continue;
+            }
+
+            // replace a character to represent current player
+            replaceCharAtPosition(clone, p);
+        }
+
+        sb.append("========= Map =========\n");
+
+        for (char[] chaSeq : clone) {
+            sb.append(chaSeq);
+            sb.append("\n");
+        }
+
+        sb.append("======== Status ========\n");
+        sb.append("current time: " + time.getHour() + ":" + time.getMinute() + ":"
+                + time.getSecond() + "\n");
+        sb.append("your health: " + health + "\n");
+
+        sb.append("your visibility: " + visibility + "\n");
+
+        // TODO inventory. need to iterate the inventory and print it out.
+        sb.append("your inventory: \n");
+        for (String s : inventory) {
+            sb.append("- " + s + "\n");
+        }
+
+        sb.append("========= Help =========\n");
+        sb.append("'E' stands for empty space that you can walk.\n");
+        sb.append("'T' stands for tree. 'R' stands for rock.\n");
+        sb.append("'B' stands for cupboard. 'S' stands for scrap pile.\n");
+        sb.append("'D' stands for door. '1-9' stands for rooms.\n");
+        sb.append("'1-9' stands for rooms (roomId in fact).\n");
+
+        sb.append("========= Keys =========\n");
+
+        // @formatter:off
+        String s = "[w] Move forward\n"
+                + "[s] Move backward\n"
+                + "[a] Move left\n"
+                + "[d] Move right: \n"
+                + "[q] Turn left: \n"
+                + "[e] Trun right: \n"
+                + "[f] Unlock Lockable: \n"
+                + "[g] Take items from Container: \n"
+                + "[ ] Put item into container: data packet not implemented yet"
+                + "[r] Enter/Exit room: \n"
+                + "[1] Use the 1st item in inventory: \n"
+                + "[2] Use the 2nd item in inventory: \n"
+                + "[0] Destroy the 1st item in inventory: \n";
+        // @formatter:on
+
+        sb.append(s);
+
+        return sb.toString();
+    }
+
+    private char[][] deepClone2DArray(char[][] grid) {
+        char[][] clone = new char[grid.length][grid[0].length];
+        for (int i = 0; i < grid.length; i++) {
+            System.arraycopy(grid[i], 0, clone[i], 0, grid[i].length);
+        }
+        return clone;
+    }
+
+    private void replaceCharAtPosition(char[][] currentArea, Position p) {
+        switch (p.getDirection()) {
+        case East:
+            currentArea[p.y][p.x] = '>';
+            break;
+        case North:
+            currentArea[p.y][p.x] = '^';
+            break;
+        case South:
+            currentArea[p.y][p.x] = 'v';
+            break;
+        case West:
+            currentArea[p.y][p.x] = '<';
+            break;
+        default:
+            break; // dead code
+        }
+    }
+
     @Override
     public void keyPressed(KeyEvent event) {
 
-        // @formatter:off
-        @SuppressWarnings("unused")
-        String s = "[Help]\n"
-                + "Move forward: w\n"
-                + "Move backward: s\n"
-                + "Move left: a\n"
-                + "Move right: d\n"
-                + "Turn left: q\n"
-                + "Trun right: e\n"
-                + "Unlock Lockable: f\n"
-                + "Take items in Container: g\n"
-                + "Enter/Exit room: r\n"
-                + "Open inventory: i\n"
-                + "Clock & Time left: c\n"
-                + "Use the 1st item in inventory: 1\n"
-                + "Use the 2nd item in inventory: 2\n"
-                + "Destroy the 1st item in inventory: 0\n";
-        // @formatter:on
-
         int keyCode = event.getKeyCode();
+
+        System.out.println("Key pressed, keycode: " + keyCode);
+
         try {
             switch (keyCode) {
             case KeyEvent.VK_W:
                 output.writeByte(Packet.Forward.toByte());
+                output.flush();
                 break;
             case KeyEvent.VK_S:
                 output.writeByte(Packet.Backward.toByte());
+                output.flush();
                 break;
             case KeyEvent.VK_A:
                 output.writeByte(Packet.Left.toByte());
+                output.flush();
                 break;
             case KeyEvent.VK_D:
                 output.writeByte(Packet.Right.toByte());
+                output.flush();
                 break;
             case KeyEvent.VK_Q:
                 output.writeByte(Packet.TurnLeft.toByte());
+                output.flush();
                 break;
             case KeyEvent.VK_E:
                 output.writeByte(Packet.TurnRight.toByte());
+                output.flush();
                 break;
             case KeyEvent.VK_F:
                 output.writeByte(Packet.Unlock.toByte());
+                output.flush();
                 break;
             case KeyEvent.VK_G:
                 output.writeByte(Packet.TakeOutItem.toByte());
+                output.flush();
                 break;
             case KeyEvent.VK_R:
                 output.writeByte(Packet.Transit.toByte());
-                break;
-            case KeyEvent.VK_I:
-                // TODO this should be implemented. Need more discussion
-                break;
-            case KeyEvent.VK_C:
-                // TODO this should be implemented. Need more discussion
+                output.flush();
                 break;
             case KeyEvent.VK_1:
                 // XXX if something is wrong we can try synchronized (this) { }
-
                 output.writeByte(Packet.UseItem.toByte());
                 output.writeInt(0);
-                byte b_1 = input.readByte();
-                Packet acknowledgement_1 = Packet.fromByte(b_1);
-                if (acknowledgement_1 == Packet.Success) {
-                    /*
-                     * TODO rendering part should then stop rendering the first item, i.e.
-                     * delete it, and then move other items up.
-                     */
-                }
-
+                output.flush();
                 break;
             case KeyEvent.VK_2:
                 output.writeByte(Packet.UseItem.toByte());
                 output.writeInt(1);
-                byte b_2 = input.readByte();
-                Packet acknowledgement_2 = Packet.fromByte(b_2);
-                if (acknowledgement_2 == Packet.Success) {
-                    /*
-                     * TODO rendering part should then stop rendering the second item,
-                     * i.e. delete it, and then move other items up.
-                     */
-                }
+                output.flush();
                 break;
             case KeyEvent.VK_0:
                 output.writeByte(Packet.DestroyItem.toByte());
                 output.writeInt(0);
-                byte b_3 = input.readByte();
-                Packet acknowledgement_3 = Packet.fromByte(b_3);
-                if (acknowledgement_3 == Packet.Success) {
-                    /*
-                     * TODO rendering part should then stop rendering the first item, i.e.
-                     * delete it, and then move other items up.
-                     */
-                }
+                output.flush();
                 break;
 
-            // TODO Of cause the client should handle more events. Need more.
+            // TODO Of cause the client should handle more events. We can always add here.
 
             default:
             }
@@ -273,7 +436,8 @@ public class ClientMain extends JFrame implements Runnable, KeyListener {
         try {
             s = new Socket(ip, port);
         } catch (IOException e) {
-            System.err.println("I/O exceptions, " + e.toString());
+            System.err.println(
+                    "Failed to connect to server, I/O exceptions, " + e.toString());
             System.exit(1);
         }
 

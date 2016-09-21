@@ -1,8 +1,12 @@
 package anotherServer;
 
+import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
+import server.game.player.Direction;
 import server.game.player.Position;
 
 /**
@@ -129,10 +133,12 @@ public class ParserUtilities {
      * the following format:
      * 
      * <p>
-     * Say Player(uId: 123) is in area(areaId: 456), and his coordinates is (78, 90):
+     * Say Player(uId: 123) is in area(areaId: 456), his coordinates is (78, 90), and his
+     * facing direction is north (clockwisely we have North: 0; East: 1; South: 2; West:
+     * 3):
      * 
      * <p>
-     * The string should be <i>"123,456,78,90"</i>
+     * The string should be <i>"123,456,78,90,0"</i>
      * 
      * @param areas
      * @param string
@@ -147,31 +153,149 @@ public class ParserUtilities {
         int areaId = -1;
         int x = -1;
         int y = -1;
+        int dir = -1;
 
         try {
             uId = Integer.valueOf(nums[0]);
             areaId = Integer.valueOf(nums[1]);
             x = Integer.valueOf(nums[2]);
             y = Integer.valueOf(nums[3]);
+            dir = Integer.valueOf(nums[4]);
 
-            if (uId < 0 || areaId < 0 || x <= 0 || y <= 0) {
+            if (uId < 0 || areaId < 0 || x < 0 || y < 0 || dir < 0) {
                 System.out.println(
-                        "Error occurred when parsing postion. Negative uId, areaId, x or y. String input is: "
+                        "Error occurred when parsing postion. Negative uId, areaId, x, y or direction. String input is: "
                                 + string);
                 scanner.close();
                 return; // do not crash the game.
             }
         } catch (NumberFormatException e1) {
             System.out.println(
-                    "Error occurred when parsing postion. uId, areaId, x or y is not integer. String input is: "
+                    "Error occurred when parsing postion. uId, areaId, x, y or direction is not integer. String input is: "
                             + string);
             scanner.close();
             return; // do not crash the game.
         }
 
+        // now parse the direction
+
         // job done, let's put it in map.
-        positions.put(uId, new Position(x, y, areaId));
+        positions.put(uId, new Position(x, y, areaId, Direction.fromOrdinal(dir)));
         scanner.close();
+    }
+
+    /**
+     * This method reads in a String and parse it into a LocalTime object, which is used
+     * on client side to render the time. The input String is expected to have the
+     * following format:
+     * 
+     * <p>
+     * Say current time is hh:mm:ss <i>10:20:30</i>:
+     * 
+     * <p>
+     * The string should be <i>"10,20,30"</i>
+     * 
+     * @return
+     */
+    public static LocalTime parseTime(String string) {
+
+        Scanner scanner = new Scanner(string);
+        String line = scanner.nextLine();
+        String[] nums = line.split(",");
+
+        int hour = -1;
+        int minute = -1;
+        int second = -1;
+
+        try {
+            hour = Integer.valueOf(nums[0]);
+            minute = Integer.valueOf(nums[1]);
+            second = Integer.valueOf(nums[2]);
+
+            if (hour < 0 || minute < 0 || second < 0) {
+                System.out.println(
+                        "Error occurred when parsing time. Negative hour, minute, or second. String input is: "
+                                + string);
+                scanner.close();
+                return null; // do not crash the game.
+            }
+        } catch (NumberFormatException e1) {
+            System.out.println(
+                    "Error occurred when parsing time. hour, minute, or second is not integer. String input is: "
+                            + string);
+            scanner.close();
+            return null; // do not crash the game.
+        }
+
+        // job done
+        scanner.close();
+
+        return LocalTime.of(hour, minute, second);
+    }
+
+    /**
+     * This method reads in a String and parse it into a List of Items, which is player's
+     * inventory, and then used on client side to render the inventory. The input String
+     * is expected to have the following format:
+     * 
+     * <p>
+     * Say an item (type A, description B), its string representation will be
+     * <i>"A|B"</i>, where A is a single character, B is the return of <i>toString()</i>.
+     * Every two items are separated with a line separator.
+     * 
+     * <p>
+     * For example, this player has an Antidote (description: "foofoo"), and a Key
+     * (description: "barbar").
+     * 
+     * <p>
+     * The string representation of his inventory is expected to be
+     * <i>"A|foofoo\nB|barbar"</i>
+     * 
+     * <p>
+     * Character abbreviation table:<br>
+     * 
+     * <li>A: Antidote<br>
+     * <li>K: Key<br>
+     * <li>T: Torch<br>
+     * <br>
+     * 
+     * @param uid
+     * 
+     * @return
+     */
+    public static List<String> parseInventory(String string) {
+
+        // currently it just convert it to strings.
+        List<String> list = new ArrayList<>();
+
+        Scanner scanner = new Scanner(string);
+        String line;
+
+        while (scanner.hasNextLine()) {
+            line = scanner.nextLine();
+            list.add(line);
+        }
+
+        scanner.close();
+        return list;
+
+        /*
+         * TODO
+         * 
+         * Here I need some discussion with team. I think the renderer doesn't need to
+         * construct an instance of item. The renderer only need to know what image it
+         * should render, and what description is the item, and the index in inventory.
+         * 
+         * for example:
+         * 
+         * Game knows that the player has an Antidote(Virus type a, description "blabla"),
+         * and a Key(used to open which chest, description "foofoofoo"). Then at the
+         * client side, the renderer only need to draw an antidote, possibly give
+         * description "blabla" somewhere, and knows it's the first item in inventory. It
+         * should not know which type of virus it can cure.
+         * 
+         * So, we should form a format of how the client side interpret the string.
+         */
     }
 
     /**
