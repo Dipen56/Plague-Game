@@ -18,7 +18,7 @@ import javafx.scene.paint.*;
  * This class represents the main rendering class, this class will control the
  * rendering of the game board, character, and objects.
  *
- * @author Dipen
+ * @author Dipen & Angelo
  *
  */
 
@@ -41,7 +41,7 @@ public class Rendering {
 	public int centerWidth = gamePaneWidth / 2;
 	public int centerHeght = gamePaneHeight;
 	private MapParser mapParser;
-	private Point playerLoc;
+	private Point playerLoc = new Point (5,0);
 
 	public Rendering() {
 		// will need to get board size passed in
@@ -50,10 +50,11 @@ public class Rendering {
 
 	/**
 	 * this method is used to render the game
+	 * @param direction 
 	 *
 	 * @param group
 	 */
-	public void render(Group renderGroup,Point playerLoc) {
+	public void render(Group renderGroup, String direction) {
 		this.group = renderGroup;
 		Image character =  loadImage(PLAYER_IMAGE);
 		Image image = loadImage(BACKGROUND_IMAGE);
@@ -70,12 +71,30 @@ public class Rendering {
 		int squaresToRight = 0;// //the number of squares on the player's
 		// right side
 		// this will be changed to the real players pos apon integration
-		playerLoc = new Point(5, 0);
+		//this.playerLoc = new Point(5, 0);
 		int boardSize = 10;
-		squaresInFront = boardSize - playerLoc.y;
-		squaresToLeft = (boardSize - playerLoc.x) - 1;
-		squaresToRight = (boardSize - squaresToLeft);
-
+		////////////////////////////////////
+		if (direction.equals("up")){
+			squaresInFront = boardSize - playerLoc.y;
+			squaresToLeft = (boardSize - playerLoc.x) - 1;
+			squaresToRight = (boardSize - squaresToLeft);
+		}
+		else if (direction.equals("down")){
+			squaresInFront = boardSize - playerLoc.y;
+			squaresToLeft = (boardSize - playerLoc.x) - 1;
+			squaresToRight = (boardSize - squaresToLeft);
+		}
+		else if(direction.equals("left")){
+			squaresInFront = boardSize - playerLoc.y;
+			squaresToLeft = (boardSize - playerLoc.x) - 1;
+			squaresToRight = (boardSize - squaresToLeft);
+		}
+		else if (direction.equals("right")){
+			squaresInFront = boardSize - playerLoc.y;
+			squaresToLeft = (boardSize - playerLoc.x) - 1;
+			squaresToRight = (boardSize - squaresToLeft);
+		}
+		//////////////////////////////////////////////////
 		// this is used to for the top line points x0 and x1 which will be
 		// scaled from larger to smaller
 		double topLine = centerHeght;
@@ -231,6 +250,7 @@ public class Rendering {
 	 */
 	public void renderObjects() {
 		String[][] worldMap = mapParser.getMap();
+		System.out.println(worldMap);
 		// this is used to for the top line points x0 and x1 which will be
 		// scaled from larger to smaller
 		double topLine = centerHeght;

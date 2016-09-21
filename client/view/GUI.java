@@ -50,7 +50,7 @@ import client.rendering.Rendering;
  */
 public class GUI extends Application {
 	// Point on center of the board
-	private Point playerLoc = new Point(5, 0);
+	private String defaultDirection = "up";
 	// GUI Style CSS
 	private static final String STYLE_CSS = "/main.css";
 	// Constants Images
@@ -142,7 +142,7 @@ public class GUI extends Application {
 		group.prefHeight(HEIGHT_VALUE);
 
 		// Calls the rendering
-		render.render(group, playerLoc);
+		render.render(group, defaultDirection);
 		group.setLayoutX(3);
 		group.setLayoutY(35);
 		// only anchor sort of works
@@ -360,26 +360,17 @@ public class GUI extends Application {
 				// getSorce will give the control which caused the event
 				if (event.getCode() == KeyCode.LEFT) {
 					// this is for moving left
-					System.out.println("left");
-					playerLoc.setLocation(playerLoc.getX() + 1, playerLoc.getY());
-					render.render(group, playerLoc);
+					render.render(group, "left");
 				} else if (event.getCode() == KeyCode.RIGHT) {
 					// this is for moving right
-					System.out.println("right");
-					playerLoc.setLocation(playerLoc.getX() - 1, playerLoc.getY());
-					render.render(group, playerLoc);
+					render.render(group, "right");
 				} else if (event.getCode() == KeyCode.UP) {
 					// this is for moving up
-					System.out.println("up");
-					playerLoc.setLocation(playerLoc.getX(), playerLoc.getY() + 1);
-					render.render(group, playerLoc);
+					render.render(group, "up");
 				} else if (event.getCode() == KeyCode.DOWN) {
 					// this is for moving down
-					System.out.println("down");
-					playerLoc.setLocation(playerLoc.getX(), playerLoc.getY() - 1);
-					render.render(group, playerLoc);
+					render.render(group, "down");
 				}
-
 			}
 		};
 	}
