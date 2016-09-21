@@ -7,6 +7,7 @@ import javax.swing.JLabel;
 
 import client.view.GUI;
 
+
 import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
