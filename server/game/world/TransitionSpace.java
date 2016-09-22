@@ -79,8 +79,4 @@ public class TransitionSpace extends GroundSpace {
         return true;
     }
 
-    @Override
-    public String toString() {
-        return "T";
-    }
 }

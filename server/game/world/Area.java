@@ -67,6 +67,14 @@ public class Area {
         this.areaId = areaID;
     }
 
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return this.height;
+    }
+
     public MapElement[][] getMap() {
         return this.map;
     }
@@ -341,15 +349,6 @@ public class Area {
         }
 
         return sb.toString();
-    }
-
-    // =======The following methods will be deleted =================
-    public int getWidth() {
-        return width;
-    }
-
-    public int getHeight() {
-        return this.height;
     }
 
 }

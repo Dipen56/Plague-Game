@@ -33,14 +33,9 @@ public class Antidote extends Item implements Destroyable, Tradable {
     }
 
     @Override
-    public String toString() {
-        return super.toString() + " It has a label: " + virus.toString() + ".";
-    }
-
-    @Override
     public int hashCode() {
         final int prime = 31;
-        int result = 1;
+        int result = super.hashCode();
         result = prime * result + ((virus == null) ? 0 : virus.hashCode());
         return result;
     }
@@ -49,7 +44,7 @@ public class Antidote extends Item implements Destroyable, Tradable {
     public boolean equals(Object obj) {
         if (this == obj)
             return true;
-        if (obj == null)
+        if (!super.equals(obj))
             return false;
         if (getClass() != obj.getClass())
             return false;
@@ -57,6 +52,11 @@ public class Antidote extends Item implements Destroyable, Tradable {
         if (virus != other.virus)
             return false;
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return super.toString() + " It has a label: " + virus.toString() + ".";
     }
 
 }
