@@ -279,7 +279,7 @@ public class Rendering {
 	 */
 	public void renderObjects() {
 		String[][] worldMap = mapParser.getMap();
-		System.out.println(worldMap);
+		System.out.println(worldMap.toString());
 		// this is used to for the top line points x0 and x1 which will be
 		// scaled from larger to smaller
 		double topLine = centerHeght;
