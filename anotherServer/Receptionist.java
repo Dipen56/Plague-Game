@@ -20,17 +20,61 @@ import server.game.player.Player;
  *
  */
 public class Receptionist extends Thread {
-
+    /**
+     * The game instance running on server side.
+     */
     private final Game game;
+    /**
+     * The duration between every two broadcast.
+     */
     private final int broadcastClock;
+    /**
+     * User (client) id of this connection.
+     */
     private final int uid;
+    /**
+     * The communicating socket.
+     */
     private final Socket socket;
+    /**
+     * A flag indicating whether this client is ready to enter game. If it's false, the
+     * server will keep this client in lobby waiting for all clients ready.
+     */
+    private boolean isReadyToStartTiming = false;
+    /**
+     * A flag indicating whether the game is running or not.
+     */
+    private boolean isGameRunning = false;
 
+    /**
+     * Constructor
+     * 
+     * @param client
+     * @param uid
+     * @param broadcastClock
+     * @param game
+     */
     public Receptionist(Socket client, int uid, int broadcastClock, Game game) {
         this.game = game;
         this.broadcastClock = broadcastClock;
         this.socket = client;
         this.uid = uid;
+    }
+
+    /**
+     * Is this client ready to enter game?
+     * 
+     * @return
+     */
+    public boolean isReady() {
+        return isReadyToStartTiming;
+    }
+
+    /**
+     * This method usually is called by server to tell the client ready to enter game.
+     */
+    public void setReady() {
+        this.isGameRunning = true;
     }
 
     @Override
@@ -42,6 +86,7 @@ public class Receptionist extends Thread {
                     new BufferedOutputStream(socket.getOutputStream()));
 
             // First, tell the client about the game world
+
             // TODO should write a method to convert the map directly into string
             String areaString1 = "0,8,7\nEECRT111\nETRRE111\nEEEEE111\nERRETCDE\nERRETTTE\nEREEEEEE\nCRETTEET";
             String areaString2 = "1,3,3\nEEC\nESB\nEDE";
@@ -51,7 +96,7 @@ public class Receptionist extends Thread {
             output.writeUTF("Fin");
             output.flush();
 
-            // second, join in the player, tell the client its id.
+            // second, join the player in, tell the client his uid.
             byte avatarIndex = input.readByte();
             String name = input.readUTF();
             System.out.println("player uid: " + uid + ". avatar " + avatarIndex);
@@ -72,41 +117,44 @@ public class Receptionist extends Thread {
                 System.out.println("Player: [" + p.getGeographicString() + "]");
             }
 
-            System.out.println("Now entering while(connected) loop");
+            // ok now this client is ready to enter game
+            isReadyToStartTiming = true;
+
+            // don't start the game until server tell us to start.
+            // (when all clients are ready).
+            while (true) {
+                try {
+                    Thread.sleep(ServerMain.DEFAULT_BROADCAST_CLK_PERIOD);
+                } catch (InterruptedException e) {
+                    // Should never happen
+                }
+                if (isGameRunning) {
+                    break;
+                }
+            }
 
             // last, a while true loop to let the receptionist communicate with clients.
-            boolean connected = true;
-            while (connected) {
+            System.out.println("Now entering while(isGameRunning) loop");
+            while (isGameRunning) {
 
                 if (input.available() != 0) {
-                    // read actions from client
+                    // read input from client
                     byte b = input.readByte();
                     Packet packet = Packet.fromByte(b);
 
+                    // what did the client want?
                     switch (packet) {
                     case Forward:
-                        System.out.println("received forward from: " + uid);
-                        if (!game.playerMoveForward(uid)) {
-                            System.out.println("Failed to move forward: " + uid);
-                        }
+                        game.playerMoveForward(uid);
                         break;
                     case Backward:
-                        System.out.println("received backward from: " + uid);
-                        if (!game.playerMoveBackward(uid)) {
-                            System.out.println("Failed to move backward: " + uid);
-                        }
+                        game.playerMoveBackward(uid);
                         break;
                     case Left:
-                        System.out.println("received left from: " + uid);
-                        if (!game.playerMoveLeft(uid)) {
-                            System.out.println("Failed to move left: " + uid);
-                        }
+                        game.playerMoveLeft(uid);
                         break;
                     case Right:
-                        System.out.println("received right from: " + uid);
-                        if (!game.playerMoveRight(uid)) {
-                            System.out.println("Failed to move right: " + uid);
-                        }
+                        game.playerMoveRight(uid);
                         break;
                     case TurnLeft:
                         game.playerTurnLeft(uid);
@@ -138,7 +186,8 @@ public class Receptionist extends Thread {
                         // shouldn't come in here.
                         break;
                     case Disconnect:
-                        connected = false;
+                        // handle disconnection. or we can handle it in catch clause.
+                        isGameRunning = false;
                         input.close();
                         output.close();
                         break;
@@ -148,13 +197,12 @@ public class Receptionist extends Thread {
                 }
 
                 // then broadcast the game status
-                if (connected) {
+                if (isGameRunning) {
                     // 1, tell the client all players' position.
                     for (Player p : game.getPlayers().values()) {
                         String s = p.getGeographicString();
                         output.writeUTF(s);
                     }
-
                     output.writeUTF("Fin");
                     output.flush();
 
@@ -175,11 +223,10 @@ public class Receptionist extends Thread {
                     output.writeUTF(game.getPlayerInventoryString(uid));
                     output.flush();
 
+                    // 6, have a good nap.
                     Thread.sleep(broadcastClock);
                 }
-
             }
-
         } catch (IOException e) {
             System.err.println("Player " + uid + " disconnected.");
         } catch (InterruptedException e) {
@@ -194,5 +241,4 @@ public class Receptionist extends Thread {
             }
         }
     }
-
 }
