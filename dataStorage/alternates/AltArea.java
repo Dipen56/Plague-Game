@@ -1,5 +1,8 @@
 package dataStorage.alternates;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -52,7 +55,10 @@ public class AltArea{
 	@XmlElement
 	boolean isLocked = false;
 	
-	
+	/**
+     * Empty position, which can be used to spawn players.
+     */
+    private int[][] playerPortals = null;
 
 	public AltArea(Area area){
 		if(area == null)
@@ -81,7 +87,16 @@ public class AltArea{
 			}
 		}
 		this.areaId = area.getAreaID();
-
+		
+		
+		//Player portals
+		List<int[]>originalPortals = area.getPlayerPortals();
+		playerPortals = new int[originalPortals.size()][originalPortals.get(0).length];
+		for(int i = 0; i < originalPortals.size(); i++){
+			playerPortals[i] = originalPortals.get(i);
+		}
+		
+		//Copies room specific fields.
 		if(area instanceof Room){
 			this.subtype = "room";
 			this.keyID = ((Room)area).getKeyID();
@@ -121,6 +136,9 @@ public class AltArea{
 				if(ame instanceof AltChest){
 					board[row][col] = ((AltChest)this.board[row][col]).getOriginal();
 				}
+				else if(ame instanceof AltScrapPile){
+					board[row][col] = ((AltScrapPile)this.board[row][col]).getOriginal();
+				}
 				else if(ame instanceof AltObstacle){
 					board[row][col] = ((AltObstacle)this.board[row][col]).getOriginal();
 				}
@@ -128,16 +146,23 @@ public class AltArea{
 					board[row][col] = ((AltTransitionSpace)this.board[row][col]).getOriginal();
 				}
 				else{
-					//This should not happen.
+					throw new RuntimeException("Type of map element not recognised.");
 				}
 			}
 		}
+		
+		//player portals
+		List<int[]>playerPortals = new ArrayList<>();
+		for(int i = 0; i < this.playerPortals.length; i++){
+			playerPortals.add(this.playerPortals[i]);
+		}
+		
 		Area newArea = null;
 		if(this.subtype.equals("room")){
-			newArea = new Room(board, this.areaId, this.keyID, this.isLocked);
+			newArea = new Room(board, this.areaId, this.keyID, this.isLocked,playerPortals);
 		}
 		else{
-			newArea = new Area(board, this.areaId); 
+			newArea = new Area(board, this.areaId, playerPortals); 
 		}
 
 		newArea.registerPortals();		//Fills the player portals list

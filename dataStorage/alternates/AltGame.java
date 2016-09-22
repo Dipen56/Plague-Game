@@ -94,20 +94,19 @@ public class AltGame{
 		Player p = null;
 		Integer myInt = -1;
 
+		AltArea altArea = null;
 		// Copies all entries from original area list, replacing values with alternative objects
 		for(Map.Entry<Integer, Area> m: game.getAreas().entrySet()){
 			myInt = m.getKey();	//The key from the entry.
 			area = m.getValue();	//The value from the entry.
-			AltArea altArea = null;
+			
 			if(area == null){
 				throw new RuntimeException("Integer mapped to null");
-			}
-			else if(area instanceof Room){
-				altArea = new AltRoom(area);
 			}
 			else
 				altArea = new AltArea(area);
 			areas.put(myInt, altArea);
+			altArea = null;
 		}
 
 		//Copies all players to the players map.
@@ -158,7 +157,7 @@ public class AltGame{
 				torches.add(this.torches[i].getOriginal());
 			}
 		}
-		Game game =  new Game(world, areas, players, torches);	//NNNNNNNNNNNEED to wait for player load solution decision.
+		Game game =  new Game(world, areas, players, torches);	
 
 		return game;
 	}

@@ -845,7 +845,31 @@ public class Game {
         if (getClass() != obj.getClass())
             return false;
         Game other = (Game) obj;
+        
+        //experiment to check map contents
+        System.out.println("areas");
+        for(Map.Entry<Integer, Area>e :areas.entrySet()){
+        	System.out.printf("Key: %s\n",e.getKey());
+        	System.out.printf("Value: %s\n",e.getValue());
+        }
+        System.out.println("\n other.areas");
+        for(Map.Entry<Integer, Area>e :other.areas.entrySet()){
+        	System.out.printf("Key: %s\n",e.getKey());
+        	System.out.printf("Value: %s\n",e.getValue());
+        }
+        
+        
+        if(!areas.entrySet().equals(other.areas.entrySet())){
+        	return false;
+        }
+        
+        if(!areas.keySet().equals(other.areas.keySet())){
+        	return false;
+        }
+        
+        
         if (areas == null) {
+        	
             if (other.areas != null)
                 return false;
         } else if (!areas.equals(other.areas))

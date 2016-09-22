@@ -80,18 +80,20 @@ public class AltChest extends AltObstacle{
 	 */
 	public Chest getOriginal(){
 		List<Item> newLoot = new ArrayList<>();
-		for(AltItem i : loot){
-			if(i instanceof AltAntidote){
-				newLoot.add(((AltAntidote)i).getOriginal());
+		AltItem item = null;
+		for(int i = 0; i < loot.length; i++){
+			item = loot[i];
+			if(item instanceof AltAntidote){
+				newLoot.add(((AltAntidote)item).getOriginal());
 			}
-			else if(i instanceof AltKey){
-				newLoot.add(((AltKey)i).getOriginal());
+			else if(item instanceof AltKey){
+				newLoot.add(((AltKey)item).getOriginal());
 			}
-			else if(i instanceof AltTorch){
-				newLoot.add(((AltTorch)i).getOriginal());
+			else if(item instanceof AltTorch){
+				newLoot.add(((AltTorch)item).getOriginal());
 			}
 			else{
-				continue;
+				throw new RuntimeException("Item is not of a recognised type.");
 			}
 		}
 
