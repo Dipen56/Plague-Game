@@ -60,7 +60,7 @@ public class Rendering {
 	 * @param direction 
 	 * @param group
 	 */
-	public void render(Group renderGroup, String direction) {
+	public void render(Group renderGroup, String direction){
 		this.group = renderGroup;
 		Image character =  loadImage(PLAYER_IMAGE);
 		Image image = loadImage(BACKGROUND_IMAGE);
@@ -98,18 +98,7 @@ public class Rendering {
 
 		}
 		else if (direction.equals("down")){
-//			//Assumes that when player wants to move south
-//			//player will always turn right to face south
-//			int l1 =  (boardSize - playerLoc.y);
-//			int f1 = (boardSize -  playerLoc.x) +1;
-//			int r1 =(boardSize -  squaresToLeft) ;
-//			
-//			squaresInFront = r1;
-//			squaresToLeft = f1;
-//			squaresToRight = (boardSize -f1);
-			playerLoc.y-=1; 
-
-			
+			playerLoc.y-=1; 			
 		}
 		else if(direction.equals("left")){
 			
@@ -277,7 +266,7 @@ public class Rendering {
 			//Renders the player onto the board
 			charRender();
 		}
-	//	renderObjects();
+		renderObjects();
 	}
 
 	public void charRender(){
@@ -320,18 +309,16 @@ public class Rendering {
 			if (worldMap[row][col].equals("tree") || worldMap[row][col].equals("chest")) {
 				// this will draw the object that are in front
 				double x1 = nowStartX + nowWidthOfSquare;
-				double y1 = topLine - tileHeight * Math.pow(scaleY, row + 1);
+				double y1 = topLine - tileHeight * Math.pow(scaleY, row +1);
 				double x0 = nowStartX;
-				double y0 = topLine - tileHeight * Math.pow(scaleY, row + 1);
-				double height = (y3 - y0);
-				double width = (x2 - x3);
+				double y0 = topLine - tileHeight * Math.pow(scaleY, row +1);
+				double height = ((y3 - y0)+100);
+				double width = ((x2 - x3));
 				//System.out.println(worldMap[row][col]);
 				if (worldMap[row][col].equals("tree")) {
 					Image tree = loadImage(TREE_IMAGE);
 					ImageView imageViewTree = new ImageView();
 					imageViewTree.setImage(tree);
-					System.out.println("tree height " + height);
-
 					imageViewTree.setFitHeight(height);
 					imageViewTree.setFitWidth(width);
 					// here is where we need to do the logic
@@ -342,7 +329,6 @@ public class Rendering {
 					Image tree = loadImage(CHEST_IMAGE);
 					ImageView imageViewTree = new ImageView();
 					imageViewTree.setImage(tree);
-
 					imageViewTree.setFitHeight(height);
 					imageViewTree.setFitWidth(width);
 					// here is where we need to do the logic
