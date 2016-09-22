@@ -358,18 +358,18 @@ public class GUI extends Application {
 			@Override
 			public void handle(KeyEvent event) {
 				// getSorce will give the control which caused the event
-				if (event.getCode() == KeyCode.LEFT) {
+				if (event.getCode() == KeyCode.UP) {
 					// this is for moving left
-					render.render(group, "left");
-				} else if (event.getCode() == KeyCode.RIGHT) {
-					// this is for moving right
-					render.render(group, "right");
-				} else if (event.getCode() == KeyCode.UP) {
-					// this is for moving up
-					render.render(group, "up");
+					render.render(group, "north");
 				} else if (event.getCode() == KeyCode.DOWN) {
+					// this is for moving right
+					render.render(group, "south");
+				} else if (event.getCode() == KeyCode.LEFT) {
+					// this is for moving up
+					render.render(group, "west");
+				} else if (event.getCode() == KeyCode.RIGHT) {
 					// this is for moving down
-					render.render(group, "down");
+					render.render(group, "east");
 				}
 			}
 		};

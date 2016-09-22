@@ -74,25 +74,29 @@ public class Rendering {
 		//this.playerLoc = new Point(5, 0);
 		int boardSize = 10;
 		////////////////////////////////////
-		if (direction.equals("up")){
+		//up
+		if (direction.equals("north")){
 			squaresInFront = boardSize - playerLoc.y;
 			squaresToLeft = (boardSize - playerLoc.x) - 1;
 			squaresToRight = (boardSize - squaresToLeft);
 		}
-		else if (direction.equals("down")){
+		//down
+		else if (direction.equals("south")){
 			squaresInFront = boardSize - playerLoc.y;
 			squaresToLeft = (boardSize - playerLoc.x) - 1;
 			squaresToRight = (boardSize - squaresToLeft);
 		}
-		else if(direction.equals("left")){
+		//right
+		else if(direction.equals("east")){
 			squaresInFront = boardSize - playerLoc.y;
 			squaresToLeft = (boardSize - playerLoc.x) - 1;
 			squaresToRight = (boardSize - squaresToLeft);
 		}
-		else if (direction.equals("right")){
-			squaresInFront = boardSize - playerLoc.y;
-			squaresToLeft = (boardSize - playerLoc.x) - 1;
-			squaresToRight = (boardSize - squaresToLeft);
+		//left
+		else if (direction.equals("west")){
+			squaresInFront = (boardSize - playerLoc.x) - 1;
+			squaresToLeft = playerLoc.y - boardSize;
+			squaresToRight = boardSize - playerLoc.y;
 		}
 		//////////////////////////////////////////////////
 		// this is used to for the top line points x0 and x1 which will be
