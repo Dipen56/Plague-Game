@@ -31,7 +31,7 @@ public class Room extends Area implements Lockable {
     }
 
     /**
-     * Constructor used in test. Probably will be discarded.
+     * Constructor used in game load.
      * 
      * @param board
      * @param areaID

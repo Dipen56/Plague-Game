@@ -4,11 +4,13 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 
+import server.game.player.Direction;
 import server.game.player.Position;
+
 
 /**
  * This class represents the an alternate version of the Position class, specifically for XML parsing.
- * @author anastadani
+ * @author Daniel Anastasi (anastadani 300145878)
  *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -25,6 +27,12 @@ public class AltPosition {
      */
 	@XmlElement
 	private int areaId;
+	
+	/**
+	 * The direction which the object at this position is facing.
+	 */
+	@XmlElement
+	private Direction direction;
 
 	public AltPosition(Position pos){
 		if(pos == null)
@@ -32,6 +40,7 @@ public class AltPosition {
 		x = pos.x;
 		y = pos.y;
 		areaId = pos.areaId;
+		direction = pos.getDirection();
 	}
 
 	/**
@@ -46,7 +55,7 @@ public class AltPosition {
 	 * @return A Position object.
 	 */
 	public Position getOriginal() {
-		return new Position(x,y,areaId);
+		return new Position(x,y,areaId,direction);
 	}
 
 	public String toString(){
@@ -55,6 +64,7 @@ public class AltPosition {
 		b.append(x + " ");
 		b.append(y + " ");
 		b.append(areaId + " ");
+		b.append(direction + " ");
 		return b.toString();
 	}
 }

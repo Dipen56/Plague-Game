@@ -15,7 +15,7 @@ import server.game.world.Chest;
 
 /**
  * A copy of a Chest object, for use in parsing the object into XML.
- * @author Daniel Anastasi 300145878
+ * @author Daniel Anastasi (anastadani 300145878)
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 public class AltChest extends AltObstacle{

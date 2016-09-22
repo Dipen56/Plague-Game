@@ -11,12 +11,11 @@ import server.game.world.MapElement;
 import server.game.world.Obstacle;
 import server.game.world.Room;
 import server.game.world.TransitionSpace;
-import server.game.world.World;
 
 /**
  * This class represents the an alternate version of the Room class, specifically for XML parsing.
  *
- * @author Hector (Fang Zhao 300364061), Daniel Anastasi 300145878.
+ * @author Daniel Anastasi (anastadani 300145878).
  *
  */
 @XmlAccessorType(XmlAccessType.FIELD)

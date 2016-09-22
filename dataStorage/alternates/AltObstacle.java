@@ -9,7 +9,7 @@ import server.game.world.Obstacle;
 
 /**
  * This class represents the an alternate version of the Obstacle class, specifically for XML parsing.
- * @author Daniel Anastasi 300145878
+ * @author Daniel Anastasi (anastadani 300145878)
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 public class AltObstacle extends AltMapElement{

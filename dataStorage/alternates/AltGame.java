@@ -26,13 +26,13 @@ import server.game.world.TransitionSpace;
 /**
  * This class represents the an alternate version of the Game class, specifically for XML parsing.
  *
- * @author Hector (Fang Zhao 300364061), Daniel Anastasi 300145878
+ * @author Daniel Anastasi (anastadani 300145878)
  *
  */
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
 public class AltGame{
-	
+
 	/**
 	 * Whatever you do don't delete either this altObstTypeProtector or altChestTypeProtector. 
 	 * I don't know why but them being here allows the parser to put objects of their types into the xml file.
@@ -48,51 +48,55 @@ public class AltGame{
 	private AltKey aKey = new AltKey();
 	@XmlElement
 	private AltTorch aTorch = new AltTorch();
-	
+
 	/**
 	 * An alternate version of a World object.
 	 */
 	@XmlElement
-    private AltArea world = null;
+	private AltArea world = null;
 
-    /**
-     * Keep track on each room with its entrance position.
-     */
+	/**
+	 * Keep track on each room with its entrance position.
+	 */
 	@XmlElement
-    private Map<Integer, AltArea> areas;
+	private Map<Integer, AltArea> areas;
 
-	
+
 	/**
-     * Players and their id. Server can find player easily by looking by id.
-     */
+	 * Players and their id. Server can find player easily by looking by id.
+	 */
 	@XmlElement
-    private Map<Integer, AltPlayer> players;
-	
-	/**
-     * All torches in this world. It is used to track torch burning status in timer.
-     */
-    private AltTorch[] torches;
+	private Map<Integer, AltPlayer> players;
 
 	/**
-	* Only to be called by XML marshaller.
-	**/
-    AltGame(){
-
-    }
+	 * All torches in this world. It is used to track torch burning status in timer.
+	 */
+	private AltTorch[] torches;
 
 	/**
-	*@param The object on which to base this object
-	**/
-    public AltGame(Game game){
-    	if(game == null)
+	 * Only to be called by XML marshaller.
+	 **/
+	AltGame(){
+
+	}
+
+	/**
+	 *@param The object on which to base this object
+	 **/
+	public AltGame(Game game){
+		if(game == null)
 			throw new IllegalArgumentException("Argument is null");
-    	this.world = new AltWorld(game.getWorld());
 
+		this.world = new AltArea(game.getWorld());
 		areas = new HashMap<>();
+		this.players = new HashMap<>();
 		Area area = null;
-		// Copies all entries from original entrances list, replacing values with alternative objects
+		Player p = null;
+		Integer myInt = -1;
+
+		// Copies all entries from original area list, replacing values with alternative objects
 		for(Map.Entry<Integer, Area> m: game.getAreas().entrySet()){
-			Integer i = m.getKey();	//The key from the entry.
+			myInt = m.getKey();	//The key from the entry.
 			area = m.getValue();	//The value from the entry.
 			AltArea altArea = null;
 			if(area == null){
@@ -103,33 +107,36 @@ public class AltGame{
 			}
 			else
 				altArea = new AltArea(area);
-			areas.put(i, altArea);
+			areas.put(myInt, altArea);
 		}
-		//Copies all players to the player array.
-		this.players = new HashMap<>();
-		Player p = null;
-		Integer myInt = -1;
-		for(Map.Entry<Integer, Player> m: game.getPlayers().entrySet().size()){
+
+		//Copies all players to the players map.
+		for(Map.Entry<Integer, Player> m: game.getPlayers().entrySet()){
 			myInt = m.getKey();	//The key from the entry.
 			p = m.getValue();	//The value from the entry.
 			if(p == null){
 				throw new RuntimeException("Integer mapped to null");
+			}
 			this.players.put(myInt, new AltPlayer(p));
 		}
-		
-		
-		// Copies all torches to the torches array. Field cannot be list due to xml complications.
+
 		List<Torch> gameTorches = game.getTorches();
-		AltTorch[] torches = new AltTorch[gameTorches.size()];
-		for(int i = 0; i < gameTorches.size();i++){
-			torches[i] = new AltTorch(gameTorches.get(i));
+		this.torches = new AltTorch[gameTorches.size()];
+		//If there are no torches in list, none are saved into array.
+
+		if(!gameTorches.isEmpty()){
+			// Copies all torches to the torches array. Field cannot be list due to xml complications.
+			for(int i = 0; i < gameTorches.size();i++){
+				this.torches[i] = new AltTorch(gameTorches.get(i));
+			}
 		}
-    }
+	}
+
 
 	/**
-	* Returns a Game object, identical to that which this object was originally based.
-	*@return The Game
-	**/
+	 * Returns a Game object, identical to that which this object was originally based.
+	 *@return The Game
+	 **/
 	public Game getOriginal(){
 		Area world = this.world.getOriginal();
 		Map<Integer, Area> areas = new HashMap<>();
@@ -137,7 +144,7 @@ public class AltGame{
 			Area area = ((AltArea)m.getValue()).getOriginal();
 			areas.put(m.getKey(), area);
 		}
-		
+
 		//Restores Players
 		Map<Integer, Player> players = new HashMap<>();
 		for(Map.Entry<Integer, AltPlayer> m: this.players.entrySet()){
@@ -146,15 +153,16 @@ public class AltGame{
 		}
 		//Restores Torches
 		List<Torch>torches = new ArrayList<>();
-		for(int i = 0; i < this.torches.length;i++){
-			torches.add(this.torches[i].getOriginal());
+		if(this.torches != null){
+			for(int i = 0; i < this.torches.length;i++){
+				torches.add(this.torches[i].getOriginal());
+			}
 		}
-		
 		Game game =  new Game(world, areas, players, torches);	//NNNNNNNNNNNEED to wait for player load solution decision.
-		
+
 		return game;
 	}
-	
+
 
 }
 

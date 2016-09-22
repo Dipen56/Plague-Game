@@ -21,9 +21,9 @@ public class SaveTests {
 	private static AltGame altGame;
 
 	static{
-		for(Area a: TestConst.entrances.values())
+		for(Area a: TestConst.areas.values())
         	a.registerPortals();
-		gameA = new Game(TestConst.world, TestConst.entrances);
+		gameA = new Game(TestConst.world, TestConst.areas);
 		
 		altGame = new AltGame(gameA);
 	}

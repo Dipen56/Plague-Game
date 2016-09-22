@@ -1,32 +1,27 @@
 package dataStorage.alternates;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementRef;
 
 import server.game.items.Antidote;
-import server.game.items.Destroyable;
 import server.game.items.Item;
 import server.game.items.Key;
 import server.game.items.Torch;
-import server.game.items.Tradable;
+import server.game.player.Avatar;
 import server.game.player.Direction;
 import server.game.player.Player;
 import server.game.player.Position;
 import server.game.player.Virus;
-import server.game.world.Area;
-import server.game.world.Chest;
-import server.game.world.Room;
+
 /**
- * This class represents the an alternate version of the Player class, specifically for XML parsing.
+ * This class is an adapter for a Player to be loaded to and from XML.
+ * This behaves as a builder object in the builder pattern, in order to prevent the need for a constructor with 7+ parameters.
  *
- * @author Hector (Fang Zhao 300364061), Daniel Anastasi 300145878
+ * @author Daniel Anastasi (anastadani 300145878)
  *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -82,10 +77,14 @@ public class AltPlayer {
 	/**
 	 * The direction which the player is facing.
 	 */
-	//@XmlAttribute
 	@XmlElement
 	private Direction direction;
 
+	/**
+	 * The player's avatar.
+	 */
+	@XmlElement
+	private Avatar avatar;
 
 	/**
 	 * This constructor should only be called by an XML marshaller.
@@ -129,9 +128,10 @@ public class AltPlayer {
 			}
 
 		}
-
+		avatar = player.getAvatar();
 		position = new AltPosition(player.getPosition());
 		direction = player.getDirection();
+		
 	}
 
 	/**
@@ -162,10 +162,18 @@ public class AltPlayer {
 		
 		Position newPosition = position.getOriginal();
 		Direction direction = this.direction;
+		
+		
 		//Restores player from this adapter object.
-		Player p = new Player(uID, name, virus, health, isAlive, newInventory);
+		Player p = new Player(avatar, health);
 		p.setPosition(newPosition);	//set position
 		p.setDirection(direction);//set direction
+		p.setVirus(virus);
+		p.setIsAlive(isAlive);
+		p.setId(uID);
+		p.setName(name);
+		p.setInventory(newInventory);
+		
 		return p;
 	}
 	

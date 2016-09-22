@@ -5,15 +5,14 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 
 import server.game.player.Direction;
+import server.game.player.Position;
 import server.game.world.Area;
 import server.game.world.MapElement;
-import server.game.world.Position;
-import server.game.world.RoomEntrance;
 import server.game.world.TransitionSpace;
 
 /**
  * An alternative version of the TransistionSpace class, only to be used for XML parsing.
- * @author Daniel Anastasi 300145878
+ * @author Daniel Anastasi (anastadani 300145878)
  *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -41,9 +40,8 @@ public class AltTransitionSpace extends AltMapElement{
 		if(ts == null)
 			throw new IllegalArgumentException("Argument is null");
 
-		position = new AltPosition(ts.position);
-		destPos = new AltPosition(ts.destPosition);
-		direction = ts.direction;
+		position = new AltPosition(ts.getCurrentPosition());
+		destPos = new AltPosition(ts.getDestination());
 	}
 
 	/**
@@ -56,7 +54,7 @@ public class AltTransitionSpace extends AltMapElement{
 	public TransitionSpace getOriginal() {
 		Position pos = position.getOriginal();
 		Position destPos = this.destPos.getOriginal();
-		return new TransitionSpace(pos, destPos, direction);
+		return new TransitionSpace(pos, destPos);
 	}
 
 	/**

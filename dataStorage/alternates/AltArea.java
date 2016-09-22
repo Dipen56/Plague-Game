@@ -13,7 +13,7 @@ import server.game.world.TransitionSpace;
 
 /**
  * This class represents the an alternate version of the Area class, specifically for XML parsing.
- * @author Daniel Anastasi 300145878
+ * @author Daniel Anastasi (anastadani 300145878)
  *
  */
 @XmlAccessorType( XmlAccessType.FIELD )

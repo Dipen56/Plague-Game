@@ -10,7 +10,7 @@ import server.game.player.Virus;
 
 /**
  * A copy of a Antidote object, for use in parsing the object into XML.
- * @author Daniel Anastasi 300145878
+ * @author Daniel Anastasi (anastadani 300145878)
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 public class AltAntidote extends AltItem{
