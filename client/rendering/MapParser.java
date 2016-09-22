@@ -50,12 +50,12 @@ public class MapParser {
 			e.printStackTrace();
 		}
 		// for test if we want to add more items to the world
-		 for (int i = 0; i < map.length; i++) {
-		 for (int j = 0; j < map[0].length; j++) {
-		 System.out.print(map[i][j] + ",");
-		 }
-		 System.out.println("");
-		 }
+//		 for (int i = 0; i < map.length; i++) {
+//		 for (int j = 0; j < map[0].length; j++) {
+//		 System.out.print(map[i][j] + ",");
+//		 }
+//		 System.out.println("");
+//		 }
 	}
 
 	public String[][] getMap() {
