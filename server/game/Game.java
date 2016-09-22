@@ -19,6 +19,7 @@ import server.game.player.Player;
 import server.game.player.Position;
 import server.game.world.Area;
 import server.game.world.Container;
+import server.game.world.GroundSpace;
 import server.game.world.Lockable;
 import server.game.world.MapElement;
 import server.game.world.Obstacle;
@@ -61,6 +62,8 @@ public class Game {
      */
     // private static final float SPAWN_IN_WORLD_CHANCE = 0.6f;
 
+    public static final GroundSpace groundSpace = new GroundSpace();
+    
     /**
      * World map
      */
