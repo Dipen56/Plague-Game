@@ -34,7 +34,6 @@ public class ClockThread extends Thread {
     public ClockThread(int delay, Game game) {
         this.game = game;
         this.delay = delay;
-
     }
 
     @Override
@@ -44,7 +43,7 @@ public class ClockThread extends Thread {
             try {
                 Thread.sleep(delay);
 
-                // game update
+                // rendering update
 
             } catch (InterruptedException e) {
                 // should never happen

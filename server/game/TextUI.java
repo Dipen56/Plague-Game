@@ -2,6 +2,7 @@ package server.game;
 
 import java.util.Scanner;
 
+import anotherServer.ParserUtilities;
 import server.game.player.Avatar;
 import server.game.player.Player;
 import server.game.player.Position;
@@ -66,7 +67,7 @@ public class TextUI {
     }
 
     private void StepRun(Game game, Player player) {
-        char input = parseChar();
+        char input = ParserUtilities.parseChar();
 
         switch (input) {
         case 'w':
@@ -161,49 +162,6 @@ public class TextUI {
     private void gameStop(Game game) {
 
     }
-
-    private static char parseChar() {
-
-        String line = SCANNER.nextLine();
-
-        // if user asked for help, print out help message
-        if (line.equals("help")) {
-            helpMessage();
-            line = SCANNER.nextLine();
-        }
-
-        while (line.length() > 1) {
-            System.out.println("Please only type in one char");
-            line = SCANNER.nextLine();
-        }
-
-        return line.charAt(0);
-    }
-
-    // @formatter:off
-    /**
-     * This method print out available input keys.
-     */
-    private static void helpMessage() {
-        String s = "[Help]\n"
-                + "Only type in lower case, and only one character.\n"
-                + "Move forward: w\n"
-                + "Move backward: s\n"
-                + "Move left: a\n"
-                + "Move right: d\n"
-                + "Turn left: q\n"
-                + "Trun right: e\n"
-                + "Unlock Lockable: f\n"
-                + "Take items in Container: g\n"
-                + "Enter/Exit room: r\n"
-                + "Open inventory: i\n"
-                + "Clock & Time left: c\n"
-                + "Use the 1st item in inventory: 1\n"
-                + "Use the 2nd item in inventory: 2\n"
-                + "Destroy the 1st item in inventory: 0\n";
-        System.out.println(s);
-    }
-    // @formatter:on
 
     public static void main(String[] args) {
         new TextUI();

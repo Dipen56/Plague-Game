@@ -28,9 +28,12 @@ import server.game.player.Position;
 @SuppressWarnings("serial")
 public class ClientMain extends JFrame implements Runnable, KeyListener {
 
+    /**
+     * This is designed as a table for renderer to index char board to render objects.
+     */
     private static final Map<Character, String> MAP_OBJECTS_TABLE;
 
-    // It's not a good idea. leave it aside for now.
+    // ITEM_TABLE is not a good idea. leave it aside for now.
     // private static final Map<Character, Item> ITEM_TABLE;
 
     /*
@@ -67,40 +70,67 @@ public class ClientMain extends JFrame implements Runnable, KeyListener {
 
     }
 
-    private final Socket socket;
-    private DataOutputStream output;
-    private DataInputStream input;
-    private int uid;
-    private LocalTime time;
-    private int health;
-    private int visibility;
-
     /**
-     * This map keeps track of all player's avatars.
+     * The communicating socket.
+     */
+    private final Socket socket;
+    /**
+     * The data stream used to send packet to server.
+     */
+    private DataOutputStream output;
+    /**
+     * The data stream used to receive packet from server.
+     */
+    private DataInputStream input;
+    /**
+     * User id of this connection.
+     */
+    private int uid;
+    /**
+     * The world time. This is updated by server broadcast.
+     */
+    private LocalTime time;
+    /**
+     * The health left. This is updated by server broadcast.
+     */
+    private int health;
+    /**
+     * The visibility. This is updated by server broadcast.
+     */
+    private int visibility;
+    /**
+     * This map keeps track of all player's avatars. Renderer can look for which avatar to
+     * render from here.
      */
     private Map<Integer, Avatar> avatars;
-
     /**
-     * This map keeps track of all player's Positions.
+     * This map keeps track of all player's Positions. Renderer can look for where to
+     * render different players from here.
      */
     private Map<Integer, Position> positions;
-
     /**
+     * This map keeps track of this player's inventory. Renderer can look for what item to
+     * render from here.
+     * 
      * TODO this should change.
      */
     private List<String> inventory;
-
     /**
      * This is a mirror of the field, Map<Integer, Area> areas, in Game class, except the
-     * area is represented as a char[][]
+     * area is represented as a char[][]. Renderer can look for what map object to render
+     * from here.
      */
     private Map<Integer, char[][]> areas;
-
     /**
-     * Only for test, we use a text area to display the game here, just like in console.
+     * [Only for test] A text area to display the game status, just like in console.
      */
     private JTextArea window;
 
+    /**
+     * Constructor
+     * 
+     * @param socket
+     */
     public ClientMain(Socket socket) {
         this.socket = socket;
         areas = new HashMap<>();
@@ -112,16 +142,16 @@ public class ClientMain extends JFrame implements Runnable, KeyListener {
         this.setLayout(new BorderLayout(3, 3));
         window = new JTextArea(30, 50);
         window.setEditable(false);
-
         window.addKeyListener(this);
-
         this.add(window, BorderLayout.CENTER);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+        this.setTitle("Plague alpha test version 0.1");
         this.pack();
         this.validate();
         this.setResizable(true);
         this.setVisible(true);
 
+        // run the thread
         this.run();
     }
 
@@ -132,10 +162,14 @@ public class ClientMain extends JFrame implements Runnable, KeyListener {
                     new BufferedOutputStream(socket.getOutputStream()));
             input = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
 
-            // First, receive from server about the game world
+            // First, receive from server about the maps
             String incoming = input.readUTF();
 
             System.out.println("received map string:\n" + incoming);
+
+            /*
+             * TODO "Fin" should be coded in Packet as a properly defined packet type.
+             */
 
             while (!incoming.equals("Fin")) {
                 ParserUtilities.parseMap(areas, incoming);
@@ -143,31 +177,19 @@ public class ClientMain extends JFrame implements Runnable, KeyListener {
                 System.out.println("received map string:\n" + incoming);
             }
 
-            // choose an avatar and type in a name
+            // choose an avatar and input a name
             // TODO this should be GUI instead of console.
             System.out.println("Please choose your Avatar(1-4):");
             byte avatarIndex = (byte) ParserUtilities.parseInt(1, 4);
             output.writeByte(avatarIndex - 1);
-
+            output.flush();
             System.out.println("Please type in your name:");
             String name = ParserUtilities.parseString();
             output.writeUTF(name);
             output.flush();
 
-            /*
-             * FIXME so readInt is not blocking and waiting for another int to come in, it
-             * throws EOF exception if it meets the end.
-             */
-
+            // get the uid from server.
             uid = input.readInt();
-
-            // while (true) {
-            // if (input.available() > 0) {
-            // uid = input.readInt();
-            // break;
-            // }
-            // }
-
             System.out.println("Your uId is: " + uid);
 
             // =========== [DEBUG] ========================
@@ -185,8 +207,13 @@ public class ClientMain extends JFrame implements Runnable, KeyListener {
 
             System.out.println("Now entering while(connected) loop");
 
-            // last, a while true loop to let the client communicate with server.
+            /*
+             * TODO This boolean is not much useful now. It may be useful when we add in
+             * like force-quit features. And it should be a field.
+             */
             boolean connected = true;
+
+            // last, a while true loop to let the client communicate with server.
             while (connected) {
 
                 // read in broadcast
@@ -213,28 +240,43 @@ public class ClientMain extends JFrame implements Runnable, KeyListener {
                 incoming = input.readUTF();
                 inventory = ParserUtilities.parseInventory(incoming);
 
-                // update gui
-                window.setText(toTextUI());
+                /*
+                 * ====================================================
+                 * 
+                 * This is where we update the Renderer. Or, alternatively, like Pacman,
+                 * we could update Renderer in ClockThread
+                 * 
+                 * ====================================================
+                 */
 
+                // update GUI
+                window.setText(toTextUI());
             }
 
         } catch (IOException e) {
+            /*
+             * TODO should handle all exceptions on GUI, i.e. catch clause should popup a
+             * dialog on GUI.
+             */
             System.err.println("I/O Error: " + e.getMessage());
             e.printStackTrace();
         } finally {
             try {
                 // TODO when the client sent an disconnect flag, set connected = false
-
                 socket.close();
             } catch (IOException e) {
                 System.out.println("I/O error. But who cares, disconnected anyway. ");
             }
         }
-
     }
 
+    /**
+     * This is a helper method to generate a JTextArea display for testing. Will be
+     * deleted.
+     * 
+     * @return
+     */
     private String toTextUI() {
-
         StringBuilder sb = new StringBuilder();
 
         // get current area
@@ -259,6 +301,7 @@ public class ClientMain extends JFrame implements Runnable, KeyListener {
              * TODO In GUI rendering, we should add visibility into consideration as well.
              * e.g. if he is out of my visibility, no need to render him.
              */
+            
             // no need to draw the player in other areas.
             int hisAreaId = p.areaId;
             if (hisAreaId != areaId) {
@@ -269,18 +312,18 @@ public class ClientMain extends JFrame implements Runnable, KeyListener {
             replaceCharAtPosition(clone, p);
         }
 
+        // display map
         sb.append("========= Map =========\n");
-
         for (char[] chaSeq : clone) {
             sb.append(chaSeq);
             sb.append("\n");
         }
 
+        // display player's status
         sb.append("======== Status ========\n");
         sb.append("current time: " + time.getHour() + ":" + time.getMinute() + ":"
                 + time.getSecond() + "\n");
         sb.append("your health: " + health + "\n");
-
         sb.append("your visibility: " + visibility + "\n");
 
         // TODO inventory. need to iterate the inventory and print it out.
@@ -289,7 +332,7 @@ public class ClientMain extends JFrame implements Runnable, KeyListener {
             sb.append("- " + s + "\n");
         }
 
-        sb.append("========= Help =========\n");
+        sb.append("===== Board Legend =====\n");
         sb.append("'E' stands for empty space that you can walk.\n");
         sb.append("'T' stands for tree. 'R' stands for rock.\n");
         sb.append("'B' stands for cupboard. 'S' stands for scrap pile.\n");

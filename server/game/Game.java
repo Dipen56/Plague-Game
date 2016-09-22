@@ -427,6 +427,18 @@ public class Game {
      */
     public void playerTurnLeft(int uid) {
         Player player = players.get(uid);
+
+        // This patch code fix the bug that when transit player's direction is changed.
+        Position currentPosition = player.getPosition();
+        Area currentArea = areas.get(currentPosition.areaId);
+        MapElement currentMapElement = currentArea.getMapElementAt(currentPosition.x,
+                currentPosition.y);
+        if (currentMapElement instanceof TransitionSpace) {
+            player.setPosition(new Position(currentPosition.x, currentPosition.y,
+                    currentPosition.areaId, player.getPosition().getDirection().left()));
+            return;
+        }
+
         player.turnLeft();
     }
 
@@ -437,6 +449,18 @@ public class Game {
      */
     public void playerTurnRight(int uid) {
         Player player = players.get(uid);
+
+        // This patch code fix the bug that when transit player's direction is changed.
+        Position currentPosition = player.getPosition();
+        Area currentArea = areas.get(currentPosition.areaId);
+        MapElement currentMapElement = currentArea.getMapElementAt(currentPosition.x,
+                currentPosition.y);
+        if (currentMapElement instanceof TransitionSpace) {
+            player.setPosition(new Position(currentPosition.x, currentPosition.y,
+                    currentPosition.areaId, player.getPosition().getDirection().right()));
+            return;
+        }
+
         player.turnRight();
     }
 
@@ -516,7 +540,7 @@ public class Game {
             return false;
         }
 
-        // OK, space travel time
+        // OK, time for space travel
         player.setPosition(currentTransition.getDestination());
         return true;
     }

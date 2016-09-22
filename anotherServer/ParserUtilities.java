@@ -341,4 +341,16 @@ public class ParserUtilities {
         return SCANNER.nextLine();
     }
 
+    public static char parseChar() {
+
+        String line = SCANNER.nextLine();
+
+        while (line.length() > 1) {
+            System.out.println("Please only type in one char");
+            line = SCANNER.nextLine();
+        }
+
+        return line.charAt(0);
+    }
+
 }

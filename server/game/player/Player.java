@@ -1,7 +1,6 @@
 package server.game.player;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import server.game.items.Antidote;

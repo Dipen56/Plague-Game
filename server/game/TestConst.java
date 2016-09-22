@@ -97,7 +97,12 @@ public class TestConst {
 
         // room
         MapElement[][] roomBoard = new MapElement[3][3];
-        Room room = new Room(roomBoard, 1, 11111, true);
+
+        // locked room
+        // Room room = new Room(roomBoard, 1, 11111, true);
+
+        // unlocked room
+        Room room = new Room(roomBoard, 1, 11111, false);
 
         // ground squares (positions we can enter)
         for (int y = 0; y < 3; y++) {

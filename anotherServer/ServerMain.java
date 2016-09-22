@@ -26,7 +26,7 @@ public class ServerMain {
     /**
      * The period between every broadcast
      */
-    private static final int DEFAULT_BROADCAST_CLK_PERIOD = 50;
+    static final int DEFAULT_BROADCAST_CLK_PERIOD = 50;
     /**
      * A series of port number, in case the port is used.
      */
@@ -92,8 +92,8 @@ public class ServerMain {
         int count = 0;
 
         try {
+            // Wait for a connection
             while (count != numPlayers) {
-                // Wait for a connection
                 Socket clientSocket = serverSocket.accept();
                 int uId = clientSocket.getPort();
 
@@ -106,42 +106,66 @@ public class ServerMain {
                 receptionists.put(uId, receptionist);
                 count++;
             }
+
+            System.out.println("All clients accepted, GAME ON!");
+
+            // start the initialisation process (enter the lobby)
+            runGame();
+
         } catch (IOException e) {
             System.err.println("I/O error: " + e.getMessage());
+        } finally {
+            /*
+             * XXX clean up actions, shut down clients pool, close server, etc. Perhaps
+             * this should be put in finally clause.
+             */
+
+            // shut down the thread pool and server socket.
+            clientsPool.shutdown();
+            try {
+                serverSocket.close();
+            } catch (IOException e) {
+                System.err.println("I/O error: " + e.getMessage());
+            }
+
         }
 
-        System.out.println("All clients accepted, GAME ON!");
-        runGame();
-
-        /**
-         * XXX runGame() ends so quickly, and "All clients disconnected." was printed
-         */
-        System.out.println("All clients disconnected.");
-
-        // shut down the thread pool and server socket.
-        clientsPool.shutdown();
-        try {
-            serverSocket.close();
-        } catch (IOException e) {
-            System.err.println("I/O error: " + e.getMessage());
-        }
     }
 
     private void runGame() {
-        // Now get those clients busy
+        // Now get those workers busy
         for (Receptionist r : receptionists.values()) {
             clientsPool.submit(r);
         }
 
-        // FIXME Start timing should be somewhere else
+        // ======= Enter the lobby, waiting for everyone ready ========
+
+        // do not start timing until everybody is ready.
+        outer: while (true) {
+            for (Receptionist r : receptionists.values()) {
+                if (!r.isReady()) {
+                    try {
+                        Thread.sleep(DEFAULT_BROADCAST_CLK_PERIOD);
+                    } catch (InterruptedException e) {
+                        // Should never happen
+                    }
+                    continue outer;
+                }
+            }
+            break;
+        }
+
+        System.out.println("finished waiting for everybody ready.");
+
+        // ====== everybody is ready, now enter the game ========
+        for (Receptionist r : receptionists.values()) {
+            r.setReady();
+        }
+
+        System.out.println("finished telling everybody to start.");
+
         game.startTiming();
         clockThread.start();
-
-        // loop forever until game ends.
-        while (atleastOneConnection()) {
-            Thread.yield();
-            System.out.println("Running");
-        }
     }
 
     /**
@@ -156,8 +180,6 @@ public class ServerMain {
         // try to create a server with port number from pre-defined array.
         for (int i = 0; i < PORT_NUM.length; i++) {
             try {
-                // s = new ServerSocket(PORT_NUM[i]);
-
                 s = new ServerSocket(PORT_NUM[i], 50, InetAddress.getLocalHost());
                 break;
             } catch (IOException e) {
@@ -169,22 +191,9 @@ public class ServerMain {
         if (s != null) {
             return s;
         } else {
-            throw new GameError("Cannot create server socket");
+            throw new GameError(
+                    "Cannot create server socket, all predefined ports are used");
         }
-    }
-
-    /**
-     * Check whether or not there is at least one connection alive.
-     * 
-     * @return
-     */
-    private boolean atleastOneConnection() {
-        for (Receptionist r : receptionists.values()) {
-            if (r.isAlive()) {
-                return true;
-            }
-        }
-        return false;
     }
 
     /**
