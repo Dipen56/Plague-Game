@@ -43,7 +43,10 @@ public class Rendering {
 	public int centerWidth = gamePaneWidth / 2;
 	public int centerHeght = gamePaneHeight;
 	private MapParser mapParser;
-	private Point playerLoc = new Point (7,2);
+	private Point playerLoc = new Point (5,0);
+	private int squaresInFront =0;
+	private int squaresToLeft =0;
+	private int squaresToRight= 0;
 
 
 	public Rendering() {
@@ -67,59 +70,68 @@ public class Rendering {
 		imageViewNight.setFitWidth(gamePaneWidth + 3);
 		imageViewNight.setFitHeight(gamePaneHeight + 35);
 		group.getChildren().add(imageViewNight);
-		int squaresInFront = 0;// the number of squares on the player's face
+		 //squaresInFront = 0;// the number of squares on the player's face
 		// side
-		int squaresToLeft = 0;// the number of squares on the player's left
+		 //squaresToLeft = 0;// the number of squares on the player's left
 		// side
-		int squaresToRight = 0;// //the number of squares on the player's
+		 //squaresToRight = ;// //the number of squares on the player's
 		// right side
 		// this will be changed to the real players pos apon integration
 		//this.playerLoc = new Point(5, 0);
+		
 		int boardSize = 10;
+		int north = boardSize - playerLoc.y;
+		int west = (boardSize - playerLoc.x) - 1;
+		int east = (boardSize - squaresToLeft);
 		////////////////////////////////////
 		if (direction.equals("up")){
-			squaresInFront = boardSize - playerLoc.y;
-			squaresToLeft = (boardSize - playerLoc.x) - 1;
-			squaresToRight = (boardSize - squaresToLeft);
+			squaresInFront =north;
+			squaresToLeft = west;
+			squaresToRight = east;
 			String values = "squares in front " + squaresInFront +"\n";
 			values+= "squares to the left" + squaresToLeft + "\n";
 			values+= "squares to the right " + squaresToRight + "\n";
-			System.out.println(values);
+			//playerLoc.y+=1; 
+			System.out.println("up/n " + values);
 			System.out.println("Loc Y " + playerLoc.y);
 			System.out.println("Loc X " + playerLoc.x);
 
 		}
 		else if (direction.equals("down")){
-			//Assumes that when player wants to move south
-			//player will always turn right to face south
-			squaresInFront = (boardSize - playerLoc.y);
-			squaresToRight = (boardSize - playerLoc.x) - 1;
-			squaresToLeft = (boardSize - squaresToRight);
-			String values = "squares in front " + squaresInFront +"\n";
-			values+= "squares to the left" + squaresToLeft + "\n";
-			values+= "squares to the right " + squaresToRight + "\n";
-			System.out.println("down \n" + values);
+//			//Assumes that when player wants to move south
+//			//player will always turn right to face south
+//			int l1 =  (boardSize - playerLoc.y);
+//			int f1 = (boardSize -  playerLoc.x) +1;
+//			int r1 =(boardSize -  squaresToLeft) ;
+//			
+//			squaresInFront = r1;
+//			squaresToLeft = f1;
+//			squaresToRight = (boardSize -f1);
+			playerLoc.y-=1; 
+
 			
 		}
 		else if(direction.equals("left")){
-			squaresInFront = (boardSize - playerLoc.x) - 1;;
-			squaresToRight =  boardSize - playerLoc.y;
-			squaresToLeft = boardSize - squaresInFront;
 			
+			squaresToRight =  north ;
+			squaresInFront = west ;
+			squaresToLeft = boardSize - east ;
 			String values = "squares in front " + squaresInFront +"\n";
 			values+= "squares to the left" + squaresToLeft + "\n";
 			values+= "squares to the right " + squaresToRight + "\n";
-			System.out.println(values);
+			System.out.println("left \n" + values);
 
 		}
 		else if (direction.equals("right")){
-			squaresToLeft =  boardSize - playerLoc.y;
-			squaresToRight =(boardSize - playerLoc.x) - 1;
-			squaresInFront = (boardSize - squaresToRight);
+			squaresToLeft = north;
+			squaresInFront = east;
+			squaresToRight =(boardSize -  west) ;
+
 			String values = "squares in front " + squaresInFront +"\n";
 			values+= "squares to the left" + squaresToLeft + "\n";
 			values+= "squares to the right " + squaresToRight + "\n";
-			System.out.println(values);
+			System.out.println("right \n" + values);
+
 
 		}
 		//////////////////////////////////////////////////
@@ -265,7 +277,7 @@ public class Rendering {
 			//Renders the player onto the board
 			charRender();
 		}
-		renderObjects();
+	//	renderObjects();
 	}
 
 	public void charRender(){
@@ -317,6 +329,7 @@ public class Rendering {
 					Image tree = loadImage(TREE_IMAGE);
 					ImageView imageViewTree = new ImageView();
 					imageViewTree.setImage(tree);
+					System.out.println("tree height " + height);
 
 					imageViewTree.setFitHeight(height);
 					imageViewTree.setFitWidth(width);
