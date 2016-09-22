@@ -67,6 +67,7 @@ public class ServerGui extends Application {
 		window.setScene(mainScene);
 		mainScene.getStylesheets().add(this.getClass().getResource("/main.css").toExternalForm());
 		window.show();
+		setText("10.1.1","5000");
 
 	}
 

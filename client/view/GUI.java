@@ -52,6 +52,10 @@ public class GUI extends Application {
 	// Constants Images
 	private static final String GAMEICON_IMAGE = "/game-icon.png";
 	private static final String INVENTORY_IMAGE = "/item-tray.png";
+	private static final String SLASH_SCREEN_IMAGE = "/night.jpg"; // this will
+																	// be
+																	// changed
+	private static final String AVATAR_ONE_IMAGE = "/standingstillrear.png";
 
 	// Constants Dimensions
 	public static final int WIDTH_VALUE = 1000;
@@ -87,9 +91,28 @@ public class GUI extends Application {
 	private EventHandler<MouseEvent> mouseEvent;
 	// for window resizing not really need else where
 	private EventHandler<WindowEvent> windowEvent;
+
 	private Rendering render = new Rendering();
 
 	public static ViewControler viewControler;
+
+	// Button Controls For Slash Screen
+	private Button play;
+	private Button quit;
+	private Button help;
+	// Controls for the login Screen
+	private Label info;
+	private Button login;
+	private Button quitLogin;
+	private TextField userNameInput;
+	private TextField ipInput;
+	private TextField portInput;
+	private Group avatarGroup;
+	private String selectedAvatar;
+	// waiting room Controls
+	FlowPane playersWaiting;
+	private Button beginGame;
+	private Button quitWaitingRoom;
 
 	public GUI(ViewControler viewControler) {
 		this.viewControler = viewControler;
@@ -113,7 +136,114 @@ public class GUI extends Application {
 		// this will disable and enable resizing so when we have a working
 		// version we can just set this to false;
 		window.setResizable(false);
+		// this starts the action listener
+		actionEventHandler();
+		// this will start the key listener
+		keyEventHander();
+		// this will start the mouse listener
+		mouseEventHander();
+		slashScreen();
+		window.show();
 
+	}
+
+	public void slashScreen() {
+		Group slashGroup = new Group();
+		Image slashBackground = loadImage(SLASH_SCREEN_IMAGE);
+		ImageView slashBackgroundImage = new ImageView(slashBackground);
+		slashBackgroundImage.setFitHeight(HEIGHT_VALUE + 20);
+		slashBackgroundImage.setFitWidth(WIDTH_VALUE + 20);
+		HBox buttonBox = new HBox(10);
+		buttonBox.setLayoutX((WIDTH_VALUE / 2) - (100));
+		buttonBox.setLayoutY(HEIGHT_VALUE / 2);
+		play = new Button("Play");
+		play.setOnAction(actionEvent);
+		quit = new Button("Run Away");
+		quit.setOnAction(actionEvent);
+		help = new Button("Help");
+		help.setOnAction(actionEvent);
+		buttonBox.getChildren().addAll(play, quit, help);
+		slashGroup.getChildren().add(slashBackgroundImage);
+		slashGroup.getChildren().add(buttonBox);
+		BorderPane slashBorderPane = new BorderPane();
+		slashBorderPane.getChildren().add(slashGroup);
+		Scene slashScene = new Scene(slashBorderPane, WIDTH_VALUE, HEIGHT_VALUE);
+		window.setScene(slashScene);
+
+	}
+
+	public void loginScreen() {
+		VBox loginBox = new VBox(5);
+		info = new Label();
+		info.setText("Enter The IP,Port and UserName");
+		loginBox.getChildren().add(info);
+		BorderPane loginBorderPane = new BorderPane();
+
+		VBox inputStore = new VBox(5);
+
+		HBox userNameBox = new HBox(3);
+		Label user = new Label("Enter UserName");
+		userNameInput = new TextField();
+		userNameBox.getChildren().addAll(user, userNameInput);
+		// loginBox.getChildren().add(userNameBox);
+
+		HBox ipBox = new HBox(3);
+		Label ip = new Label("Enter IP Address");
+		ipInput = new TextField();
+		ipBox.getChildren().addAll(ip, ipInput);
+		// loginBox.getChildren().add(ipBox);
+
+		HBox portBox = new HBox(3);
+		Label port = new Label("Enter UserName");
+		portInput = new TextField();
+		portBox.getChildren().addAll(port, portInput);
+		// loginBox.getChildren().add(portBox);
+		inputStore.getChildren().addAll(userNameBox, ipBox, portBox);
+		loginBorderPane.setLeft(inputStore);
+		loginBox.getChildren().add(loginBorderPane);
+		avatarGroup = new Group();
+		Image avatarImg = loadImage(AVATAR_ONE_IMAGE);
+		ImageView avatarImage = new ImageView(avatarImg);
+		avatarGroup.getChildren().add(avatarImage);
+		loginBorderPane.setRight(avatarGroup);
+		// TODO: need to add some from of action listener here to change images
+		FlowPane buttons = new FlowPane();
+		buttons.setHgap(10);
+		login = new Button("Login");
+		login.setOnAction(actionEvent);
+		quitLogin = new Button("Leave");
+		quitLogin.setOnAction(actionEvent);
+		buttons.getChildren().addAll(login, quitLogin);
+		loginBox.getChildren().add(buttons);
+		Scene slashScene = new Scene(loginBox, WIDTH_VALUE / 2, HEIGHT_VALUE / 2);
+		window.setScene(slashScene);
+
+	}
+
+	public void waitingRoom() {
+		VBox waitingRoomBox = new VBox(5);
+		Label waitingMsg = new Label();
+		waitingMsg.setText(
+				"Welome Players! This is the Waiting, You are seeing this room as this game reqires min of 2 players to play. Game Will Start as soon as there are 2 players or more players");
+		waitingMsg.setWrapText(true);
+		waitingRoomBox.getChildren().add(waitingMsg);
+		playersWaiting = new FlowPane();
+		playersWaiting.setHgap(10);
+		waitingRoomBox.getChildren().add(playersWaiting);
+		FlowPane buttons = new FlowPane();
+		buttons.setHgap(10);
+		beginGame = new Button("Begain");
+		beginGame.setOnAction(actionEvent);
+		quitWaitingRoom = new Button("Leave Game");
+		quitWaitingRoom.setOnAction(actionEvent);
+		buttons.getChildren().addAll(beginGame, quitWaitingRoom);
+		waitingRoomBox.getChildren().add(buttons);
+		Scene slashScene = new Scene(waitingRoomBox, WIDTH_VALUE, HEIGHT_VALUE);
+		window.setScene(slashScene);
+
+	}
+
+	public void startGame() {
 		// Create a VBox which is just layout manger and adds gap of 10
 		rightPanel = new VBox(10);
 		rightPanel.setPrefSize(RIGHTPANE_WIDTH_VALUE, HEIGHT_VALUE);
@@ -121,12 +251,6 @@ public class GUI extends Application {
 		borderPane = new BorderPane();
 		borderPane.setRight(rightPanel);
 
-		// this starts the action listener
-		actionEventHandler();
-		// this will start the key listener
-		keyEventHander();
-		// this will start the mouse listener
-		mouseEventHander();
 		// creates a scene
 		setMenuBar();
 		setWorldTime();
@@ -142,17 +266,13 @@ public class GUI extends Application {
 		group.setLayoutX(3);
 		group.setLayoutY(35);
 		// only anchor sort of works
-		AnchorPane temp = new AnchorPane();
-		//temp.setPrefWidth(GAMEPANE_WIDTH_VALUE);
-		//temp.getChildren().add(group);
+		// AnchorPane temp = new AnchorPane();
 		borderPane.getChildren().add(group);
-		//borderPane.getChildren().add(temp);
-		
+
 		Scene scene = new Scene(borderPane, WIDTH_VALUE, HEIGHT_VALUE);
 		scene.getStylesheets().add(this.getClass().getResource(STYLE_CSS).toExternalForm());
 		scene.setOnKeyPressed(keyEvent);
 		window.setScene(scene);
-		window.show();
 
 	}
 
@@ -339,7 +459,29 @@ public class GUI extends Application {
 			public void handle(ActionEvent event) {
 				if (event.getSource() == send) {
 					viewControler.getChatMsg(getChatMsg());
-
+				} else if (event.getSource() == play) {
+					loginScreen();
+				} else if (event.getSource() == quit) {
+					window.close();
+				} else if (event.getSource() == help) {
+					// TODO: need to make a help thing which tells the user how
+					// to play the game
+					System.out.println("help me");
+				} else if (event.getSource() == login) {
+					// TODO: set secected avatar
+					// TODO: check login was correct
+					// TODO set the Avatars whicha re all the palyes currently in
+					// the waiting room
+					waitingRoom();
+				} else if (event.getSource() == quitLogin) {
+					window.close();
+				} else if (event.getSource() == beginGame) {
+					// TODO: check that there are 2 > players only start the
+					// game if there are else promt a masg and also let the
+					// other players know the game is starting
+					startGame();
+				} else if (event.getSource() == quitWaitingRoom) {
+					window.close();
 				}
 
 			}

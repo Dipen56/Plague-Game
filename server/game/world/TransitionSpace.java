@@ -13,20 +13,16 @@ import server.game.player.Position;
 public class TransitionSpace extends GroundSpace {
 
     /**
-     * The position of this object in the area.
+     * The position of this object in the area, which specifies areaId, coordinates, and
+     * facing direction before transition.
      */
     private final Position currentPosition;
 
     /**
-     * The position in the destination area from this space.
+     * The position in the destination area from this space. which specifies areaId,
+     * coordinates, and facing direction before transition.
      */
     private final Position destPosition;
-
-    /**
-     * The direction which the player must travel from this space to enter the destination
-     * area.
-     */
-    private final Direction direction;
 
     /**
      * @param The
@@ -36,10 +32,9 @@ public class TransitionSpace extends GroundSpace {
      * @param Direction
      *            to face in order to enter destination area.
      */
-    public TransitionSpace(Position pos, Position destPos, Direction direction) {
+    public TransitionSpace(Position pos, Position destPos) {
         this.currentPosition = pos;
         this.destPosition = destPos;
-        this.direction = direction;
     }
 
     /**
@@ -54,18 +49,17 @@ public class TransitionSpace extends GroundSpace {
      * 
      * @return
      */
-    public Direction getDirection() {
-        return direction;
+    public Direction getFacingDirection() {
+        return currentPosition.getDirection();
     }
 
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((destPosition == null) ? 0 : destPosition.hashCode());
-        result = prime * result + ((direction == null) ? 0 : direction.hashCode());
         result = prime * result
                 + ((currentPosition == null) ? 0 : currentPosition.hashCode());
+        result = prime * result + ((destPosition == null) ? 0 : destPosition.hashCode());
         return result;
     }
 
@@ -78,17 +72,15 @@ public class TransitionSpace extends GroundSpace {
         if (getClass() != obj.getClass())
             return false;
         TransitionSpace other = (TransitionSpace) obj;
-        if (destPosition == null) {
-            if (other.destPosition != null)
-                return false;
-        } else if (!destPosition.equals(other.destPosition))
-            return false;
-        if (direction != other.direction)
-            return false;
         if (currentPosition == null) {
             if (other.currentPosition != null)
                 return false;
         } else if (!currentPosition.equals(other.currentPosition))
+            return false;
+        if (destPosition == null) {
+            if (other.destPosition != null)
+                return false;
+        } else if (!destPosition.equals(other.destPosition))
             return false;
         return true;
     }

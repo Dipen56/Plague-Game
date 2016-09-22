@@ -1,7 +1,6 @@
 package server.game.player;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import server.game.items.Antidote;
@@ -23,7 +22,7 @@ public class Player {
     /**
      * The inventory size
      */
-    private static final int INVENTORY_SIZE = 8;
+    public static final int INVENTORY_SIZE = 8;
     /**
      * The max health (time left) of player. This number is set to 10 minutes. After 10
      * minutes, the player will die.
@@ -33,6 +32,10 @@ public class Player {
      * User Id to identify this player.
      */
     private final int uID;
+    /**
+     * User Id to identify this player.
+     */
+    private final Avatar avatar;
     /**
      * player's name
      */
@@ -65,10 +68,6 @@ public class Player {
      * The player's coordinate
      */
     private Position position;
-    /**
-     * The player's facing direction
-     */
-    private Direction direction;
 
     /**
      * Constructor
@@ -77,15 +76,15 @@ public class Player {
      * @param name
      * @param virus
      */
-    public Player(int uID, String name) {
+    public Player(int uID, Avatar avatar, String name) {
         this.uID = uID;
+        this.avatar = avatar;
         this.name = name;
         health = MAX_HEALTH;
         isAlive = true;
         isHoldingTorch = false;
         inventory = new ArrayList<>();
         this.virus = Virus.randomVirus();
-        this.direction = Direction.randomDirection();
 
         // player's position should be set by server by joinPlayer().
         this.position = null;
@@ -108,8 +107,9 @@ public class Player {
      * @param newPosition
      * @param direction
      */
-    public Player(int ID, String name, Virus virus, int health, boolean isAlive,
-            List<Item> newInventory, Position newPosition, Direction direction) {
+    public Player(int ID, Avatar avatar, String name, Virus virus, int health,
+            boolean isAlive, List<Item> newInventory, Position newPosition,
+            Direction direction) {
 
         /*
          * kept for testing game load. Health field is decremented with time, so can't use
@@ -117,13 +117,13 @@ public class Player {
          */
         this.healthSavingConstant = health;
         this.uID = ID;
+        this.avatar = avatar;
         this.name = name;
         this.virus = virus;
         this.health = health;
         this.isAlive = isAlive;
         this.inventory = newInventory;
         this.position = newPosition;
-        this.direction = direction;
     }
 
     /**
@@ -346,28 +346,39 @@ public class Player {
         if (!isAlive) {
             return false; // gosh this should never happen!
         }
+        return container.lootTakenOutByPlayer(this);
+    }
 
-        // if the container is locked, the player cannot take item from it
-        if (container instanceof Lockable && ((Lockable) container).isLocked()) {
+    /**
+     * This method let the player try to put an item into a container (chest or cupboard,
+     * etc.) in front.
+     *
+     * @param container
+     * @param index
+     *            --- the index in inventory of item to be put in
+     * @return --- true if the action succeeded; or false if failed (most likely when the
+     *         container is full or locked).
+     */
+    public boolean tryPutItemsIntoContainer(Container container, int index) {
+        // dead man should do nothing
+        if (!isAlive) {
+            return false; // gosh this should never happen!
+        }
+
+        // It's surely not my item.
+        if (index < 0 || index > inventory.size()) {
             return false;
         }
 
-        boolean tookAtLeastOne = false;
+        Item item = inventory.get(index);
+        boolean isDone = container.putItemIn(item);
 
-        List<Item> loot = container.getLoot();
-        Iterator<Item> itr = loot.iterator();
-        while (itr.hasNext()) {
-            if (inventory.size() < INVENTORY_SIZE) {
-                Item item = itr.next();
-                pickUpItem(item);
-                itr.remove();
-                tookAtLeastOne = true;
-            } else {
-                break;
-            }
+        // if it is successfully put into the container, delete the item
+        if (isDone) {
+            this.inventory.remove(index);
         }
 
-        return tookAtLeastOne;
+        return isDone;
     }
 
     /**
@@ -399,24 +410,45 @@ public class Player {
         return position;
     }
 
+    /**
+     * This method is used to generate the string for broadcasting player's position and
+     * direction to clients. The String has the following format:
+     * 
+     * <p>
+     * Say Player(uId: 123) is in area(areaId: 456), his coordinates is (78, 90), and his
+     * facing direction is north (clockwisely we have North: 0; East: 1; South: 2; West:
+     * 3):
+     * 
+     * <p>
+     * The string will be <i>"123,456,78,90,0"</i>
+     * 
+     * @return
+     */
+    public String getGeographicString() {
+        return uID + "," + position.areaId + "," + position.x + "," + position.y + ","
+                + position.getDirection().ordinal();
+    }
+
     public void setPosition(Position pos) {
         this.position = pos;
     }
 
     public Direction getDirection() {
-        return direction;
+        return position.getDirection();
     }
 
     public void setDirection(Direction direction) {
-        this.direction = direction;
+        position.setDirection(direction);
     }
 
     public void turnLeft() {
-        direction = direction.left();
+        Direction d = position.getDirection();
+        position.setDirection(d.left());
     }
 
     public void turnRight() {
-        direction = direction.right();
+        Direction d = position.getDirection();
+        position.setDirection(d.right());
     }
 
     public Virus getVirus() {
@@ -473,7 +505,7 @@ public class Player {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((direction == null) ? 0 : direction.hashCode());
+        result = prime * result + ((avatar == null) ? 0 : avatar.hashCode());
         result = prime * result + health;
         result = prime * result + healthSavingConstant;
         result = prime * result + ((inventory == null) ? 0 : inventory.hashCode());
@@ -495,7 +527,7 @@ public class Player {
         if (getClass() != obj.getClass())
             return false;
         Player other = (Player) obj;
-        if (direction != other.direction)
+        if (avatar != other.avatar)
             return false;
         if (health != other.health)
             return false;
