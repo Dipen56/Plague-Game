@@ -49,7 +49,7 @@ public class Player {
      */
     private int health;
     /**
-     * Only used for testing validity of game load.
+     * Only used for testing validity of game load. Do not delete.
      */
     private int healthSavingConstant = 0;
     /**
@@ -100,22 +100,12 @@ public class Player {
      * @param ID
      * @param name
      * @param virus
-     * @param area
      * @param health
      * @param isAlive
      * @param newInventory
-     * @param newPosition
-     * @param direction
      */
-    public Player(int ID, Avatar avatar, String name, Virus virus, int health,
-            boolean isAlive, List<Item> newInventory, Position newPosition,
-            Direction direction) {
-
-        /*
-         * kept for testing game load. Health field is decremented with time, so can't use
-         * for test.
-         */
-        this.healthSavingConstant = health;
+	public Player(int ID, Avatar avatar, String name, Virus virus, int health, boolean isAlive, List<Item> newInventory) {
+        this.healthSavingConstant = health;	// Kept for testing game load. Health field is decremented with time, so can't use for test.
         this.uID = ID;
         this.avatar = avatar;
         this.name = name;
@@ -123,7 +113,6 @@ public class Player {
         this.health = health;
         this.isAlive = isAlive;
         this.inventory = newInventory;
-        this.position = newPosition;
     }
 
     /**
