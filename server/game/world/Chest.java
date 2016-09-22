@@ -1,9 +1,11 @@
 package server.game.world;
 
+import java.util.Iterator;
 import java.util.List;
 
 import server.game.GameError;
 import server.game.items.Item;
+import server.game.player.Player;
 
 /**
  * This class represents a chest. A chest can be locked or unlocked. If it is locked, a
@@ -43,11 +45,34 @@ public class Chest extends Obstacle implements Container, Lockable {
 
     @Override
     public boolean putItemIn(Item item) {
+        if (isLocked) {
+            return false;
+        }
         if (loot.size() >= Container.CHEST_SIZE) {
             return false;
         }
-    
+
         return loot.add(item);
+    }
+
+    @Override
+    public boolean lootTakenOutByPlayer(Player player) {
+        if (isLocked) {
+            return false;
+        }
+        boolean tookAtLeastOne = false;
+        Iterator<Item> itr = loot.iterator();
+        while (itr.hasNext()) {
+            if (player.getInventory().size() < Player.INVENTORY_SIZE) {
+                Item item = itr.next();
+                player.pickUpItem(item);
+                itr.remove();
+                tookAtLeastOne = true;
+            } else {
+                break;
+            }
+        }
+        return tookAtLeastOne;
     }
 
     @Override

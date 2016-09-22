@@ -20,10 +20,6 @@ public abstract class Item {
         this.description = description;
     }
 
-    public String getDescription() {
-        return this.description;
-    }
-
     /**
      * Change the description of this object. Whenever the status of an object is changed,
      * the description should change accordingly. E.g. a torch has less time to light up.
