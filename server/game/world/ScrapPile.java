@@ -60,6 +60,31 @@ public class ScrapPile extends Obstacle implements Container {
     }
 
     @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + ((loot == null) ? 0 : loot.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (!super.equals(obj))
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        ScrapPile other = (ScrapPile) obj;
+        if (loot == null) {
+            if (other.loot != null)
+                return false;
+        } else if (!loot.equals(other.loot))
+            return false;
+        return true;
+    }
+
+    @Override
     public String toString() {
         return "S";
     }

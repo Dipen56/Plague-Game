@@ -818,7 +818,6 @@ public class Game {
         result = prime * result + ((clock == null) ? 0 : clock.hashCode());
         result = prime * result + ((player == null) ? 0 : player.hashCode());
         result = prime * result + ((players == null) ? 0 : players.hashCode());
-        result = prime * result + ((timer == null) ? 0 : timer.hashCode());
         result = prime * result + ((torches == null) ? 0 : torches.hashCode());
         result = prime * result + ((world == null) ? 0 : world.hashCode());
         return result;
@@ -852,11 +851,6 @@ public class Game {
             if (other.players != null)
                 return false;
         } else if (!players.equals(other.players))
-            return false;
-        if (timer == null) {
-            if (other.timer != null)
-                return false;
-        } else if (!timer.equals(other.timer))
             return false;
         if (torches == null) {
             if (other.torches != null)

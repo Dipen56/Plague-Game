@@ -93,7 +93,7 @@ public class Chest extends Obstacle implements Container, Lockable {
     @Override
     public int hashCode() {
         final int prime = 31;
-        int result = 1;
+        int result = super.hashCode();
         result = prime * result + (isLocked ? 1231 : 1237);
         result = prime * result + keyID;
         result = prime * result + ((loot == null) ? 0 : loot.hashCode());
@@ -104,7 +104,7 @@ public class Chest extends Obstacle implements Container, Lockable {
     public boolean equals(Object obj) {
         if (this == obj)
             return true;
-        if (obj == null)
+        if (!super.equals(obj))
             return false;
         if (getClass() != obj.getClass())
             return false;

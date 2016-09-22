@@ -82,7 +82,7 @@ public class Torch extends Item implements Destroyable, Tradable {
     @Override
     public int hashCode() {
         final int prime = 31;
-        int result = 1;
+        int result = super.hashCode();
         result = prime * result + (isFlaming ? 1231 : 1237);
         result = prime * result + timeLimit;
         return result;
@@ -92,7 +92,7 @@ public class Torch extends Item implements Destroyable, Tradable {
     public boolean equals(Object obj) {
         if (this == obj)
             return true;
-        if (obj == null)
+        if (!super.equals(obj))
             return false;
         if (getClass() != obj.getClass())
             return false;

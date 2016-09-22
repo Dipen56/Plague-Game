@@ -92,6 +92,37 @@ public class Cupboard extends Obstacle implements Container, Lockable {
     }
 
     @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + (isLocked ? 1231 : 1237);
+        result = prime * result + keyID;
+        result = prime * result + ((loot == null) ? 0 : loot.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (!super.equals(obj))
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Cupboard other = (Cupboard) obj;
+        if (isLocked != other.isLocked)
+            return false;
+        if (keyID != other.keyID)
+            return false;
+        if (loot == null) {
+            if (other.loot != null)
+                return false;
+        } else if (!loot.equals(other.loot))
+            return false;
+        return true;
+    }
+
+    @Override
     public String toString() {
         return "C";
     }

@@ -26,7 +26,7 @@ public class Key extends Item implements Tradable {
     @Override
     public int hashCode() {
         final int prime = 31;
-        int result = 1;
+        int result = super.hashCode();
         result = prime * result + keyID;
         return result;
     }
@@ -35,7 +35,7 @@ public class Key extends Item implements Tradable {
     public boolean equals(Object obj) {
         if (this == obj)
             return true;
-        if (obj == null)
+        if (!super.equals(obj))
             return false;
         if (getClass() != obj.getClass())
             return false;
