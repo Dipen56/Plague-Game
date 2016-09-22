@@ -1,9 +1,11 @@
 package server.game.world;
 
+import java.util.Iterator;
 import java.util.List;
 
 import server.game.GameError;
 import server.game.items.Item;
+import server.game.player.Player;
 
 /**
  * This class represents a chest. A chest can be locked or unlocked. If it is locked, a
@@ -19,8 +21,15 @@ public class Chest extends Obstacle implements Container, Lockable {
      * can open it.
      */
     private int keyID;
+    
+    /**
+     * True if the chest is locked.
+     */
     private boolean isLocked;
 
+    /**
+     * Items in the chest.
+     */
     private List<Item> loot;
 
     public Chest(String description, int keyID, boolean isLocked, List<Item> loot) {
@@ -43,11 +52,34 @@ public class Chest extends Obstacle implements Container, Lockable {
 
     @Override
     public boolean putItemIn(Item item) {
+        if (isLocked) {
+            return false;
+        }
         if (loot.size() >= Container.CHEST_SIZE) {
             return false;
         }
-    
+
         return loot.add(item);
+    }
+
+    @Override
+    public boolean lootTakenOutByPlayer(Player player) {
+        if (isLocked) {
+            return false;
+        }
+        boolean tookAtLeastOne = false;
+        Iterator<Item> itr = loot.iterator();
+        while (itr.hasNext()) {
+            if (player.getInventory().size() < Player.INVENTORY_SIZE) {
+                Item item = itr.next();
+                player.pickUpItem(item);
+                itr.remove();
+                tookAtLeastOne = true;
+            } else {
+                break;
+            }
+        }
+        return tookAtLeastOne;
     }
 
     @Override
@@ -68,7 +100,7 @@ public class Chest extends Obstacle implements Container, Lockable {
     @Override
     public int hashCode() {
         final int prime = 31;
-        int result = 1;
+        int result = super.hashCode();
         result = prime * result + (isLocked ? 1231 : 1237);
         result = prime * result + keyID;
         result = prime * result + ((loot == null) ? 0 : loot.hashCode());
@@ -79,7 +111,7 @@ public class Chest extends Obstacle implements Container, Lockable {
     public boolean equals(Object obj) {
         if (this == obj)
             return true;
-        if (obj == null)
+        if (!super.equals(obj))
             return false;
         if (getClass() != obj.getClass())
             return false;

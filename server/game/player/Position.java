@@ -1,8 +1,8 @@
 package server.game.player;
 
 /**
- * This class represents a set of geographical information for a player. It contains a set
- * of (x, y) coordinates, and the id number of area.
+ * This class represents a set of geographical information for a player. It contains a
+ * pair of (x, y) coordinates, the id number of current area, and a facing direction.
  *
  * @author Hector (Fang Zhao 300364061)
  *
@@ -20,6 +20,10 @@ public class Position {
      * Which area is this position.
      */
     public final int areaId;
+    /**
+     * The player's facing direction
+     */
+    private Direction direction;
 
     /**
      * Constructor
@@ -28,67 +32,84 @@ public class Position {
      * @param y
      * @param areaId
      */
-    public Position(int x, int y, int areaId) {
+    public Position(int x, int y, int areaId, Direction direction) {
         this.x = x;
         this.y = y;
         this.areaId = areaId;
+        this.direction = direction;
     }
 
-    public Position frontPosition(Direction direction) {
+    /**
+     * 
+     * @return
+     */
+    public Direction getDirection() {
+        return direction;
+    }
+
+    /**
+     * 
+     * @param direction
+     */
+    public void setDirection(Direction direction) {
+        this.direction = direction;
+    }
+
+    public Position frontPosition() {
         switch (direction) {
         case East:
-            return new Position(x + 1, y, areaId);
+            return new Position(x + 1, y, areaId, direction);
         case North:
-            return new Position(x, y - 1, areaId);
+            return new Position(x, y - 1, areaId, direction);
         case South:
-            return new Position(x, y + 1, areaId);
+            return new Position(x, y + 1, areaId, direction);
         case West:
-            return new Position(x - 1, y, areaId);
+            return new Position(x - 1, y, areaId, direction);
         default:
             return null; // dead code
         }
     }
 
-    public Position backPosition(Direction direction) {
+    public Position backPosition() {
         switch (direction) {
         case East:
-            return new Position(x - 1, y, areaId);
+            return new Position(x - 1, y, areaId, direction);
         case North:
-            return new Position(x, y + 1, areaId);
+            return new Position(x, y + 1, areaId, direction);
         case South:
-            return new Position(x, y - 1, areaId);
+            return new Position(x, y - 1, areaId, direction);
         case West:
-            return new Position(x + 1, y, areaId);
+            return new Position(x + 1, y, areaId, direction);
         default:
             return null; // dead code
         }
     }
 
-    public Position leftPosition(Direction direction) {
+    public Position leftPosition() {
         switch (direction) {
         case East:
-            return new Position(x, y - 1, areaId);
+            return new Position(x, y - 1, areaId, direction);
         case North:
-            return new Position(x - 1, y, areaId);
+            return new Position(x - 1, y, areaId, direction);
         case South:
-            return new Position(x + 1, y, areaId);
+            return new Position(x + 1, y, areaId, direction);
         case West:
-            return new Position(x, y + 1, areaId);
+            return new Position(x, y + 1, areaId, direction);
         default:
             return null; // dead code
         }
     }
 
-    public Position rightPosition(Direction direction) {
+    public Position rightPosition() {
         switch (direction) {
         case East:
-            return new Position(x, y + 1, areaId);
+            return new Position(x, y + 1, areaId, direction);
         case North:
-            return new Position(x + 1, y, areaId);
+            return new Position(x + 1, y, areaId, direction);
         case South:
-            return new Position(x - 1, y, areaId);
+            return new Position(x - 1, y, areaId, direction);
         case West:
-            return new Position(x, y - 1, areaId);
+            return new Position(x, y - 1, areaId, direction);
         default:
             return null; // dead code
         }
@@ -99,6 +120,7 @@ public class Position {
         final int prime = 31;
         int result = 1;
         result = prime * result + areaId;
+        result = prime * result + ((direction == null) ? 0 : direction.hashCode());
         result = prime * result + x;
         result = prime * result + y;
         return result;
@@ -115,6 +137,8 @@ public class Position {
         Position other = (Position) obj;
         if (areaId != other.areaId)
             return false;
+        if (direction != other.direction)
+            return false;
         if (x != other.x)
             return false;
         if (y != other.y)
@@ -124,6 +148,6 @@ public class Position {
 
     @Override
     public String toString() {
-        return "[" + x + ", " + y + "]";
+        return "[" + areaId + ", " + x + ", " + y + ", " + direction + "]";
     }
 }

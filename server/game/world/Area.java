@@ -36,7 +36,7 @@ public class Area {
     /**
      * Empty position, which can be used to spawn players.
      */
-    private List<Position> playerPortals = new ArrayList<>();
+    private List<int[]> playerPortals = new ArrayList<>();
 
     /**
      * Constructor
@@ -67,10 +67,22 @@ public class Area {
         this.areaId = areaID;
     }
 
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return this.height;
+    }
+
     public MapElement[][] getMap() {
         return this.map;
     }
 
+    public int getAreaID(){
+    	return this.areaId;
+    }
+    
     /**
      * let this area remember where empty positions are, so that player can be spawned
      * from one of them.
@@ -79,7 +91,7 @@ public class Area {
         for (int row = 0; row < map.length; row++) {
             for (int col = 0; col < map[0].length; col++) {
                 if (map[row][col] instanceof GroundSpace) {
-                    playerPortals.add(new Position(col, row, areaId));
+                    playerPortals.add(new int[] { col, row });
                 }
             }
         }
@@ -92,11 +104,10 @@ public class Area {
      * @return --- an empty position to spawn player. If this area is so occupied that
      *         there is no empty space, null will be returned.
      */
-    public Position getPlayerSpawnPos(Game game) {
-        List<Position> portalList = new ArrayList<>(playerPortals);
-        Collections.shuffle(portalList);
-
-        for (Position p : portalList) {
+    public synchronized Position getPlayerSpawnPos(Game game) {
+        Collections.shuffle(playerPortals);
+        for (int[] e : playerPortals) {
+            Position p = new Position(e[0], e[1], areaId, Direction.randomDirection());
             if (!game.isOccupiedByOtherPlayer(p)) {
                 return p;
             }
@@ -338,15 +349,6 @@ public class Area {
         }
 
         return sb.toString();
-    }
-
-    // =======The following methods will be deleted =================
-    public int getWidth() {
-        return width;
-    }
-
-    public int getHeight() {
-        return this.height;
     }
 
 }

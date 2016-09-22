@@ -18,14 +18,11 @@ import server.game.items.Torch;
 import server.game.items.Tradable;
 import server.game.player.Direction;
 import server.game.player.Player;
+import server.game.player.Position;
 import server.game.player.Virus;
 import server.game.world.Area;
 import server.game.world.Chest;
-import server.game.world.GroundSquare;
-import server.game.world.Position;
 import server.game.world.Room;
-import server.game.world.RoomEntrance;
-import server.game.world.World;
 /**
  * This class represents the an alternate version of the Player class, specifically for XML parsing.
  *
@@ -63,6 +60,11 @@ public class AltPlayer {
 	 */
 	@XmlElement
 	private boolean isAlive;
+	
+	/**
+     * If the player is holding a lighted torch or not.
+     */
+    private boolean isHoldingTorch;
 
 	/**
 	 * The player's inventory.
@@ -71,12 +73,6 @@ public class AltPlayer {
 	private AltItem[] inventory;
 
 	// Geographical information.
-	/**
-	 * The area in which the player currently resides.
-	 */
-	@XmlElement
-	private AltArea altArea;
-
 	/**
 	 * The position of the player in the current area.
 	 */
@@ -110,6 +106,7 @@ public class AltPlayer {
 		this.virus = player.getVirus();
 		health = player.getHealthLeft();
 		isAlive = player.isAlive();
+		isHoldingTorch = player.isHoldingTorch();
 		//Inventory is converted to array as List cannot have JXB annotations.
 		List<Item> playerInventory = player.getInventory();
 		inventory = new AltItem[playerInventory.size()];
@@ -132,18 +129,7 @@ public class AltPlayer {
 			}
 
 		}
-		Area area = player.getArea();
 
-		if(area instanceof World){
-			altArea = new AltWorld(area);
-		}
-		else if(area instanceof Room){
-			altArea = new AltRoom(area);
-		}
-		else{
-			throw new IllegalArgumentException("Unknown subtype of Area");
-		}
-		
 		position = new AltPosition(player.getPosition());
 		direction = player.getDirection();
 	}
@@ -174,12 +160,16 @@ public class AltPlayer {
 			}
 		}
 		
-		Area newArea = altArea.getOriginal();
 		Position newPosition = position.getOriginal();
 		Direction direction = this.direction;
-
-		return new Player(uID, name, virus, newArea, health, isAlive, newInventory, newPosition, direction);	//Passing only this object prevents sending 6 arguments.
+		//Restores player from this adapter object.
+		Player p = new Player(uID, name, virus, health, isAlive, newInventory);
+		p.setPosition(newPosition);	//set position
+		p.setDirection(direction);//set direction
+		return p;
 	}
+	
+
 
 }
 

@@ -21,6 +21,8 @@ public class ThreadClient extends Thread {
 
 	private DatagramSocket clientSocket;
 	private InetAddress ipAddress;
+	private ViewControler GUIController;
+
 	private ViewControler viewControler;
 
 	public ThreadClient(String add, ViewControler viewControler) {
@@ -67,7 +69,7 @@ public class ThreadClient extends Thread {
 	/**
 	 * Extracts the type of packet the client had received and calls the
 	 * appropriate method to handle the data
-	 * 
+	 *
 	 * @param dPacket
 	 *            the packet to be read and extracted
 	 */
@@ -87,7 +89,7 @@ public class ThreadClient extends Thread {
 
 	/**
 	 * Makes a new Datagram object and sends it to the server
-	 * 
+	 *
 	 * @param data
 	 *            bytes of information to be sent
 	 */

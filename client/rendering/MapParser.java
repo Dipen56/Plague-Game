@@ -23,7 +23,7 @@ public class MapParser {
 	}
 
 	public void parse() {
-		File file = new File("C:/Users/Angelo/Documents/University/SWEN221/Workspace/Plague Project/resource/worldmap.txt");
+		File file = new File("/Users/Raff/Documents/University/2016/TRIMESTER 2/SWEN222(WORKSPACE)/PROJECT GAME/resource/worldmap.txt");
 		String line;
 		int row = 0;
 		try {
@@ -50,12 +50,12 @@ public class MapParser {
 			e.printStackTrace();
 		}
 		// for test if we want to add more items to the world
-		// for (int i = 0; i < map.length; i++) {
-		// for (int j = 0; j < map[0].length; j++) {
-		// System.out.print(map[i][j] + ",");
-		// }
-		// System.out.println("");
-		// }
+//		 for (int i = 0; i < map.length; i++) {
+//		 for (int j = 0; j < map[0].length; j++) {
+//		 System.out.print(map[i][j] + ",");
+//		 }
+//		 System.out.println("");
+//		 }
 	}
 
 	public String[][] getMap() {

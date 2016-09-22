@@ -3,7 +3,7 @@ package client.view;
 /**
  * this is class represents the controller witch will be used to communicate
  * between client and GUI.
- * 
+ *
  * @author Dipen
  *
  */
@@ -18,7 +18,7 @@ public class ViewControler {
 	}
 
 	public String getChatMsg(String msg) {
-		System.out.println(msg);
+		//gui.setChatText(msg);
 		return msg;
 	}
 

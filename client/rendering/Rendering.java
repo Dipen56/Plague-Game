@@ -7,6 +7,7 @@ import javax.swing.JLabel;
 
 import client.view.GUI;
 
+
 import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -18,7 +19,7 @@ import javafx.scene.paint.*;
  * This class represents the main rendering class, this class will control the
  * rendering of the game board, character, and objects.
  *
- * @author Dipen & Angelo
+ * @author Angelo & Dipen
  *
  */
 
@@ -30,6 +31,7 @@ public class Rendering {
 	private static final String TREE_IMAGE = "/tree.png";
 	private static final String CHEST_IMAGE = "/chest.png";
 	private Group group;
+	
 
 	public double scaleY = 0.85; // lower number less scaling
 	private int gamePaneHeight = GUI.HEIGHT_VALUE - 35; // 35 y alignment of
@@ -42,19 +44,23 @@ public class Rendering {
 	public int centerHeght = gamePaneHeight;
 	private MapParser mapParser;
 	private Point playerLoc = new Point (5,0);
+	private int squaresInFront =0;
+	private int squaresToLeft =0;
+	private int squaresToRight= 0;
+
 
 	public Rendering() {
 		// will need to get board size passed in
 		mapParser = new MapParser(10, 10);
 	}
 
+
 	/**
 	 * this method is used to render the game
 	 * @param direction 
-	 *
 	 * @param group
 	 */
-	public void render(Group renderGroup, String direction) {
+	public void render(Group renderGroup, String direction){
 		this.group = renderGroup;
 		Image character =  loadImage(PLAYER_IMAGE);
 		Image image = loadImage(BACKGROUND_IMAGE);
@@ -64,39 +70,58 @@ public class Rendering {
 		imageViewNight.setFitWidth(gamePaneWidth + 3);
 		imageViewNight.setFitHeight(gamePaneHeight + 35);
 		group.getChildren().add(imageViewNight);
-		int squaresInFront = 0;// the number of squares on the player's face
+		 //squaresInFront = 0;// the number of squares on the player's face
 		// side
-		int squaresToLeft = 0;// the number of squares on the player's left
+		 //squaresToLeft = 0;// the number of squares on the player's left
 		// side
-		int squaresToRight = 0;// //the number of squares on the player's
+		 //squaresToRight = ;// //the number of squares on the player's
 		// right side
 		// this will be changed to the real players pos apon integration
 		//this.playerLoc = new Point(5, 0);
+		
 		int boardSize = 10;
-		////////////////////////////////////
-		//up
+		int north = boardSize - playerLoc.y;
+		int west = (boardSize - playerLoc.x) - 1;
+		int east = (boardSize - squaresToLeft);
+
 		if (direction.equals("north")){
-			squaresInFront = boardSize - playerLoc.y;
-			squaresToLeft = (boardSize - playerLoc.x) - 1;
-			squaresToRight = (boardSize - squaresToLeft);
+			squaresInFront =north;
+			squaresToLeft = west;
+			squaresToRight = east;
+			String values = "squares in front " + squaresInFront +"\n";
+			values+= "squares to the left" + squaresToLeft + "\n";
+			values+= "squares to the right " + squaresToRight + "\n";
+			//playerLoc.y+=1; 
+			System.out.println("up/n " + values);
+			System.out.println("Loc Y " + playerLoc.y);
+			System.out.println("Loc X " + playerLoc.x);
+
 		}
-		//down
 		else if (direction.equals("south")){
-			squaresInFront = boardSize - playerLoc.y;
-			squaresToLeft = (boardSize - playerLoc.x) - 1;
-			squaresToRight = (boardSize - squaresToLeft);
+			playerLoc.y-=1; 			
 		}
-		//right
-		else if(direction.equals("east")){
-			squaresInFront = boardSize - playerLoc.y;
-			squaresToLeft = (boardSize - playerLoc.x) - 1;
-			squaresToRight = (boardSize - squaresToLeft);
+		else if(direction.equals("west")){
+			
+			squaresToRight =  squaresInFront ;
+			squaresInFront = squaresToLeft ;
+			squaresToLeft = boardSize - squaresToRight ;
+			String values = "squares in front " + squaresInFront +"\n";
+			values+= "squares to the left" + squaresToLeft + "\n";
+			values+= "squares to the right " + squaresToRight + "\n";
+			System.out.println("left \n" + values);
+
 		}
-		//left
-		else if (direction.equals("west")){
-			squaresInFront = (boardSize - playerLoc.x) - 1;
-			squaresToLeft = playerLoc.y - boardSize;
-			squaresToRight = boardSize - playerLoc.y;
+		else if (direction.equals("east")){
+			squaresToLeft = north;
+			squaresInFront = east;
+			squaresToRight =(boardSize -  west) ;
+
+			String values = "squares in front " + squaresInFront +"\n";
+			values+= "squares to the left" + squaresToLeft + "\n";
+			values+= "squares to the right " + squaresToRight + "\n";
+			System.out.println("right \n" + values);
+
+
 		}
 		//////////////////////////////////////////////////
 		// this is used to for the top line points x0 and x1 which will be
@@ -248,13 +273,11 @@ public class Rendering {
 
 
 	}
-
 	/**
 	 * this method is used to render the object in the game.
 	 */
 	public void renderObjects() {
 		String[][] worldMap = mapParser.getMap();
-		System.out.println(worldMap);
 		// this is used to for the top line points x0 and x1 which will be
 		// scaled from larger to smaller
 		double topLine = centerHeght;
@@ -273,9 +296,10 @@ public class Rendering {
 		// this point is is the bot lift and is set it the height of the game
 		// pane so at the bottom of window.
 		double y3 = centerHeght;
-		int col = playerLoc.x;
+
 		// the 10 will be the sqare in front of the players
 		for (int row = 0; row < 10; row++) {
+			int col = playerLoc.x;
 			double nowWidthOfSquare = tileWidth * Math.pow(scaleY, row + 1);
 			// this is the top part of the tile starting x pos
 			double nowStartX = centerWidth - nowWidthOfSquare / 2;
@@ -288,7 +312,7 @@ public class Rendering {
 				double y0 = topLine - tileHeight * Math.pow(scaleY, row + 1);
 				double height = (y3 - y0);
 				double width = (x2 - x3);
-				System.out.println(worldMap[row][col]);
+				//System.out.println(worldMap[row][col]);
 				if (worldMap[row][col].equals("tree")) {
 					Image tree = loadImage(TREE_IMAGE);
 					ImageView imageViewTree = new ImageView();
@@ -312,7 +336,132 @@ public class Rendering {
 					imageViewTree.setY(y0);
 					group.getChildren().add(imageViewTree);
 				}
-				//this will be the sqares to the left
+				// this will be the sqares to the left
+
+				for (int j = 0; j < 3; j++) {
+					if (worldMap[row][col - j].equals("tree") || worldMap[row][col - j].equals("chest")) {
+						// left side logic here
+						double previouWidthOfSquare = (x2 - x3);
+						// this is the bot part of the tile which is just placed
+						// to the
+						// left of the facing tile.
+						double tempLeftx3 = x3 - (j * previouWidthOfSquare);
+						double tempLefty3 = y3;
+						double tempLeftx2 = x2 - (j * previouWidthOfSquare);
+						double tempLefty2 = y2;
+						// this is the top part to the tile and will be scaled
+						// on the
+						// left from larger
+						// to smaller
+						double tempLeftx1 = nowStartX + nowWidthOfSquare - j * nowWidthOfSquare;
+						double tempLefty1 = topLine - tileHeight * Math.pow(scaleY, row + 1);
+						double tempLeftx0 = nowStartX - j * nowWidthOfSquare;
+						double tempLefty0 = topLine - tileHeight * Math.pow(scaleY, row + 1);
+
+						double heightleft = (tempLefty3 - tempLefty0);
+						double widthleft = (tempLeftx2 - tempLeftx3);
+						if (worldMap[row][col - j].equals("tree")) {
+							Image tree = loadImage(TREE_IMAGE);
+							ImageView imageViewTree = new ImageView();
+							imageViewTree.setImage(tree);
+
+							imageViewTree.setFitHeight(heightleft);
+							imageViewTree.setFitWidth(widthleft);
+							// here is where we need to do the logic
+							imageViewTree.setX(tempLeftx0);
+							imageViewTree.setY(tempLefty0);
+							group.getChildren().add(imageViewTree);
+						} else if (worldMap[row][col - j].equals("chest")) {
+							Image tree = loadImage(CHEST_IMAGE);
+							ImageView imageViewTree = new ImageView();
+							imageViewTree.setImage(tree);
+
+							imageViewTree.setFitHeight(heightleft);
+							imageViewTree.setFitWidth(widthleft);
+							// here is where we need to do the logic
+							imageViewTree.setX(tempLeftx0);
+							imageViewTree.setY(tempLefty0);
+							group.getChildren().add(imageViewTree);
+						}
+					}
+
+				}
+
+			}
+			col = playerLoc.x;
+			for (int j = 0; j < 3; j++) {
+				if (worldMap[row][col - j].equals("tree") || worldMap[row][col - j].equals("chest")) {
+
+					// this will get the width of the square that is the on
+					// facing
+					// the player, the width will be the bot part of the facing
+					// player square.
+					double previouWidthOfSquare = (x2 - x3);
+					// this is the bot part of the tile which is just placed to
+					// the
+					// left of the facing tile.
+					double tempRightx3 = x3 + (j * previouWidthOfSquare);
+					// this is to force the polygons to draw in range of the
+					// screen
+					if (tempRightx3 > gamePaneWidth) {
+						tempRightx3 = gamePaneWidth;
+					}
+
+					double tempRighty3 = y3;
+					double tempRightx2 = x2 + (j * previouWidthOfSquare);
+					if (tempRightx2 > gamePaneWidth) {
+						tempRightx2 = gamePaneWidth;
+					}
+
+					double tempRighty2 = y2;
+					double tempRightx1 = nowStartX + nowWidthOfSquare + j * nowWidthOfSquare;
+					if (tempRightx1 > gamePaneWidth) {
+						tempRightx1 = gamePaneWidth;
+					}
+					// this is the top part to the tile and will be scaled on
+					// the
+					// left from larger
+					// to smaller
+
+					double tempRightY1 = topLine - tileHeight * Math.pow(scaleY, row + 1);
+					double tempRightx0 = nowStartX + j * nowWidthOfSquare;
+					if (tempRightx0 > gamePaneWidth) {
+						tempRightx0 = gamePaneWidth;
+					}
+
+					double tempRighty0 = topLine - tileHeight * Math.pow(scaleY, row + 1);
+					double heightRight = (tempRighty3 - tempRighty0);
+					double widthRight = (tempRightx2 - tempRightx3);
+					//System.out.println(gamePaneWidth);
+					//System.out.println(tempRightx0 + " " + tempRightx1 + " " + tempRightx2 + " " + tempRightx3);
+					if (tempRightx2 != gamePaneWidth && tempRightx1 != gamePaneWidth) {
+						// System.out.println(worldMap[row][col - j]);
+						if (worldMap[row][col - j].equals("tree")) {
+							Image tree = loadImage(TREE_IMAGE);
+							ImageView imageViewTree = new ImageView();
+							imageViewTree.setImage(tree);
+							// no idea why the first image on the right is not
+							// draw
+							imageViewTree.setFitHeight(heightRight);
+							imageViewTree.setFitWidth(widthRight);
+							// here is where we need to do the logic
+							imageViewTree.setX(tempRightx0);
+							imageViewTree.setY(tempRighty0);
+							group.getChildren().add(imageViewTree);
+						} else if (worldMap[row][col - j].equals("chest")) {
+							Image tree = loadImage(CHEST_IMAGE);
+							ImageView imageViewTree = new ImageView();
+							imageViewTree.setImage(tree);
+
+							imageViewTree.setFitHeight(heightRight);
+							imageViewTree.setFitWidth(widthRight);
+							// here is where we need to do the logic
+							imageViewTree.setX(tempRightx0);
+							imageViewTree.setY(tempRighty0);
+							group.getChildren().add(imageViewTree);
+						}
+					}
+				}
 			}
 
 			// update the bot right point to previous tiles top part which will
@@ -341,5 +490,8 @@ public class Rendering {
 	public String toString() {
 		return "renderclass";
 	}
+
+
+
 
 }

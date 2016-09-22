@@ -15,11 +15,9 @@ import server.game.items.Destroyable;
 import server.game.items.Item;
 import server.game.items.Key;
 import server.game.items.Torch;
-import server.game.player.Direction;
 import server.game.player.Player;
 import server.game.player.Position;
 import server.game.world.Area;
-import server.game.world.Chest;
 import server.game.world.Container;
 import server.game.world.Lockable;
 import server.game.world.MapElement;
@@ -30,13 +28,11 @@ import server.game.world.TransitionSpace;
 /**
  * This class represents the game.
  * 
- * FOR TEAM
- *
- * Ideally, other packages who want to visit game states should only interact with this
- * class. This class wraps all game-world-related and logic-related classes inside, and
- * provides getters, setters and reasonable functions for external packages to interact
- * with game. If you guys need any access point for some stuff, like player, item, map, or
- * time, and it is not provided within this class yet, let me know.
+ * TODO <br>
+ * 1. the game is not detecting win condition<br>
+ * 2. it doesn't support save/load yet<br>
+ * 3. it doesn't support trading system yet<br>
+ * 4. it has no npc or enemy.<br>
  *
  * @author Hector (Fang Zhao 300364061)
  *
@@ -108,11 +104,14 @@ public class Game {
         // TODO parse the file and construct world
 
         // TODO scan the world, so some initialisation job:
-        // 1. remember all containers (for key re-distribution)
-        // 2.
+        // 1. remember all containers (for key re-distribution, and for open/close status
+        // update for rendering)
+        // 2. remember all torches and put them into torches list (for torch track)
+        // 3. join in players
 
-        // start the world clock
-        startTiming();
+        // last, start timing.
+
+        // these could be integrated into one method initialise();
     }
 
     /**
@@ -128,9 +127,6 @@ public class Game {
 
         this.world = world;
         this.areas = areas;
-
-        // start the world clock
-        startTiming();
     }
 
     /**
@@ -148,44 +144,6 @@ public class Game {
         this.players = new HashMap<>();
         this.torches = new ArrayList<>();
         joinPlayer(this.player);
-
-        // start the world clock
-        startTiming();
-    }
-
-    /**
-     * Start the world time. The world time is constantly advancing. As long as the server
-     * is running, no other events will stop it.
-     */
-    private void startTiming() {
-        // the world clock starts from a random time from 00:00:00 to 23:59:59
-        Random ran = new Random();
-        int hour = ran.nextInt(24);
-        int minute = ran.nextInt(60);
-        int second = ran.nextInt(60);
-        clock = LocalTime.of(hour, minute, second);
-
-        // start ticking
-        timer = new Timer();
-        timer.scheduleAtFixedRate(new TimerTask() {
-            @Override
-            public void run() {
-                // decrease every player's life
-                for (Player p : players.values()) {
-                    p.increaseHealth(-1);
-                }
-
-                // decrease every torch's time left
-                for (Torch t : torches) {
-                    if (t.isFlaming()) {
-                        t.Burn();
-                    }
-                }
-
-                // time advance by 1 second
-                clock = clock.plusSeconds(1);
-            }
-        }, 1000, 1000);
     }
 
     /**
@@ -244,13 +202,48 @@ public class Game {
     }
 
     /**
+     * Start the world time. The world time is constantly advancing. As long as the server
+     * is running, no other events will stop it.
+     */
+    public void startTiming() {
+        // the world clock starts from a random time from 00:00:00 to 23:59:59
+        Random ran = new Random();
+        int hour = ran.nextInt(24);
+        int minute = ran.nextInt(60);
+        int second = ran.nextInt(60);
+        clock = LocalTime.of(hour, minute, second);
+
+        // start ticking
+        timer = new Timer();
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                // decrease every player's life
+                for (Player p : players.values()) {
+                    p.increaseHealth(-1);
+                }
+
+                // decrease every torch's time left
+                for (Torch t : torches) {
+                    if (t.isFlaming()) {
+                        t.Burn();
+                    }
+                }
+
+                // time advance by 1 second
+                clock = clock.plusSeconds(1);
+            }
+        }, 1000, 1000);
+    }
+
+    /**
      * Disconnect the player, and re-distribute all his keys to locked containers.
      * 
      * @param player
      */
-    public void disconnectPlayer(Player player) {
+    public void disconnectPlayer(int playerId) {
         // delete player from player list.
-        players.remove(player);
+        Player player = players.remove(playerId);
 
         // delete his torch from torch list.
         List<Torch> hisTorches = player.getAllTorches();
@@ -273,9 +266,16 @@ public class Game {
         }
 
         for (Player p : players.values()) {
-            if (p.getPosition() != null && p.getPosition().equals(position)) {
+            Position pos = p.getPosition();
+            if (pos == null) {
+                continue;
+            }
+
+            if (pos.areaId == position.areaId && pos.x == position.x
+                    && pos.y == position.y) {
                 return true;
             }
+
         }
         return false;
     }
@@ -283,13 +283,13 @@ public class Game {
     /**
      * This method tries to move the given player one step forward.
      *
-     * @param player
+     * @param uid
      * @return --- true if successful, or false if the player cannot move forward for some
      *         reason, e.g. blocked by obstacle.
      */
-    public boolean playerMoveForward(Player player) {
+    public boolean playerMoveForward(int uid) {
+        Player player = players.get(uid);
         Position currentPosition = player.getPosition();
-        Direction currentDirection = player.getDirection();
         Area currentArea = areas.get(currentPosition.areaId);
         MapElement frontMapElement = currentArea.getFrontMapElement(player);
 
@@ -298,7 +298,7 @@ public class Game {
             return false;
         }
 
-        Position forwardPosition = currentPosition.frontPosition(currentDirection);
+        Position forwardPosition = currentPosition.frontPosition();
 
         // check if it's out of board
         if (!currentArea.isInBoard(forwardPosition)) {
@@ -318,13 +318,13 @@ public class Game {
     /**
      * This method tries to move the given player one step backward.
      *
-     * @param player
+     * @param uid
      * @return --- true if successful, or false if the player cannot move backward for
      *         some reason, e.g. blocked by obstacle.
      */
-    public boolean playerMoveBackward(Player player) {
+    public boolean playerMoveBackward(int uid) {
+        Player player = players.get(uid);
         Position currentPosition = player.getPosition();
-        Direction currentDirection = player.getDirection();
         Area currentArea = areas.get(currentPosition.areaId);
         MapElement backMapElement = currentArea.getBackMapElement(player);
 
@@ -333,7 +333,7 @@ public class Game {
             return false;
         }
 
-        Position backPosition = currentPosition.backPosition(currentDirection);
+        Position backPosition = currentPosition.backPosition();
 
         // check if it's out of board
         if (!currentArea.isInBoard(backPosition)) {
@@ -353,13 +353,13 @@ public class Game {
     /**
      * This method tries to move the given player one step to the left.
      *
-     * @param player
+     * @param uid
      * @return --- true if successful, or false if the player cannot move left for some
      *         reason, e.g. blocked by obstacle.
      */
-    public boolean playerMoveLeft(Player player) {
+    public boolean playerMoveLeft(int uid) {
+        Player player = players.get(uid);
         Position currentPosition = player.getPosition();
-        Direction currentDirection = player.getDirection();
         Area currentArea = areas.get(currentPosition.areaId);
         MapElement leftMapElement = currentArea.getLeftMapElement(player);
 
@@ -368,7 +368,7 @@ public class Game {
             return false;
         }
 
-        Position leftPosition = currentPosition.leftPosition(currentDirection);
+        Position leftPosition = currentPosition.leftPosition();
 
         // check if it's out of board
         if (!currentArea.isInBoard(leftPosition)) {
@@ -388,13 +388,13 @@ public class Game {
     /**
      * This method tries to move the given player one step to the right.
      *
-     * @param player
+     * @param uid
      * @return --- true if successful, or false if the player cannot move right for some
      *         reason, e.g. blocked by obstacle.
      */
-    public boolean playerMoveRight(Player player) {
+    public boolean playerMoveRight(int uid) {
+        Player player = players.get(uid);
         Position currentPosition = player.getPosition();
-        Direction currentDirection = player.getDirection();
         Area currentArea = areas.get(currentPosition.areaId);
         MapElement rightMapElement = currentArea.getRightMapElement(player);
 
@@ -403,7 +403,7 @@ public class Game {
             return false;
         }
 
-        Position rightPosition = currentPosition.rightPosition(currentDirection);
+        Position rightPosition = currentPosition.rightPosition();
 
         // check if it's out of board
         if (!currentArea.isInBoard(rightPosition)) {
@@ -423,18 +423,44 @@ public class Game {
     /**
      * This method let the given player turn left.
      *
-     * @param player
+     * @param uid
      */
-    public void playerTurnLeft(Player player) {
+    public void playerTurnLeft(int uid) {
+        Player player = players.get(uid);
+
+        // This patch code fix the bug that when transit player's direction is changed.
+        Position currentPosition = player.getPosition();
+        Area currentArea = areas.get(currentPosition.areaId);
+        MapElement currentMapElement = currentArea.getMapElementAt(currentPosition.x,
+                currentPosition.y);
+        if (currentMapElement instanceof TransitionSpace) {
+            player.setPosition(new Position(currentPosition.x, currentPosition.y,
+                    currentPosition.areaId, player.getPosition().getDirection().left()));
+            return;
+        }
+
         player.turnLeft();
     }
 
     /**
      * This method let the given player turn right.
      *
-     * @param player
+     * @param uid
      */
-    public void playerTurnRight(Player player) {
+    public void playerTurnRight(int uid) {
+        Player player = players.get(uid);
+
+        // This patch code fix the bug that when transit player's direction is changed.
+        Position currentPosition = player.getPosition();
+        Area currentArea = areas.get(currentPosition.areaId);
+        MapElement currentMapElement = currentArea.getMapElementAt(currentPosition.x,
+                currentPosition.y);
+        if (currentMapElement instanceof TransitionSpace) {
+            player.setPosition(new Position(currentPosition.x, currentPosition.y,
+                    currentPosition.areaId, player.getPosition().getDirection().right()));
+            return;
+        }
+
         player.turnRight();
     }
 
@@ -442,12 +468,13 @@ public class Game {
      * This method let the given player try to unlock a chest, room, or other lockable
      * object in front.
      * 
-     * @param player
+     * @param uid
      * @return --- true if the loackable is unlocked, or false if this action failed.
      *         Failure can be caused by many reasons, for example it's not a lockable in
      *         front, or the player doesn't have a right key to open it.
      */
-    public boolean playerUnlockLockable(Player player) {
+    public boolean playerUnlockLockable(int uid) {
+        Player player = players.get(uid);
         Position currentPosition = player.getPosition();
         Area currentArea = areas.get(currentPosition.areaId);
         MapElement currentMapElement = currentArea.getMapElementAt(currentPosition.x,
@@ -461,7 +488,7 @@ public class Game {
             Area destArea = areas.get(currentTransition.getDestination().areaId);
 
             // is the player facing the room?
-            if (player.getDirection() == currentTransition.getDirection()
+            if (player.getDirection() == currentTransition.getFacingDirection()
                     && destArea instanceof Room) {
                 lockable = (Room) destArea;
             }
@@ -480,95 +507,17 @@ public class Game {
         }
     }
 
-    // /**
-    // * This method let the given player try to unlock a chest in front.
-    // *
-    // * @param player
-    // * @return --- true if the chest is unlocked, or false if this action failed.
-    // Failure
-    // * can be caused by many reasons, for example it's not a chest in front, or
-    // * the player doesn't have a right key to open it.
-    // */
-    // public boolean playerUnlockChest(Player player) {
-    // Position currentPosition = player.getPosition();
-    // Area currentArea = areas.get(currentPosition.areaId);
-    // MapElement frontMapElement = currentArea.getFrontMapElement(player);
-    //
-    // // no it's not a chest
-    // if (!(frontMapElement instanceof Chest)) {
-    // return false;
-    // }
-    //
-    // return player.tryUnlock((Chest) frontMapElement);
-    // }
-    //
-    // /**
-    // * This method let the given player try to unlock a room in front.
-    // *
-    // * @param player
-    // * @return --- true if the room is unlocked, or false if this action failed. Failure
-    // * can be caused by many reasons, for example it's not a room in front, or the
-    // * player doesn't have a right key to open it.
-    // */
-    // public boolean playerUnlockRoom(Player player) {
-    // Position currentPosition = player.getPosition();
-    // Area currentArea = areas.get(currentPosition.areaId);
-    // MapElement currentMapElement = currentArea.getMapElementAt(currentPosition.x,
-    // currentPosition.y);
-    //
-    // // no it's not a TransitionSpace
-    // if (!(currentMapElement instanceof TransitionSpace)) {
-    // return false;
-    // }
-    //
-    // TransitionSpace currentTransition = (TransitionSpace) currentMapElement;
-    // Area destArea = areas.get(currentTransition.getDestination().areaId);
-    //
-    // // no it's not a room in the other end.
-    // if (!(destArea instanceof Room)) {
-    // return false;
-    // }
-    //
-    // // no the player is not facing the room
-    // if (player.getDirection() != currentTransition.getDirection()) {
-    // return false;
-    // }
-    //
-    // return player.tryUnlock((Room) destArea);
-    // }
-
-    /**
-     * This method let the player try to take items from the container in front. If the
-     * player's inventory can take in all items, he will take them all; otherwise he will
-     * take as many as he can until his inventory is full.
-     *
-     * @param player
-     * @return --- true if he has taken at least one item from the container, or false if
-     *         he has taken none from the container.
-     */
-    public boolean playerTakeItemsFromContainer(Player player) {
-        Position currentPosition = player.getPosition();
-        Area currentArea = areas.get(currentPosition.areaId);
-        MapElement frontMapElement = currentArea.getFrontMapElement(player);
-
-        // no it's not a container
-        if (!(frontMapElement instanceof Container)) {
-            return false;
-        }
-
-        return player.tryTakeItemsFromContainer((Container) frontMapElement);
-    }
-
     /**
      * This method let the given player try to transit between areas (enter or exit a
      * room).
      * 
-     * @param player
+     * @param uid
      * @return --- true if the player changed to another area, or false if this action
      *         failed for some reason, for example the player is not facing the door, or
      *         he is too far from it.
      */
-    public boolean playerTransit(Player player) {
+    public boolean playerTransit(int uid) {
+        Player player = players.get(uid);
         Position currentPosition = player.getPosition();
         Area currentArea = areas.get(currentPosition.areaId);
         MapElement currentMapElement = currentArea.getMapElementAt(currentPosition.x,
@@ -587,33 +536,92 @@ public class Game {
         }
 
         // no the player is not facing the right direction
-        if (player.getDirection() != currentTransition.getDirection()) {
+        if (player.getDirection() != currentTransition.getFacingDirection()) {
             return false;
         }
 
-        // OK, space travel time
+        // OK, time for space travel
         player.setPosition(currentTransition.getDestination());
         return true;
     }
 
     /**
-     * This method let the player use an item.
+     * This method let the player try to take items from the container in front. If the
+     * player's inventory can take in all items, he will take them all; otherwise he will
+     * take as many as he can until his inventory is full.
      *
-     * @param player
-     * @param item
+     * @param uid
+     * @return --- true if he has taken at least one item from the container, or false if
+     *         he has taken none from the container.
      */
-    public void playerUseItem(Player player, Item item) {
+    public boolean playerTakeItemsFromContainer(int uid) {
+        Player player = players.get(uid);
+        Position currentPosition = player.getPosition();
+        Area currentArea = areas.get(currentPosition.areaId);
+        MapElement frontMapElement = currentArea.getFrontMapElement(player);
+
+        // no it's not a container
+        if (!(frontMapElement instanceof Container)) {
+            return false;
+        }
+
+        return player.tryTakeItemsFromContainer((Container) frontMapElement);
+    }
+
+    /**
+     * This method let the player try to put an item into a container (chest or cupboard,
+     * etc.) in front.
+     *
+     * @param uid
+     * @param index
+     *            --- the index in inventory of item to be put in
+     * @return --- true if the action succeeded; or false if failed (most likely when the
+     *         container is full or locked).
+     */
+    public boolean playerPutItemIntoContainer(int uid, int index) {
+        Player player = players.get(uid);
+        Position currentPosition = player.getPosition();
+        Area currentArea = areas.get(currentPosition.areaId);
+        MapElement frontMapElement = currentArea.getFrontMapElement(player);
+
+        // no it's not a container
+        if (!(frontMapElement instanceof Container)) {
+            return false;
+        }
+
+        return player.tryPutItemsIntoContainer((Container) frontMapElement, index);
+    }
+
+    /**
+     * This method let the player use an item at index in inventory.
+     *
+     * @param uid
+     * @param index
+     * @return --- true if the item is used, or false if the action failed.
+     */
+    public boolean playerUseItem(int uid, int index) {
+        Player player = players.get(uid);
+
+        List<Item> inventory = player.getInventory();
+
+        if (index < 0 || index >= inventory.size()) {
+            return false;
+        }
+
+        Item item = inventory.get(index);
 
         if (item instanceof Antidote) {
             // antidote
             Antidote ant = (Antidote) item;
             player.drinkAntidote(ant);
+            return true;
         } else if (item instanceof Torch) {
             // Torch
             player.lightUpTorch((Torch) item);
+            return true;
         } else if (item instanceof Key) {
             // Key
-
+            return false;
             /*
              * XXX We can but I don't really want the key to be directly used. A key
              * should be in player's inventory waiting to be automatically consumed when
@@ -623,16 +631,28 @@ public class Game {
         }
 
         // could have more else if clause if there are more types
+
+        return false;
     }
 
     /**
      * This method let the player try to destroy an item.
      *
-     * @param player
-     * @param item
+     * @param uid
+     * @param index
      * @return --- true if the item is destroyed, or false if the action failed.
      */
-    public boolean playerDestroyItem(Player player, Item item) {
+    public boolean playerDestroyItem(int uid, int index) {
+        Player player = players.get(uid);
+
+        List<Item> inventory = player.getInventory();
+
+        if (index < 0 || index >= inventory.size()) {
+            return false;
+        }
+
+        Item item = inventory.get(index);
+
         if (item instanceof Destroyable) {
             return player.destroyItem((Destroyable) item);
         }
@@ -642,10 +662,11 @@ public class Game {
     /**
      * Gets the specified player's visibility according to current time.
      * 
-     * @param player
+     * @param uid
      * @return
      */
-    public int getPlayerVisibility(Player player) {
+    public int getPlayerVisibility(int uid) {
+        Player player = players.get(uid);
 
         if (clock.getHour() >= 6 && clock.getHour() < 18) {
             // it's day time
@@ -677,12 +698,40 @@ public class Game {
         return clock;
     }
 
+    /**
+     * This method is used to generate the string for broadcasting world time to clients.
+     * The String has the following format:
+     * 
+     * <p>
+     * Say current time is hh:mm:ss <i>10:20:30</i>:
+     * 
+     * <p>
+     * The string will be <i>"10,20,30"</i>
+     * 
+     * @return
+     */
+    public String getClockString() {
+        int hour = clock.getHour();
+        int minute = clock.getMinute();
+        int second = clock.getSecond();
+        return hour + "," + minute + "," + second;
+    }
+
+    public Map<Integer, Player> getPlayers() {
+        return players;
+    }
+
+    /**
+     * For testing, will be deleted.
+     * 
+     * @return
+     */
     public Player getPlayer() {
         return player;
     }
 
-    public Player getPlayerById(int id) {
-        Player player = players.get(id);
+    public Player getPlayerById(int uid) {
+        Player player = players.get(uid);
         if (player == null) {
             throw new GameError("Unknown player Id.");
         }
@@ -693,21 +742,72 @@ public class Game {
     /**
      * Get the player's health left in seconds.
      *
-     * @param player
+     * @param uid
      * @return
      */
-    public int getPlayerHealth(Player player) {
+    public int getPlayerHealth(int uid) {
+        Player player = players.get(uid);
         return player.getHealthLeft();
     }
 
     /**
      * Get all items in the player's inventory as a list.
      *
-     * @param player
+     * @param uid
      * @return
      */
-    public List<Item> getPlayerInventory(Player player) {
+    public List<Item> getPlayerInventory(int uid) {
+        Player player = players.get(uid);
         return player.getInventory();
+    }
+
+    /**
+     * This method is used to generate the string for broadcasting player's inventory to
+     * clients. The String has the following format:
+     * 
+     * <p>
+     * Say an item (type A, description B), its string representation will be
+     * <i>"A|B"</i>, where A is a single character, B is the return of <i>toString()</i>.
+     * Every two items are separated with a line separator.
+     * 
+     * <p>
+     * For example, this player has an Antidote (description: "foofoo"), and a Key
+     * (description: "barbar").
+     * 
+     * <p>
+     * The string representation of his inventory will be <i>"A|foofoo\nB|barbar"</i>
+     * 
+     * <p>
+     * Character abbreviation table:<br>
+     * 
+     * <li>A: Antidote<br>
+     * <li>K: Key<br>
+     * <li>T: Torch<br>
+     * <br>
+     * 
+     * @param uid
+     * 
+     * @return
+     */
+    public String getPlayerInventoryString(int uid) {
+        Player player = players.get(uid);
+        List<Item> inv = player.getInventory();
+
+        StringBuilder sb = new StringBuilder();
+
+        for (Item i : inv) {
+            if (i instanceof Antidote) {
+                sb.append("A|");
+            } else if (i instanceof Key) {
+                sb.append("K|");
+            } else if (i instanceof Torch) {
+                sb.append("T|");
+            }
+            sb.append(i.toString());
+            sb.append("\n");
+        }
+
+        return sb.toString();
     }
 
     @Override
@@ -718,7 +818,6 @@ public class Game {
         result = prime * result + ((clock == null) ? 0 : clock.hashCode());
         result = prime * result + ((player == null) ? 0 : player.hashCode());
         result = prime * result + ((players == null) ? 0 : players.hashCode());
-        result = prime * result + ((timer == null) ? 0 : timer.hashCode());
         result = prime * result + ((torches == null) ? 0 : torches.hashCode());
         result = prime * result + ((world == null) ? 0 : world.hashCode());
         return result;
@@ -752,11 +851,6 @@ public class Game {
             if (other.players != null)
                 return false;
         } else if (!players.equals(other.players))
-            return false;
-        if (timer == null) {
-            if (other.timer != null)
-                return false;
-        } else if (!timer.equals(other.timer))
             return false;
         if (torches == null) {
             if (other.torches != null)
