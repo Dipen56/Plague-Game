@@ -88,16 +88,21 @@ public class TestConst {
         worldBoard[6][0] = new Chest("chest 3", 789, true, loot3);
 
         // transition space
-        Position p1 = new Position(6, 3, 0);
-        Position p2 = new Position(1, 2, 1);
-        TransitionSpace tsWorld = new TransitionSpace(p1, p2, Direction.North);
+        Position p1 = new Position(6, 3, 0, Direction.North);
+        Position p2 = new Position(1, 2, 1, Direction.North);
+        TransitionSpace tsWorld = new TransitionSpace(p1, p2);
         worldBoard[3][6] = tsWorld;
 
         // ============= ROOM ==================
 
         // room
         MapElement[][] roomBoard = new MapElement[3][3];
-        Room room = new Room(roomBoard, 1, 11111, true);
+
+        // locked room
+        // Room room = new Room(roomBoard, 1, 11111, true);
+
+        // unlocked room
+        Room room = new Room(roomBoard, 1, 11111, false);
 
         // ground squares (positions we can enter)
         for (int y = 0; y < 3; y++) {
@@ -125,12 +130,20 @@ public class TestConst {
         roomBoard[0][2] = new Chest("chest in room", 123, false, lootInRoom);
 
         // transition space
-        TransitionSpace tsRoom = new TransitionSpace(p2, p1, Direction.South);
+        Position p3 = new Position(1, 2, 1, Direction.South);
+        Position p4 = new Position(6, 3, 0, Direction.South);
+
+        TransitionSpace tsRoom = new TransitionSpace(p3, p4);
         roomBoard[2][1] = tsRoom;
 
         // the Hashmap
         areas.put(0, world);
         areas.put(1, room);
+
+        // NOTICE: VERY IMPORTANT, resister portals for each area in the game
+        for (Area a : areas.values()) {
+            a.registerPortals();
+        }
     }
 
 }
