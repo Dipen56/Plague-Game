@@ -506,16 +506,16 @@ public class GUI extends Application {
 				// getSorce will give the control which caused the event
 				if (event.getCode() == KeyCode.UP) {
 					// this is for moving left
-					render.render(group, "north");
+					render.render(group, "up");
 				} else if (event.getCode() == KeyCode.DOWN) {
 					// this is for moving right
-					render.render(group, "south");
+					render.render(group, "down");
 				} else if (event.getCode() == KeyCode.LEFT) {
 					// this is for moving up
-					render.render(group, "west");
+					render.render(group, "left");
 				} else if (event.getCode() == KeyCode.RIGHT) {
 					// this is for moving down
-					render.render(group, "east");
+					render.render(group, "right");
 				}
 			}
 		};

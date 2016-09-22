@@ -80,28 +80,23 @@ public class Rendering {
 		//this.playerLoc = new Point(5, 0);
 		
 		int boardSize = 10;
-		int north = boardSize - playerLoc.y;
-		int west = (boardSize - playerLoc.x) - 1;
-		int east = (boardSize - squaresToLeft);
-
-		if (direction.equals("north")){
-			squaresInFront =north;
-			squaresToLeft = west;
-			squaresToRight = east;
+		if (direction.equals("up")){
+			squaresInFront =boardSize - playerLoc.y;
+			squaresToLeft = (boardSize - playerLoc.x) - 1;
+			squaresToRight =  (boardSize - squaresToLeft);
 			String values = "squares in front " + squaresInFront +"\n";
 			values+= "squares to the left" + squaresToLeft + "\n";
 			values+= "squares to the right " + squaresToRight + "\n";
-			//playerLoc.y+=1; 
 			System.out.println("up/n " + values);
 			System.out.println("Loc Y " + playerLoc.y);
 			System.out.println("Loc X " + playerLoc.x);
+		}
 
-		}
-		else if (direction.equals("south")){
-			playerLoc.y-=1; 			
-		}
-		else if(direction.equals("west")){
+		else if (direction.equals("down")){
 			
+		}
+		
+		else if(direction.equals("left")){
 			squaresToRight =  squaresInFront ;
 			squaresInFront = squaresToLeft ;
 			squaresToLeft = boardSize - squaresToRight ;
@@ -111,17 +106,15 @@ public class Rendering {
 			System.out.println("left \n" + values);
 
 		}
-		else if (direction.equals("east")){
-			squaresToLeft = north;
-			squaresInFront = east;
-			squaresToRight =(boardSize -  west) ;
 
+		else if (direction.equals("right")){
+			squaresToLeft = squaresInFront;
+			squaresInFront = squaresToRight;
+			squaresToRight =(boardSize -  squaresToLeft) ;
 			String values = "squares in front " + squaresInFront +"\n";
 			values+= "squares to the left" + squaresToLeft + "\n";
 			values+= "squares to the right " + squaresToRight + "\n";
 			System.out.println("right \n" + values);
-
-
 		}
 		//////////////////////////////////////////////////
 		// this is used to for the top line points x0 and x1 which will be
