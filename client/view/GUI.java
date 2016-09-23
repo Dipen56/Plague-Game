@@ -82,15 +82,6 @@ public class GUI extends Application {
 	private BorderPane borderPane;
 	private String chatText = "HARDD: Welcome Players";
 	private StackPane gamePane;
-	// Event Handlers
-	// for clicks
-	private EventHandler<ActionEvent> actionEvent;
-	// for keys inputs
-	private EventHandler<KeyEvent> keyEvent;
-	// for mouse events
-	private EventHandler<MouseEvent> mouseEvent;
-	// for window resizing not really need else where
-	private EventHandler<WindowEvent> windowEvent;
 
 	private Rendering render = new Rendering();
 
@@ -110,19 +101,32 @@ public class GUI extends Application {
 	private Group avatarGroup;
 	private String selectedAvatar;
 	// waiting room Controls
-	FlowPane playersWaiting;
+	private FlowPane playersWaiting;
 	private Button beginGame;
 	private Button quitWaitingRoom;
+	// Event Handlers
+	// for clicks
+	private EventHandler<ActionEvent> actionEvent;
+	// for keys inputs
+	private EventHandler<KeyEvent> keyEvent;
+	// for mouse events
+	private EventHandler<MouseEvent> mouseEvent;
+	// for window resizing not really need else where
+	private EventHandler<WindowEvent> windowEvent;
+	private Rendering render2;
 
-	public GUI(ViewControler viewControler) {
+	public GUI(ViewControler viewControler, Rendering render) {
+		// TODO: find a way to not make the controler static
 		this.viewControler = viewControler;
-		// GUI.launch(GUI.class);
+		this.render2 = render;
 
 	}
 
 	public GUI() {
 		// leave this constructor in here need to run the gui.
 	}
+
+	
 
 	/**
 	 * this method will get passed in a stage which is the main window and will
@@ -135,13 +139,13 @@ public class GUI extends Application {
 		window.getIcons().add(loadImage(GAMEICON_IMAGE));
 		// this will disable and enable resizing so when we have a working
 		// version we can just set this to false;
-		window.setResizable(false);
 		// this starts the action listener
 		actionEventHandler();
 		// this will start the key listener
 		keyEventHander();
 		// this will start the mouse listener
 		mouseEventHander();
+		window.setResizable(false);
 		slashScreen();
 		window.show();
 
@@ -194,7 +198,7 @@ public class GUI extends Application {
 		// loginBox.getChildren().add(ipBox);
 
 		HBox portBox = new HBox(3);
-		Label port = new Label("Enter UserName");
+		Label port = new Label("Enter Port");
 		portInput = new TextField();
 		portBox.getChildren().addAll(port, portInput);
 		// loginBox.getChildren().add(portBox);
@@ -426,30 +430,6 @@ public class GUI extends Application {
 	}
 
 	/**
-	 * this method is used to set the chat message the text area in the gui
-	 *
-	 * @param text
-	 * @param user
-	 */
-	public void setChatText(String text, String user) {
-		chatText = chatText + "\n";
-		chatText = chatText + user + ": " + text;
-		textAreaLable.setText(chatText);
-	}
-
-	/**
-	 * this method will return the masg type in the chat box apon clicking the
-	 * send button.
-	 * 
-	 * @return
-	 */
-	public String getChatMsg() {
-		// System.out.println(render);
-		String msgToSend = msg.getText();
-		return msgToSend;
-	}
-
-	/**
 	 * this method is used to check for action and give a implementation of
 	 * handle method
 	 */
@@ -457,6 +437,7 @@ public class GUI extends Application {
 		actionEvent = new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
+				System.out.println(render2);
 				if (event.getSource() == send) {
 					viewControler.getChatMsg(getChatMsg());
 				} else if (event.getSource() == play) {
@@ -470,9 +451,11 @@ public class GUI extends Application {
 				} else if (event.getSource() == login) {
 					// TODO: set secected avatar
 					// TODO: check login was correct
-					// TODO set the Avatars whicha re all the palyes currently in
+					// TODO set the Avatars whicha re all the palyes currently
+					// in
 					// the waiting room
 					waitingRoom();
+
 				} else if (event.getSource() == quitLogin) {
 					window.close();
 				} else if (event.getSource() == beginGame) {
@@ -528,6 +511,34 @@ public class GUI extends Application {
 				System.out.println("here");
 			}
 		};
+	}
+
+	/**
+	 * this method is used to set the chat message the text area in the gui
+	 *
+	 * @param text
+	 * @param user
+	 */
+	public void setChatText(String text, String user) {
+		chatText = chatText + "\n";
+		chatText = chatText + user + ": " + text;
+		textAreaLable.setText(chatText);
+	}
+
+	/**
+	 * this method will return the masg type in the chat box apon clicking the
+	 * send button.
+	 * 
+	 * @return
+	 */
+	public String getChatMsg() {
+		// System.out.println(render);
+		String msgToSend = msg.getText();
+		return msgToSend;
+	}
+
+	public Stage getWindow() {
+		return window;
 	}
 
 	/**

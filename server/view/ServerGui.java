@@ -1,29 +1,24 @@
 package server.view;
 
-import javafx.*;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 
 import javafx.application.*;
 import javafx.stage.Stage;
-import javafx.scene.Group;
 
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.*;
 import javafx.scene.control.*;
-import javafx.scene.layout.VBox;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.*;
 import javafx.scene.paint.Color;
-import javafx.scene.control.*;
 import javafx.scene.layout.StackPane;
 import javafx.scene.image.ImageView;
 import javafx.geometry.Insets;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.RowConstraints;
-import javafx.scene.layout.GridPane;
+
+import java.util.concurrent.CountDownLatch;
+
 import javafx.animation.FadeTransition;
 import javafx.util.Duration;
+import server.ServerMain;
 
 /**
  * this class represents the Server GUI which is just basically used to display
@@ -38,13 +33,15 @@ import javafx.util.Duration;
 
 public class ServerGui extends Application {
 	private static final String GAMEICON_IMAGE = "/game-icon.png";
-	Stage window;
-	BorderPane borderPane;
-	Label textLabel;
-	FadeTransition ft;
+	private Stage window;
+	private BorderPane borderPane;
+	private Label textLabel;
+	private FadeTransition ft;
+	public static String ip;
+	public static int port;
 
 	public ServerGui() {
-		// will be used later to start the gui
+
 	}
 
 	@Override
@@ -55,27 +52,29 @@ public class ServerGui extends Application {
 		borderPane = new BorderPane();
 		textLabel = new Label();
 		textLabel.getStyleClass().add("root-server");
-		textLabel.setText("Welcome Server Is Starting Up...\n Operated By: HARDD inc");
+		// textLabel.setText("Welcome Server Is Starting Up...\n Operated By:
+		// HARDD inc");
+		setText();
 		ft = new FadeTransition(Duration.millis(4000), textLabel);
 		ft.setFromValue(0.0);
 		ft.setToValue(1.0);
 		ft.play();
 		textLabel.setWrapText(true);
 		borderPane.setCenter(textLabel);
-		//setText("192.1.1.0", "8080");
+		// setText("192.1.1.0", "8080");
 		Scene mainScene = new Scene(borderPane, 300, 300);
 		window.setScene(mainScene);
 		mainScene.getStylesheets().add(this.getClass().getResource("/main.css").toExternalForm());
 		window.show();
-		setText("10.1.1","5000");
+		// setText("10.1.1","5000");
 
 	}
 
 	/**
 	 * this method is used to set the information about the server to the GUI
 	 */
-	public void setText(String address, String port) {
-		textLabel.setText("Server Address: " + address + " \nPort Number: " + port);
+	public void setText() {
+		textLabel.setText("Server Address: " + ip + " \nPort Number: " + port);
 	}
 
 	/**

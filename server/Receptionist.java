@@ -1,4 +1,4 @@
-package anotherServer;
+package server;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -16,7 +16,7 @@ import server.game.player.Player;
  * client. It receives events from a client connection via a socket as well as transmit
  * information to the client about the current board state.
  * 
- * @author Rafaela (Just put your Id here)
+ * @author Rafaela & Hector
  *
  */
 public class Receptionist extends Thread {
