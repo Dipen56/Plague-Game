@@ -2,6 +2,8 @@ package client.rendering;
 
 import java.awt.Color;
 import java.awt.Point;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.JLabel;
 
@@ -11,6 +13,8 @@ import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.shape.Polygon;
+import server.game.player.Player;
+import server.game.world.Area;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.paint.*;
 
@@ -41,10 +45,28 @@ public class Rendering {
 	public int centerHeght = gamePaneHeight;
 	private MapParser mapParser;
 	private Point playerLoc;
+	private Player player;
+	private Map<Integer, Player> playersOnMap;
+	private Map<Integer, Area> map;
+	private int avatarID;
 
 	public Rendering() {
 		// will need to get board size passed in
 		mapParser = new MapParser(10, 10);
+	}
+
+	/**
+	 * this constructor is to be used for integration and will be passed in a
+	 * Player and a map, and also all the other player on the map and also the
+	 * avatar id atm.
+	 * 
+	 * @param player
+	 */
+	public Rendering(Player player, Map<Integer, Player> playersOnMap, Map<Integer, Area> map, int avatarID) {
+		this.player = player;
+		this.playersOnMap = playersOnMap;
+		this.map = map;
+		this.avatarID = avatarID;
 	}
 
 	/**
@@ -53,6 +75,8 @@ public class Rendering {
 	 * @param group
 	 */
 	public void render(Group renderGroup) {
+		// TODO: get ride of the renderGroup parameters call the set group
+		// method below first before calling this method
 		this.group = renderGroup;
 		Image image = loadImage(BACKGROUND_IMAGE);
 		Image grass = loadImage(GRASS_IMAGE);
@@ -215,6 +239,7 @@ public class Rendering {
 			topLine = topLine - tileHeight * Math.pow(scaleY, i + 1);
 
 		}
+		// TODO: call the render avatar method here
 		renderObjects();
 
 	}
@@ -258,7 +283,7 @@ public class Rendering {
 				double y0 = topLine - tileHeight * Math.pow(scaleY, row + 1);
 				double height = (y3 - y0);
 				double width = (x2 - x3);
-				//System.out.println(worldMap[row][col]);
+				// System.out.println(worldMap[row][col]);
 				if (worldMap[row][col].equals("tree")) {
 					Image tree = loadImage(TREE_IMAGE);
 					ImageView imageViewTree = new ImageView();
@@ -378,8 +403,9 @@ public class Rendering {
 					double tempRighty0 = topLine - tileHeight * Math.pow(scaleY, row + 1);
 					double heightRight = (tempRighty3 - tempRighty0);
 					double widthRight = (tempRightx2 - tempRightx3);
-					//System.out.println(gamePaneWidth);
-					//System.out.println(tempRightx0 + " " + tempRightx1 + " " + tempRightx2 + " " + tempRightx3);
+					// System.out.println(gamePaneWidth);
+					// System.out.println(tempRightx0 + " " + tempRightx1 + " "
+					// + tempRightx2 + " " + tempRightx3);
 					if (tempRightx2 != gamePaneWidth && tempRightx1 != gamePaneWidth) {
 						// System.out.println(worldMap[row][col - j]);
 						if (worldMap[row][col - j].equals("tree")) {
@@ -427,6 +453,41 @@ public class Rendering {
 		}
 	}
 
+	/**
+	 * this method will render the aviator to the screen
+	 */
+	public void renderAvatar() {
+		// TODO: render the avartar to the center of the screen
+	}
+
+	/**
+	 * this method is used to move the player in the screen given player, it
+	 * then calls the render method
+	 * 
+	 * @param player
+	 */
+	public void movePlayer(Player player) {
+		this.player = player;
+		// TODO: call render;
+		// render();
+	}
+
+	/**
+	 * this method is used to set the group which is used to render the images
+	 * on the screen and will be used by the gui class
+	 * 
+	 * @param renderGroup
+	 */
+	public void setGroup(Group renderGroup) {
+		this.group = renderGroup;
+	}
+
+	/**
+	 * this is just a helper method which is used to load images
+	 * 
+	 * @param name
+	 * @return
+	 */
 	private Image loadImage(String name) {
 		Image image = new Image(this.getClass().getResourceAsStream(name));
 		return image;

@@ -47,6 +47,23 @@ public class Client extends Thread {
         this.socket = socket;
         areas = new HashMap<>();
     }
+    public Client(String ip, int port, String userName, int avatarID) {
+		// TODO: still need to add avatar in and also make use of the username
+		// System.out.println("Server address?");
+    	areas = new HashMap<>();
+		String tempIp = ParserUtilities.parseString();
+		// System.out.println("Port number?");
+		int tempPort = ParserUtilities.parseInt(0, 99999);
+		Socket s = null;
+		try {
+			s = new Socket(ip, port);
+		} catch (IOException e) {
+			System.err.println("Failed to connect to server, I/O exceptions, " + e.toString());
+			System.exit(1);
+		}
+		this.socket = s;
+		run();
+	}
 
     @Override
     public void run() {
