@@ -1,4 +1,4 @@
-package dataStorage.alternates;
+package dataStorage.adapters;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,7 +31,7 @@ import server.game.world.TransitionSpace;
  */
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-public class AltGame{
+public class GameAdapter{
 
 	/**
 	 * Whatever you do don't delete either this altObstTypeProtector or altChestTypeProtector. 
@@ -39,62 +39,71 @@ public class AltGame{
 	 * Without it, the parser does not recognise these types of object, and they will not be written to the game save. 
 	 */
 	@XmlElement
-	private AltObstacle altObstTypeProtector = new AltObstacle();
+	private ObstacleAdapter ObstTypeProtector = new ObstacleAdapter();
 	@XmlElement
-	private AltChest altChestTypeProtector = new AltChest();
+	private ChestAdapter ChestTypeProtector = new ChestAdapter();
 	@XmlElement
-	private AltAntidote altAntidote = new AltAntidote();
+	private AntidoteAdapter AntidoteTypeProtector = new AntidoteAdapter();
 	@XmlElement
-	private AltKey aKey = new AltKey();
+	private KeyAdapter KeyTypeProtector = new KeyAdapter();
 	@XmlElement
-	private AltTorch aTorch = new AltTorch();
-
+	private TorchAdapter TorchTypeProtector = new TorchAdapter();
+	@XmlElement
+	private CupboardAdapter CupboardTypeProtector = new CupboardAdapter();
+	@XmlElement
+	private ScrapPileAdapter ScrapPileTypeProtector = new ScrapPileAdapter();
+	@XmlElement
+	private TransitionSpaceAdapter TransitionSpaceTypeProtector = new TransitionSpaceAdapter();
+	
+	
+	public static final GroundSpaceAdapter groundSpaceAdapter= new GroundSpaceAdapter();
+	
 	/**
 	 * An alternate version of a World object.
 	 */
 	@XmlElement
-	private AltArea world = null;
+	private AreaAdapter world = null;
 
 	/**
 	 * Keep track on each room with its entrance position.
 	 */
 	@XmlElement
-	private Map<Integer, AltArea> areas;
+	private Map<Integer, AreaAdapter> areas;
 
 
 	/**
 	 * Players and their id. Server can find player easily by looking by id.
 	 */
 	@XmlElement
-	private Map<Integer, AltPlayer> players;
+	private Map<Integer, PlayerAdapter> players;
 
 	/**
 	 * All torches in this world. It is used to track torch burning status in timer.
 	 */
-	private AltTorch[] torches;
+	private TorchAdapter[] torches;
 
 	/**
 	 * Only to be called by XML marshaller.
 	 **/
-	AltGame(){
+	GameAdapter(){
 
 	}
 
 	/**
 	 *@param The object on which to base this object
 	 **/
-	public AltGame(Game game){
+	public GameAdapter(Game game){
 		if(game == null)
 			throw new IllegalArgumentException("Argument is null");
 
-		this.world = new AltArea(game.getWorld());
+		this.world = new AreaAdapter(game.getWorld());
 		areas = new HashMap<>();
 		this.players = new HashMap<>();
 		Area area = null;
 		Player p = null;
 		Integer myInt = -1;
 
-		AltArea altArea = null;
+		AreaAdapter altArea = null;
 		// Copies all entries from original area list, replacing values with alternative objects
 		for(Map.Entry<Integer, Area> m: game.getAreas().entrySet()){
 			myInt = m.getKey();	//The key from the entry.
@@ -104,7 +113,7 @@ public class AltGame{
 				throw new RuntimeException("Integer mapped to null");
 			}
 			else
-				altArea = new AltArea(area);
+				altArea = new AreaAdapter(area);
 			areas.put(myInt, altArea);
 			altArea = null;
 		}
@@ -116,17 +125,17 @@ public class AltGame{
 			if(p == null){
 				throw new RuntimeException("Integer mapped to null");
 			}
-			this.players.put(myInt, new AltPlayer(p));
+			this.players.put(myInt, new PlayerAdapter(p));
 		}
 
 		List<Torch> gameTorches = game.getTorches();
-		this.torches = new AltTorch[gameTorches.size()];
+		this.torches = new TorchAdapter[gameTorches.size()];
 		//If there are no torches in list, none are saved into array.
 
 		if(!gameTorches.isEmpty()){
 			// Copies all torches to the torches array. Field cannot be list due to xml complications.
 			for(int i = 0; i < gameTorches.size();i++){
-				this.torches[i] = new AltTorch(gameTorches.get(i));
+				this.torches[i] = new TorchAdapter(gameTorches.get(i));
 			}
 		}
 	}
@@ -139,15 +148,16 @@ public class AltGame{
 	public Game getOriginal(){
 		Area world = this.world.getOriginal();
 		Map<Integer, Area> areas = new HashMap<>();
-		for(Map.Entry<Integer, AltArea> m: this.areas.entrySet()){
-			Area area = ((AltArea)m.getValue()).getOriginal();
+		for(Map.Entry<Integer, AreaAdapter> m: this.areas.entrySet()){
+			AreaAdapter adapter = m.getValue();
+			Area area = adapter.getOriginal();
 			areas.put(m.getKey(), area);
 		}
 
 		//Restores Players
 		Map<Integer, Player> players = new HashMap<>();
-		for(Map.Entry<Integer, AltPlayer> m: this.players.entrySet()){
-			Player p = ((AltPlayer)m.getValue()).getOriginal();
+		for(Map.Entry<Integer, PlayerAdapter> m: this.players.entrySet()){
+			Player p = ((PlayerAdapter)m.getValue()).getOriginal();
 			players.put(m.getKey(), p);
 		}
 		//Restores Torches

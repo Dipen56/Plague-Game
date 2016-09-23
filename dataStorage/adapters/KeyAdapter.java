@@ -1,4 +1,4 @@
-package dataStorage.alternates;
+package dataStorage.adapters;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -13,7 +13,7 @@ import server.game.items.Torch;
  * @author Daniel Anastasi (anastadani 300145878)
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-public class AltKey extends AltItem{
+public class KeyAdapter extends ItemAdapter{
 
 	 /**
      * The keyID specifies which door it can open. Only the door with the same keyID can
@@ -28,7 +28,7 @@ public class AltKey extends AltItem{
 	@XmlElement
     private String description;
 
-	public AltKey(Key item) {
+	public KeyAdapter(Key item) {
 		if(item == null)
 			throw new IllegalArgumentException("Argument is null");
 		keyID = item.getKeyID();
@@ -38,7 +38,7 @@ public class AltKey extends AltItem{
 	/**
 	 * Only to be used by XML parser.
 	 */
-	AltKey(){
+	KeyAdapter(){
 
 	}
 

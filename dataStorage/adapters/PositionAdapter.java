@@ -1,4 +1,4 @@
-package dataStorage.alternates;
+package dataStorage.adapters;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -14,7 +14,7 @@ import server.game.player.Position;
  *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-public class AltPosition {
+public class PositionAdapter {
 
 	/**
 	 * X and Y coordinates of this position.
@@ -34,7 +34,7 @@ public class AltPosition {
 	@XmlElement
 	private Direction direction;
 
-	public AltPosition(Position pos){
+	public PositionAdapter(Position pos){
 		if(pos == null)
 			throw new IllegalArgumentException("Argument is null");
 		x = pos.x;
@@ -46,7 +46,7 @@ public class AltPosition {
 	/**
 	 * Only to be used by XML parser
 	 */
-	AltPosition(){
+	PositionAdapter(){
 
 	}
 

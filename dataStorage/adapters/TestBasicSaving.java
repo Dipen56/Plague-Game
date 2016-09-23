@@ -1,9 +1,14 @@
-package dataStorage.alternates;
+package dataStorage.adapters;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import dataStorage.XmlFunctions;
 import server.game.Game;
 import server.game.TestConst;
 import server.game.TextUI;
+import server.game.player.Avatar;
+import server.game.player.Player;
 import server.game.world.Area;
 
 public class TestBasicSaving {
@@ -12,10 +17,11 @@ public class TestBasicSaving {
 		for(Area a: TestConst.areas.values())
         	a.registerPortals();
 		Game gameA = new Game(TestConst.world, TestConst.areas);
-		AltGame altGame = new AltGame(gameA);
+		GameAdapter altGame = new GameAdapter(gameA);
 		XmlFunctions.saveFile(altGame);
 		altGame = XmlFunctions.loadFile();
 
+		
 		Game gameB = altGame.getOriginal();
 		int i = 0;
 		

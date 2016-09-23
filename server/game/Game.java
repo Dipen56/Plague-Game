@@ -6,7 +6,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Random;
+import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -78,7 +80,7 @@ public class Game {
      */
     private Map<Integer, Player> players;
     /**
-     * For testing. Will be removed.
+     * For testing. Will be removed.	
      */
     private Player player;
     /**
@@ -848,28 +850,6 @@ public class Game {
         if (getClass() != obj.getClass())
             return false;
         Game other = (Game) obj;
-        
-        //experiment to check map contents
-        System.out.println("areas");
-        for(Map.Entry<Integer, Area>e :areas.entrySet()){
-        	System.out.printf("Key: %s\n",e.getKey());
-        	System.out.printf("Value: %s\n",e.getValue());
-        }
-        System.out.println("\n other.areas");
-        for(Map.Entry<Integer, Area>e :other.areas.entrySet()){
-        	System.out.printf("Key: %s\n",e.getKey());
-        	System.out.printf("Value: %s\n",e.getValue());
-        }
-        
-        
-        if(!areas.entrySet().equals(other.areas.entrySet())){
-        	return false;
-        }
-        
-        if(!areas.keySet().equals(other.areas.keySet())){
-        	return false;
-        }
-        
         
         if (areas == null) {
         	

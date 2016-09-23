@@ -1,23 +1,27 @@
-package dataStorage.alternates;
+package dataStorage.adapters;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 
 import server.game.items.Antidote;
 import server.game.items.Item;
 import server.game.items.Key;
 import server.game.items.Torch;
 import server.game.world.ScrapPile;
-
-public class AltScrapPile extends AltObstacle{
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlRootElement
+public class ScrapPileAdapter extends ObstacleAdapter{
 
 	/**
 	 * The loot contained in this scrap pile
 	 */
 	@XmlElement
-	private AltItem[] loot;
+	private ItemAdapter[] loot;
 	
 	/**
 	 * Describes this object in the game client.
@@ -26,21 +30,21 @@ public class AltScrapPile extends AltObstacle{
 	private String description;
 	
 	
-	public AltScrapPile(ScrapPile sp){
+	public ScrapPileAdapter(ScrapPile sp){
 		 List<Item> spLoot = sp.getLoot();
-		this.loot = new AltItem[spLoot.size()];
+		this.loot = new ItemAdapter[spLoot.size()];
 		Item item = null;
 		//Copies each item in the loot as an adapter version of the original.
 		for(int i = 0; i <spLoot.size(); i++){
 			item = spLoot.get(i);
 			if(item instanceof Antidote){
-				this.loot[i] = new AltAntidote((Antidote)item);
+				this.loot[i] = new AntidoteAdapter((Antidote)item);
 			}
 			else if(item instanceof Key){
-				this.loot[i] = new AltKey((Key)item);
+				this.loot[i] = new KeyAdapter((Key)item);
 			}
 			else if(item instanceof Torch){
-				this.loot[i] = new AltTorch((Torch)item);
+				this.loot[i] = new TorchAdapter((Torch)item);
 			}
 			else{
 				throw new RuntimeException("Loot item is not a recognised item type.");
@@ -52,7 +56,7 @@ public class AltScrapPile extends AltObstacle{
 	/**
 	 * This constructor is only to be called by an XML parser.
 	 */
-	AltScrapPile(){
+	ScrapPileAdapter(){
 		
 	}
 	
@@ -62,17 +66,17 @@ public class AltScrapPile extends AltObstacle{
 	 */
 	public ScrapPile getOriginal(){
 		List<Item> newLoot = new ArrayList<>();
-		AltItem item = null;
+		ItemAdapter item = null;
 		for(int i = 0; i < this.loot.length; i++){
 				item = loot[i];
-				if(item instanceof AltAntidote){
-					newLoot.add(((AltAntidote)item).getOriginal());
+				if(item instanceof AntidoteAdapter){
+					newLoot.add(((AntidoteAdapter)item).getOriginal());
 				}
-				else if(item instanceof AltKey){
-					newLoot.add(((AltKey)item).getOriginal());
+				else if(item instanceof KeyAdapter){
+					newLoot.add(((KeyAdapter)item).getOriginal());
 				}
-				else if(item instanceof AltTorch){
-					newLoot.add(((AltTorch)item).getOriginal());
+				else if(item instanceof TorchAdapter){
+					newLoot.add(((TorchAdapter)item).getOriginal());
 				}
 				else{
 					throw new RuntimeException("Item is not of a recognised type.");
@@ -81,4 +85,10 @@ public class AltScrapPile extends AltObstacle{
 		return new ScrapPile(this.description, newLoot);
 	}
 	
+	/**
+	 * Returns a string representation of this object's fields.
+	 */
+	public String toString(){
+		return "SCRAPPILE: "+this.description + " ";
+	} 
 }

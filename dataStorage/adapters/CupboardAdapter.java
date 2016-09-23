@@ -1,9 +1,10 @@
-package dataStorage.alternates;
+package dataStorage.adapters;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 
@@ -12,54 +13,54 @@ import server.game.items.Item;
 import server.game.items.Key;
 import server.game.items.Torch;
 import server.game.world.Chest;
+import server.game.world.Cupboard;
 
 /**
- * A copy of a Chest object, for use in parsing the object into XML.
+ * A copy of a Cupboard object, for use in parsing the object into XML.
  * @author Daniel Anastasi (anastadani 300145878)
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-public class AltChest extends AltObstacle{
+public class CupboardAdapter extends ObstacleAdapter{
 	/**
-	 * The id for the key that unlocks this chest.
+	 * The id for the key that unlocks this cupboard.
 	 */
 	@XmlElement
 	private int keyID;
 
 	/**
-	 * True if the chest is locked.
+	 * True if the cupboard is locked.
 	 */
 	@XmlElement
 	private boolean isLocked;
 
 	/**
-	 * A list of all items in this chest.
+	 * A list of all items in this cupboard.
 	 */
 	@XmlElement
-	private AltItem[] loot;
+	private ItemAdapter[] loot;
 
-	public AltChest(Chest chest){
-		if(chest == null)
+	public CupboardAdapter(Cupboard cupboard){
+		if(cupboard == null)
 			throw new IllegalArgumentException("Argument is null");
-		keyID = chest.getKeyID();
-		isLocked = chest.isLocked();
-		//description = chest.getDescription();
-		this.setDescrption(chest.getDescription());
+		keyID = cupboard.getKeyID();
+		isLocked = cupboard.isLocked();
+		this.setDescrption(cupboard.getDescription());
 
 		//Array is used, as List cannot have the same JAXB annotation.
-		List<Item> chestLoot = chest.getLoot();
-		loot = new AltItem[chestLoot.size()];
+		List<Item> oldLoot = cupboard.getLoot();
+		loot = new ItemAdapter[oldLoot.size()];
 
 		Item item = null;
-		for(int i = 0; i < chestLoot.size(); i++){
-			item = chestLoot.get(i);
+		for(int i = 0; i < oldLoot.size(); i++){
+			item = oldLoot.get(i);
 			if(item instanceof Antidote){
-				loot[i] = (new AltAntidote((Antidote)item));
+				loot[i] = (new AntidoteAdapter((Antidote)item));
 			}
 			else if(item instanceof Key){
-				loot[i] = (new AltKey((Key)item));
+				loot[i] = (new KeyAdapter((Key)item));
 			}
 			else if(item instanceof Torch){
-				loot[i] = (new AltTorch((Torch)item));
+				loot[i] = (new TorchAdapter((Torch)item));
 			}
 			else{
 				continue;
@@ -70,7 +71,7 @@ public class AltChest extends AltObstacle{
 	/**
 	 * Only to be called by XML parser.
 	 */
-	AltChest(){
+	CupboardAdapter(){
 
 	}
 
@@ -78,26 +79,26 @@ public class AltChest extends AltObstacle{
 	 * Returns a copy of the object which this object was based on.
 	 * @return A Chest object.
 	 */
-	public Chest getOriginal(){
+	public Cupboard getOriginal(){
 		List<Item> newLoot = new ArrayList<>();
-		AltItem item = null;
+		ItemAdapter item = null;
 		for(int i = 0; i < loot.length; i++){
 			item = loot[i];
-			if(item instanceof AltAntidote){
-				newLoot.add(((AltAntidote)item).getOriginal());
+			if(item instanceof AntidoteAdapter){
+				newLoot.add(((AntidoteAdapter)item).getOriginal());
 			}
-			else if(item instanceof AltKey){
-				newLoot.add(((AltKey)item).getOriginal());
+			else if(item instanceof KeyAdapter){
+				newLoot.add(((KeyAdapter)item).getOriginal());
 			}
-			else if(item instanceof AltTorch){
-				newLoot.add(((AltTorch)item).getOriginal());
+			else if(item instanceof TorchAdapter){
+				newLoot.add(((TorchAdapter)item).getOriginal());
 			}
 			else{
 				throw new RuntimeException("Item is not of a recognised type.");
 			}
 		}
 
-		return new Chest(description, keyID, isLocked, newLoot);
+		return new Cupboard(description, keyID, isLocked, newLoot);
 	}
 
 	/**
@@ -105,14 +106,16 @@ public class AltChest extends AltObstacle{
 	 */
 	public String toString(){
 		StringBuffer b = new StringBuffer();
-		b.append("CHEST: ");
+		b.append("CUPBOARD: ");
 		b.append(keyID + " ");
 		b.append(isLocked + " ");
-		
+
 		for(int i = 0; i < loot.length; i ++){
 			b.append(loot[i] + " ");
 		}
 		b.append(description + " ");
 		return b.toString();
 	}
+
+
 }

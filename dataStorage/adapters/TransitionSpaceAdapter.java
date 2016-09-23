@@ -1,4 +1,4 @@
-package dataStorage.alternates;
+package dataStorage.adapters;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -16,19 +16,19 @@ import server.game.world.TransitionSpace;
  *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-public class AltTransitionSpace extends AltMapElement{
+public class TransitionSpaceAdapter extends MapElementAdapter{
 
 	/**
 	 * The position of this object in the area.
 	 */
 	@XmlElement
-	private AltPosition position;
+	private PositionAdapter position;
 
 	/**
 	 * The Position in the area that this space leads to.
 	 */
 	@XmlElement
-	private AltPosition destPos;
+	private PositionAdapter destPos;
 
     /**
      * The direction which the player must travel from this space to enter the destination area.
@@ -36,18 +36,18 @@ public class AltTransitionSpace extends AltMapElement{
 	@XmlElement
 	private Direction direction;
 
-	public AltTransitionSpace(TransitionSpace ts) {
+	public TransitionSpaceAdapter(TransitionSpace ts) {
 		if(ts == null)
 			throw new IllegalArgumentException("Argument is null");
 
-		position = new AltPosition(ts.getCurrentPosition());
-		destPos = new AltPosition(ts.getDestination());
+		position = new PositionAdapter(ts.getCurrentPosition());
+		destPos = new PositionAdapter(ts.getDestination());
 	}
 
 	/**
 	 * Only to be used by XML marshaller.
 	 */
-	AltTransitionSpace(){
+	TransitionSpaceAdapter(){
 
 	}
 

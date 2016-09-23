@@ -1,4 +1,4 @@
-package dataStorage.alternates;
+package dataStorage.adapters;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -10,19 +10,19 @@ import server.game.world.MapElement;
  * @author Daniel Anastasi (anastadani 300145878)
  *
  */
-public class AltMapElement {
+public class MapElementAdapter {
 
-	AltMapElement(){
+	MapElementAdapter(){
 
 	}
 
 	public String toString(){
-		if(this instanceof AltChest)
-			return ((AltChest)this).toString();
-		if(this instanceof AltObstacle)
-			return ((AltObstacle)this).toString();
-		if(this instanceof AltTransitionSpace)
-			return ((AltTransitionSpace)this).toString();
+		if(this instanceof ChestAdapter)
+			return ((ChestAdapter)this).toString();
+		if(this instanceof ObstacleAdapter)
+			return ((ObstacleAdapter)this).toString();
+		if(this instanceof TransitionSpaceAdapter)
+			return ((TransitionSpaceAdapter)this).toString();
 		return null;
 	}
 }

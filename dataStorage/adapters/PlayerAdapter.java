@@ -1,4 +1,4 @@
-package dataStorage.alternates;
+package dataStorage.adapters;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +25,7 @@ import server.game.player.Virus;
  *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-public class AltPlayer {
+public class PlayerAdapter {
 	/**
 	 * The player's user ID
 	 */
@@ -65,14 +65,14 @@ public class AltPlayer {
 	 * The player's inventory.
 	 */
 	@XmlElement
-	private AltItem[] inventory;
+	private ItemAdapter[] inventory;
 
 	// Geographical information.
 	/**
 	 * The position of the player in the current area.
 	 */
 	@XmlElement
-	private AltPosition position;
+	private PositionAdapter position;
 
 	/**
 	 * The direction which the player is facing.
@@ -89,14 +89,14 @@ public class AltPlayer {
 	/**
 	 * This constructor should only be called by an XML marshaller.
 	 */
-	AltPlayer(){
+	PlayerAdapter(){
 
 	}
 
 	/**
 	 * @param The original Player object
 	 */
-	public AltPlayer(Player player) {
+	public PlayerAdapter(Player player) {
 		if(player == null)
 			throw new IllegalArgumentException("Argument is null");
 		player.saveRecordOfHealth();	//records player health as unchanging int for testing game save validity.
@@ -108,20 +108,20 @@ public class AltPlayer {
 		isHoldingTorch = player.isHoldingTorch();
 		//Inventory is converted to array as List cannot have JXB annotations.
 		List<Item> playerInventory = player.getInventory();
-		inventory = new AltItem[playerInventory.size()];
+		inventory = new ItemAdapter[playerInventory.size()];
 
 		Item item = null;
 		//Creates a new AltItem from each item in the inventory.
 		for(int i = 0; i < playerInventory.size(); i++){
 			item = playerInventory.get(i);
 			if(item instanceof Antidote){
-				inventory[i] = new AltAntidote((Antidote)item);
+				inventory[i] = new AntidoteAdapter((Antidote)item);
 			}
 			else if(item instanceof Key){
-				inventory[i] = new AltKey((Key)item);
+				inventory[i] = new KeyAdapter((Key)item);
 			}
 			else if(item instanceof Torch){
-				inventory[i] = new AltTorch((Torch)item);
+				inventory[i] = new TorchAdapter((Torch)item);
 			}
 			else{
 				continue;
@@ -129,7 +129,7 @@ public class AltPlayer {
 
 		}
 		avatar = player.getAvatar();
-		position = new AltPosition(player.getPosition());
+		position = new PositionAdapter(player.getPosition());
 		direction = player.getDirection();
 		
 	}
@@ -140,19 +140,19 @@ public class AltPlayer {
 	 */
 	public Player getOriginal(){
 		List<Item> newInventory = new ArrayList<>();
-		AltItem item = null;
+		ItemAdapter item = null;
 		// If player inventory was empty before save, then the current inventory will be null.
 		if(inventory != null){
 			for(int index = 0; index < inventory.length; index++){
 				item = inventory[index];
-				if(item instanceof AltAntidote){
-					newInventory.add(((AltAntidote)item).getOriginal());
+				if(item instanceof AntidoteAdapter){
+					newInventory.add(((AntidoteAdapter)item).getOriginal());
 				}
-				else if(item instanceof AltKey){
-					newInventory.add(((AltKey)item).getOriginal());
+				else if(item instanceof KeyAdapter){
+					newInventory.add(((KeyAdapter)item).getOriginal());
 				}
-				else if(item instanceof AltTorch){
-					newInventory.add(((AltTorch)item).getOriginal());
+				else if(item instanceof TorchAdapter){
+					newInventory.add(((TorchAdapter)item).getOriginal());
 				}
 				else{
 					continue;
