@@ -4,9 +4,7 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 
-import server.game.items.Item;
 import server.game.items.Key;
-import server.game.items.Torch;
 
 /**
  * A copy of a Key object, for use in parsing the object into XML.

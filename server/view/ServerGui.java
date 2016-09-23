@@ -1,27 +1,13 @@
 package server.view;
 
-import javafx.*;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 
 import javafx.application.*;
 import javafx.stage.Stage;
-import javafx.scene.Group;
 
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.control.*;
-import javafx.scene.layout.VBox;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.paint.Color;
-import javafx.scene.control.*;
-import javafx.scene.layout.StackPane;
-import javafx.scene.image.ImageView;
-import javafx.geometry.Insets;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.RowConstraints;
-import javafx.scene.layout.GridPane;
 import javafx.animation.FadeTransition;
 import javafx.util.Duration;
 

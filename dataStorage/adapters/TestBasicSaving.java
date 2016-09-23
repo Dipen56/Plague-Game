@@ -1,14 +1,8 @@
 package dataStorage.adapters;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import dataStorage.XmlFunctions;
 import server.game.Game;
 import server.game.TestConst;
-import server.game.TextUI;
-import server.game.player.Avatar;
-import server.game.player.Player;
 import server.game.world.Area;
 
 public class TestBasicSaving {

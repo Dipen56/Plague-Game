@@ -119,10 +119,13 @@ public class Player {
 		this.healthSavingValue = health;	
 	    this.health = health;
         this.avatar = avatar;
-        this.name = name;
 
         this.loading = true;	//required to load with builder pattern.
     }
+	
+	public int getHealthFromSave(){
+		return this.healthSavingValue;
+	}
 
 	public Avatar getAvatar() {
 		return this.avatar;

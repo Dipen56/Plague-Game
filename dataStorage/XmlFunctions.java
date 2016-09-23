@@ -4,13 +4,9 @@ import java.io.File;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.Unmarshaller;
 
 import dataStorage.adapters.GameAdapter;
-import server.game.Game;
-
-import javax.xml.bind.Unmarshaller;
 
 public class XmlFunctions {
 

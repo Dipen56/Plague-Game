@@ -4,16 +4,11 @@ import org.junit.runners.MethodSorters;
 import org.junit.FixMethodOrder;
 import static org.junit.Assert.*;
 
-import java.util.List;
-
 import dataStorage.XmlFunctions;
 import dataStorage.adapters.GameAdapter;
 import server.game.Game;
 import server.game.TestConst;
-import server.game.player.Player;
-import server.game.player.Virus;
 import server.game.world.Area;
-import server.game.world.MapElement;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class SaveTests {

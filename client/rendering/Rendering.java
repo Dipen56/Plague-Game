@@ -1,9 +1,6 @@
 package client.rendering;
 
-import java.awt.Color;
 import java.awt.Point;
-
-import javax.swing.JLabel;
 
 import client.view.GUI;
 
@@ -12,7 +9,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.shape.Polygon;
 import javafx.scene.paint.ImagePattern;
-import javafx.scene.paint.*;
 
 /**
  * This class represents the main rendering class, this class will control the

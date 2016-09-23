@@ -4,8 +4,6 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 
-import server.game.items.Antidote;
-import server.game.items.Item;
 import server.game.items.Torch;
 
 /**

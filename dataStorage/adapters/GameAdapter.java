@@ -9,19 +9,11 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 import server.game.Game;
-import server.game.items.Antidote;
-import server.game.items.Item;
 import server.game.items.Torch;
 import server.game.player.Player;
-import server.game.player.Virus;
 import server.game.world.Area;
-import server.game.world.Chest;
-import server.game.world.Obstacle;
-import server.game.world.Room;
-import server.game.world.TransitionSpace;
 
 /**
  * This class represents the an alternate version of the Game class, specifically for XML parsing.

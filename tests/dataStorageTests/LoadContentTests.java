@@ -6,6 +6,7 @@ import dataStorage.XmlFunctions;
 import dataStorage.adapters.GameAdapter;
 import server.game.Game;
 import server.game.TestConst;
+import server.game.player.Player;
 import server.game.world.Area;
 import server.game.world.MapElement;
 import server.game.world.Room;
@@ -13,8 +14,6 @@ import server.game.world.Room;
 import org.junit.FixMethodOrder;
 import static org.junit.Assert.*;
 
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -49,9 +48,53 @@ public class LoadContentTests {
 
 	@Test
 	public void test2(){
-		//Game players
-		assertTrue(gameA.getPlayers().equals(gameB.getPlayers()));
+		//Game players: keys
+		Map<Integer, Player> playersA = gameA.getPlayers();
+		Map<Integer, Player> playersB = gameB.getPlayers();
+		//Player lists must be the same size, and each keyset must match.
+		if(playersB == null 
+				|| playersA.size() != playersB.size()
+				|| playersA.keySet().equals(playersB.keySet())){
+			fail();
+			return;
+		}	
 	}
+
+	@Test
+	public void test2b(){
+		//Game players: values. Note that player isAlive is not checked, as player could die immediately after loading.
+		Map<Integer, Player> playersA = gameA.getPlayers();
+		Map<Integer, Player> playersB = gameB.getPlayers();
+		if(playersB == null 
+				|| playersA.size() != playersB.size()){
+			fail();
+			return;
+		}
+		Set<Integer> keysA = playersA.keySet();
+		Player a = null, b = null;
+		//Iterates over all keys comparing the associated values with the relevant value in the other map.
+		for(Integer i : keysA){
+			a = playersA.get(i);
+			b = playersB.get(i);
+
+			if(a == null
+					|| b == null
+					|| a.getClass() != b.getClass() 
+					|| a.getAvatar() != b.getAvatar()
+					|| a.getHealthFromSave() != b.getHealthFromSave()	//The health at the time of saving is compared rather than the dynamic "health" field.
+					|| a.getVirus() != b.getVirus()
+					|| a.getId() != b.getId()
+					|| a.getInventory() != b.getInventory()
+					|| a.getPosition() != b.getPosition()
+					|| a.isHoldingTorch() != b.isHoldingTorch()
+					|| !a.getName().equals(b.getName())
+					){
+				fail();
+				return;
+			}
+		}
+	}
+
 
 	@Test
 	public void test3(){
@@ -75,9 +118,7 @@ public class LoadContentTests {
 				b = mapB[i][j];
 				assert(a.equals(b));
 			}
-
 		}
-		//assertTrue(gameA.getWorld().equals(gameB.getWorld()));
 	}
 
 	@Test
@@ -103,7 +144,7 @@ public class LoadContentTests {
 		/*Game areas: values: 
 		.equals is not appropriate as player portal list can have the same pairs in the same indeces, but fail an equals check.
 		We are not interested in a perfect equals check.
-		*/
+		 */
 		Map<Integer, Area> areasA = gameA.getAreas();
 		Map<Integer, Area> areasB = gameB.getAreas();
 		Set<Integer> keysA = areasA.keySet();
@@ -141,10 +182,10 @@ public class LoadContentTests {
 
 	@Test
 	public void test4c(){
-		
+
 
 	}
-	
+
 	/**
 	 * Returns true if all position pairs match.
 	 * @param A list of duple integer arrays.
