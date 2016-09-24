@@ -75,10 +75,10 @@ public class Rendering {
 	 * 
 	 * @param group
 	 */
-	public void render(Group renderGroup) {
+	public void render() {
 		// TODO: get ride of the renderGroup parameters call the set group
 		// method below first before calling this method
-		this.group = renderGroup;
+		
 		Image image = loadImage(BACKGROUND_IMAGE);
 		Image character = loadImage(PLAYER_IMAGE);
 		Image grass = loadImage(GRASS_IMAGE);

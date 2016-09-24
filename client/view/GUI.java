@@ -256,7 +256,8 @@ public class GUI extends Application {
 		group.prefHeight(HEIGHT_VALUE);
 
 		// Calls the rendering
-		render.render(group);
+		render.setGroup(group);
+		render.render();
 		group.setLayoutX(3);
 		group.setLayoutY(35);
 		// only anchor sort of works
