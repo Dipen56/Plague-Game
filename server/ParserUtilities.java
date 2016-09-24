@@ -1,4 +1,4 @@
-package anotherServer;
+package server;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -18,7 +18,7 @@ import server.game.player.Position;
  * txt file and create a string form of the world map which will be used to render the
  * game world.
  * 
- * @author Dipen, Rafaela (Just put your Id here)
+ * @author Dipen, Rafaela & Hector
  *
  */
 public class ParserUtilities {

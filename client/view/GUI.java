@@ -36,9 +36,10 @@ public class GUI extends Application {
 	// Constants Images
 	private static final String GAMEICON_IMAGE = "/game-icon.png";
 	private static final String INVENTORY_IMAGE = "/item-tray.png";
-	private static final String SLASH_SCREEN_IMAGE = "/night.jpg"; // this will
-																	// be
-																	// changed
+	private static final String SLASH_SCREEN_IMAGE = "/spash-screen-background.jpg"; // this
+																						// will
+	// be
+	// changed
 	private static final String AVATAR_ONE_IMAGE = "/standingstillrear.png";
 
 	// Constants Dimensions
@@ -48,7 +49,7 @@ public class GUI extends Application {
 	public static final int GAMEPANE_WIDTH_VALUE = WIDTH_VALUE - 400;
 
 	// main window
-	private Stage window;
+	private static Stage window;
 	// controls
 	private MenuBar menuBar;
 	private Label timeLable;
@@ -66,19 +67,11 @@ public class GUI extends Application {
 	private BorderPane borderPane;
 	private String chatText = "HARDD: Welcome Players";
 	private StackPane gamePane;
-	// Event Handlers
-	// for clicks
-	private EventHandler<ActionEvent> actionEvent;
-	// for keys inputs
-	private EventHandler<KeyEvent> keyEvent;
-	// for mouse events
-	private EventHandler<MouseEvent> mouseEvent;
-	// for window resizing not really need else where
-	private EventHandler<WindowEvent> windowEvent;
 
-	private Rendering render = new Rendering();
+	// private Rendering render = new Rendering();
 
-	public static ViewControler viewControler;
+	private static ViewControler viewControler;
+	private static Rendering render;
 
 	// Button Controls For Slash Screen
 	private Button play;
@@ -94,13 +87,25 @@ public class GUI extends Application {
 	private Group avatarGroup;
 	private String selectedAvatar;
 	// waiting room Controls
-	FlowPane playersWaiting;
+	private FlowPane playersWaiting;
 	private Button beginGame;
 	private Button quitWaitingRoom;
+	// this is for event
+	// for action events
+	private EventHandler<ActionEvent> actionEvent;
+	// for keys inputs
+	private EventHandler<KeyEvent> keyEvent;
+	// for mouse events
+	private EventHandler<MouseEvent> mouseEvent;
+	// for window resizing not really need else where
+	private EventHandler<WindowEvent> windowEvent;
 
-	public GUI(ViewControler viewControler) {
+	// variables
+	private static String clockTime;
+
+	public GUI(ViewControler viewControler, Rendering rendering) {
 		this.viewControler = viewControler;
-		// GUI.launch(GUI.class);
+		this.render = rendering;
 
 	}
 
@@ -119,14 +124,15 @@ public class GUI extends Application {
 		window.getIcons().add(loadImage(GAMEICON_IMAGE));
 		// this will disable and enable resizing so when we have a working
 		// version we can just set this to false;
-		window.setResizable(false);
 		// this starts the action listener
-		actionEventHandler();
-		// this will start the key listener
-		keyEventHander();
-		// this will start the mouse listener
-		mouseEventHander();
+		viewControler.startListeners();
+		actionEvent = viewControler.getActionEventHandler();
+		keyEvent = viewControler.getKeyEventHander();
+		mouseEvent = viewControler.getMouseEventHander();
+		windowEvent = viewControler.getWindowEventHander();
+		window.setResizable(false);
 		slashScreen();
+		// loginScreen() ;
 		window.show();
 
 	}
@@ -157,6 +163,10 @@ public class GUI extends Application {
 	}
 
 	public void loginScreen() {
+		actionEvent = viewControler.getActionEventHandler();
+		keyEvent = viewControler.getKeyEventHander();
+		mouseEvent = viewControler.getMouseEventHander();
+		windowEvent = viewControler.getWindowEventHander();
 		VBox loginBox = new VBox(5);
 		info = new Label();
 		info.setText("Enter The IP,Port and UserName");
@@ -178,7 +188,7 @@ public class GUI extends Application {
 		// loginBox.getChildren().add(ipBox);
 
 		HBox portBox = new HBox(3);
-		Label port = new Label("Enter UserName");
+		Label port = new Label("Enter Port");
 		portInput = new TextField();
 		portBox.getChildren().addAll(port, portInput);
 		// loginBox.getChildren().add(portBox);
@@ -216,7 +226,7 @@ public class GUI extends Application {
 		waitingRoomBox.getChildren().add(playersWaiting);
 		FlowPane buttons = new FlowPane();
 		buttons.setHgap(10);
-		beginGame = new Button("Begain");
+		beginGame = new Button("Begin");
 		beginGame.setOnAction(actionEvent);
 		quitWaitingRoom = new Button("Leave Game");
 		quitWaitingRoom.setOnAction(actionEvent);
@@ -299,7 +309,7 @@ public class GUI extends Application {
 		timeLable.setPrefWidth(400);
 		timeLable.setPrefHeight(50);
 		timeLable.getStyleClass().add("world-time-lable");
-		timeLable.setText("00:00");
+		timeLable.setText(clockTime);
 		rightPanel.getChildren().add(titlePane);
 	}
 
@@ -428,90 +438,26 @@ public class GUI extends Application {
 	 * @return
 	 */
 	public String getChatMsg() {
-		// System.out.println(render);
 		String msgToSend = msg.getText();
 		return msgToSend;
 	}
 
 	/**
-	 * this method is used to check for action and give a implementation of
-	 * handle method
+	 * this method will set the world time
+	 * 
+	 * @param worldTime
 	 */
-	private void actionEventHandler() {
-		actionEvent = new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent event) {
-				if (event.getSource() == send) {
-					viewControler.getChatMsg(getChatMsg());
-				} else if (event.getSource() == play) {
-					loginScreen();
-				} else if (event.getSource() == quit) {
-					window.close();
-				} else if (event.getSource() == help) {
-					// TODO: need to make a help thing which tells the user how
-					// to play the game
-					System.out.println("help me");
-				} else if (event.getSource() == login) {
-					// TODO: set secected avatar
-					// TODO: check login was correct
-					// TODO set the Avatars whicha re all the palyes currently in
-					// the waiting room
-					waitingRoom();
-				} else if (event.getSource() == quitLogin) {
-					window.close();
-				} else if (event.getSource() == beginGame) {
-					// TODO: check that there are 2 > players only start the
-					// game if there are else promt a masg and also let the
-					// other players know the game is starting
-					startGame();
-				} else if (event.getSource() == quitWaitingRoom) {
-					window.close();
-				}
-
-			}
-		};
+	public void setTime(String worldTime) {
+		this.clockTime = worldTime;
 	}
 
 	/**
-	 * this methods is used to listen for keys being pressed and will respond
-	 * Accordingly
+	 * this method will return the window
+	 * 
+	 * @return
 	 */
-	private void keyEventHander() {
-		keyEvent = new EventHandler<KeyEvent>() {
-
-			@Override
-			public void handle(KeyEvent event) {
-				// getSorce will give the control which caused the event
-				if (event.getCode() == KeyCode.LEFT) {
-					// this is for moving left
-					System.out.println("left");
-				} else if (event.getCode() == KeyCode.RIGHT) {
-					// this is for moving right
-					System.out.println("right");
-				} else if (event.getCode() == KeyCode.UP) {
-					// this is for moving up
-					System.out.println("up");
-				} else if (event.getCode() == KeyCode.DOWN) {
-					// this is for moving down
-					System.out.println("down");
-				}
-
-			}
-		};
-	}
-
-	/**
-	 * this this is used to listen for mouse clicks on different controls
-	 */
-	private void mouseEventHander() {
-		mouseEvent = new EventHandler<MouseEvent>() {
-
-			@Override
-			public void handle(MouseEvent event) {
-				// Currently this listen to clicks on the items
-				System.out.println("here");
-			}
-		};
+	public Stage getWindow() {
+		return window;
 	}
 
 	/**

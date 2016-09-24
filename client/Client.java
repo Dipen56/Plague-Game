@@ -1,61 +1,122 @@
 package client;
 
-import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.net.Socket;
+import java.util.HashMap;
+import java.util.Map;
 
-import client.ThreadClient;
-import client.rendering.Rendering;
-import client.view.GUI;
-import client.view.ViewControler;
-import server.PacketTypes;
+import server.ParserUtilities;
 
 /**
- *
- * @author Rafaela Tabay 3003500871
+ * This is the client side. This class should be integrated with GUI
+ * 
+ * NOTE: This class is not completed. I moved everything in client into ClientMain. This
+ * class is probably to be deleted.
+ * 
+ * @author Rafaela & Hector
  *
  */
+public class Client extends Thread {
 
-public class Client {
+    private final Socket socket;
+    private DataOutputStream output;
+    private DataInputStream input;
+    private int uid;
 
-	public static void main(String[] args) throws IOException, InterruptedException {
-		PacketTypes p = new PacketTypes();
-		PacketTypes.Message message;
-		PacketTypes.LogIn login = null;
-		// GUI gui = new GUI(); i think this is not needed instead
+    /*
+     * TODO: In this class or in Rendering class, we should have a Map<Avatar, Position>
+     * to keep track of all other player's location. This field is updated in every
+     * broadcast.
+     */
 
-		ViewControler viewControler = new ViewControler(args);
-		Rendering renderer;
-		String consoleMessage;
-		BufferedReader bf = new BufferedReader(new InputStreamReader(System.in));
+    /*
+     * This is a mirror of the field, areas, in Game class, except the area is replaced
+     * with a char[][]
+     */
+    private Map<Integer, char[][]> areas;
 
-		/*
-		 * This is just for testing purposes. It reads the input from the
-		 * console and constructs a message or log in packet and broadcasts it
-		 * to each client
-		 */
-		String servername = bf.readLine().trim();
-		ThreadClient clientThread = new ThreadClient(servername, viewControler);
-		clientThread.start(); // start thread
-		consoleMessage = "Welcome to the SERVER!\n" + "IP address is : " + clientThread.getClientAddress()
-				+ " Port number is " + clientThread.getClientPort() + "\n";
-		consoleMessage += "Pls enter a username";
-		System.out.println(consoleMessage);
+    /*
+     * TODO; It may be a good idea to integrate the Client class with the Rendering class.
+     * If not, the Client class should have access to Rendering class, so he can tell
+     * Rendering what to render.
+     */
 
-		login = p.new LogIn(("1" + bf.readLine()).getBytes());
-		login.sendMessage(clientThread);
-		String m;
-		while (true) {
-			try {
-				m = bf.readLine();
-				System.out.println("debugger: " + m);
-				message = p.new Message(("[" + login.getUserName() + "]: " + m).getBytes());
-				message.sendMessage(clientThread);
-			} catch (IOException e) {
-				e.getMessage();
-				break;
-			}
+    public Client(Socket socket) {
+        this.socket = socket;
+        areas = new HashMap<>();
+    }
+    public Client(String ip, int port, String userName, int avatarID) {
+		// TODO: still need to add avatar in and also make use of the username
+		// System.out.println("Server address?");
+    	areas = new HashMap<>();
+		String tempIp = ParserUtilities.parseString();
+		// System.out.println("Port number?");
+		int tempPort = ParserUtilities.parseInt(0, 99999);
+		Socket s = null;
+		try {
+			s = new Socket(ip, port);
+		} catch (IOException e) {
+			System.err.println("Failed to connect to server, I/O exceptions, " + e.toString());
+			System.exit(1);
 		}
-
+		this.socket = s;
+		run();
 	}
+
+    @Override
+    public void run() {
+        try {
+            output = new DataOutputStream(socket.getOutputStream());
+            input = new DataInputStream(socket.getInputStream());
+
+            // First, receive from server about the game world
+
+            String incoming = input.readUTF();
+
+            while (!incoming.equals("Map done")) {
+                ParserUtilities.parseMap(areas, incoming);
+                incoming = input.readUTF();
+            }
+
+            // second, receive from the server about the client id, stuff, initialise the
+            // player.
+
+            // TODO choose an avatar and type in a name, this should be GUI instead of
+            // console.
+            System.out.println("Please choose your Avatar(1-4):");
+            byte avatarIndex = (byte) ParserUtilities.parseInt(1, 4);
+            output.writeByte(avatarIndex - 1);
+
+            System.out.println("Please type in your name:");
+            String name = ParserUtilities.parseString();
+            output.writeUTF(name);
+            output.flush();
+
+            uid = input.readInt();
+            System.out.println("Your uId is: " + uid);
+
+            // last, a while true loop to let the client communicate with server.
+            boolean connected = true;
+            while (connected) {
+
+                // read in broadcast
+
+                // update gui
+
+                // when the client sent an disconnect flag, set connected = false
+
+            }
+
+        } catch (IOException e) {
+            System.err.println("I/O Error: " + e.getMessage());
+        } finally {
+            try {
+                socket.close();
+            } catch (IOException e) {
+                System.out.println("I/O error. But who cares, disconnected anyway. ");
+            }
+        }
+    }
 }
