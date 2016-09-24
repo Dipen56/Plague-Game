@@ -28,7 +28,8 @@ import javafx.scene.paint.*;
 
 public class Rendering {
 	private static final String PLAYER_IMAGE = "/standingstillrear.png";
-	private static final String BACKGROUND_IMAGE = "/background.gif";
+	// private static final String BACKGROUND_IMAGE = "/background.gif";
+	private static final String BACKGROUND_IMAGE = "/night.jpg";
 	private static final String GRASS_IMAGE = "/grass.png";
 	private static final String TREE_IMAGE = "/tree.png";
 	private static final String CHEST_IMAGE = "/chest.png";
@@ -44,11 +45,15 @@ public class Rendering {
 	public int centerWidth = gamePaneWidth / 2;
 	public int centerHeght = gamePaneHeight;
 	private MapParser mapParser;
-	private Point playerLoc;
+	private Point playerLoc = new Point(5, 1);
+	private int squaresInFront = 0;
+	private int squaresToLeft = 0;
+	private int squaresToRight = 0;
 	private Player player;
 	private Map<Integer, Player> playersOnMap;
 	private Map<Integer, Area> map;
 	private int avatarID;
+	private String direction;
 
 	public Rendering() {
 		// will need to get board size passed in
@@ -79,24 +84,39 @@ public class Rendering {
 		// method below first before calling this method
 		this.group = renderGroup;
 		Image image = loadImage(BACKGROUND_IMAGE);
+		Image character = loadImage(PLAYER_IMAGE);
 		Image grass = loadImage(GRASS_IMAGE);
 		ImageView imageViewNight = new ImageView();
 		imageViewNight.setImage(image);
 		imageViewNight.setFitWidth(gamePaneWidth + 3);
 		imageViewNight.setFitHeight(gamePaneHeight + 35);
 		group.getChildren().add(imageViewNight);
-		int squaresInFront = 0;// the number of squares on the player's face
+		// int squaresInFront = 0;// the number of squares on the player's face
 		// side
-		int squaresToLeft = 0;// the number of squares on the player's left
+		// int squaresToLeft = 0;// the number of squares on the player's left
 		// side
-		int squaresToRight = 0;// //the number of squares on the player's
+		// int squaresToRight = 0;// //the number of squares on the player's
 		// right side
 		// this will be changed to the real players pos apon integration
-		playerLoc = new Point(5, 0);
+		// playerLoc = new Point(5, 0);
 		int boardSize = 10;
-		squaresInFront = boardSize - playerLoc.y;
-		squaresToLeft = (boardSize - playerLoc.x) - 1;
-		squaresToRight = (boardSize - squaresToLeft);
+		// squaresInFront = boardSize - playerLoc.y;
+		// squaresToLeft = (boardSize - playerLoc.x) - 1;
+		// squaresToRight = (boardSize - squaresToLeft);
+		if (direction.equals("up")) {
+			squaresInFront = boardSize - playerLoc.y;
+			squaresToLeft = (boardSize - playerLoc.x) - 1;
+			squaresToRight = (boardSize - squaresToLeft);
+		} else if (direction.equals("down")) {
+		} else if (direction.equals("left")) {
+			squaresToRight = squaresInFront;
+			squaresInFront = squaresToLeft;
+			squaresToLeft = boardSize - squaresToRight;
+		} else if (direction.equals("right")) {
+			squaresToLeft = squaresInFront;
+			squaresInFront = squaresToRight;
+			squaresToRight = (boardSize - squaresToLeft);
+		}
 
 		// this is used to for the top line points x0 and x1 which will be
 		// scaled from larger to smaller
@@ -240,8 +260,9 @@ public class Rendering {
 
 		}
 		// TODO: call the render avatar method here
-		renderObjects();
+		// renderObjects();
 
+		renderObjects();
 	}
 
 	/**
@@ -451,6 +472,10 @@ public class Rendering {
 			topLine = topLine - tileHeight * Math.pow(scaleY, row + 1);
 
 		}
+	}
+
+	public void setDirection(String dir) {
+		this.direction = dir;
 	}
 
 	/**
