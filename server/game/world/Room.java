@@ -1,5 +1,7 @@
 package server.game.world;
 
+import java.util.List;
+
 /**
  * This class represents a room.
  *
@@ -29,9 +31,10 @@ public class Room extends Area implements Lockable {
         this.keyID = keyID;
         this.isLocked = isLocked;
     }
+    
 
     /**
-     * Constructor used in test. Probably will be discarded.
+     * Constructor used only in text client. Can be removed after testing.
      * 
      * @param board
      * @param areaID
@@ -40,6 +43,21 @@ public class Room extends Area implements Lockable {
      */
     public Room(MapElement[][] board, int areaID, int keyID, boolean isLocked) {
         super(board, areaID);
+        this.keyID = keyID;
+        this.isLocked = isLocked;
+    }
+    
+    /**
+     * Constructor used in game load.
+     * 
+     * @param board
+     * @param areaID
+     * @param keyID
+     * @param isLocked
+     * @param A list of possible player spawn locations.
+     */
+    public Room(MapElement[][] board, int areaID, int keyID, boolean isLocked, List<int[]> playerPortals) {
+        super(board, areaID, playerPortals);
         this.keyID = keyID;
         this.isLocked = isLocked;
     }

@@ -4,13 +4,9 @@ import java.io.File;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-
-import dataStorage.alternates.AltGame;
-import server.game.Game;
-
 import javax.xml.bind.Unmarshaller;
+
+import dataStorage.adapters.GameAdapter;
 
 public class XmlFunctions {
 
@@ -41,15 +37,15 @@ public class XmlFunctions {
 	 * Creates a new Game object from an xml file.
 	 * @return A Game object.
 	 */
-	public static AltGame loadFile(){
-		AltGame game = null;
+	public static GameAdapter loadFile(){
+		GameAdapter game = null;
 		
 		try {
 			File file = new File("save.xml");		// Gets the xml file
-			JAXBContext jaxbContext = JAXBContext.newInstance(AltGame.class);
+			JAXBContext jaxbContext = JAXBContext.newInstance(GameAdapter.class);
 
 			Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();	//The object which converts our file from xml to an object.
-			game = (AltGame) jaxbUnmarshaller.unmarshal(file);	//loads the game
+			game = (GameAdapter) jaxbUnmarshaller.unmarshal(file);	//loads the game
 		} catch (JAXBException e) {
 			e.printStackTrace();
 		}

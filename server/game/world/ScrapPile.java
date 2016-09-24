@@ -3,6 +3,8 @@ package server.game.world;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
 import server.game.GameError;
 import server.game.items.Item;
 import server.game.player.Player;
@@ -13,6 +15,7 @@ import server.game.player.Player;
  * @author Hector
  *
  */
+
 public class ScrapPile extends Obstacle implements Container {
 
     private List<Item> loot;

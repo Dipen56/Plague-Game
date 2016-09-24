@@ -21,18 +21,22 @@ public class Area {
      * Width of the map.
      */
     private int width;
+    
     /**
      * Height of the map.
      */
     private int height;
+    
     /**
      * The map itself.
      */
     protected MapElement[][] map;
+    
     /**
      * Each area has a unique ID number, which can be used for locating player.
      */
     private int areaId;
+    
     /**
      * Empty position, which can be used to spawn players.
      */
@@ -54,11 +58,10 @@ public class Area {
     }
 
     /**
-     * Constructor used in text-based UI. Probably will be discarded.
-     *
-     * @param width
-     * @param height
+     * Constructor used only for text client. Can be removed after testing.
      * @param board
+     * @param Area id.
+     * @param A list of player spawn locations.
      */
     public Area(MapElement[][] board, int areaID) {
         this.map = board;
@@ -66,7 +69,26 @@ public class Area {
         this.height = board.length;
         this.areaId = areaID;
     }
+    
+    /**
+     * Constructor used in data storage.
+     *
+     * @param board
+     * @param Area id.
+     * @param A list of player spawn locations.
+     */
+    public Area(MapElement[][] board, int areaID, List<int[]> playerPortals) {
+        this.map = board;
+        this.width = board[0].length;
+        this.height = board.length;
+        this.areaId = areaID;
+        this.playerPortals = playerPortals;
+    }
 
+    public List<int[]> getPlayerPortals(){
+    	return this.playerPortals;
+    }
+    
     public int getWidth() {
         return width;
     }
@@ -343,7 +365,10 @@ public class Area {
 
         for (MapElement[] row : map) {
             for (MapElement col : row) {
-                sb.append(col.toString());
+            	if(col != null)
+            		sb.append(col.toString());
+            	else
+            		sb.append(" ");
             }
             sb.append("\n");
         }

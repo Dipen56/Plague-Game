@@ -6,7 +6,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Random;
+import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -19,6 +21,7 @@ import server.game.player.Player;
 import server.game.player.Position;
 import server.game.world.Area;
 import server.game.world.Container;
+import server.game.world.GroundSpace;
 import server.game.world.Lockable;
 import server.game.world.MapElement;
 import server.game.world.Obstacle;
@@ -38,6 +41,7 @@ import server.game.world.TransitionSpace;
  *
  */
 public class Game {
+
     /**
      * The visibility in daytime. This number indicates that everything within this
      * distance on world grid is visible.
@@ -60,6 +64,8 @@ public class Game {
      */
     // private static final float SPAWN_IN_WORLD_CHANCE = 0.6f;
 
+    public static final GroundSpace groundSpace = new GroundSpace();
+    
     /**
      * World map
      */
@@ -74,7 +80,7 @@ public class Game {
      */
     private Map<Integer, Player> players;
     /**
-     * For testing. Will be removed.
+     * For testing. Will be removed.	
      */
     private Player player;
     /**
@@ -130,21 +136,33 @@ public class Game {
     }
 
     /**
-     * Constructor used for data storage test. Will not exist in final version.
-     * 
-     * @param world
-     * @param entrances
-     * @param player
-     */
-    public Game(Area world, Map<Integer, Area> areas, Player player) {
+	 * Constructor used for data storage. 
+	 * @param The main game world.
+	 * @param A map from areaID's to areas.
+	 * @param A map from playerID's to players.
+	 * @param A list of torches. This can be null.
+	 */
+	public Game(Area world, Map<Integer, Area> areas, Map<Integer, Player> players, List<Torch> torches) {
+		//torhces 
 
-        this.world = world;
-        this.areas = areas;
-        this.player = player;
-        this.players = new HashMap<>();
-        this.torches = new ArrayList<>();
-        joinPlayer(this.player);
-    }
+		this.world = world;
+		this.areas = areas;
+		this.players = players;
+		this.players = new HashMap<>();
+		if(torches == null){
+			this.torches = new ArrayList<>();
+		}
+		else{
+			this.torches = torches;
+		}
+		for(Player p : players.values()){
+			joinPlayer(p);
+		}
+	}
+
+	public List<Torch> getTorches() {
+		return this.torches;
+	}
 
     /**
      * Joins a player in game.
@@ -832,7 +850,9 @@ public class Game {
         if (getClass() != obj.getClass())
             return false;
         Game other = (Game) obj;
+        
         if (areas == null) {
+        	
             if (other.areas != null)
                 return false;
         } else if (!areas.equals(other.areas))

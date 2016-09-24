@@ -1,9 +1,8 @@
 package client.rendering;
 
-import java.awt.Color;
 import java.awt.Point;
-
-import javax.swing.JLabel;
+import java.util.HashMap;
+import java.util.Map;
 
 import client.view.GUI;
 
@@ -12,8 +11,9 @@ import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.shape.Polygon;
+import server.game.player.Player;
+import server.game.world.Area;
 import javafx.scene.paint.ImagePattern;
-import javafx.scene.paint.*;
 
 /**
  * This class represents the main rendering class, this class will control the
@@ -25,7 +25,8 @@ import javafx.scene.paint.*;
 
 public class Rendering {
 	private static final String PLAYER_IMAGE = "/standingstillrear.png";
-	//private static final String BACKGROUND_IMAGE = "/background.gif";
+
+	// private static final String BACKGROUND_IMAGE = "/background.gif";
 	private static final String BACKGROUND_IMAGE = "/night.jpg";
 	private static final String GRASS_IMAGE = "/grass.png";
 	private static final String TREE_IMAGE = "/tree.png";
@@ -43,11 +44,16 @@ public class Rendering {
 	public int centerWidth = gamePaneWidth / 2;
 	public int centerHeight = gamePaneHeight;
 	private MapParser mapParser;
-	private Point playerLoc = new Point (4,0);
-	private int squaresInFront =0;
-	private int squaresToLeft =0;
-	private int squaresToRight= 0;
 
+	private Point playerLoc = new Point(5, 1);
+	private int squaresInFront = 0;
+	private int squaresToLeft = 0;
+	private int squaresToRight = 0;
+	private Player player;
+	private Map<Integer, Player> playersOnMap;
+	private Map<Integer, Area> map;
+	private int avatarID;
+	private String direction;
 
 	public Rendering() {
 		// will need to get board size passed in
@@ -56,12 +62,28 @@ public class Rendering {
 
 
 	/**
+	 * this constructor is to be used for integration and will be passed in a
+	 * Player and a map, and also all the other player on the map and also the
+	 * avatar id atm.
+	 * 
+	 * @param player
+	 */
+	public Rendering(Player player, Map<Integer, Player> playersOnMap, Map<Integer, Area> map, int avatarID) {
+		this.player = player;
+		this.playersOnMap = playersOnMap;
+		this.map = map;
+		this.avatarID = avatarID;
+	}
+
+	/**
 	 * this method is used to render the game
 	 * @param direction 
 	 * @param group
 	 */
-	public void render(Group renderGroup, String direction){
-		System.out.println("Game pane width " + gamePaneWidth);
+
+	public void render(Group renderGroup) {
+		// TODO: get ride of the renderGroup parameters call the set group
+		// method below first before calling this method
 		this.group = renderGroup;
 		Image character =  loadImage(PLAYER_IMAGE);
 		Image image = loadImage(BACKGROUND_IMAGE);
@@ -71,34 +93,25 @@ public class Rendering {
 		imageViewNight.setFitWidth(gamePaneWidth + 3);
 		imageViewNight.setFitHeight(gamePaneHeight + 35);
 		group.getChildren().add(imageViewNight);
-		 //squaresInFront = 0;// the number of squares on the player's face
-		// side
-		 //squaresToLeft = 0;// the number of squares on the player's left
-		// side
-		 //squaresToRight = ;// //the number of squares on the player's
-		// right side
-		// this will be changed to the real players pos apon integration
-		//this.playerLoc = new Point(5, 0);
-		
+
 		int boardSize = 10;
-			if (direction.equals("up")){
-			squaresInFront =boardSize - playerLoc.y;
+
+		if (direction.equals("up")) {
+			squaresInFront = boardSize - playerLoc.y;
 			squaresToLeft = (boardSize - playerLoc.x) - 1;
-			squaresToRight =  (boardSize - squaresToLeft);
-		}
-		else if (direction.equals("down")){
-		}
-		else if(direction.equals("left")){
-			squaresToRight =  squaresInFront ;
-			squaresInFront = squaresToLeft ;
-			squaresToLeft = boardSize - squaresToRight ;
-		}
-		else if (direction.equals("right")){
+			squaresToRight = (boardSize - squaresToLeft);
+		} else if (direction.equals("down")) {
+		} else if (direction.equals("left")) {
+			squaresToRight = squaresInFront;
+			squaresInFront = squaresToLeft;
+			squaresToLeft = boardSize - squaresToRight;
+		} else if (direction.equals("right")) {
 			squaresToLeft = squaresInFront;
 			squaresInFront = squaresToRight;
-			squaresToRight =(boardSize -  squaresToLeft) ;
+			squaresToRight = (boardSize - squaresToLeft);
 		}
-		//////////////////////////////////////////////////
+
+
 		// this is used to for the top line points x0 and x1 which will be
 		// scaled from larger to smaller
 		double topLine = centerHeight;
@@ -242,6 +255,7 @@ public class Rendering {
 			charRender();
 		}
 		renderObjects(squaresInFront, squaresToLeft, squaresToRight, playerLoc.x,playerLoc.y);
+
 	}
 
 	public void charRender(){
@@ -287,7 +301,7 @@ public class Rendering {
 				double y0 = topLine - tileHeight * Math.pow(scaleY, row + 1);
 				double height = (y3 - y0);
 				double width = (x2 - x3);
-				//System.out.println(worldMap[row][col]);
+				// System.out.println(worldMap[row][col]);
 				if (worldMap[row][col].equals("tree")) {
 					Image tree = loadImage(TREE_IMAGE);
 					ImageView imageViewTree = new ImageView();
@@ -407,8 +421,9 @@ public class Rendering {
 					double tempRighty0 = topLine - tileHeight * Math.pow(scaleY, row + 1);
 					double heightRight = (tempRighty3 - tempRighty0);
 					double widthRight = (tempRightx2 - tempRightx3);
-					//System.out.println(gamePaneWidth);
-					//System.out.println(tempRightx0 + " " + tempRightx1 + " " + tempRightx2 + " " + tempRightx3);
+					// System.out.println(gamePaneWidth);
+					// System.out.println(tempRightx0 + " " + tempRightx1 + " "
+					// + tempRightx2 + " " + tempRightx3);
 					if (tempRightx2 != gamePaneWidth && tempRightx1 != gamePaneWidth) {
 						// System.out.println(worldMap[row][col - j]);
 						if (worldMap[row][j-col].equals("tree")) {
@@ -457,6 +472,45 @@ public class Rendering {
 		}
 	}
 
+	public void setDirection(String dir) {
+		this.direction = dir;
+	}
+
+	/**
+	 * this method will render the aviator to the screen
+	 */
+	public void renderAvatar() {
+		// TODO: render the avartar to the center of the screen
+	}
+
+	/**
+	 * this method is used to move the player in the screen given player, it
+	 * then calls the render method
+	 * 
+	 * @param player
+	 */
+	public void movePlayer(Player player) {
+		this.player = player;
+		// TODO: call render;
+		// render();
+	}
+
+	/**
+	 * this method is used to set the group which is used to render the images
+	 * on the screen and will be used by the gui class
+	 * 
+	 * @param renderGroup
+	 */
+	public void setGroup(Group renderGroup) {
+		this.group = renderGroup;
+	}
+
+	/**
+	 * this is just a helper method which is used to load images
+	 * 
+	 * @param name
+	 * @return
+	 */
 	private Image loadImage(String name) {
 		Image image = new Image(this.getClass().getResourceAsStream(name));
 		return image;

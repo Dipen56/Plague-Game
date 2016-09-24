@@ -1,7 +1,10 @@
 package server.game.world;
 
+
 import java.util.Iterator;
 import java.util.List;
+
+import javax.xml.bind.annotation.XmlRootElement;
 
 import server.game.GameError;
 import server.game.items.Item;

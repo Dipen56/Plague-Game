@@ -13,7 +13,8 @@ import server.game.world.Container;
 import server.game.world.Lockable;
 
 /**
- * This class represents a player.
+ * This class represents a player. 
+ * When the player is loaded from a data file, the Builder pattern is used in the construction.
  *
  * @author Hector (Fang Zhao 300364061), Daniel Anastasi 300145878
  *
@@ -31,7 +32,7 @@ public class Player {
     /**
      * User Id to identify this player.
      */
-    private final int uID;
+    private int uID;
     /**
      * User Id to identify this player.
      */
@@ -39,11 +40,11 @@ public class Player {
     /**
      * player's name
      */
-    private final String name;
+    private String name;
     /**
      * What virus this player has
      */
-    private final Virus virus;
+    private Virus virus;
     /**
      * The player's health
      */
@@ -51,7 +52,7 @@ public class Player {
     /**
      * Only used for testing validity of game load. Do not delete.
      */
-    private int healthSavingConstant = 0;
+    private int healthSavingValue = 0;
     /**
      * Indicates whether the player is alive or not.
      */
@@ -68,13 +69,19 @@ public class Player {
      * The player's coordinate
      */
     private Position position;
+    
+    /**
+     * Used to indicate that the player object is being loaded from a data file. 
+     * When true, certain setter methods can be used to aid in this player's construction. via the builder pattern. 
+     */
+    private boolean loading;
 
     /**
      * Constructor
      *
      * @param uID
+     * @param avatar
      * @param name
-     * @param virus
      */
     public Player(int uID, Avatar avatar, String name) {
         this.uID = uID;
@@ -91,30 +98,92 @@ public class Player {
     }
 
     /**
-     * A construction used for testing data storage.
+     * A construction used for loading this player from a data file.
      * 
      * The builder pattern was considered as an alternative to this constructor. As this
      * will only be constructed once per game load, that pattern was considered
      * unnecessary.
      * 
      * @param ID
+     * @param avatar
      * @param name
      * @param virus
      * @param health
      * @param isAlive
      * @param newInventory
      */
-	public Player(int ID, Avatar avatar, String name, Virus virus, int health, boolean isAlive, List<Item> newInventory) {
-        this.healthSavingConstant = health;	// Kept for testing game load. Health field is decremented with time, so can't use for test.
-        this.uID = ID;
+	public Player(Avatar avatar,int health) {
+		/* Kept for testing game load. Health field is decremented with time, so can't use for test.
+		 * Placement of this line is time-critical.
+		 */
+		this.healthSavingValue = health;	
+	    this.health = health;
         this.avatar = avatar;
-        this.name = name;
-        this.virus = virus;
-        this.health = health;
-        this.isAlive = isAlive;
-        this.inventory = newInventory;
-    }
 
+        this.loading = true;	//required to load with builder pattern.
+    }
+	
+	public int getHealthFromSave(){
+		return this.healthSavingValue;
+	}
+
+	public Avatar getAvatar() {
+		return this.avatar;
+	}
+	
+	/**
+	 * Sets the virus field. Can only be used while the player is loading from a data file.
+	 * @param A Virus.
+	 */
+	public void setVirus(Virus v){
+		if(loading)
+			this.virus = v;
+	}
+	
+	/**
+	 * Sets the isAlive field. Can only be used while the player is loading from a data file.
+	 * @param A boolean describing whether the player is alive or not.
+	 */
+	public void setIsAlive(boolean isAlive){
+		if(loading)
+			this.isAlive = isAlive;
+	}
+	
+	/**
+	 * Sets the inventory field. Can only be used while the player is loading from a data file.
+	 * @param A list of items.
+	 */
+	public void setInventory(List<Item> newInventory){
+		if(loading)
+			this.inventory = newInventory;
+	}
+	
+	/**
+	 * Sets the name field. Can only be used while the player is loading from a data file.
+	 * @param The player's name.
+	 */
+	public void setName(String name){
+		if(loading)
+			this.name = name;
+	}
+	
+	/**
+	 * Sets the name field. Can only be used while the player is loading from a data file.
+	 * @param The player's name.
+	 */
+	public void setId(int id){
+		if(loading)
+			this.uID = id;
+	}
+	
+	
+	/**
+	 * Sets the loading field to false to prevent any calls to builder setter methods.
+	 */
+	public void turnOffLoading(){
+		this.loading = false;
+	}
+	
     /**
      * This method increases (or decrease if the argument is a negative integer) player's
      * health (time left).
@@ -375,7 +444,7 @@ public class Player {
      * game states from before and after a game load.
      */
     public void saveRecordOfHealth() {
-        this.healthSavingConstant = health;
+        this.healthSavingValue = health;
     }
 
     public String getName() {
@@ -496,7 +565,7 @@ public class Player {
         int result = 1;
         result = prime * result + ((avatar == null) ? 0 : avatar.hashCode());
         result = prime * result + health;
-        result = prime * result + healthSavingConstant;
+        result = prime * result + healthSavingValue;
         result = prime * result + ((inventory == null) ? 0 : inventory.hashCode());
         result = prime * result + (isAlive ? 1231 : 1237);
         result = prime * result + (isHoldingTorch ? 1231 : 1237);
@@ -520,7 +589,7 @@ public class Player {
             return false;
         if (health != other.health)
             return false;
-        if (healthSavingConstant != other.healthSavingConstant)
+        if (healthSavingValue != other.healthSavingValue)
             return false;
         if (inventory == null) {
             if (other.inventory != null)
