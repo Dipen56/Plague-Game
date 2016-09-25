@@ -21,6 +21,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.input.KeyCode;
 import javafx.stage.WindowEvent;
 
+import java.nio.file.attribute.PosixFilePermission;
+
 import client.rendering.Rendering;
 
 /**
@@ -141,8 +143,8 @@ public class GUI extends Application {
 		Group slashGroup = new Group();
 		Image slashBackground = loadImage(SLASH_SCREEN_IMAGE);
 		ImageView slashBackgroundImage = new ImageView(slashBackground);
-		slashBackgroundImage.setFitHeight(HEIGHT_VALUE + 20);
-		slashBackgroundImage.setFitWidth(WIDTH_VALUE + 20);
+		slashBackgroundImage.setFitHeight(HEIGHT_VALUE + 18);
+		slashBackgroundImage.setFitWidth(WIDTH_VALUE + 18);
 		VBox buttonBox = new VBox(10);
 		buttonBox.setLayoutX(50);
 		buttonBox.setLayoutY(HEIGHT_VALUE / 2+(50));
@@ -176,15 +178,15 @@ public class GUI extends Application {
 		keyEvent = viewControler.getKeyEventHander();
 		mouseEvent = viewControler.getMouseEventHander();
 		windowEvent = viewControler.getWindowEventHander();
-		VBox loginBox = new VBox(5);
+		VBox loginBox = new VBox(10);
 		info = new Label();
 		info.setText("Enter The IP,Port and UserName");
 		loginBox.getChildren().add(info);
 		BorderPane loginBorderPane = new BorderPane();
-
+	
 		VBox inputStore = new VBox(5);
-
 		HBox userNameBox = new HBox(3);
+		
 		Label user = new Label("Enter UserName");
 		userNameInput = new TextField();
 		userNameBox.getChildren().addAll(user, userNameInput);
@@ -197,6 +199,8 @@ public class GUI extends Application {
 		// loginBox.getChildren().add(ipBox);
 
 		HBox portBox = new HBox(3);
+		portBox.alignmentProperty().set(Pos.CENTER);
+		
 		Label port = new Label("Enter Port");
 		portInput = new TextField();
 		portBox.getChildren().addAll(port, portInput);
@@ -211,6 +215,7 @@ public class GUI extends Application {
 		loginBorderPane.setRight(avatarGroup);
 		// TODO: need to add some from of action listener here to change images
 		FlowPane buttons = new FlowPane();
+		buttons.alignmentProperty().set(Pos.CENTER);
 		buttons.setHgap(10);
 		login = new Button("Login");
 		login.setOnAction(actionEvent);
@@ -218,7 +223,7 @@ public class GUI extends Application {
 		quitLogin.setOnAction(actionEvent);
 		buttons.getChildren().addAll(login, quitLogin);
 		loginBox.getChildren().add(buttons);
-		Scene slashScene = new Scene(loginBox, WIDTH_VALUE / 2, HEIGHT_VALUE / 2);
+		Scene slashScene = new Scene(loginBox, 350, 180);
 		window.setScene(slashScene);
 
 	}

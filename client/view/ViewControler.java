@@ -16,7 +16,7 @@ import javafx.stage.WindowEvent;
  * inputs from the user, informing the model and/or the view to change as
  * appropriate.
  * 
- * @author Dipen
+ * @author Dipen & Hector
  *
  */
 public class ViewControler {
