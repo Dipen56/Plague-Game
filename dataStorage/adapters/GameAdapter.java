@@ -8,6 +8,7 @@ import java.util.Map;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElements;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import server.game.Game;
@@ -25,10 +26,11 @@ import server.game.world.Area;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class GameAdapter{
 
+
 	/**
-	 * Whatever you do don't delete either this altObstTypeProtector or altChestTypeProtector. 
+	 * Whatever you do don't delete either this altObstTypeProtector or altChestTypeProtector.
 	 * I don't know why but them being here allows the parser to put objects of their types into the xml file.
-	 * Without it, the parser does not recognise these types of object, and they will not be written to the game save. 
+	 * Without it, the parser does not recognise these types of object, and they will not be written to the game save.
 	 */
 	@XmlElement
 	private ObstacleAdapter ObstTypeProtector = new ObstacleAdapter();
@@ -46,10 +48,10 @@ public class GameAdapter{
 	private ScrapPileAdapter ScrapPileTypeProtector = new ScrapPileAdapter();
 	@XmlElement
 	private TransitionSpaceAdapter TransitionSpaceTypeProtector = new TransitionSpaceAdapter();
-	
-	
+
+
 	public static final GroundSpaceAdapter groundSpaceAdapter= new GroundSpaceAdapter();
-	
+
 	/**
 	 * An alternate version of a World object.
 	 */
@@ -80,7 +82,7 @@ public class GameAdapter{
 	 */
 	@XmlElements
 	private int gameID;
-	
+
 	/**
 	 * Only to be called by XML marshaller.
 	 **/
@@ -107,7 +109,7 @@ public class GameAdapter{
 		for(Map.Entry<Integer, Area> m: game.getAreas().entrySet()){
 			myInt = m.getKey();	//The key from the entry.
 			area = m.getValue();	//The value from the entry.
-			
+
 			if(area == null){
 				throw new RuntimeException("Integer mapped to null");
 			}
@@ -167,7 +169,7 @@ public class GameAdapter{
 				torches.add(this.torches[i].getOriginal());
 			}
 		}
-		Game game =  new Game(world, areas, players, torches, gameID);	
+		Game game =  new Game(world, areas, players, torches, gameID);
 
 		return game;
 	}
