@@ -264,8 +264,8 @@ public class Rendering {
 
 	public void charRender(){
 
-
 	}
+	
 	/**
 	 * this method is used to render the object in the game.
 	 */
