@@ -36,7 +36,7 @@ public class GUI extends Application {
 	// Constants Images
 	private static final String GAMEICON_IMAGE = "/game-icon.png";
 	private static final String INVENTORY_IMAGE = "/item-tray.png";
-	private static final String SLASH_SCREEN_IMAGE = "/spash-screen-background.jpg"; // this
+	private static final String SLASH_SCREEN_IMAGE = "/spash-screen-background.png"; // this
 																						// will
 	// be
 	// changed
@@ -143,21 +143,30 @@ public class GUI extends Application {
 		ImageView slashBackgroundImage = new ImageView(slashBackground);
 		slashBackgroundImage.setFitHeight(HEIGHT_VALUE + 20);
 		slashBackgroundImage.setFitWidth(WIDTH_VALUE + 20);
-		HBox buttonBox = new HBox(10);
-		buttonBox.setLayoutX((WIDTH_VALUE / 2) - (100));
-		buttonBox.setLayoutY(HEIGHT_VALUE / 2);
+		VBox buttonBox = new VBox(10);
+		buttonBox.setLayoutX(50);
+		buttonBox.setLayoutY(HEIGHT_VALUE / 2+(50));
+		
 		play = new Button("Play");
+		play.getStyleClass().add("button-slashscreen");
+		play.setPrefWidth(200);
 		play.setOnAction(actionEvent);
 		quit = new Button("Run Away");
+		quit.getStyleClass().add("button-slashscreen");
+		quit.setPrefWidth(200);
 		quit.setOnAction(actionEvent);
 		help = new Button("Help");
+		help.getStyleClass().add("button-slashscreen");
+		help.setPrefWidth(200);
 		help.setOnAction(actionEvent);
+		
 		buttonBox.getChildren().addAll(play, quit, help);
 		slashGroup.getChildren().add(slashBackgroundImage);
 		slashGroup.getChildren().add(buttonBox);
 		BorderPane slashBorderPane = new BorderPane();
 		slashBorderPane.getChildren().add(slashGroup);
 		Scene slashScene = new Scene(slashBorderPane, WIDTH_VALUE, HEIGHT_VALUE);
+		slashScene.getStylesheets().add(this.getClass().getResource(STYLE_CSS).toExternalForm());
 		window.setScene(slashScene);
 
 	}
