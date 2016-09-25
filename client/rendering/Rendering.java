@@ -2,7 +2,6 @@ package client.rendering;
 
 import java.awt.Point;
 
-
 import client.view.GUI;
 
 import javafx.scene.Group;
@@ -10,7 +9,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.shape.Polygon;
 import javafx.scene.paint.ImagePattern;
-
 
 /**
  * This class represents the main rendering class, this class will control the
@@ -42,6 +40,7 @@ public class Rendering {
 	private int squaresInFront = 0;
 	private int squaresToLeft = 0;
 	private int squaresToRight = 0;
+	private Group renderGroup;
 
 	public Rendering() {
 		// will need to get board size passed in
@@ -54,17 +53,12 @@ public class Rendering {
 	 * @param direction
 	 * @param renderGroup
 	 */
-	public void render(Group renderGroup, String direction) {
+	public void render(String direction) {
 		Image character = loadImage(PLAYER_IMAGE);
 		Image image = loadImage(BACKGROUND_IMAGE);
 		Image grass = loadImage(GRASS_IMAGE);
 		ImageView imageViewNight = new ImageView();
-		imageViewNight.setImage(image);
-		imageViewNight.setFitWidth(gamePaneWidth + 3);
-		imageViewNight.setFitHeight(gamePaneHeight + 35);
-		renderGroup.getChildren().add(imageViewNight);
-		// this.playerLoc = new Point(5, 0);
-		
+		addImage(image, imageViewNight, renderGroup, gamePaneWidth + 3, gamePaneHeight + 35, 0, 0);
 		setNumSquares(direction, boardSize);
 		//////////////////////////////////////////////////
 		// this is used to for the top line points x0 and x1 which will be
@@ -92,7 +86,6 @@ public class Rendering {
 		for (int i = 0; i < squaresInFront; i++) {
 			// tiles in front of the player is rendered first
 			Polygon p = new Polygon();
-
 			p.setFill(new ImagePattern(grass));
 			// origins
 			p.setLayoutY(10);
@@ -216,12 +209,6 @@ public class Rendering {
 			squaresInFront = boardSize - playerLoc.y;
 			squaresToLeft = (boardSize - playerLoc.x) - 1;
 			squaresToRight = (boardSize - squaresToLeft);
-			// String values = "squares in front " + squaresInFront +"\n";
-			// values+= "squares to the left" + squaresToLeft + "\n";
-			// values+= "squares to the right " + squaresToRight + "\n";
-			// System.out.println("up/n " + values);
-			// System.out.println("Loc Y " + playerLoc.y);
-			// System.out.println("Loc X " + playerLoc.x);
 		}
 
 		else if (direction.equals("down")) {
@@ -247,7 +234,8 @@ public class Rendering {
 
 	/**
 	 * this method is used to render the object in the game.
-	 * @param renderGroup 
+	 * 
+	 * @param renderGroup
 	 */
 	public void renderObjects(Group renderGroup) {
 		String[][] worldMap = mapParser.getMap();
@@ -261,7 +249,7 @@ public class Rendering {
 		double x2 = centerWidth + tileWidth / 2;
 		// this point is is the bot right and is set it the height of the game
 		// pane so at the bottom of window.
-		//double y2 = centerHeght;
+		// double y2 = centerHeght;
 		// this point is the bot lift and will also got from larger to smaller
 		// int previouX0
 		// it's twice the size of the set tile width
@@ -279,7 +267,7 @@ public class Rendering {
 			// front view
 			if (worldMap[row][col].equals("tree") || worldMap[row][col].equals("chest")) {
 				// this will draw the object that are in front
-				//double x1 = nowStartX + nowWidthOfSquare;
+				// double x1 = nowStartX + nowWidthOfSquare;
 				double x0 = nowStartX;
 				double y0 = topLine - tileHeight * Math.pow(scaleY, row + 1);
 				double height = (y3 - y0);
@@ -288,11 +276,11 @@ public class Rendering {
 				if (worldMap[row][col].equals("tree")) {
 					Image tree = loadImage(TREE_IMAGE);
 					ImageView imageViewTree = new ImageView();
-					addImage(tree, imageViewTree, renderGroup, width, height,x0 , y0);
+					addImage(tree, imageViewTree, renderGroup, width, height, x0, y0);
 				} else if (worldMap[row][col].equals("chest")) {
 					Image chest = loadImage(CHEST_IMAGE);
 					ImageView imageViewChest = new ImageView();
-					addImage(chest, imageViewChest, renderGroup, width, height,x0 , y0);
+					addImage(chest, imageViewChest, renderGroup, width, height, x0, y0);
 				}
 				// this will be the sqares to the left
 
@@ -318,25 +306,11 @@ public class Rendering {
 						if (worldMap[row][col - j].equals("tree")) {
 							Image tree = loadImage(TREE_IMAGE);
 							ImageView imageViewTree = new ImageView();
-							imageViewTree.setImage(tree);
-
-							imageViewTree.setFitHeight(heightleft);
-							imageViewTree.setFitWidth(widthleft);
-							// here is where we need to do the logic
-							imageViewTree.setX(tempLeftx0);
-							imageViewTree.setY(tempLefty0);
-							renderGroup.getChildren().add(imageViewTree);
+							addImage(tree, imageViewTree, renderGroup, widthleft, heightleft, tempLeftx0, tempLefty0);
 						} else if (worldMap[row][col - j].equals("chest")) {
-							Image tree = loadImage(CHEST_IMAGE);
-							ImageView imageViewTree = new ImageView();
-							imageViewTree.setImage(tree);
-
-							imageViewTree.setFitHeight(heightleft);
-							imageViewTree.setFitWidth(widthleft);
-							// here is where we need to do the logic
-							imageViewTree.setX(tempLeftx0);
-							imageViewTree.setY(tempLefty0);
-							renderGroup.getChildren().add(imageViewTree);
+							Image chest = loadImage(CHEST_IMAGE);
+							ImageView imageViewChest = new ImageView();
+							addImage(chest, imageViewChest, renderGroup, widthleft, heightleft, tempLeftx0, tempLefty0);
 						}
 					}
 
@@ -346,7 +320,6 @@ public class Rendering {
 			col = playerLoc.x;
 			for (int j = 0; j < 3; j++) {
 				if (worldMap[row][col - j].equals("tree") || worldMap[row][col - j].equals("chest")) {
-
 					// this will get the width of the square that is the on
 					// facing
 					// the player, the width will be the bot part of the facing
@@ -377,7 +350,6 @@ public class Rendering {
 					// left from larger
 					// to smaller
 
-					
 					double tempRightx0 = nowStartX + j * nowWidthOfSquare;
 					if (tempRightx0 > gamePaneWidth) {
 						tempRightx0 = gamePaneWidth;
@@ -386,34 +358,17 @@ public class Rendering {
 					double tempRighty0 = topLine - tileHeight * Math.pow(scaleY, row + 1);
 					double heightRight = (tempRighty3 - tempRighty0);
 					double widthRight = (tempRightx2 - tempRightx3);
-					// System.out.println(gamePaneWidth);
-					// System.out.println(tempRightx0 + " " + tempRightx1 + " "
-					// + tempRightx2 + " " + tempRightx3);
 					if (tempRightx2 != gamePaneWidth && tempRightx1 != gamePaneWidth) {
-						// System.out.println(worldMap[row][col - j]);
 						if (worldMap[row][col - j].equals("tree")) {
 							Image tree = loadImage(TREE_IMAGE);
 							ImageView imageViewTree = new ImageView();
-							imageViewTree.setImage(tree);
-							// no idea why the first image on the right is not
-							// draw
-							imageViewTree.setFitHeight(heightRight);
-							imageViewTree.setFitWidth(widthRight);
-							// here is where we need to do the logic
-							imageViewTree.setX(tempRightx0);
-							imageViewTree.setY(tempRighty0);
-							renderGroup.getChildren().add(imageViewTree);
+							addImage(tree, imageViewTree, renderGroup, widthRight, heightRight, tempRightx0,
+									tempRighty0);
 						} else if (worldMap[row][col - j].equals("chest")) {
-							Image tree = loadImage(CHEST_IMAGE);
-							ImageView imageViewTree = new ImageView();
-							imageViewTree.setImage(tree);
-
-							imageViewTree.setFitHeight(heightRight);
-							imageViewTree.setFitWidth(widthRight);
-							// here is where we need to do the logic
-							imageViewTree.setX(tempRightx0);
-							imageViewTree.setY(tempRighty0);
-							renderGroup.getChildren().add(imageViewTree);
+							Image chest = loadImage(CHEST_IMAGE);
+							ImageView imageViewChest = new ImageView();
+							addImage(chest, imageViewChest, renderGroup, widthRight, heightRight, tempRightx0,
+									tempRighty0);
 						}
 					}
 				}
@@ -423,7 +378,6 @@ public class Rendering {
 			// also be the top left part in the prevous tile
 			x3 = nowStartX;
 			y3 = topLine - tileHeight * Math.pow(scaleY, row + 1);
-
 			// update the bot left point to the previous tiles top part which
 			// will also be the top right part in the previous tile
 			x2 = nowStartX + nowWidthOfSquare;
@@ -434,11 +388,11 @@ public class Rendering {
 		}
 	}
 
-	private void addImage(Image image, ImageView imageView, Group renderGroup, double width, double height, double setX, double setY) {
+	private void addImage(Image image, ImageView imageView, Group renderGroup, double width, double height, double setX,
+			double setY) {
 		imageView.setImage(image);
 		imageView.setFitHeight(height);
 		imageView.setFitWidth(width);
-// need to add 
 		imageView.setX(setX);
 		imageView.setY(setY);
 		renderGroup.getChildren().add(imageView);

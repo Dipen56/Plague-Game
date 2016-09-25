@@ -266,7 +266,7 @@ public class GUI extends Application {
 		group.prefHeight(HEIGHT_VALUE);
 
 		// Calls the rendering
-		render.render(group, defaultDirection);
+		render.render(defaultDirection);
 		group.setLayoutX(3);
 		group.setLayoutY(35);
 		// only anchor sort of works
@@ -506,16 +506,16 @@ public class GUI extends Application {
 				// getSorce will give the control which caused the event
 				if (event.getCode() == KeyCode.UP) {
 					// this is for moving left
-					render.render(group, "up");
+					render.render("up");
 				} else if (event.getCode() == KeyCode.DOWN) {
 					// this is for moving right
-					render.render(group, "down");
+					render.render("down");
 				} else if (event.getCode() == KeyCode.LEFT) {
 					// this is for moving up
-					render.render(group, "left");
+					render.render("left");
 				} else if (event.getCode() == KeyCode.RIGHT) {
 					// this is for moving down
-					render.render(group, "right");
+					render.render("right");
 				}
 			}
 		};
