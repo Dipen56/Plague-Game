@@ -12,15 +12,12 @@ public class TestBasicSaving {
         	a.registerPortals();
 		Game gameA = new Game(TestConst.world, TestConst.areas);
 		GameAdapter altGame = new GameAdapter(gameA);
-		XmlFunctions.saveFile(altGame);
-		altGame = XmlFunctions.loadFile();
-
-		
-		Game gameB = altGame.getOriginal();
+		XmlFunctions.saveFile(altGame,"");
+		Game gameB = XmlFunctions.loadFile("");
 		int i = 0;
 		
 		
-		
+
 	}
 
 

@@ -1,5 +1,6 @@
 package dataStorage.adapters;
 
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -16,14 +17,14 @@ import server.game.player.Player;
 import server.game.world.Area;
 
 /**
- * This class represents the an alternate version of the Game class, specifically for XML parsing.
+ * This class represents the an alternate version of the Game class, specifically for saving/loading an XML version of a hard-coded game world.
  *
  * @author Daniel Anastasi (anastadani 300145878)
  *
  */
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-public class GameAdapter{
+public class InitialGameAdapter{
 
 	/**
 	 * Whatever you do don't delete either this altObstTypeProtector or altChestTypeProtector. 
@@ -46,10 +47,10 @@ public class GameAdapter{
 	private ScrapPileAdapter ScrapPileTypeProtector = new ScrapPileAdapter();
 	@XmlElement
 	private TransitionSpaceAdapter TransitionSpaceTypeProtector = new TransitionSpaceAdapter();
-	
-	
+
+
 	public static final GroundSpaceAdapter groundSpaceAdapter= new GroundSpaceAdapter();
-	
+
 	/**
 	 * An alternate version of a World object.
 	 */
@@ -62,13 +63,6 @@ public class GameAdapter{
 	@XmlElement
 	private Map<Integer, AreaAdapter> areas;
 
-
-	/**
-	 * Players and their id. Server can find player easily by looking by id.
-	 */
-	@XmlElement
-	private Map<Integer, PlayerAdapter> players;
-
 	/**
 	 * All torches in this world. It is used to track torch burning status in timer.
 	 */
@@ -78,28 +72,26 @@ public class GameAdapter{
 	/**
 	 * An ID number to identify a loaded game against a running game.
 	 */
-	@XmlElements
+	@XmlElement
 	private int gameID;
 	
 	/**
 	 * Only to be called by XML marshaller.
 	 **/
-	GameAdapter(){
+	InitialGameAdapter(){
 
 	}
 
 	/**
 	 *@param The object on which to base this object
 	 **/
-	public GameAdapter(Game game){
+	public InitialGameAdapter(Game game){
 		if(game == null)
 			throw new IllegalArgumentException("Argument is null");
 
 		this.world = new AreaAdapter(game.getWorld());
 		areas = new HashMap<>();
-		this.players = new HashMap<>();
 		Area area = null;
-		Player p = null;
 		Integer myInt = -1;
 
 		AreaAdapter altArea = null;
@@ -107,7 +99,7 @@ public class GameAdapter{
 		for(Map.Entry<Integer, Area> m: game.getAreas().entrySet()){
 			myInt = m.getKey();	//The key from the entry.
 			area = m.getValue();	//The value from the entry.
-			
+
 			if(area == null){
 				throw new RuntimeException("Integer mapped to null");
 			}
@@ -115,16 +107,6 @@ public class GameAdapter{
 				altArea = new AreaAdapter(area);
 			areas.put(myInt, altArea);
 			altArea = null;
-		}
-
-		//Copies all players to the players map.
-		for(Map.Entry<Integer, Player> m: game.getPlayers().entrySet()){
-			myInt = m.getKey();	//The key from the entry.
-			p = m.getValue();	//The value from the entry.
-			if(p == null){
-				throw new RuntimeException("Integer mapped to null");
-			}
-			this.players.put(myInt, new PlayerAdapter(p));
 		}
 
 		List<Torch> gameTorches = game.getTorches();
@@ -137,6 +119,7 @@ public class GameAdapter{
 				this.torches[i] = new TorchAdapter(gameTorches.get(i));
 			}
 		}
+		
 		gameID = game.getGameID();
 	}
 
@@ -154,12 +137,6 @@ public class GameAdapter{
 			areas.put(m.getKey(), area);
 		}
 
-		//Restores Players
-		Map<Integer, Player> players = new HashMap<>();
-		for(Map.Entry<Integer, PlayerAdapter> m: this.players.entrySet()){
-			Player p = ((PlayerAdapter)m.getValue()).getOriginal();
-			players.put(m.getKey(), p);
-		}
 		//Restores Torches
 		List<Torch>torches = new ArrayList<>();
 		if(this.torches != null){
@@ -167,11 +144,13 @@ public class GameAdapter{
 				torches.add(this.torches[i].getOriginal());
 			}
 		}
-		Game game =  new Game(world, areas, players, torches, gameID);	
+		Game game =  new Game(world, areas, new HashMap<Integer, Player>(), torches, gameID);	
 
 		return game;
 	}
 
 
-}
 
+
+
+}
