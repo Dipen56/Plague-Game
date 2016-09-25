@@ -1,4 +1,4 @@
-package anotherServer;
+package server;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -18,7 +18,7 @@ import server.game.player.Position;
  * txt file and create a string form of the world map which will be used to render the
  * game world.
  * 
- * @author Dipen, Rafaela (Just put your Id here)
+ * @author Dipen, Rafaela & Hector
  *
  */
 public class ParserUtilities {
@@ -41,11 +41,11 @@ public class ParserUtilities {
      * <p>
      * EEE<br>
      * EEC<br>
-     * ETE<br>
+     * EDE<br>
      * 
      * 
      * <p>
-     * E stands for empty space, C stands for chest, T stands for door.
+     * E stands for empty space, C stands for chest, D stands for door.
      * 
      * <p>
      * The string should be <i>"1,3,3\nEEE\nEEC\nETE"</i>

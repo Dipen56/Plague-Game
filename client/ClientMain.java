@@ -1,4 +1,4 @@
-package anotherServer;
+package client;
 
 import java.awt.BorderLayout;
 import java.awt.event.KeyEvent;
@@ -16,13 +16,15 @@ import java.util.Map;
 import javax.swing.JFrame;
 import javax.swing.JTextArea;
 
+import server.Packet;
+import server.ParserUtilities;
 import server.game.player.Avatar;
 import server.game.player.Position;
 
 /**
  * This is the client side. This class also has a really simple GUI for testing.
  * 
- * @author Rafaela (Just put your Id here)
+ * @author Rafaela & Hector
  *
  */
 @SuppressWarnings("serial")
@@ -152,7 +154,7 @@ public class ClientMain extends JFrame implements Runnable, KeyListener {
         this.setVisible(true);
 
         // run the thread
-        this.run();
+        new Thread(this).start();
     }
 
     @Override
@@ -213,7 +215,8 @@ public class ClientMain extends JFrame implements Runnable, KeyListener {
              */
             boolean connected = true;
 
-            // last, a while true loop to let the client communicate with server.
+            // last, a while true loop to let the client communicate with
+            // server.
             while (connected) {
 
                 // read in broadcast
@@ -262,7 +265,8 @@ public class ClientMain extends JFrame implements Runnable, KeyListener {
             e.printStackTrace();
         } finally {
             try {
-                // TODO when the client sent an disconnect flag, set connected = false
+                // TODO when the client sent an disconnect flag, set connected =
+                // false
                 socket.close();
             } catch (IOException e) {
                 System.out.println("I/O error. But who cares, disconnected anyway. ");
@@ -301,7 +305,7 @@ public class ClientMain extends JFrame implements Runnable, KeyListener {
              * TODO In GUI rendering, we should add visibility into consideration as well.
              * e.g. if he is out of my visibility, no need to render him.
              */
-            
+
             // no need to draw the player in other areas.
             int hisAreaId = p.areaId;
             if (hisAreaId != areaId) {
@@ -342,20 +346,12 @@ public class ClientMain extends JFrame implements Runnable, KeyListener {
         sb.append("========= Keys =========\n");
 
         // @formatter:off
-        String s = "[w] Move forward\n"
-                + "[s] Move backward\n"
-                + "[a] Move left\n"
-                + "[d] Move right: \n"
-                + "[q] Turn left: \n"
-                + "[e] Trun right: \n"
-                + "[f] Unlock Lockable: \n"
-                + "[g] Take items from Container: \n"
-                + "[ ] Put item into container: data packet not implemented yet"
-                + "[r] Enter/Exit room: \n"
-                + "[1] Use the 1st item in inventory: \n"
-                + "[2] Use the 2nd item in inventory: \n"
-                + "[0] Destroy the 1st item in inventory: \n";
-        // @formatter:on
+		String s = "[w] Move forward\n" + "[s] Move backward\n" + "[a] Move left\n" + "[d] Move right: \n"
+				+ "[q] Turn left: \n" + "[e] Trun right: \n" + "[f] Unlock Lockable: \n"
+				+ "[g] Take items from Container: \n" + "[ ] Put item into container: data packet not implemented yet"
+				+ "[r] Enter/Exit room: \n" + "[1] Use the 1st item in inventory: \n"
+				+ "[2] Use the 2nd item in inventory: \n" + "[0] Destroy the 1st item in inventory: \n";
+		// @formatter:on
 
         sb.append(s);
 
@@ -451,7 +447,8 @@ public class ClientMain extends JFrame implements Runnable, KeyListener {
                 output.flush();
                 break;
 
-            // TODO Of cause the client should handle more events. We can always add here.
+            // TODO Of cause the client should handle more events. We can always
+            // add here.
 
             default:
             }

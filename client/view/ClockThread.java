@@ -1,5 +1,6 @@
-package anotherServer;
+package client.view;
 
+import client.rendering.Rendering;
 import server.game.Game;
 
 /**
@@ -11,15 +12,15 @@ import server.game.Game;
  * 
  * needs to be decided.
  * 
- * @author Rafaela (Just put your Id here)
+ * @author Rafaela & Hector
  *
  */
 public class ClockThread extends Thread {
 
     /**
-     * The game
+     * The client side renderer
      */
-    private final Game game;
+    private final Rendering renderer;
     /**
      * the period between every update.
      */
@@ -31,8 +32,8 @@ public class ClockThread extends Thread {
      * @param delay
      * @param game
      */
-    public ClockThread(int delay, Game game) {
-        this.game = game;
+    public ClockThread(int delay, Rendering renderer) {
+        this.renderer = renderer;
         this.delay = delay;
     }
 
@@ -44,6 +45,7 @@ public class ClockThread extends Thread {
                 Thread.sleep(delay);
 
                 // rendering update
+                renderer.redraw();
 
             } catch (InterruptedException e) {
                 // should never happen
