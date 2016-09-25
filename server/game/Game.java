@@ -566,8 +566,14 @@ public class Game {
             return false;
         }
 
+        // if the destPosition of this TransitionSpace is blocked
+        Position destPos = currentTransition.getDestination();
+        if (isOccupiedByOtherPlayer(destPos)) {
+            return false;
+        }
+
         // OK, time for space travel
-        player.setPosition(currentTransition.getDestination());
+        player.setPosition(destPos);
         return true;
     }
 
