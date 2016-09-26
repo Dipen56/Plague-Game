@@ -2,17 +2,12 @@ package server;
 
 /**
  * This enumeration class represents the data packets exchanged between server and client.
-<<<<<<< HEAD
  * For efficiency each Packet should be converted to byte in transition. This class also
  * provides methods to perform byte <--> Packet conversion.
-=======
- * In transition they are converted to String. This class also provides methods to perform
- * String <--> Packet conversion.
->>>>>>> Hector
- * 
+ *
  * XXX if we need more packet, we can just simply add it here, and then add more clause in
  * client and receptionist.
- * 
+ *
  * @author Rafaela & Hector
  *
  */
@@ -80,9 +75,6 @@ public enum Packet {
     /**
      * Disconnect with server/client. This is used for both side.
      */
-<<<<<<< HEAD
-    Disconnect;
-=======
     Disconnect,
     /**
      * A flag indicating ready.
@@ -92,26 +84,21 @@ public enum Packet {
      * A flag indicating this session of data transmission is done.
      */
     Fin;
->>>>>>> Hector
 
     /*
      * NOTE!!!!!
-     * 
+     *
      * If new packet type is added, the long nasty switch statement in Receptionist and
      * Client should both be added.
-     * 
+     *
      * TODO:
-     * 
+     *
      * need to add: Put_Items_in_container
      */
 
     /**
-<<<<<<< HEAD
      * Convert the Packet into byte.
-=======
-     * Convert the Packet into String.
->>>>>>> Hector
-     * 
+     *
      * @return
      */
     public byte toByte() {
@@ -121,7 +108,7 @@ public enum Packet {
 
     /**
      * Convert a byte back to a Packet.
-     * 
+     *
      * @param b
      * @return
      */
