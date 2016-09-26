@@ -41,11 +41,11 @@ public class ParserUtilities {
      * <p>
      * EEE<br>
      * EEC<br>
-     * ETE<br>
+     * EDE<br>
      * 
      * 
      * <p>
-     * E stands for empty space, C stands for chest, T stands for door.
+     * E stands for empty space, C stands for chest, D stands for door.
      * 
      * <p>
      * The string should be <i>"1,3,3\nEEE\nEEC\nETE"</i>

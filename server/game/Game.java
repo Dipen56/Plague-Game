@@ -67,6 +67,11 @@ public class Game {
     public static final GroundSpace groundSpace = new GroundSpace();
     
     /**
+     * A means by which to simply compare game saves.
+     */
+    private int gameID = 0;
+    
+    /**
      * World map
      */
     private Area world;
@@ -106,6 +111,7 @@ public class Game {
 
         players = new HashMap<>();
         torches = new ArrayList<>();
+     
 
         // TODO parse the file and construct world
 
@@ -133,6 +139,7 @@ public class Game {
 
         this.world = world;
         this.areas = areas;
+        this.gameID = new Random().nextInt((5000 - 0) + 1);
     }
 
     /**
@@ -142,7 +149,7 @@ public class Game {
 	 * @param A map from playerID's to players.
 	 * @param A list of torches. This can be null.
 	 */
-	public Game(Area world, Map<Integer, Area> areas, Map<Integer, Player> players, List<Torch> torches) {
+	public Game(Area world, Map<Integer, Area> areas, Map<Integer, Player> players, List<Torch> torches, int gameID) {
 		//torhces 
 
 		this.world = world;
@@ -158,6 +165,7 @@ public class Game {
 		for(Player p : players.values()){
 			joinPlayer(p);
 		}
+		 this.gameID = gameID;
 	}
 
 	public List<Torch> getTorches() {
@@ -558,8 +566,14 @@ public class Game {
             return false;
         }
 
+        // if the destPosition of this TransitionSpace is blocked
+        Position destPos = currentTransition.getDestination();
+        if (isOccupiedByOtherPlayer(destPos)) {
+            return false;
+        }
+
         // OK, time for space travel
-        player.setPosition(currentTransition.getDestination());
+        player.setPosition(destPos);
         return true;
     }
 
@@ -777,6 +791,10 @@ public class Game {
     public List<Item> getPlayerInventory(int uid) {
         Player player = players.get(uid);
         return player.getInventory();
+    }
+    
+    public int getGameID(){
+    	return this.gameID;
     }
 
     /**

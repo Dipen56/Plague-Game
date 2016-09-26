@@ -28,7 +28,7 @@ public class SaveTests {
 	public void test1(){
 		//Tests  for errors during saveFile method.
 		try{
-			XmlFunctions.saveFile(altGame);
+			XmlFunctions.saveFile(altGame,"");
 		}
 		catch(RuntimeException e){
 			e.printStackTrace();
@@ -40,8 +40,8 @@ public class SaveTests {
 	public void test2(){
 		// tests loading game is done without throwing an error.
 		try{
-			XmlFunctions.saveFile(altGame);
-			altGame = XmlFunctions.loadFile();
+			XmlFunctions.saveFile(altGame,"");
+			XmlFunctions.loadFile("");
 		}catch(RuntimeException e){
 			e.printStackTrace();
 			fail();
@@ -52,8 +52,8 @@ public class SaveTests {
 	public void test3(){
 		//tests that the adaptation from AltGame to Game processes without throwing an error.
 		try{
-			XmlFunctions.saveFile(altGame);
-			altGame = XmlFunctions.loadFile();
+			XmlFunctions.saveFile(altGame,"");
+			XmlFunctions.loadFile("");
 			Game gameB = altGame.getOriginal();
 		}catch(RuntimeException e){
 			e.printStackTrace();

@@ -33,8 +33,7 @@ public class LoadContentTests {
 			a.registerPortals();
 		gameA = new Game(TestConst.world, TestConst.areas);
 		altGame = new GameAdapter(gameA);
-		XmlFunctions.saveFile(altGame);
-		altGame = XmlFunctions.loadFile();
+		XmlFunctions.saveFile(altGame,"");
 		gameB = altGame.getOriginal();
 	}
 
