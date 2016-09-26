@@ -1,38 +1,34 @@
 package tests.dataStorageTests;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
-
-import dataStorage.alternates.AltGame;
-
 import org.junit.FixMethodOrder;
 import static org.junit.Assert.*;
 
 import dataStorage.XmlFunctions;
+import dataStorage.adapters.GameAdapter;
 import server.game.Game;
 import server.game.TestConst;
-import server.game.player.Player;
-import server.game.player.Virus;
 import server.game.world.Area;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class SaveTests {
 
 	private static Game gameA;
-	private static AltGame altGame;
+	private static GameAdapter altGame;
 
 	static{
-		for(Area a: TestConst.entrances.values())
-        	a.registerPortals();
-		gameA = new Game(TestConst.world, TestConst.entrances);
-		
-		altGame = new AltGame(gameA);
+		for(Area a: TestConst.areas.values())
+			a.registerPortals();
+		gameA = new Game(TestConst.world, TestConst.areas);
+
+		altGame = new GameAdapter(gameA);
 	}
 
 	@Test
 	public void test1(){
 		//Tests  for errors during saveFile method.
 		try{
-			XmlFunctions.saveFile(altGame);
+			XmlFunctions.saveFile(altGame,"");
 		}
 		catch(RuntimeException e){
 			e.printStackTrace();
@@ -44,11 +40,11 @@ public class SaveTests {
 	public void test2(){
 		// tests loading game is done without throwing an error.
 		try{
-			XmlFunctions.saveFile(altGame);
-			altGame = XmlFunctions.loadFile();
+			XmlFunctions.saveFile(altGame,"");
+			XmlFunctions.loadFile("");
 		}catch(RuntimeException e){
-				e.printStackTrace();
-				fail();
+			e.printStackTrace();
+			fail();
 		}
 	}
 
@@ -56,48 +52,15 @@ public class SaveTests {
 	public void test3(){
 		//tests that the adaptation from AltGame to Game processes without throwing an error.
 		try{
-			XmlFunctions.saveFile(altGame);
-			altGame = XmlFunctions.loadFile();
+			XmlFunctions.saveFile(altGame,"");
+			XmlFunctions.loadFile("");
 			Game gameB = altGame.getOriginal();
 		}catch(RuntimeException e){
-				e.printStackTrace();
-				fail();
+			e.printStackTrace();
+			fail();
 		}
 	}
 
-	@Test
-	public void test4(){
-		Game gameB = null;
-		try{
-			XmlFunctions.saveFile(altGame);
-			altGame = XmlFunctions.loadFile();
-			gameB = altGame.getOriginal();
-			int i = 0;
-		}catch(RuntimeException e){
-				e.printStackTrace();
-				fail();
-		}
-
-		assertTrue(gameA.equals(gameB));		//this is not enough.
-
-
-	}
-
-	@Test
-	public void test5(){
-		// IS .equals the way to go ?
-
-	}
-
-	@Test
-	public void test6(){
-
-	}
-
-	@Test
-	public void test7(){
-
-	}
 
 	/*
 

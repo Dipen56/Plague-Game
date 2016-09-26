@@ -65,25 +65,13 @@ public enum Packet {
      */
     Unlock,
     /**
-     * acknowledgement for success. This is used at server side.
-     */
-    Success,
-    /**
-     * acknowledgement for failure. This is used at server side.
-     */
-    Failure,
-    /**
      * Disconnect with server/client. This is used for both side.
      */
     Disconnect,
     /**
      * A flag indicating ready.
      */
-    Ready,
-    /**
-     * A flag indicating this session of data transmission is done.
-     */
-    Fin;
+    Ready;
 
     /*
      * NOTE!!!!!

@@ -485,14 +485,12 @@ public class GUI extends Application {
      * 
      * @param worldTime
      */
-    public void setTime(LocalTime time) {
+    public void setTime(String time) {
 
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
-                timeLable.setText(
-                        time.getHour() + ":" + time.getMinute() + ":" + time.getSecond());
-
+                timeLable.setText(time);
             }
         });
     }

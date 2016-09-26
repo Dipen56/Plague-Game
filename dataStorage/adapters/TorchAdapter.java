@@ -1,19 +1,17 @@
-package dataStorage.alternates;
+package dataStorage.adapters;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 
-import server.game.items.Antidote;
-import server.game.items.Item;
 import server.game.items.Torch;
 
 /**
  * A copy of a Torch object, for use in parsing the object into XML.
- * @author Daniel Anastasi 300145878
+ * @author Daniel Anastasi (anastadani 300145878)
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-public class AltTorch extends AltItem{
+public class TorchAdapter extends ItemAdapter{
 
 	/**
 	 * The time limit on this torch.
@@ -33,7 +31,7 @@ public class AltTorch extends AltItem{
 	@XmlElement
     private String description;
 
-	public AltTorch(Torch item) {
+	public TorchAdapter(Torch item) {
 		if(item == null)
 			throw new IllegalArgumentException("Argument is null");
 		this.timeLimit = item.getTimeLeft();
@@ -44,7 +42,7 @@ public class AltTorch extends AltItem{
 	/**
 	 * Only to be called by XML parser.
 	 */
-	AltTorch() {
+	TorchAdapter() {
 
 	}
 

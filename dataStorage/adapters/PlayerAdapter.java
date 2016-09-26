@@ -1,39 +1,31 @@
-package dataStorage.alternates;
+package dataStorage.adapters;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementRef;
 
 import server.game.items.Antidote;
-import server.game.items.Destroyable;
 import server.game.items.Item;
 import server.game.items.Key;
 import server.game.items.Torch;
-import server.game.items.Tradable;
+import server.game.player.Avatar;
 import server.game.player.Direction;
 import server.game.player.Player;
+import server.game.player.Position;
 import server.game.player.Virus;
-import server.game.world.Area;
-import server.game.world.Chest;
-import server.game.world.GroundSquare;
-import server.game.world.Position;
-import server.game.world.Room;
-import server.game.world.RoomEntrance;
-import server.game.world.World;
+
 /**
- * This class represents the an alternate version of the Player class, specifically for XML parsing.
+ * This class is an adapter for a Player to be loaded to and from XML.
+ * This behaves as a builder object in the builder pattern, in order to prevent the need for a constructor with 7+ parameters.
  *
- * @author Hector (Fang Zhao 300364061), Daniel Anastasi 300145878
+ * @author Daniel Anastasi (anastadani 300145878)
  *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-public class AltPlayer {
+public class PlayerAdapter {
 	/**
 	 * The player's user ID
 	 */
@@ -63,45 +55,48 @@ public class AltPlayer {
 	 */
 	@XmlElement
 	private boolean isAlive;
+	
+	/**
+     * If the player is holding a lighted torch or not.
+     */
+    private boolean isHoldingTorch;
 
 	/**
 	 * The player's inventory.
 	 */
 	@XmlElement
-	private AltItem[] inventory;
+	private ItemAdapter[] inventory;
 
 	// Geographical information.
-	/**
-	 * The area in which the player currently resides.
-	 */
-	@XmlElement
-	private AltArea altArea;
-
 	/**
 	 * The position of the player in the current area.
 	 */
 	@XmlElement
-	private AltPosition position;
+	private PositionAdapter position;
 
 	/**
 	 * The direction which the player is facing.
 	 */
-	//@XmlAttribute
 	@XmlElement
 	private Direction direction;
 
+	/**
+	 * The player's avatar.
+	 */
+	@XmlElement
+	private Avatar avatar;
 
 	/**
 	 * This constructor should only be called by an XML marshaller.
 	 */
-	AltPlayer(){
+	PlayerAdapter(){
 
 	}
 
 	/**
 	 * @param The original Player object
 	 */
-	public AltPlayer(Player player) {
+	public PlayerAdapter(Player player) {
 		if(player == null)
 			throw new IllegalArgumentException("Argument is null");
 		player.saveRecordOfHealth();	//records player health as unchanging int for testing game save validity.
@@ -110,42 +105,33 @@ public class AltPlayer {
 		this.virus = player.getVirus();
 		health = player.getHealthLeft();
 		isAlive = player.isAlive();
+		isHoldingTorch = player.isHoldingTorch();
 		//Inventory is converted to array as List cannot have JXB annotations.
 		List<Item> playerInventory = player.getInventory();
-		inventory = new AltItem[playerInventory.size()];
+		inventory = new ItemAdapter[playerInventory.size()];
 
 		Item item = null;
 		//Creates a new AltItem from each item in the inventory.
 		for(int i = 0; i < playerInventory.size(); i++){
 			item = playerInventory.get(i);
 			if(item instanceof Antidote){
-				inventory[i] = new AltAntidote((Antidote)item);
+				inventory[i] = new AntidoteAdapter((Antidote)item);
 			}
 			else if(item instanceof Key){
-				inventory[i] = new AltKey((Key)item);
+				inventory[i] = new KeyAdapter((Key)item);
 			}
 			else if(item instanceof Torch){
-				inventory[i] = new AltTorch((Torch)item);
+				inventory[i] = new TorchAdapter((Torch)item);
 			}
 			else{
 				continue;
 			}
 
 		}
-		Area area = player.getArea();
-
-		if(area instanceof World){
-			altArea = new AltWorld(area);
-		}
-		else if(area instanceof Room){
-			altArea = new AltRoom(area);
-		}
-		else{
-			throw new IllegalArgumentException("Unknown subtype of Area");
-		}
-		
-		position = new AltPosition(player.getPosition());
+		avatar = player.getAvatar();
+		position = new PositionAdapter(player.getPosition());
 		direction = player.getDirection();
+		
 	}
 
 	/**
@@ -154,19 +140,19 @@ public class AltPlayer {
 	 */
 	public Player getOriginal(){
 		List<Item> newInventory = new ArrayList<>();
-		AltItem item = null;
+		ItemAdapter item = null;
 		// If player inventory was empty before save, then the current inventory will be null.
 		if(inventory != null){
 			for(int index = 0; index < inventory.length; index++){
 				item = inventory[index];
-				if(item instanceof AltAntidote){
-					newInventory.add(((AltAntidote)item).getOriginal());
+				if(item instanceof AntidoteAdapter){
+					newInventory.add(((AntidoteAdapter)item).getOriginal());
 				}
-				else if(item instanceof AltKey){
-					newInventory.add(((AltKey)item).getOriginal());
+				else if(item instanceof KeyAdapter){
+					newInventory.add(((KeyAdapter)item).getOriginal());
 				}
-				else if(item instanceof AltTorch){
-					newInventory.add(((AltTorch)item).getOriginal());
+				else if(item instanceof TorchAdapter){
+					newInventory.add(((TorchAdapter)item).getOriginal());
 				}
 				else{
 					continue;
@@ -174,12 +160,24 @@ public class AltPlayer {
 			}
 		}
 		
-		Area newArea = altArea.getOriginal();
 		Position newPosition = position.getOriginal();
 		Direction direction = this.direction;
-
-		return new Player(uID, name, virus, newArea, health, isAlive, newInventory, newPosition, direction);	//Passing only this object prevents sending 6 arguments.
+		
+		
+		//Restores player from this adapter object.
+		Player p = new Player(avatar, health);
+		p.setPosition(newPosition);	//set position
+		p.setDirection(direction);//set direction
+		p.setVirus(virus);
+		p.setIsAlive(isAlive);
+		p.setId(uID);
+		p.setName(name);
+		p.setInventory(newInventory);
+		
+		return p;
 	}
+	
+
 
 }
 

@@ -1,4 +1,4 @@
-package dataStorage.alternates;
+package dataStorage.adapters;
 
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -10,10 +10,10 @@ import server.game.player.Virus;
 
 /**
  * A copy of a Antidote object, for use in parsing the object into XML.
- * @author Daniel Anastasi 300145878
+ * @author Daniel Anastasi (anastadani 300145878)
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-public class AltAntidote extends AltItem{
+public class AntidoteAdapter extends ItemAdapter{
 
 	/**
 	 * The virus which this antidote provides relief from.
@@ -27,7 +27,7 @@ public class AltAntidote extends AltItem{
 	@XmlElement
 	private String description;
 	
-	public AltAntidote(Antidote a) {
+	public AntidoteAdapter(Antidote a) {
 		if(a == null)
 			throw new IllegalArgumentException("Argument is null");
 		virus = a.getVirus();
@@ -37,7 +37,7 @@ public class AltAntidote extends AltItem{
 	/**
 	 * Only to be called by XML parser.
 	 */
-	AltAntidote(){
+	AntidoteAdapter(){
 
 	}
 

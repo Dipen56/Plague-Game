@@ -1,0 +1,33 @@
+Setting up initial game xml file:
+1. Game map is hardcoded, so when a certain main method is called, the game object is created.
+2. That same main method then calls XmlFunctions.saveInitialFile(game), passing in the game object.
+========================================
+Loading the game from the xml file at the start of a new game:
+NOTE! This process relies upon the game having first been saved as an XML file, "initialGame.xml".
+1.Call XmlFunctions.loadInitialFile(). This outputs the new Game file. 
+========================
+
+Saving during gameplay:
+1.Client makes request via server
+2.Game saves using XmlFunctions.saveFile(Object obj, String prefix). This is Game object, and the usernameString.
+3.Game sends completion response via server to client.
+4.Renderer draws text to screen, "Game Saved".
+5.The text should disappear in a few seconds.
+====================================
+
+Loading during gameplay:
+1. Player X opens new Client during a game, or while no game is being run.
+2. Player X request game load via server.
+3. Game first checks if a file containing the username is there at all using XmlFunctions.saveExists(username), passing in the player's username.
+	If no file exists the game responds to the client so it will display a "No save found that matches username" message.
+	If there is one, continue these steps.
+4. Server side application loads that game into a new game object using XmlFunctions.loadFile(username).		That game is not yet active or running.
+5. Application checks game id of current game against loaded game.(NOTE: game id cannot be hash code, as game state will change that number.)
+	If the number does not match, application must send denial to player x "No save file found for current game."
+	Else, continue these steps.
+6. Application sends waiting message to Player X's client via server.
+7. Application (freezes current game?, then) sends permission requests to all other players via the server.
+8. For each player, other than loading player:
+	Render displays "Player X would like to load the game from an earlier state. Do you want to allow this? Yes/No"	
+9. If any player presses no, all players are sent load request denied.
+	Else, if all players say yes, the game application stops the current game, sets the loaded game as the current game, and starts it up.

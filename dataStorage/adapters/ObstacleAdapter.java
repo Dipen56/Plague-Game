@@ -1,4 +1,4 @@
-package dataStorage.alternates;
+package dataStorage.adapters;
 
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -9,10 +9,10 @@ import server.game.world.Obstacle;
 
 /**
  * This class represents the an alternate version of the Obstacle class, specifically for XML parsing.
- * @author Daniel Anastasi 300145878
+ * @author Daniel Anastasi (anastadani 300145878)
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-public class AltObstacle extends AltMapElement{
+public class ObstacleAdapter extends MapElementAdapter{
 
 	/**
 	 * Describes the obstacle.
@@ -20,7 +20,7 @@ public class AltObstacle extends AltMapElement{
 	@XmlElement
 	protected String description;
 
-	public AltObstacle(Obstacle obstacle) {
+	public ObstacleAdapter(Obstacle obstacle) {
 		if(obstacle == null)
 			throw new IllegalArgumentException("Argument is null");
 		this.description = obstacle.getDescription();
@@ -31,7 +31,7 @@ public class AltObstacle extends AltMapElement{
 	 * Only to be used by XML parser.
 	 * @param obstacle
 	 */
-	AltObstacle(){
+	ObstacleAdapter(){
 
 	}
 

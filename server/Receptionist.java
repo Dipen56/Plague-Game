@@ -2,14 +2,9 @@ package server;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
 import java.net.Socket;
 
 import server.game.Game;
@@ -18,7 +13,7 @@ import server.game.player.Player;
 
 /**
  * This class represents a single thread that handles communication with a connected
- * client. It receives events from a client connection via a socket as well as transmit
+ * client. It receives events from a client connection via a socket as well as send
  * information to the client about the current board state.
  * 
  * @author Rafaela & Hector
@@ -30,10 +25,6 @@ public class Receptionist extends Thread {
      */
     private final Game game;
     /**
-     * The duration between every two broadcast.
-     */
-    private final int broadcastClock;
-    /**
      * User (client) id of this connection.
      */
     private final int uid;
@@ -41,10 +32,14 @@ public class Receptionist extends Thread {
      * The communicating socket.
      */
     private final Socket socket;
-
+    /**
+     * The download link from the client.
+     */
     private DataInputStream input;
+    /**
+     * The upload link to the client
+     */
     private DataOutputStream output;
-
     /**
      * A flag indicating whether this client is ready to enter game. If it's false, the
      * server will keep this client in lobby waiting for all clients ready.
@@ -56,29 +51,37 @@ public class Receptionist extends Thread {
     private boolean isGameRunning = false;
 
     /**
-     * Constructor
+     * Constructor. It also initialises the socket input and output.
      * 
      * @param socket
+     *            --- the socket used to connect to client
      * @param uid
+     *            --- the unique id of this client
      * @param broadcastClock
+     *            --- the broadcast loop cycle
      * @param game
+     *            --- the game instance
      */
-    public Receptionist(Socket socket, int uid, int broadcastClock, Game game) {
+    public Receptionist(Socket socket, int uid, Game game) {
         this.game = game;
-        this.broadcastClock = broadcastClock;
         this.socket = socket;
         this.uid = uid;
 
+        // create the output and input stream.
         try {
-            output = new DataOutputStream(socket.getOutputStream());
-            input = new DataInputStream(socket.getInputStream());
+            output = new DataOutputStream(
+                    new BufferedOutputStream(socket.getOutputStream()));
+            input = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
         } catch (IOException e) {
             System.err.println("Lost connection with client." + e.toString());
             e.printStackTrace();
         }
     }
 
-    public void sendMapAndID() {
+    /**
+     * Send the game world maps as strings to client, and tell the client his id.
+     */
+    public void sendMapID() {
         /*
          * TODO It's sending the mock game world currently. should write a method to
          * convert the map directly into string
@@ -87,7 +90,7 @@ public class Receptionist extends Thread {
         String areaString2 = "1,3,3\nEEC\nESB\nEDE";
 
         try {
-            // maps
+            // tell the client all maps
             output.writeUTF(areaString1);
             output.writeUTF(areaString2);
             output.writeUTF("Fin");
@@ -96,33 +99,56 @@ public class Receptionist extends Thread {
             // tell the client his uid
             output.writeInt(uid);
             output.flush();
+
         } catch (IOException e) {
             System.err.println("Lost connection with client." + e.toString());
             e.printStackTrace();
         }
     }
 
+    /**
+     * Receive from client about the player's name and avatar.
+     */
     public void receiveNameAvatar() {
         try {
-            // join the player in, tell the client his uid.
             byte avatarIndex = input.readByte();
             String name = input.readUTF();
-            System.out.println("player uid: " + uid + ". avatar " + avatarIndex);
             game.joinPlayer(new Player(uid, Avatar.get(avatarIndex), name));
+
+            System.out.println("player uid: " + uid + ". avatar " + avatarIndex);
             System.out.println("initialisation done. joined player: " + uid
                     + " with avatar " + avatarIndex);
 
-            // TODO tell the client his virus type (Packet type need to add)
-
-            // ============= [DEBUG] =======================
-            System.out.println("Ready to start the game.");
-            System.out.println("Server now has players:");
-            for (Player p : game.getPlayers().values()) {
-                System.out.println("Player: [" + p.getGeographicString() + "]");
-            }
-
         } catch (IOException e) {
-            // TODO Auto-generated catch block
+            System.err.println("IO exception: " + e.toString());
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Send the player's virus type to the client
+     */
+    public void sendVirusType() {
+        // tell the client his virus type
+        int virusIndex = game.getPlayerVirus(uid).ordinal();
+        try {
+            output.writeInt(virusIndex);
+            output.flush();
+        } catch (IOException e) {
+            System.err.println("IO exception: " + e.toString());
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Send each player's avatar to the client.
+     */
+    public void sendAvatars() {
+        try {
+            output.writeUTF(game.getAvatarsString());
+            output.flush();
+        } catch (IOException e) {
+            System.err.println("IO exception: " + e.toString());
             e.printStackTrace();
         }
     }
@@ -147,7 +173,7 @@ public class Receptionist extends Thread {
     public void run() {
         try {
 
-            // wait until the user is ready
+            // wait until all users are ready
             while (true) {
                 if (input.available() > 0) {
                     Packet packet = Packet.fromByte(input.readByte());
@@ -180,11 +206,17 @@ public class Receptionist extends Thread {
                 }
             }
 
-            // last, a while true loop to let the receptionist communicate with clients.
-            System.out.println("Now entering while(isGameRunning) loop");
-            while (isGameRunning) {
+            System.out.println("[Debug] Now entering while(isGameRunning) loop");
 
-                if (input.available() != 0) {
+            // last, let the receptionist constantly communicate with clients.
+            while (isGameRunning) {
+                // broadcast the game status.
+                String str = gameToString();
+                output.writeUTF(str);
+                output.flush();
+
+                // check if clients has requested anything
+                if (input.available() > 0) {
                     // read input from client
                     byte b = input.readByte();
                     Packet packet = Packet.fromByte(b);
@@ -226,53 +258,23 @@ public class Receptionist extends Thread {
                     case Unlock:
                         game.playerUnlockLockable(uid);
                         break;
-                    case Success:
-                        // shouldn't come in here.
-                        break;
-                    case Failure:
-                        // shouldn't come in here.
-                        break;
                     case Disconnect:
-                        // handle disconnection. or we can handle it in catch clause.
-                        isGameRunning = false;
+                        // TODO handle disconnection. or we can handle it in catch clause.
                         input.close();
                         output.close();
+
+                        // TODO close this socket
+
+                        // TODO stop this thread
+
                         break;
                     default:
                         break;
                     }
                 }
 
-                // then broadcast the game status
-                if (isGameRunning) {
-                    // 1, tell the client all players' position.
-                    for (Player p : game.getPlayers().values()) {
-                        String s = p.getGeographicString();
-                        output.writeUTF(s);
-                    }
-                    output.writeUTF("Fin");
-                    output.flush();
-
-                    // 2, tell the client the world time
-                    String time = game.getClockString();
-                    output.writeUTF(time);
-                    output.flush();
-
-                    // 3, tell the client the player's health
-                    output.writeInt(game.getPlayerHealth(uid));
-                    output.flush();
-
-                    // 4, tell the client the player's visibility
-                    output.writeInt(game.getPlayerVisibility(uid));
-                    output.flush();
-
-                    // 5, tell the client the player's inventory
-                    output.writeUTF(game.getPlayerInventoryString(uid));
-                    output.flush();
-
-                    // 6, have a good nap.
-                    Thread.sleep(broadcastClock);
-                }
+                // a little nap
+                Thread.sleep(ServerMain.DEFAULT_BROADCAST_CLK_PERIOD);
             }
         } catch (IOException e) {
             System.err.println("Player " + uid + " disconnected.");
@@ -288,4 +290,58 @@ public class Receptionist extends Thread {
             }
         }
     }
+
+    /**
+     * This method generates a String representation of the game status. The format of it
+     * is:
+     * 
+     * <p>
+     * <li>Time
+     * <li>Health
+     * <li>Visibility
+     * <li>Positions of all players
+     * <li>The inventory of the player in this client
+     * 
+     * <p>
+     * Each one of them is separated by a new line character '\n'. The format of each part
+     * should refer to {@link client.ParserUtilities #parseTime(String) parseTime},
+     * {@link client.ParserUtilities #parsePosition(java.util.Map, String) parsePosition},
+     * and {@link client.ParserUtilities #parseInventory(String) parseInventory}.
+     * 
+     * @return --- a String representation of the game status
+     */
+    private String gameToString() {
+        StringBuilder gameString = new StringBuilder();
+
+        // 1. time
+        String time = game.getClockString();
+        gameString.append(time);
+        gameString.append('\n');
+
+        // 2. health
+        int health = game.getPlayerHealth(uid);
+        gameString.append(health);
+        gameString.append('\n');
+
+        // 3. visibility
+        int visibility = game.getPlayerVisibility(uid);
+        gameString.append(visibility);
+        gameString.append('\n');
+
+        // 4. positions of all players
+        for (Player p : game.getPlayers().values()) {
+            String s = p.getGeographicString();
+            gameString.append(s);
+            gameString.append('|');
+        }
+        gameString.append('\n');
+
+        // 5. inventory
+        String inventory = game.getPlayerInventoryString(uid);
+        gameString.append(inventory);
+        gameString.append('\n');
+
+        return gameString.toString();
+    }
+
 }

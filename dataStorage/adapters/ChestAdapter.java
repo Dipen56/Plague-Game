@@ -1,4 +1,4 @@
-package dataStorage.alternates;
+package dataStorage.adapters;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,10 +15,10 @@ import server.game.world.Chest;
 
 /**
  * A copy of a Chest object, for use in parsing the object into XML.
- * @author Daniel Anastasi 300145878
+ * @author Daniel Anastasi (anastadani 300145878)
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-public class AltChest extends AltObstacle{
+public class ChestAdapter extends ObstacleAdapter{
 	/**
 	 * The id for the key that unlocks this chest.
 	 */
@@ -35,37 +35,30 @@ public class AltChest extends AltObstacle{
 	 * A list of all items in this chest.
 	 */
 	@XmlElement
-	private AltItem[] loot;
+	private ItemAdapter[] loot;
 
-	/**
-	 * A description of this chest.
-	 */
-	//@XmlElement
-	//private String description;
-
-	public AltChest(Chest chest){
+	public ChestAdapter(Chest chest){
 		if(chest == null)
 			throw new IllegalArgumentException("Argument is null");
 		keyID = chest.getKeyID();
 		isLocked = chest.isLocked();
-		//description = chest.getDescription();
 		this.setDescrption(chest.getDescription());
 
-		//Array is used, as List cannot have JAXB annotations.
+		//Array is used, as List cannot have the same JAXB annotation.
 		List<Item> chestLoot = chest.getLoot();
-		loot = new AltItem[chestLoot.size()];
+		loot = new ItemAdapter[chestLoot.size()];
 
 		Item item = null;
 		for(int i = 0; i < chestLoot.size(); i++){
 			item = chestLoot.get(i);
 			if(item instanceof Antidote){
-				loot[i] = (new AltAntidote((Antidote)item));
+				loot[i] = (new AntidoteAdapter((Antidote)item));
 			}
 			else if(item instanceof Key){
-				loot[i] = (new AltKey((Key)item));
+				loot[i] = (new KeyAdapter((Key)item));
 			}
 			else if(item instanceof Torch){
-				loot[i] = (new AltTorch((Torch)item));
+				loot[i] = (new TorchAdapter((Torch)item));
 			}
 			else{
 				continue;
@@ -76,7 +69,7 @@ public class AltChest extends AltObstacle{
 	/**
 	 * Only to be called by XML parser.
 	 */
-	AltChest(){
+	ChestAdapter(){
 
 	}
 
@@ -86,18 +79,20 @@ public class AltChest extends AltObstacle{
 	 */
 	public Chest getOriginal(){
 		List<Item> newLoot = new ArrayList<>();
-		for(AltItem i : loot){
-			if(i instanceof AltAntidote){
-				newLoot.add(((AltAntidote)i).getOriginal());
+		ItemAdapter item = null;
+		for(int i = 0; i < loot.length; i++){
+			item = loot[i];
+			if(item instanceof AntidoteAdapter){
+				newLoot.add(((AntidoteAdapter)item).getOriginal());
 			}
-			else if(i instanceof AltKey){
-				newLoot.add(((AltKey)i).getOriginal());
+			else if(item instanceof KeyAdapter){
+				newLoot.add(((KeyAdapter)item).getOriginal());
 			}
-			else if(i instanceof AltTorch){
-				newLoot.add(((AltTorch)i).getOriginal());
+			else if(item instanceof TorchAdapter){
+				newLoot.add(((TorchAdapter)item).getOriginal());
 			}
 			else{
-				continue;
+				throw new RuntimeException("Item is not of a recognised type.");
 			}
 		}
 

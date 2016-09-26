@@ -1,11 +1,7 @@
 package client.rendering;
 
-import java.awt.Color;
 import java.awt.Point;
-import java.util.HashMap;
 import java.util.Map;
-
-import javax.swing.JLabel;
 
 import client.view.ClientUI;
 import client.view.GUI;
@@ -19,14 +15,13 @@ import server.game.player.Player;
 import server.game.player.Position;
 import server.game.world.Area;
 import javafx.scene.paint.ImagePattern;
-import javafx.scene.paint.*;
 
 import static client.view.GUI.loadImage;
 
 /**
  * This class represents the main rendering class, this class will control the rendering
  * of the game board, character, and objects.
- * 
+ *
  * @author Dipen
  *
  */
@@ -38,7 +33,6 @@ public class Rendering {
     private static final String GRASS_IMAGE = "/grass.png";
     private static final String TREE_IMAGE = "/tree.png";
     private static final String CHEST_IMAGE = "/chest.png";
-    private Group group;
 
     public double scaleY = 0.85; // lower number less scaling
     private int gamePaneHeight = GUI.HEIGHT_VALUE - 35; // 35 y alignment of
@@ -60,13 +54,6 @@ public class Rendering {
     private int avatarID;
     private String direction;
 
-    // for the renderer to get informations from client side controller
-    private ClientUI controller;
-
-    public Rendering(ClientUI controller) {
-        this.controller = controller;
-    }
-
     public Rendering() {
         // will need to get board size passed in
         mapParser = new MapParser(10, 10);
@@ -75,7 +62,7 @@ public class Rendering {
     /**
      * this constructor is to be used for integration and will be passed in a Player and a
      * map, and also all the other player on the map and also the avatar id atm.
-     * 
+     *
      * @param player
      */
     public Rendering(Player player, Map<Integer, Player> playersOnMap,
@@ -88,199 +75,199 @@ public class Rendering {
 
     /**
      * this method is used to render the game
-     * 
-     * @param group
+     *
+     * @param renderGroup
      */
     public void render(Group renderGroup) {
-        // TODO: get ride of the renderGroup parameters call the set group
-        // method below first before calling this method
-        this.group = renderGroup;
-        Image image = loadImage(BACKGROUND_IMAGE);
-        Image character = loadImage(PLAYER_IMAGE);
-        Image grass = loadImage(GRASS_IMAGE);
-        ImageView imageViewNight = new ImageView();
-        imageViewNight.setImage(image);
-        imageViewNight.setFitWidth(gamePaneWidth + 3);
-        imageViewNight.setFitHeight(gamePaneHeight + 35);
-        group.getChildren().add(imageViewNight);
-        // int squaresInFront = 0;// the number of squares on the player's face
-        // side
-        // int squaresToLeft = 0;// the number of squares on the player's left
-        // side
-        // int squaresToRight = 0;// //the number of squares on the player's
-        // right side
-        // this will be changed to the real players pos apon integration
-        // playerLoc = new Point(5, 0);
-        int boardSize = 10;
-        // squaresInFront = boardSize - playerLoc.y;
-        // squaresToLeft = (boardSize - playerLoc.x) - 1;
-        // squaresToRight = (boardSize - squaresToLeft);
-        if (direction.equals("up")) {
-            squaresInFront = boardSize - playerLoc.y;
-            squaresToLeft = (boardSize - playerLoc.x) - 1;
-            squaresToRight = (boardSize - squaresToLeft);
-        } else if (direction.equals("down")) {
-        } else if (direction.equals("left")) {
-            squaresToRight = squaresInFront;
-            squaresInFront = squaresToLeft;
-            squaresToLeft = boardSize - squaresToRight;
-        } else if (direction.equals("right")) {
-            squaresToLeft = squaresInFront;
-            squaresInFront = squaresToRight;
-            squaresToRight = (boardSize - squaresToLeft);
-        }
+		// TODO: get ride of the renderGroup parameters call the set group
+		// method below first before calling this method
 
-        // this is used to for the top line points x0 and x1 which will be
-        // scaled from larger to smaller
-        double topLine = centerHeght;
-        // double prevTopLine = centerHeght;
-        // this point is the bot right and will also got from larger to smaller
-        // int previouX1
-        // it's twice the size of the set tile width
-        double x2 = centerWidth + tileWidth / 2;
-        // this point is is the bot right and is set it the height of the game
-        // pane so at the bottom of window.
-        double y2 = centerHeght;
-        // this point is the bot lift and will also got from larger to smaller
-        // int previouX0
-        // it's twice the size of the set tile width
-        double x3 = centerWidth - tileWidth / 2;
-        // this point is is the bot lift and is set it the height of the game
-        // pane so at the bottom of window.
-        double y3 = centerHeght;
-        // ===================================================================================================
-        // Below this is point is the code for all the rendering for first
-        // person
-        // ====================================================================================================
-        for (int i = 0; i < squaresInFront; i++) {
-            // tiles in front of the player is rendered first
-            Polygon p = new Polygon();
+		Image image = loadImage(BACKGROUND_IMAGE);
+		Image character = loadImage(PLAYER_IMAGE);
+		Image grass = loadImage(GRASS_IMAGE);
+		ImageView imageViewNight = new ImageView();
+		imageViewNight.setImage(image);
+		imageViewNight.setFitWidth(gamePaneWidth + 3);
+		imageViewNight.setFitHeight(gamePaneHeight + 35);
+		renderGroup.getChildren().add(imageViewNight);
+		// int squaresInFront = 0;// the number of squares on the player's face
+		// side
+		// int squaresToLeft = 0;// the number of squares on the player's left
+		// side
+		// int squaresToRight = 0;// //the number of squares on the player's
+		// right side
+		// this will be changed to the real players pos apon integration
+		// playerLoc = new Point(5, 0);
+		int boardSize = 10;
+		// squaresInFront = boardSize - playerLoc.y;
+		// squaresToLeft = (boardSize - playerLoc.x) - 1;
+		// squaresToRight = (boardSize - squaresToLeft);
+		if (direction.equals("up")) {
+			squaresInFront = boardSize - playerLoc.y;
+			squaresToLeft = (boardSize - playerLoc.x) - 1;
+			squaresToRight = (boardSize - squaresToLeft);
+		} else if (direction.equals("down")) {
+		} else if (direction.equals("left")) {
+			squaresToRight = squaresInFront;
+			squaresInFront = squaresToLeft;
+			squaresToLeft = boardSize - squaresToRight;
+		} else if (direction.equals("right")) {
+			squaresToLeft = squaresInFront;
+			squaresInFront = squaresToRight;
+			squaresToRight = (boardSize - squaresToLeft);
+		}
 
-            p.setFill(new ImagePattern(grass));
-            // origins
-            p.setLayoutY(10);
-            // current scaled width of the top part of the tile
-            double nowWidthOfSquare = tileWidth * Math.pow(scaleY, i + 1);
-            // this is the top part of the tile starting x pos
-            double nowStartX = centerWidth - nowWidthOfSquare / 2;
-            // this is the bot part of the tile which is just the previous tiles
-            // top part
-            p.getPoints().add(x3);
-            p.getPoints().add(y3);
-            p.getPoints().add(x2);
-            p.getPoints().add(y2);
-            // this is the top part to the tile and will be scaled from larger
-            // to smaller
-            // /__\
-            p.getPoints().add(nowStartX + nowWidthOfSquare);
-            p.getPoints().add(topLine - tileHeight * Math.pow(scaleY, i + 1));
-            p.getPoints().add(nowStartX);
-            p.getPoints().add(topLine - tileHeight * Math.pow(scaleY, i + 1));
-            p.setStroke(javafx.scene.paint.Color.AQUA);
-            p.setStrokeWidth(1);
-            group.getChildren().add(p);
-            // tiles on the lift of the players are render second for ever 1
-            // tile that in front of them
-            for (int j = 0; j < squaresToLeft; j++) {
-                Polygon p2 = new Polygon();
-                // this just push it down by 10
-                p2.setLayoutY(10);
-                // adds the grass image
-                p2.setFill(new ImagePattern(grass));
-                // this will get the width of the square that is the on facing
-                // the player
-                double previouWidthOfSquare = (x2 - x3);
-                // this is the bot part of the tile which is just placed to the
-                // left of the facing tile.
-                p2.getPoints().add(x3 - (j * previouWidthOfSquare));
-                p2.getPoints().add(y3);
-                p2.getPoints().add(x2 - (j * previouWidthOfSquare));
-                p2.getPoints().add(y2);
-                // this is the top part to the tile and will be scaled on the
-                // left from larger
-                // to smaller
-                p2.getPoints().add(nowStartX + nowWidthOfSquare - j * nowWidthOfSquare);
-                p2.getPoints().add(topLine - tileHeight * Math.pow(scaleY, i + 1));
-                p2.getPoints().add(nowStartX - j * nowWidthOfSquare);
-                p2.getPoints().add(topLine - tileHeight * Math.pow(scaleY, i + 1));
-                p2.setStroke(javafx.scene.paint.Color.AQUA);
-                p2.setStrokeWidth(1);
-                group.getChildren().add(p2);
-            }
-            // tiles on the right of the players are render second for ever 1
-            // tile that in front of them
-            for (int j = 0; j < squaresToRight; j++) {
+		// this is used to for the top line points x0 and x1 which will be
+		// scaled from larger to smaller
+		double topLine = centerHeght;
+		// double prevTopLine = centerHeght;
+		// this point is the bot right and will also got from larger to smaller
+		// int previouX1
+		// it's twice the size of the set tile width
+		double x2 = centerWidth + tileWidth / 2;
+		// this point is is the bot right and is set it the height of the game
+		// pane so at the bottom of window.
+		double y2 = centerHeght;
+		// this point is the bot lift and will also got from larger to smaller
+		// int previouX0
+		// it's twice the size of the set tile width
+		double x3 = centerWidth - tileWidth / 2;
+		// this point is is the bot lift and is set it the height of the game
+		// pane so at the bottom of window.
+		double y3 = centerHeght;
+		// ===================================================================================================
+		// Below this is point is the code for all the rendering for first
+		// person
+		// ====================================================================================================
+		for (int i = 0; i < squaresInFront; i++) {
+			// tiles in front of the player is rendered first
+			Polygon p = new Polygon();
 
-                Polygon p3 = new Polygon();
-                // adds the grass image
-                p3.setFill(new ImagePattern(grass));
-                // this just push it down by 10
-                p3.setLayoutY(10);
-                // this will get the width of the square that is the on facing
-                // the player, the width will be the bot part of the facing
-                // player square.
-                double previouWidthOfSquare = (x2 - x3);
-                // this is the bot part of the tile which is just placed to the
-                // left of the facing tile.
-                double tempx3 = x3 + (j * previouWidthOfSquare);
-                // this is to force the polygons to draw in range of the screen
-                if (tempx3 > gamePaneWidth) {
-                    tempx3 = gamePaneWidth;
-                }
-                p3.getPoints().add(tempx3);
-                p3.getPoints().add(y3);
-                double tempx2 = x2 + (j * previouWidthOfSquare);
-                if (tempx2 > gamePaneWidth) {
-                    tempx2 = gamePaneWidth;
-                }
+			p.setFill(new ImagePattern(grass));
+			// origins
+			p.setLayoutY(10);
+			// current scaled width of the top part of the tile
+			double nowWidthOfSquare = tileWidth * Math.pow(scaleY, i + 1);
+			// this is the top part of the tile starting x pos
+			double nowStartX = centerWidth - nowWidthOfSquare / 2;
+			// this is the bot part of the tile which is just the previous tiles
+			// top part
+			p.getPoints().add(x3);
+			p.getPoints().add(y3);
+			p.getPoints().add(x2);
+			p.getPoints().add(y2);
+			// this is the top part to the tile and will be scaled from larger
+			// to smaller
+			// /__\
+			p.getPoints().add(nowStartX + nowWidthOfSquare);
+			p.getPoints().add(topLine - tileHeight * Math.pow(scaleY, i + 1));
+			p.getPoints().add(nowStartX);
+			p.getPoints().add(topLine - tileHeight * Math.pow(scaleY, i + 1));
+			p.setStroke(javafx.scene.paint.Color.AQUA);
+			p.setStrokeWidth(1);
+			renderGroup.getChildren().add(p);
+			// tiles on the lift of the players are render second for ever 1
+			// tile that in front of them
+			for (int j = 0; j < squaresToLeft; j++) {
+				Polygon p2 = new Polygon();
+				// this just push it down by 10
+				p2.setLayoutY(10);
+				// adds the grass image
+				p2.setFill(new ImagePattern(grass));
+				// this will get the width of the square that is the on facing
+				// the player
+				double previouWidthOfSquare = (x2 - x3);
+				// this is the bot part of the tile which is just placed to the
+				// left of the facing tile.
+				p2.getPoints().add(x3 - (j * previouWidthOfSquare));
+				p2.getPoints().add(y3);
+				p2.getPoints().add(x2 - (j * previouWidthOfSquare));
+				p2.getPoints().add(y2);
+				// this is the top part to the tile and will be scaled on the
+				// left from larger
+				// to smaller
+				p2.getPoints().add(nowStartX + nowWidthOfSquare - j * nowWidthOfSquare);
+				p2.getPoints().add(topLine - tileHeight * Math.pow(scaleY, i + 1));
+				p2.getPoints().add(nowStartX - j * nowWidthOfSquare);
+				p2.getPoints().add(topLine - tileHeight * Math.pow(scaleY, i + 1));
+				p2.setStroke(javafx.scene.paint.Color.AQUA);
+				p2.setStrokeWidth(1);
+				renderGroup.getChildren().add(p2);
+			}
+			// tiles on the right of the players are render second for ever 1
+			// tile that in front of them
+			for (int j = 0; j < squaresToRight; j++) {
 
-                p3.getPoints().add(tempx2);
-                p3.getPoints().add(y2);
-                double tempx1 = nowStartX + nowWidthOfSquare + j * nowWidthOfSquare;
-                if (tempx1 > gamePaneWidth) {
-                    tempx1 = gamePaneWidth;
-                }
-                // this is the top part to the tile and will be scaled on the
-                // left from larger
-                // to smaller
-                p3.getPoints().add(tempx1);
-                p3.getPoints().add(topLine - tileHeight * Math.pow(scaleY, i + 1));
-                double tempx0 = nowStartX + j * nowWidthOfSquare;
-                if (tempx0 > gamePaneWidth) {
-                    tempx0 = gamePaneWidth;
-                }
-                p3.getPoints().add(tempx0);
-                p3.getPoints().add(topLine - tileHeight * Math.pow(scaleY, i + 1));
-                p3.setStroke(javafx.scene.paint.Color.AQUA);
-                p3.setStrokeWidth(1);
-                group.getChildren().add(p3);
-            }
+				Polygon p3 = new Polygon();
+				// adds the grass image
+				p3.setFill(new ImagePattern(grass));
+				// this just push it down by 10
+				p3.setLayoutY(10);
+				// this will get the width of the square that is the on facing
+				// the player, the width will be the bot part of the facing
+				// player square.
+				double previouWidthOfSquare = (x2 - x3);
+				// this is the bot part of the tile which is just placed to the
+				// left of the facing tile.
+				double tempx3 = x3 + (j * previouWidthOfSquare);
+				// this is to force the polygons to draw in range of the screen
+				if (tempx3 > gamePaneWidth) {
+					tempx3 = gamePaneWidth;
+				}
+				p3.getPoints().add(tempx3);
+				p3.getPoints().add(y3);
+				double tempx2 = x2 + (j * previouWidthOfSquare);
+				if (tempx2 > gamePaneWidth) {
+					tempx2 = gamePaneWidth;
+				}
 
-            // update the bot right point to previous tiles top part which will
-            // also be the top left part in the prevous tile
-            x3 = nowStartX;
-            y3 = topLine - tileHeight * Math.pow(scaleY, i + 1);
+				p3.getPoints().add(tempx2);
+				p3.getPoints().add(y2);
+				double tempx1 = nowStartX + nowWidthOfSquare + j * nowWidthOfSquare;
+				if (tempx1 > gamePaneWidth) {
+					tempx1 = gamePaneWidth;
+				}
+				// this is the top part to the tile and will be scaled on the
+				// left from larger
+				// to smaller
+				p3.getPoints().add(tempx1);
+				p3.getPoints().add(topLine - tileHeight * Math.pow(scaleY, i + 1));
+				double tempx0 = nowStartX + j * nowWidthOfSquare;
+				if (tempx0 > gamePaneWidth) {
+					tempx0 = gamePaneWidth;
+				}
+				p3.getPoints().add(tempx0);
+				p3.getPoints().add(topLine - tileHeight * Math.pow(scaleY, i + 1));
+				p3.setStroke(javafx.scene.paint.Color.AQUA);
+				p3.setStrokeWidth(1);
+				renderGroup.getChildren().add(p3);
+			}
 
-            // update the bot left point to the previous tiles top part which
-            // will also be the top right part in the previous tile
-            x2 = nowStartX + nowWidthOfSquare;
-            y2 = topLine - tileHeight * Math.pow(scaleY, i + 1);
-            // prevTopLine = topLine;
-            // this updates the width of the next topline which will be used to
-            // calc x0 , x1 so the top part
-            topLine = topLine - tileHeight * Math.pow(scaleY, i + 1);
+			// update the bot right point to previous tiles top part which will
+			// also be the top left part in the prevous tile
+			x3 = nowStartX;
+			y3 = topLine - tileHeight * Math.pow(scaleY, i + 1);
 
-        }
-        // TODO: call the render avatar method here
-        // renderObjects();
+			// update the bot left point to the previous tiles top part which
+			// will also be the top right part in the previous tile
+			x2 = nowStartX + nowWidthOfSquare;
+			y2 = topLine - tileHeight * Math.pow(scaleY, i + 1);
+			// prevTopLine = topLine;
+			// this updates the width of the next topline which will be used to
+			// calc x0 , x1 so the top part
+			topLine = topLine - tileHeight * Math.pow(scaleY, i + 1);
 
-        renderObjects();
-    }
+		}
+		// TODO: call the render avatar method here
+		// renderObjects();
 
-    /**
-     * this method is used to render the object in the game.
-     */
-    public void renderObjects() {
+		renderObjects(renderGroup);
+	}
+
+	/**
+	 * this method is used to render the object in the game.
+	 */
+	public void renderObjects(Group renderGroup) {
         String[][] worldMap = mapParser.getMap();
         // this is used to for the top line points x0 and x1 which will be
         // scaled from larger to smaller
@@ -327,7 +314,7 @@ public class Rendering {
                     // here is where we need to do the logic
                     imageViewTree.setX(x0);
                     imageViewTree.setY(y0);
-                    group.getChildren().add(imageViewTree);
+                    renderGroup.getChildren().add(imageViewTree);
                 } else if (worldMap[row][col].equals("chest")) {
                     Image tree = loadImage(CHEST_IMAGE);
                     ImageView imageViewTree = new ImageView();
@@ -338,7 +325,7 @@ public class Rendering {
                     // here is where we need to do the logic
                     imageViewTree.setX(x0);
                     imageViewTree.setY(y0);
-                    group.getChildren().add(imageViewTree);
+                    renderGroup.getChildren().add(imageViewTree);
                 }
                 // this will be the sqares to the left
 
@@ -378,7 +365,7 @@ public class Rendering {
                             // here is where we need to do the logic
                             imageViewTree.setX(tempLeftx0);
                             imageViewTree.setY(tempLefty0);
-                            group.getChildren().add(imageViewTree);
+                            renderGroup.getChildren().add(imageViewTree);
                         } else if (worldMap[row][col - j].equals("chest")) {
                             Image tree = loadImage(CHEST_IMAGE);
                             ImageView imageViewTree = new ImageView();
@@ -389,7 +376,7 @@ public class Rendering {
                             // here is where we need to do the logic
                             imageViewTree.setX(tempLeftx0);
                             imageViewTree.setY(tempLefty0);
-                            group.getChildren().add(imageViewTree);
+                            renderGroup.getChildren().add(imageViewTree);
                         }
                     }
 
@@ -458,7 +445,7 @@ public class Rendering {
                             // here is where we need to do the logic
                             imageViewTree.setX(tempRightx0);
                             imageViewTree.setY(tempRighty0);
-                            group.getChildren().add(imageViewTree);
+                            renderGroup.getChildren().add(imageViewTree);
                         } else if (worldMap[row][col - j].equals("chest")) {
                             Image tree = loadImage(CHEST_IMAGE);
                             ImageView imageViewTree = new ImageView();
@@ -469,7 +456,7 @@ public class Rendering {
                             // here is where we need to do the logic
                             imageViewTree.setX(tempRightx0);
                             imageViewTree.setY(tempRighty0);
-                            group.getChildren().add(imageViewTree);
+                            renderGroup.getChildren().add(imageViewTree);
                         }
                     }
                 }
@@ -506,60 +493,13 @@ public class Rendering {
     /**
      * this method is used to move the player in the screen given player, it then calls
      * the render method
-     * 
+     *
      * @param player
      */
     public void movePlayer(Player player) {
         this.player = player;
         // TODO: call render;
         // render();
-    }
-
-    /**
-     * this method is used to set the group which is used to render the images on the
-     * screen and will be used by the gui class
-     * 
-     * @param renderGroup
-     */
-    public void setGroup(Group renderGroup) {
-        this.group = renderGroup;
-    }
-
-    /**
-     * Redraw the rendering panel
-     */
-    public void redraw() {
-        Map<Integer, Position> positions = controller.getPositions();
-        Position selfPosition = positions.get(controller.getUid());
-        int areaId = selfPosition.areaId;
-        char[][] map = controller.getCharMapByAreaId(areaId);
-        int visibility = controller.getVisibility();
-
-        redraw(positions, map, visibility);
-    }
-
-    /**
-     * Redraw the rendering panel.
-     * 
-     * @param positions
-     *            --- the position of all player.
-     * @param areaMap
-     *            --- the area map represented as a char[][]
-     * @param visibility
-     *            --- current visibility.
-     */
-    private void redraw(Map<Integer, Position> positions, char[][] areaMap,
-            int visibility) {
-
-        // player's coordinate on board, and direction.
-        Position selfPosition = positions.get(controller.getUid());
-
-        int x = selfPosition.x;
-        int y = selfPosition.y;
-        Direction direction = selfPosition.getDirection();
-
-        // TODO redraw the rendering panel
-
     }
 
     @Override

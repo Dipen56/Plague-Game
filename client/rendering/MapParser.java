@@ -8,12 +8,12 @@ import java.util.Scanner;
  * this class represent the parser for the game world. this class will basically take a
  * txt file and create a string form of the world map which will be used to render the
  * game world.
- * 
+ *
  * @author Dipen
  *
  */
 public class MapParser {
-    private static final String WORLD_MAP_FILE = "/worldmap.txt";
+    private static final String WORLD_MAP_FILE = "/rec/worldmap.txt";
     private String[][] map;
     private Scanner sc;
 
@@ -24,7 +24,7 @@ public class MapParser {
 
     public void parse() {
         File file = new File(
-                "H:/EclipseNeonWorkspace/SWEN222GroupProjectIntegration/rec/worldmap.txt");
+                "./rec/worldmap.txt");
         String line;
         int row = 0;
         try {
