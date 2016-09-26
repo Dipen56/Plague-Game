@@ -6,8 +6,10 @@ import javafx.scene.image.Image;
 import javafx.application.*;
 import javafx.stage.Stage;
 
-import javafx.scene.layout.*;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.control.*;
+
+import javafx.scene.layout.*;
 import javafx.scene.shape.*;
 import javafx.scene.paint.Color;
 import javafx.scene.layout.StackPane;
@@ -32,6 +34,7 @@ import server.ServerMain;
  */
 
 public class ServerGui extends Application {
+
     private static final String GAMEICON_IMAGE = "/game-icon.png";
     private Stage window;
     private BorderPane borderPane;
