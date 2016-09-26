@@ -126,10 +126,6 @@ public class Player {
 	public int getHealthFromSave(){
 		return this.healthSavingValue;
 	}
-
-	public Avatar getAvatar() {
-		return this.avatar;
-	}
 	
 	/**
 	 * Sets the virus field. Can only be used while the player is loading from a data file.
