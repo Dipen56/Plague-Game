@@ -25,10 +25,8 @@ public class TransitionSpace extends GroundSpace {
     private final Position destPosition;
 
     /**
-     * @param The
-     *            position of this object on the map.
-     * @param The
-     *            destination position in the destination area.
+     * @param The position of this object on the map.
+     * @param The destination position in the destination area.
      * @param Direction
      *            to face in order to enter destination area.
      */
@@ -36,19 +34,15 @@ public class TransitionSpace extends GroundSpace {
         this.currentPosition = pos;
         this.destPosition = destPos;
     }
+    
+    public Position getCurrentPosition() {
+        return currentPosition;
+    }
 
-    /**
-     * 
-     * @return
-     */
     public Position getDestination() {
         return destPosition;
     }
 
-    /**
-     * 
-     * @return
-     */
     public Direction getFacingDirection() {
         return currentPosition.getDirection();
     }

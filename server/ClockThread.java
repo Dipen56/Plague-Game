@@ -1,4 +1,4 @@
-package anotherServer;
+package server;
 
 import server.game.Game;
 
@@ -11,7 +11,7 @@ import server.game.Game;
  * 
  * needs to be decided.
  * 
- * @author Rafaela (Just put your Id here)
+ * @author Rafaela & Hector
  *
  */
 public class ClockThread extends Thread {

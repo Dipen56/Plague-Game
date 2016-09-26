@@ -1,4 +1,4 @@
-package anotherServer;
+package server;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -8,14 +8,16 @@ import java.util.HashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import client.view.ClockThread;
 import server.game.Game;
 import server.game.GameError;
 import server.game.TestConst;
+import server.view.ServerGui;
 
 /**
  * This is a server main class I (Hector) copied from Rafaela's code. Some modifications.
  * 
- * @author Rafaela (Just put your Id here)
+ * @author Rafaela & Hector
  *
  */
 public class ServerMain {
@@ -26,15 +28,11 @@ public class ServerMain {
     /**
      * The period between every broadcast
      */
-    static final int DEFAULT_BROADCAST_CLK_PERIOD = 50;
+    public static final int DEFAULT_BROADCAST_CLK_PERIOD = 50;
     /**
      * A series of port number, in case the port is used.
      */
     public static final int[] PORT_NUM = { 6000, 6001, 6002, 6003, 6004, 6005 };
-    /**
-     * The thread used for maintaining the game world
-     */
-    private ClockThread clockThread;
     /**
      * The server socket waiting for connection.
      */
@@ -53,6 +51,10 @@ public class ServerMain {
     private HashMap<Integer, Receptionist> receptionists;
 
     /**
+     * this is the server GUI which is used to display the ip an port of the server
+     */
+
+    /**
      * Constructor
      */
     public ServerMain() {
@@ -67,7 +69,6 @@ public class ServerMain {
 
         // create the game world
         game = new Game(TestConst.world, TestConst.areas);
-        clockThread = new ClockThread(DEFAULT_CLK_PERIOD, game);
         clientsPool = Executors.newFixedThreadPool(numPlayers);
 
         runServer(numPlayers);
@@ -89,6 +90,18 @@ public class ServerMain {
                 + serverSocket.getInetAddress().toString() + ", port: "
                 + serverSocket.getLocalPort());
 
+        /*
+         * TODO integrate the server into GUI.
+         * 
+         */
+        new Thread() {
+            public void run() {
+                ServerGui.port = serverSocket.getLocalPort();
+                ServerGui.ip = serverSocket.getInetAddress().toString();
+                ServerGui.launch(ServerGui.class);
+            }
+        }.start();
+
         int count = 0;
 
         try {
@@ -103,6 +116,8 @@ public class ServerMain {
 
                 Receptionist receptionist = new Receptionist(clientSocket, uId,
                         DEFAULT_BROADCAST_CLK_PERIOD, game);
+                // send the map to client
+                receptionist.sendMapAndID();
                 receptionists.put(uId, receptionist);
                 count++;
             }
@@ -133,6 +148,12 @@ public class ServerMain {
     }
 
     private void runGame() {
+
+        // 2. join the player in, tell the client his uid.
+        for (Receptionist r : receptionists.values()) {
+            r.receiveNameAvatar();
+        }
+
         // Now get those workers busy
         for (Receptionist r : receptionists.values()) {
             clientsPool.submit(r);
@@ -155,17 +176,14 @@ public class ServerMain {
             break;
         }
 
-        System.out.println("finished waiting for everybody ready.");
-
         // ====== everybody is ready, now enter the game ========
         for (Receptionist r : receptionists.values()) {
-            r.setReady();
+            r.setGameRunning();
         }
 
-        System.out.println("finished telling everybody to start.");
+        System.out.println("finished waiting for everybody ready. Game start");
 
         game.startTiming();
-        clockThread.start();
     }
 
     /**

@@ -1,43 +1,35 @@
 package client.view;
 
-import javafx.*;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TitledPane;
 import javafx.scene.image.Image;
-
-import javafx.application.*;
 import javafx.stage.Stage;
 import javafx.scene.Group;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.FlowPane;
-import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Line;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.paint.Color;
-import javafx.scene.control.*;
 import javafx.scene.layout.StackPane;
 import javafx.scene.image.ImageView;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.GridPane;
-import javafx.event.*;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.input.KeyCode;
 import javafx.stage.WindowEvent;
-import javafx.beans.value.*;
 
-import java.awt.Point;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import java.nio.file.attribute.PosixFilePermission;
+import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+
+import java.time.LocalTime;
 
 import client.rendering.Rendering;
 
@@ -49,16 +41,14 @@ import client.rendering.Rendering;
  *
  */
 public class GUI extends Application {
-	// Point on center of the board
-	private String defaultDirection = "up";
+
 	// GUI Style CSS
 	private static final String STYLE_CSS = "/main.css";
 	// Constants Images
 	private static final String GAMEICON_IMAGE = "/game-icon.png";
 	private static final String INVENTORY_IMAGE = "/item-tray.png";
-	private static final String SLASH_SCREEN_IMAGE = "/night.jpg"; // this will
-																	// be
-																	// changed
+	private static final String SLASH_SCREEN_IMAGE = "/spash-screen-background.png";
+
 	private static final String AVATAR_ONE_IMAGE = "/standingstillrear.png";
 
 	// Constants Dimensions
@@ -68,7 +58,7 @@ public class GUI extends Application {
 	public static final int GAMEPANE_WIDTH_VALUE = WIDTH_VALUE - 400;
 
 	// main window
-	private Stage window;
+	private static Stage window;
 	// controls
 	private MenuBar menuBar;
 	private Label timeLable;
@@ -86,19 +76,11 @@ public class GUI extends Application {
 	private BorderPane borderPane;
 	private String chatText = "HARDD: Welcome Players";
 	private StackPane gamePane;
-	// Event Handlers
-	// for clicks
-	private EventHandler<ActionEvent> actionEvent;
-	// for keys inputs
-	private EventHandler<KeyEvent> keyEvent;
-	// for mouse events
-	private EventHandler<MouseEvent> mouseEvent;
-	// for window resizing not really need else where
-	private EventHandler<WindowEvent> windowEvent;
 
-	private Rendering render = new Rendering();
+	// private Rendering render = new Rendering();
 
-	public static ViewControler viewControler;
+	private static ClientUI viewControler;
+	private static Rendering render;
 
 	// Button Controls For Slash Screen
 	private Button play;
@@ -114,14 +96,22 @@ public class GUI extends Application {
 	private Group avatarGroup;
 	private String selectedAvatar;
 	// waiting room Controls
-	FlowPane playersWaiting;
-	private Button beginGame;
+	private FlowPane playersWaiting;
+	private Button readyGame;
 	private Button quitWaitingRoom;
+	// this is for event
+	// for action events
+	private EventHandler<ActionEvent> actionEvent;
+	// for keys inputs
+	private EventHandler<KeyEvent> keyEvent;
+	// for mouse events
+	private EventHandler<MouseEvent> mouseEvent;
+	// for window resizing not really need else where
+	private EventHandler<WindowEvent> windowEvent;
 
-	public GUI(ViewControler viewControler) {
+	public GUI(ClientUI viewControler, Rendering rendering) {
 		this.viewControler = viewControler;
-		// GUI.launch(GUI.class);
-
+		this.render = rendering;
 	}
 
 	public GUI() {
@@ -139,44 +129,56 @@ public class GUI extends Application {
 		window.getIcons().add(loadImage(GAMEICON_IMAGE));
 		// this will disable and enable resizing so when we have a working
 		// version we can just set this to false;
-		window.setResizable(false);
 		// this starts the action listener
-		actionEventHandler();
-		// this will start the key listener
-		keyEventHander();
-		// this will start the mouse listener
-		mouseEventHander();
+		viewControler.startListeners();
+		actionEvent = viewControler.getActionEventHandler();
+		keyEvent = viewControler.getKeyEventHander();
+		mouseEvent = viewControler.getMouseEventHander();
+		windowEvent = viewControler.getWindowEventHander();
+		window.setResizable(false);
 		slashScreen();
+		// loginScreen() ;
 		window.show();
-
 	}
 
 	public void slashScreen() {
 		Group slashGroup = new Group();
 		Image slashBackground = loadImage(SLASH_SCREEN_IMAGE);
 		ImageView slashBackgroundImage = new ImageView(slashBackground);
-		slashBackgroundImage.setFitHeight(HEIGHT_VALUE + 20);
-		slashBackgroundImage.setFitWidth(WIDTH_VALUE + 20);
-		HBox buttonBox = new HBox(10);
-		buttonBox.setLayoutX((WIDTH_VALUE / 2) - (100));
-		buttonBox.setLayoutY(HEIGHT_VALUE / 2);
+		slashBackgroundImage.setFitHeight(HEIGHT_VALUE + 18);
+		slashBackgroundImage.setFitWidth(WIDTH_VALUE + 18);
+		VBox buttonBox = new VBox(10);
+		buttonBox.setLayoutX(50);
+		buttonBox.setLayoutY(HEIGHT_VALUE / 2 + (50));
+
 		play = new Button("Play");
+		play.getStyleClass().add("button-slashscreen");
+		play.setPrefWidth(200);
 		play.setOnAction(actionEvent);
 		quit = new Button("Run Away");
+		quit.getStyleClass().add("button-slashscreen");
+		quit.setPrefWidth(200);
 		quit.setOnAction(actionEvent);
 		help = new Button("Help");
+		help.getStyleClass().add("button-slashscreen");
+		help.setPrefWidth(200);
 		help.setOnAction(actionEvent);
+
 		buttonBox.getChildren().addAll(play, quit, help);
 		slashGroup.getChildren().add(slashBackgroundImage);
 		slashGroup.getChildren().add(buttonBox);
 		BorderPane slashBorderPane = new BorderPane();
 		slashBorderPane.getChildren().add(slashGroup);
 		Scene slashScene = new Scene(slashBorderPane, WIDTH_VALUE, HEIGHT_VALUE);
+		slashScene.getStylesheets().add(this.getClass().getResource(STYLE_CSS).toExternalForm());
 		window.setScene(slashScene);
-
 	}
 
 	public void loginScreen() {
+		actionEvent = viewControler.getActionEventHandler();
+		keyEvent = viewControler.getKeyEventHander();
+		mouseEvent = viewControler.getMouseEventHander();
+		windowEvent = viewControler.getWindowEventHander();
 		VBox loginBox = new VBox(5);
 		info = new Label();
 		info.setText("Enter The IP,Port and UserName");
@@ -198,7 +200,7 @@ public class GUI extends Application {
 		// loginBox.getChildren().add(ipBox);
 
 		HBox portBox = new HBox(3);
-		Label port = new Label("Enter UserName");
+		Label port = new Label("Enter Port");
 		portInput = new TextField();
 		portBox.getChildren().addAll(port, portInput);
 		// loginBox.getChildren().add(portBox);
@@ -221,7 +223,6 @@ public class GUI extends Application {
 		loginBox.getChildren().add(buttons);
 		Scene slashScene = new Scene(loginBox, WIDTH_VALUE / 2, HEIGHT_VALUE / 2);
 		window.setScene(slashScene);
-
 	}
 
 	public void waitingRoom() {
@@ -236,15 +237,14 @@ public class GUI extends Application {
 		waitingRoomBox.getChildren().add(playersWaiting);
 		FlowPane buttons = new FlowPane();
 		buttons.setHgap(10);
-		beginGame = new Button("Begain");
-		beginGame.setOnAction(actionEvent);
+		readyGame = new Button("Ready");
+		readyGame.setOnAction(actionEvent);
 		quitWaitingRoom = new Button("Leave Game");
 		quitWaitingRoom.setOnAction(actionEvent);
-		buttons.getChildren().addAll(beginGame, quitWaitingRoom);
+		buttons.getChildren().addAll(readyGame, quitWaitingRoom);
 		waitingRoomBox.getChildren().add(buttons);
 		Scene slashScene = new Scene(waitingRoomBox, WIDTH_VALUE, HEIGHT_VALUE);
 		window.setScene(slashScene);
-
 	}
 
 	public void startGame() {
@@ -266,21 +266,17 @@ public class GUI extends Application {
 		group.prefHeight(HEIGHT_VALUE);
 
 		// Calls the rendering
-		render.render(defaultDirection);
+		render.render(group, 10);
 		group.setLayoutX(3);
 		group.setLayoutY(35);
 		// only anchor sort of works
 		// AnchorPane temp = new AnchorPane();
-		// temp.setPrefWidth(GAMEPANE_WIDTH_VALUE);
-		// temp.getChildren().add(group);
 		borderPane.getChildren().add(group);
-		//borderPane.getChildren().add(temp);
 
 		Scene scene = new Scene(borderPane, WIDTH_VALUE, HEIGHT_VALUE);
 		scene.getStylesheets().add(this.getClass().getResource(STYLE_CSS).toExternalForm());
 		scene.setOnKeyPressed(keyEvent);
 		window.setScene(scene);
-
 	}
 
 	/**
@@ -308,7 +304,6 @@ public class GUI extends Application {
 		menuBar.getMenus().addAll(file, help);
 		// add the layout to the borderPane Layout
 		borderPane.setTop(menuBar);
-
 	}
 
 	/**
@@ -322,7 +317,7 @@ public class GUI extends Application {
 		timeLable.setPrefWidth(400);
 		timeLable.setPrefHeight(50);
 		timeLable.getStyleClass().add("world-time-lable");
-		timeLable.setText("00:00");
+		// timeLable.setText(clockTime);
 		rightPanel.getChildren().add(titlePane);
 	}
 
@@ -372,6 +367,7 @@ public class GUI extends Application {
 		titlePane.setContent(chatControls);
 
 		rightPanel.getChildren().add(titlePane);
+
 	}
 
 	/**
@@ -437,113 +433,112 @@ public class GUI extends Application {
 	 * @param text
 	 * @param user
 	 */
-	public void setChatText(String text) {
+	public void setChatText(String text, String user) {
 		chatText = chatText + "\n";
-		chatText = chatText +text;
+		chatText = chatText + user + ": " + text;
 		textAreaLable.setText(chatText);
 	}
 
 	/**
-	 * this method will return the masg type in the chat box apon clicking the
-	 * send button.
+	 * this method will return the massage typed in the chat box upon clicking
+	 * the send button.
 	 *
 	 * @return
 	 */
 	public String getChatMsg() {
-		// System.out.println(render);
 		String msgToSend = msg.getText();
 		return msgToSend;
 	}
 
 	/**
-	 * this method is used to check for action and give a implementation of
-	 * handle method
+	 * This method will return the user name.
+	 *
+	 * @return
 	 */
-	private void actionEventHandler() {
-		actionEvent = new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent event) {
-				if (event.getSource() == send) {
-					viewControler.getChatMsg(getChatMsg());
-				} else if (event.getSource() == play) {
-					loginScreen();
-				} else if (event.getSource() == quit) {
-					window.close();
-				} else if (event.getSource() == help) {
-					// TODO: need to make a help thing which tells the user how
-					// to play the game
-					System.out.println("help me");
-				} else if (event.getSource() == login) {
-					// TODO: set secected avatar
-					// TODO: check login was correct
-					// TODO set the Avatars whicha re all the palyes currently in
-					// the waiting room
-					waitingRoom();
-				} else if (event.getSource() == quitLogin) {
-					window.close();
-				} else if (event.getSource() == beginGame) {
-					// TODO: check that there are 2 > players only start the
-					// game if there are else promt a masg and also let the
-					// other players know the game is starting
-					startGame();
-				} else if (event.getSource() == quitWaitingRoom) {
-					window.close();
-				}
-
-			}
-		};
+	public String getUserName() {
+		String name = userNameInput.getText();
+		return name;
 	}
 
 	/**
-	 * this methods is used to listen for keys being pressed and will respond
-	 * Accordingly
+	 * This method will return the IP address as a string
+	 *
+	 * @return
 	 */
-	private void keyEventHander() {
-		keyEvent = new EventHandler<KeyEvent>() {
-
-			@Override
-			public void handle(KeyEvent event) {
-				// getSorce will give the control which caused the event
-				if (event.getCode() == KeyCode.UP) {
-					// this is for moving left
-					render.render("up");
-				} else if (event.getCode() == KeyCode.DOWN) {
-					// this is for moving right
-					render.render("down");
-				} else if (event.getCode() == KeyCode.LEFT) {
-					// this is for moving up
-					render.render("left");
-				} else if (event.getCode() == KeyCode.RIGHT) {
-					// this is for moving down
-					render.render("right");
-				}
-			}
-		};
+	public String getIpAddress() {
+		String ipAddress = ipInput.getText();
+		return ipAddress;
 	}
 
 	/**
-	 * this this is used to listen for mouse clicks on different controls
+	 * This method will return the port number as a String
+	 *
+	 * @return
 	 */
-	private void mouseEventHander() {
-		mouseEvent = new EventHandler<MouseEvent>() {
-
-			@Override
-			public void handle(MouseEvent event) {
-				// Currently this listen to clicks on the items
-				System.out.println("here");
-			}
-		};
+	public String getPortString() {
+		String portStr = portInput.getText();
+		return portStr;
 	}
 
 	/**
-	 * this is a helper method used to load images
+	 * This method will return the avatar index. Note that it's 0-indexed.
+	 *
+	 * @return
+	 */
+	public int getAvatarIndex() {
+		// FIXME to be implemented. Note that it's 0-indexed.
+		return 0;
+	}
+
+	/**
+	 * this method will set the world time
+	 *
+	 * @param worldTime
+	 */
+	public void setTime(LocalTime time) {
+
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				timeLable.setText(time.getHour() + ":" + time.getMinute() + ":" + time.getSecond());
+
+			}
+		});
+	}
+
+	/**
+	 * this method will return the window
+	 *
+	 * @return
+	 */
+	public Stage getWindow() {
+		return window;
+	}
+
+	/**
+	 * A helper method used to load images
 	 *
 	 * @param name
 	 * @return
 	 */
-	private Image loadImage(String name) {
-		Image image = new Image(this.getClass().getResourceAsStream(name));
+	public static Image loadImage(String name) {
+		Image image = new Image(GUI.class.getResourceAsStream(name));
 		return image;
+	}
+
+	/**
+	 * This static helper method will pop up a warning dialog to user.
+	 *
+	 * @param msg
+	 */
+	public static void showWarningPane(String msg) {
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				AlertBox.displayMsg("Warning", msg);
+			}
+		});
+		System.err.println(msg);
 	}
 
 }

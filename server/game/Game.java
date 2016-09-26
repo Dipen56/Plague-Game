@@ -6,7 +6,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Random;
+import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -19,6 +21,7 @@ import server.game.player.Player;
 import server.game.player.Position;
 import server.game.world.Area;
 import server.game.world.Container;
+import server.game.world.GroundSpace;
 import server.game.world.Lockable;
 import server.game.world.MapElement;
 import server.game.world.Obstacle;
@@ -38,6 +41,7 @@ import server.game.world.TransitionSpace;
  *
  */
 public class Game {
+
     /**
      * The visibility in daytime. This number indicates that everything within this
      * distance on world grid is visible.
@@ -60,6 +64,13 @@ public class Game {
      */
     // private static final float SPAWN_IN_WORLD_CHANCE = 0.6f;
 
+    public static final GroundSpace groundSpace = new GroundSpace();
+    
+    /**
+     * A means by which to simply compare game saves.
+     */
+    private int gameID = 0;
+    
     /**
      * World map
      */
@@ -74,7 +85,7 @@ public class Game {
      */
     private Map<Integer, Player> players;
     /**
-     * For testing. Will be removed.
+     * For testing. Will be removed.	
      */
     private Player player;
     /**
@@ -100,6 +111,7 @@ public class Game {
 
         players = new HashMap<>();
         torches = new ArrayList<>();
+     
 
         // TODO parse the file and construct world
 
@@ -127,24 +139,38 @@ public class Game {
 
         this.world = world;
         this.areas = areas;
+        this.gameID = new Random().nextInt((5000 - 0) + 1);
     }
 
     /**
-     * Constructor used for data storage test. Will not exist in final version.
-     * 
-     * @param world
-     * @param entrances
-     * @param player
-     */
-    public Game(Area world, Map<Integer, Area> areas, Player player) {
+	 * Constructor used for data storage. 
+	 * @param The main game world.
+	 * @param A map from areaID's to areas.
+	 * @param A map from playerID's to players.
+	 * @param A list of torches. This can be null.
+	 */
+	public Game(Area world, Map<Integer, Area> areas, Map<Integer, Player> players, List<Torch> torches, int gameID) {
+		//torhces 
 
-        this.world = world;
-        this.areas = areas;
-        this.player = player;
-        this.players = new HashMap<>();
-        this.torches = new ArrayList<>();
-        joinPlayer(this.player);
-    }
+		this.world = world;
+		this.areas = areas;
+		this.players = players;
+		this.players = new HashMap<>();
+		if(torches == null){
+			this.torches = new ArrayList<>();
+		}
+		else{
+			this.torches = torches;
+		}
+		for(Player p : players.values()){
+			joinPlayer(p);
+		}
+		 this.gameID = gameID;
+	}
+
+	public List<Torch> getTorches() {
+		return this.torches;
+	}
 
     /**
      * Joins a player in game.
@@ -540,8 +566,14 @@ public class Game {
             return false;
         }
 
+        // if the destPosition of this TransitionSpace is blocked
+        Position destPos = currentTransition.getDestination();
+        if (isOccupiedByOtherPlayer(destPos)) {
+            return false;
+        }
+
         // OK, time for space travel
-        player.setPosition(currentTransition.getDestination());
+        player.setPosition(destPos);
         return true;
     }
 
@@ -760,6 +792,10 @@ public class Game {
         Player player = players.get(uid);
         return player.getInventory();
     }
+    
+    public int getGameID(){
+    	return this.gameID;
+    }
 
     /**
      * This method is used to generate the string for broadcasting player's inventory to
@@ -832,7 +868,9 @@ public class Game {
         if (getClass() != obj.getClass())
             return false;
         Game other = (Game) obj;
+        
         if (areas == null) {
+        	
             if (other.areas != null)
                 return false;
         } else if (!areas.equals(other.areas))

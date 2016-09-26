@@ -6,7 +6,7 @@ import server.game.player.Player;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import server.game.items.Item;
-@XmlRootElement
+
 public interface Container {
 
     /**

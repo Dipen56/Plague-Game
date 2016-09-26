@@ -19,6 +19,10 @@ public abstract class Item {
     public Item(String description) {
         this.description = description;
     }
+    
+    public String getDescription(){
+    	return description;
+    }
 
     /**
      * Change the description of this object. Whenever the status of an object is changed,

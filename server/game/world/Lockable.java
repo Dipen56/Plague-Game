@@ -1,5 +1,7 @@
 package server.game.world;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
 public interface Lockable {
 
     /**
