@@ -5,6 +5,7 @@ import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import sun.applet.Main;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 
@@ -12,7 +13,7 @@ import javafx.geometry.Pos;
 
 /**
  * This class represents a dialog box and is used to display massages.
- * 
+ *
  * @author Dipen
  *
  */
@@ -20,7 +21,7 @@ import javafx.geometry.Pos;
 public class AlertBox {
 	/**
 	 * this method will open a dialog box given the title and the massage.
-	 * 
+	 *
 	 * @param title
 	 * @param massage
 	 */
