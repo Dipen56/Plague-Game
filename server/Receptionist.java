@@ -2,9 +2,14 @@ package server;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.net.Socket;
 
 import server.game.Game;
@@ -36,11 +41,15 @@ public class Receptionist extends Thread {
      * The communicating socket.
      */
     private final Socket socket;
+
+    private DataInputStream input;
+    private DataOutputStream output;
+
     /**
      * A flag indicating whether this client is ready to enter game. If it's false, the
      * server will keep this client in lobby waiting for all clients ready.
      */
-    private boolean isReadyToStartTiming = false;
+    private boolean isClientReady = false;
     /**
      * A flag indicating whether the game is running or not.
      */
@@ -49,64 +58,59 @@ public class Receptionist extends Thread {
     /**
      * Constructor
      * 
-     * @param client
+     * @param socket
      * @param uid
      * @param broadcastClock
      * @param game
      */
-    public Receptionist(Socket client, int uid, int broadcastClock, Game game) {
+    public Receptionist(Socket socket, int uid, int broadcastClock, Game game) {
         this.game = game;
         this.broadcastClock = broadcastClock;
-        this.socket = client;
+        this.socket = socket;
         this.uid = uid;
-    }
 
-    /**
-     * Is this client ready to enter game?
-     * 
-     * @return
-     */
-    public boolean isReady() {
-        return isReadyToStartTiming;
-    }
-
-    /**
-     * This method usually is called by server to tell the client ready to enter game.
-     */
-    public void setReady() {
-        this.isGameRunning = true;
-    }
-
-    @Override
-    public void run() {
         try {
-            DataInputStream input = new DataInputStream(
-                    new BufferedInputStream(socket.getInputStream()));
-            DataOutputStream output = new DataOutputStream(
-                    new BufferedOutputStream(socket.getOutputStream()));
+            output = new DataOutputStream(socket.getOutputStream());
+            input = new DataInputStream(socket.getInputStream());
+        } catch (IOException e) {
+            System.err.println("Lost connection with client." + e.toString());
+            e.printStackTrace();
+        }
+    }
 
-            // First, tell the client about the game world
+    public void sendMapAndID() {
+        /*
+         * TODO It's sending the mock game world currently. should write a method to
+         * convert the map directly into string
+         */
+        String areaString1 = "0,8,7\nEECRT111\nETRRE111\nEEEEE111\nERRETCDE\nERRETTTE\nEREEEEEE\nCRETTEET";
+        String areaString2 = "1,3,3\nEEC\nESB\nEDE";
 
-            // TODO should write a method to convert the map directly into string
-            String areaString1 = "0,8,7\nEECRT111\nETRRE111\nEEEEE111\nERRETCDE\nERRETTTE\nEREEEEEE\nCRETTEET";
-            String areaString2 = "1,3,3\nEEC\nESB\nEDE";
-
+        try {
+            // maps
             output.writeUTF(areaString1);
             output.writeUTF(areaString2);
             output.writeUTF("Fin");
             output.flush();
 
-            // second, join the player in, tell the client his uid.
+            // tell the client his uid
+            output.writeInt(uid);
+            output.flush();
+        } catch (IOException e) {
+            System.err.println("Lost connection with client." + e.toString());
+            e.printStackTrace();
+        }
+    }
+
+    public void receiveNameAvatar() {
+        try {
+            // join the player in, tell the client his uid.
             byte avatarIndex = input.readByte();
             String name = input.readUTF();
             System.out.println("player uid: " + uid + ". avatar " + avatarIndex);
             game.joinPlayer(new Player(uid, Avatar.get(avatarIndex), name));
             System.out.println("initialisation done. joined player: " + uid
                     + " with avatar " + avatarIndex);
-
-            // tell the client his uid
-            output.writeInt(uid);
-            output.flush();
 
             // TODO tell the client his virus type (Packet type need to add)
 
@@ -117,19 +121,62 @@ public class Receptionist extends Thread {
                 System.out.println("Player: [" + p.getGeographicString() + "]");
             }
 
-            // ok now this client is ready to enter game
-            isReadyToStartTiming = true;
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
 
-            // don't start the game until server tell us to start.
-            // (when all clients are ready).
+    /**
+     * Is this client ready to enter game?
+     * 
+     * @return
+     */
+    public boolean isReady() {
+        return isClientReady;
+    }
+
+    /**
+     * This method usually is called by server to tell the client ready to enter game.
+     */
+    public void setGameRunning() {
+        this.isGameRunning = true;
+    }
+
+    @Override
+    public void run() {
+        try {
+
+            // wait until the user is ready
             while (true) {
+                if (input.available() > 0) {
+                    Packet packet = Packet.fromByte(input.readByte());
+                    if (packet == Packet.Ready) {
+                        isClientReady = true;
+                        break;
+                    }
+                }
+
                 try {
                     Thread.sleep(ServerMain.DEFAULT_BROADCAST_CLK_PERIOD);
                 } catch (InterruptedException e) {
                     // Should never happen
                 }
+            }
+
+            // don't start the game until server tell us to start.
+            // (when all clients are ready).
+            while (true) {
                 if (isGameRunning) {
+                    output.writeByte(Packet.Ready.toByte());
+                    output.flush();
                     break;
+                }
+
+                try {
+                    Thread.sleep(ServerMain.DEFAULT_BROADCAST_CLK_PERIOD);
+                } catch (InterruptedException e) {
+                    // Should never happen
                 }
             }
 
