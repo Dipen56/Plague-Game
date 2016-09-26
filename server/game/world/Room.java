@@ -31,11 +31,11 @@ public class Room extends Area implements Lockable {
         this.keyID = keyID;
         this.isLocked = isLocked;
     }
-    
+
 
     /**
-     * Constructor used only in text client. Can be removed after testing.
-     * 
+     * Constructor used during game creation.
+     *
      * @param board
      * @param areaID
      * @param keyID
@@ -46,10 +46,10 @@ public class Room extends Area implements Lockable {
         this.keyID = keyID;
         this.isLocked = isLocked;
     }
-    
+
     /**
      * Constructor used in game load.
-     * 
+     *
      * @param board
      * @param areaID
      * @param keyID
