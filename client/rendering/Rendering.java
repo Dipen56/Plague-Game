@@ -1,7 +1,6 @@
 package client.rendering;
 
 import java.awt.Point;
-import java.util.HashMap;
 import java.util.Map;
 
 import client.view.ClientUI;
@@ -34,7 +33,6 @@ public class Rendering {
     private static final String GRASS_IMAGE = "/grass.png";
     private static final String TREE_IMAGE = "/tree.png";
     private static final String CHEST_IMAGE = "/chest.png";
-    private Group group;
 
     public double scaleY = 0.85; // lower number less scaling
     private int gamePaneHeight = GUI.HEIGHT_VALUE - 35; // 35 y alignment of
@@ -85,7 +83,7 @@ public class Rendering {
     /**
      * this method is used to render the game
      *
-     * @param group
+     * @param renderGroup
      */
     public void render(Group renderGroup) {
 		// TODO: get ride of the renderGroup parameters call the set group
@@ -98,7 +96,7 @@ public class Rendering {
 		imageViewNight.setImage(image);
 		imageViewNight.setFitWidth(gamePaneWidth + 3);
 		imageViewNight.setFitHeight(gamePaneHeight + 35);
-		group.getChildren().add(imageViewNight);
+		renderGroup.getChildren().add(imageViewNight);
 		// int squaresInFront = 0;// the number of squares on the player's face
 		// side
 		// int squaresToLeft = 0;// the number of squares on the player's left
@@ -174,7 +172,7 @@ public class Rendering {
 			p.getPoints().add(topLine - tileHeight * Math.pow(scaleY, i + 1));
 			p.setStroke(javafx.scene.paint.Color.AQUA);
 			p.setStrokeWidth(1);
-			group.getChildren().add(p);
+			renderGroup.getChildren().add(p);
 			// tiles on the lift of the players are render second for ever 1
 			// tile that in front of them
 			for (int j = 0; j < squaresToLeft; j++) {
@@ -201,7 +199,7 @@ public class Rendering {
 				p2.getPoints().add(topLine - tileHeight * Math.pow(scaleY, i + 1));
 				p2.setStroke(javafx.scene.paint.Color.AQUA);
 				p2.setStrokeWidth(1);
-				group.getChildren().add(p2);
+				renderGroup.getChildren().add(p2);
 			}
 			// tiles on the right of the players are render second for ever 1
 			// tile that in front of them
@@ -249,7 +247,7 @@ public class Rendering {
 				p3.getPoints().add(topLine - tileHeight * Math.pow(scaleY, i + 1));
 				p3.setStroke(javafx.scene.paint.Color.AQUA);
 				p3.setStrokeWidth(1);
-				group.getChildren().add(p3);
+				renderGroup.getChildren().add(p3);
 			}
 
 			// update the bot right point to previous tiles top part which will
@@ -270,13 +268,13 @@ public class Rendering {
 		// TODO: call the render avatar method here
 		// renderObjects();
 
-		renderObjects();
+		renderObjects(renderGroup);
 	}
 
 	/**
 	 * this method is used to render the object in the game.
 	 */
-	public void renderObjects() {
+	public void renderObjects(Group renderGroup) {
         String[][] worldMap = mapParser.getMap();
         // this is used to for the top line points x0 and x1 which will be
         // scaled from larger to smaller
@@ -323,7 +321,7 @@ public class Rendering {
                     // here is where we need to do the logic
                     imageViewTree.setX(x0);
                     imageViewTree.setY(y0);
-                    group.getChildren().add(imageViewTree);
+                    renderGroup.getChildren().add(imageViewTree);
                 } else if (worldMap[row][col].equals("chest")) {
                     Image tree = loadImage(CHEST_IMAGE);
                     ImageView imageViewTree = new ImageView();
@@ -334,7 +332,7 @@ public class Rendering {
                     // here is where we need to do the logic
                     imageViewTree.setX(x0);
                     imageViewTree.setY(y0);
-                    group.getChildren().add(imageViewTree);
+                    renderGroup.getChildren().add(imageViewTree);
                 }
                 // this will be the sqares to the left
 
@@ -374,7 +372,7 @@ public class Rendering {
                             // here is where we need to do the logic
                             imageViewTree.setX(tempLeftx0);
                             imageViewTree.setY(tempLefty0);
-                            group.getChildren().add(imageViewTree);
+                            renderGroup.getChildren().add(imageViewTree);
                         } else if (worldMap[row][col - j].equals("chest")) {
                             Image tree = loadImage(CHEST_IMAGE);
                             ImageView imageViewTree = new ImageView();
@@ -385,7 +383,7 @@ public class Rendering {
                             // here is where we need to do the logic
                             imageViewTree.setX(tempLeftx0);
                             imageViewTree.setY(tempLefty0);
-                            group.getChildren().add(imageViewTree);
+                            renderGroup.getChildren().add(imageViewTree);
                         }
                     }
 
@@ -454,7 +452,7 @@ public class Rendering {
                             // here is where we need to do the logic
                             imageViewTree.setX(tempRightx0);
                             imageViewTree.setY(tempRighty0);
-                            group.getChildren().add(imageViewTree);
+                            renderGroup.getChildren().add(imageViewTree);
                         } else if (worldMap[row][col - j].equals("chest")) {
                             Image tree = loadImage(CHEST_IMAGE);
                             ImageView imageViewTree = new ImageView();
@@ -465,7 +463,7 @@ public class Rendering {
                             // here is where we need to do the logic
                             imageViewTree.setX(tempRightx0);
                             imageViewTree.setY(tempRighty0);
-                            group.getChildren().add(imageViewTree);
+                            renderGroup.getChildren().add(imageViewTree);
                         }
                     }
                 }
@@ -509,16 +507,6 @@ public class Rendering {
         this.player = player;
         // TODO: call render;
         // render();
-    }
-
-    /**
-     * this method is used to set the group which is used to render the images on the
-     * screen and will be used by the gui class
-     *
-     * @param renderGroup
-     */
-    public void setGroup(Group renderGroup) {
-        this.group = renderGroup;
     }
 
     /**
