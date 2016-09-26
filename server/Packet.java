@@ -2,6 +2,7 @@ package server;
 
 /**
  * This enumeration class represents the data packets exchanged between server and client.
+ *
  * For efficiency each Packet should be converted to byte in transition. This class also
  * provides methods to perform byte <--> Packet conversion.
  *
@@ -98,7 +99,6 @@ public enum Packet {
 
     /**
      * Convert the Packet into byte.
-     *
      * @return
      */
     public byte toByte() {

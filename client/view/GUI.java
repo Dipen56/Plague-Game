@@ -47,7 +47,7 @@ public class GUI extends Application {
     private static final String GAMEICON_IMAGE = "/game-icon.png";
     private static final String INVENTORY_IMAGE = "/item-tray.png";
     // this will be changed
-    private static final String SLASH_SCREEN_IMAGE = "/spash-screen-background.jpg";
+    private static final String SLASH_SCREEN_IMAGE = "/spash-screen-background.png";
 
     private static final String AVATAR_ONE_IMAGE = "/standingstillrear.png";
 
