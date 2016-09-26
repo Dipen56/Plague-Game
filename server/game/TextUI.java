@@ -2,7 +2,7 @@ package server.game;
 
 import java.util.Scanner;
 
-import server.ParserUtilities;
+import client.ParserUtilities;
 import server.game.player.Avatar;
 import server.game.player.Player;
 import server.game.player.Position;

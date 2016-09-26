@@ -13,7 +13,7 @@ import java.util.Scanner;
  *
  */
 public class MapParser {
-    private static final String WORLD_MAP_FILE = "/worldmap.txt";
+    private static final String WORLD_MAP_FILE = "/rec/worldmap.txt";
     private String[][] map;
     private Scanner sc;
 
@@ -24,7 +24,8 @@ public class MapParser {
 
     public void parse() {
         File file = new File(
-                "src/worldmap.txt");
+                "./rec/worldmap.txt");
+
         String line;
         int row = 0;
         try {

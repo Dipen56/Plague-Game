@@ -42,6 +42,7 @@ import client.rendering.Rendering;
  */
 public class GUI extends Application {
 
+
 	// GUI Style CSS
 	private static final String STYLE_CSS = "/main.css";
 	// Constants Images
@@ -490,21 +491,20 @@ public class GUI extends Application {
 		return 0;
 	}
 
-	/**
-	 * this method will set the world time
-	 *
-	 * @param worldTime
-	 */
-	public void setTime(LocalTime time) {
+    /**
+     * this method will set the world time
+     * 
+     * @param worldTime
+     */
+    public void setTime(String time) {
 
-		Platform.runLater(new Runnable() {
-			@Override
-			public void run() {
-				timeLable.setText(time.getHour() + ":" + time.getMinute() + ":" + time.getSecond());
-
-			}
-		});
-	}
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                timeLable.setText(time);
+            }
+        });
+    }
 
 	/**
 	 * this method will return the window

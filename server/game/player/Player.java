@@ -455,6 +455,10 @@ public class Player {
         return uID;
     }
 
+    public Avatar getAvatar() {
+        return avatar;
+    }
+
     public int getAreaID() {
         if (position != null) {
             return position.areaId;

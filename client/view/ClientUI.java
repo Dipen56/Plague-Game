@@ -2,13 +2,9 @@ package client.view;
 
 import java.io.IOException;
 import java.net.Socket;
-import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.swing.JOptionPane;
-
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -18,13 +14,12 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.WindowEvent;
 
 import client.Client;
-import client.ClientMain;
+import client.ParserUtilities;
 import client.rendering.Rendering;
 import server.Packet;
-import server.ParserUtilities;
 import server.game.player.Avatar;
-import server.game.player.Direction;
 import server.game.player.Position;
+import server.game.player.Virus;
 
 /**
  * This class is the client side UI, which is where the user start the game from. It also
@@ -41,6 +36,11 @@ public class ClientUI {
     // ============ info fields =================
 
     /**
+     * The period between every update
+     */
+    public static final int DEFAULT_CLK_PERIOD = 100;
+
+    /**
      * This is designed as a table for renderer to index char board to render objects.
      */
     private static final Map<Character, String> MAP_OBJECTS_TABLE;
@@ -54,7 +54,6 @@ public class ClientUI {
      * was sent by server.
      */
     static {
-
         MAP_OBJECTS_TABLE = new HashMap<>();
         ITEM_TABLE = new HashMap<>();
 
@@ -107,9 +106,13 @@ public class ClientUI {
      */
     private String userName;
     /**
-     * Avatar index of this connection.
+     * Avatar type of this connection.
      */
-    private int avatarindex;
+    private Avatar avatar;
+    /**
+     * Virus type of the player at this connection
+     */
+    private Virus virus;
     /**
      * The health left. This is updated by server broadcast.
      */
@@ -169,10 +172,11 @@ public class ClientUI {
         positions = new HashMap<>();
 
         // TODO: need to uses the other constructor
-        render = new Rendering(this);
+        render = new Rendering();
         // TODO: get the actual player direction
         render.setDirection("up");
         gui = new GUI(this, render);
+
         GUI.launch(GUI.class);
     }
 
@@ -205,7 +209,7 @@ public class ClientUI {
 
         client = new Client(s, this);
         this.userName = userName;
-        this.avatarindex = avatarIndex;
+        this.avatar = Avatar.get(avatarIndex);
         client.start();
         return true;
     }
@@ -250,6 +254,16 @@ public class ClientUI {
     }
 
     /**
+     * When the client receives the user's virus type from the server, this method will
+     * update the local record
+     * 
+     * @param uid
+     */
+    public void parseVirus(int virusIndex) {
+        this.virus = Virus.get(virusIndex);
+    }
+
+    /**
      * When the client receives a map string from the server, this method will update the
      * local table which records every area's map (in a plain char matrix).
      * 
@@ -260,13 +274,24 @@ public class ClientUI {
     }
 
     /**
-     * When the client receives a position string from the server, this method will update
-     * the local table which records every player's position.
+     * When the client receives the string recording all players positions from the
+     * server, this method will update the local table which records every player's
+     * position.
      * 
      * @param posStr
      */
     public void parsePosition(String posStr) {
         ParserUtilities.parsePosition(positions, posStr);
+    }
+
+    /**
+     * When the client receives the string recording all players avatars from the server,
+     * this method will update the local table which records every player's avatar.
+     * 
+     * @param avatarsStr
+     */
+    public void parseAvatars(String avatarsStr) {
+        ParserUtilities.parseAvatar(avatars, avatarsStr);
     }
 
     /**
@@ -276,8 +301,7 @@ public class ClientUI {
      * @param timeStr
      */
     public void parseTime(String timeStr) {
-        LocalTime time = ParserUtilities.parseTime(timeStr);
-        gui.setTime(time);
+        gui.setTime(timeStr);
     }
 
     /**
@@ -321,38 +345,12 @@ public class ClientUI {
     }
 
     /**
-     * get uId of this client
+     * Get the avatar.
      * 
      * @return
      */
-    public int getUid() {
-        return uid;
-    }
-
-    /**
-     * Get the avatar index.
-     * 
-     * @return
-     */
-    public int getAvatarIndex() {
-        return avatarindex;
-    }
-
-    /**
-     * Get positions of all players.
-     * 
-     * @return
-     */
-    public Map<Integer, Position> getPositions() {
-        return positions;
-    }
-
-    public char[][] getCharMapByAreaId(int id) {
-        return areas.get(id);
-    }
-
-    public int getVisibility() {
-        return visibility;
+    public Avatar getAvatar() {
+        return avatar;
     }
 
     /*
@@ -363,12 +361,61 @@ public class ClientUI {
      * ===============================
      */
 
+    /**
+     * This method is called by ClockThread periodically to update the renderer and GUI.
+     */
+    public void updateRenderAndGui() {
+        // ====================
+        // These method should be somewhere for rendering
+
+        // /**
+        // * Redraw the rendering panel
+        // */
+        // public void redraw() {
+        // Map<Integer, Position> positions = controller.getPositions();
+        // Position selfPosition = positions.get(controller.getUid());
+        // int areaId = selfPosition.areaId;
+        // char[][] map = controller.getCharMapByAreaId(areaId);
+        // int visibility = controller.getVisibility();
+        //
+        // redraw(positions, map, visibility);
+        // }
+        //
+        // /**
+        // * Redraw the rendering panel.
+        // *
+        // * @param positions
+        // * --- the position of all player.
+        // * @param areaMap
+        // * --- the area map represented as a char[][]
+        // * @param visibility
+        // * --- current visibility.
+        // */
+        // private void redraw(Map<Integer, Position> positions, char[][] areaMap,
+        // int visibility) {
+        //
+        // // player's coordinate on board, and direction.
+        // Position selfPosition = positions.get(controller.getUid());
+        //
+        // int x = selfPosition.x;
+        // int y = selfPosition.y;
+        // Direction direction = selfPosition.getDirection();
+        //
+        // // TODO redraw the rendering panel
+        //
+        // }
+
+    }
+
     public void startGame() {
 
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
                 gui.startGame();
+
+                clockThread = new ClockThread(DEFAULT_CLK_PERIOD, ClientUI.this);
+
                 clockThread.start();
             }
         });

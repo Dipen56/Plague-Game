@@ -54,13 +54,6 @@ public class Rendering {
     private int avatarID;
     private String direction;
 
-    // for the renderer to get informations from client side controller
-    private ClientUI controller;
-
-    public Rendering(ClientUI controller) {
-        this.controller = controller;
-    }
-
     public Rendering() {
         // will need to get board size passed in
         mapParser = new MapParser(10, 10);
@@ -507,43 +500,6 @@ public class Rendering {
         this.player = player;
         // TODO: call render;
         // render();
-    }
-
-    /**
-     * Redraw the rendering panel
-     */
-    public void redraw() {
-        Map<Integer, Position> positions = controller.getPositions();
-        Position selfPosition = positions.get(controller.getUid());
-        int areaId = selfPosition.areaId;
-        char[][] map = controller.getCharMapByAreaId(areaId);
-        int visibility = controller.getVisibility();
-
-        redraw(positions, map, visibility);
-    }
-
-    /**
-     * Redraw the rendering panel.
-     *
-     * @param positions
-     *            --- the position of all player.
-     * @param areaMap
-     *            --- the area map represented as a char[][]
-     * @param visibility
-     *            --- current visibility.
-     */
-    private void redraw(Map<Integer, Position> positions, char[][] areaMap,
-            int visibility) {
-
-        // player's coordinate on board, and direction.
-        Position selfPosition = positions.get(controller.getUid());
-
-        int x = selfPosition.x;
-        int y = selfPosition.y;
-        Direction direction = selfPosition.getDirection();
-
-        // TODO redraw the rendering panel
-
     }
 
     @Override

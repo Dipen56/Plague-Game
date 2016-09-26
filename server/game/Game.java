@@ -17,8 +17,10 @@ import server.game.items.Destroyable;
 import server.game.items.Item;
 import server.game.items.Key;
 import server.game.items.Torch;
+import server.game.player.Avatar;
 import server.game.player.Player;
 import server.game.player.Position;
+import server.game.player.Virus;
 import server.game.world.Area;
 import server.game.world.Container;
 import server.game.world.GroundSpace;
@@ -113,6 +115,13 @@ public class Game {
         torches = new ArrayList<>();
      
 
+        // the world clock starts from a random time from 00:00:00 to 23:59:59
+        Random ran = new Random();
+        int hour = ran.nextInt(24);
+        int minute = ran.nextInt(60);
+        int second = ran.nextInt(60);
+        clock = LocalTime.of(hour, minute, second);
+
         // TODO parse the file and construct world
 
         // TODO scan the world, so some initialisation job:
@@ -140,6 +149,13 @@ public class Game {
         this.world = world;
         this.areas = areas;
         this.gameID = new Random().nextInt((5000 - 0) + 1);
+        
+        // the world clock starts from a random time from 00:00:00 to 23:59:59
+        Random ran = new Random();
+        int hour = ran.nextInt(24);
+        int minute = ran.nextInt(60);
+        int second = ran.nextInt(60);
+        clock = LocalTime.of(hour, minute, second);
     }
 
     /**
@@ -165,7 +181,14 @@ public class Game {
 		for(Player p : players.values()){
 			joinPlayer(p);
 		}
-		 this.gameID = gameID;
+		this.gameID = gameID;
+        
+        // the world clock starts from a random time from 00:00:00 to 23:59:59
+        Random ran = new Random();
+        int hour = ran.nextInt(24);
+        int minute = ran.nextInt(60);
+        int second = ran.nextInt(60);
+        clock = LocalTime.of(hour, minute, second);
 	}
 
 	public List<Torch> getTorches() {
@@ -232,12 +255,6 @@ public class Game {
      * is running, no other events will stop it.
      */
     public void startTiming() {
-        // the world clock starts from a random time from 00:00:00 to 23:59:59
-        Random ran = new Random();
-        int hour = ran.nextInt(24);
-        int minute = ran.nextInt(60);
-        int second = ran.nextInt(60);
-        clock = LocalTime.of(hour, minute, second);
 
         // start ticking
         timer = new Timer();
@@ -738,19 +755,47 @@ public class Game {
      * Say current time is hh:mm:ss <i>10:20:30</i>:
      * 
      * <p>
-     * The string will be <i>"10,20,30"</i>
+     * The string will be <i>"10:20:30"</i>
      * 
      * @return
      */
-    public String getClockString() {
+    public synchronized String getClockString() {
         int hour = clock.getHour();
         int minute = clock.getMinute();
         int second = clock.getSecond();
-        return hour + "," + minute + "," + second;
+        return hour + ":" + minute + ":" + second;
+
+        // return clock.toString();
     }
 
     public Map<Integer, Player> getPlayers() {
         return players;
+    }
+
+    /**
+     * Generate a String of all players' avatars so the client who get this string will
+     * know other player's avatar. The String has the following format:
+     * <i>"uId_1,avatar_index_1|uId_2,avatar_index_2"</i>
+     * 
+     * <p>
+     * Say 2 players currently in game:
+     * <li>player 1, id 111, avatar index 0
+     * <li>player 2, id 222, avatar index 1<br>
+     * <br>
+     * <p>
+     * The string representation will be <i>"111,0|222,1"</i>
+     * 
+     * @return
+     */
+    public String getAvatarsString() {
+        StringBuilder sb = new StringBuilder();
+        for (Player p : players.values()) {
+            sb.append(p.getId());
+            sb.append(",");
+            sb.append(p.getAvatar().ordinal());
+            sb.append("|");
+        }
+        return sb.toString();
     }
 
     /**
@@ -783,6 +828,17 @@ public class Game {
     }
 
     /**
+     * Get the player's Virus type
+     * 
+     * @param uid
+     * @return
+     */
+    public Virus getPlayerVirus(int uid) {
+        Player player = players.get(uid);
+        return player.getVirus();
+    }
+
+    /**
      * Get all items in the player's inventory as a list.
      *
      * @param uid
@@ -803,15 +859,15 @@ public class Game {
      * 
      * <p>
      * Say an item (type A, description B), its string representation will be
-     * <i>"A|B"</i>, where A is a single character, B is the return of <i>toString()</i>.
-     * Every two items are separated with a line separator.
+     * <i>"A@B"</i>, where A is a single character, B is the return of <i>toString()</i>.
+     * Every two items are separated with a '|' character.
      * 
      * <p>
      * For example, this player has an Antidote (description: "foofoo"), and a Key
      * (description: "barbar").
      * 
      * <p>
-     * The string representation of his inventory will be <i>"A|foofoo\nB|barbar"</i>
+     * The string representation of his inventory will be <i>"A@foofoo|B@barbar"</i>
      * 
      * <p>
      * Character abbreviation table:<br>
@@ -833,14 +889,14 @@ public class Game {
 
         for (Item i : inv) {
             if (i instanceof Antidote) {
-                sb.append("A|");
+                sb.append("A@");
             } else if (i instanceof Key) {
-                sb.append("K|");
+                sb.append("K@");
             } else if (i instanceof Torch) {
-                sb.append("T|");
+                sb.append("T@");
             }
             sb.append(i.toString());
-            sb.append("\n");
+            sb.append("|");
         }
 
         return sb.toString();

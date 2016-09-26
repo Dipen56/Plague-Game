@@ -1,11 +1,11 @@
-package server;
+package client;
 
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
+import server.game.player.Avatar;
 import server.game.player.Direction;
 import server.game.player.Position;
 
@@ -127,7 +127,67 @@ public class ParserUtilities {
     }
 
     /**
-     * This method reads in a String and parse it into a Position, which is used on client
+     * This method reads in a String and parse it into different avatar indices for each
+     * player in game, which is then used on client side to render all connected players
+     * with their avatars. Result is recorded in <i><b>avatars</b></i> given as parameter.
+     * The input String is expected to have the following format:
+     * <i>"uId_1,avatar_index_1|uId_2,avatar_index_2"</i>
+     * 
+     * <p>
+     * Say 2 players currently in game:
+     * <li>player 1, id 111, avatar index 0
+     * <li>player 2, id 222, avatar index 1<br>
+     * <br>
+     * <p>
+     * The string representation will be <i>"111,0|222,1"</i>
+     * 
+     * @param avatars
+     * @param avatarsStr
+     */
+    public static void parseAvatar(Map<Integer, Avatar> avatars, String avatarsStr) {
+        Scanner scanner = new Scanner(avatarsStr);
+        String line = scanner.nextLine();
+
+        String[] posStrs = line.split("\\|"); // not '|' I spent days debugging this!
+
+        int uId = -1;
+        int avatarIndex = -1;
+
+        try {
+            for (String posStr : posStrs) {
+
+                if (posStr.length() < 1) {
+                    continue;
+                }
+
+                String[] nums = posStr.split(",");
+                uId = Integer.valueOf(nums[0]);
+                avatarIndex = Integer.valueOf(nums[1]);
+
+                if (uId < 0 || avatarIndex < 0) {
+                    System.out.println(
+                            "Error occurred when parsing postion. Negative uId or avatarIndex. String input is: "
+                                    + avatarsStr);
+                    scanner.close();
+                    return; // do not crash the game.
+                }
+
+                avatars.put(uId, Avatar.get(avatarIndex));
+            }
+
+        } catch (NumberFormatException e1) {
+            System.out.println(
+                    "Error occurred when parsing postion. uId or avatarIndex is not integer. String input is: "
+                            + avatarsStr);
+            scanner.close();
+            return; // do not crash the game.
+        }
+        scanner.close();
+
+    }
+
+    /**
+     * This method reads in a String and parse it into positions, which is used on client
      * side to locate all connected players and render them. Result is recorded in
      * <i><b>positions</b></i> given as parameter. The input String is expected to have
      * the following format:
@@ -147,7 +207,8 @@ public class ParserUtilities {
 
         Scanner scanner = new Scanner(string);
         String line = scanner.nextLine();
-        String[] nums = line.split(",");
+
+        String[] posStrs = line.split("\\|"); // not '|' I spent days debugging this!
 
         int uId = -1;
         int areaId = -1;
@@ -156,19 +217,31 @@ public class ParserUtilities {
         int dir = -1;
 
         try {
-            uId = Integer.valueOf(nums[0]);
-            areaId = Integer.valueOf(nums[1]);
-            x = Integer.valueOf(nums[2]);
-            y = Integer.valueOf(nums[3]);
-            dir = Integer.valueOf(nums[4]);
+            for (String posStr : posStrs) {
 
-            if (uId < 0 || areaId < 0 || x < 0 || y < 0 || dir < 0) {
-                System.out.println(
-                        "Error occurred when parsing postion. Negative uId, areaId, x, y or direction. String input is: "
-                                + string);
-                scanner.close();
-                return; // do not crash the game.
+                if (posStr.length() < 1) {
+                    continue;
+                }
+
+                String[] nums = posStr.split(",");
+                uId = Integer.valueOf(nums[0]);
+                areaId = Integer.valueOf(nums[1]);
+                x = Integer.valueOf(nums[2]);
+                y = Integer.valueOf(nums[3]);
+                dir = Integer.valueOf(nums[4]);
+
+                if (uId < 0 || areaId < 0 || x < 0 || y < 0 || dir < 0) {
+                    System.out.println(
+                            "Error occurred when parsing postion. Negative uId, areaId, x, y or direction. String input is: "
+                                    + string);
+                    scanner.close();
+                    return; // do not crash the game.
+                }
+
+                positions.put(uId,
+                        new Position(x, y, areaId, Direction.fromOrdinal(dir)));
             }
+
         } catch (NumberFormatException e1) {
             System.out.println(
                     "Error occurred when parsing postion. uId, areaId, x, y or direction is not integer. String input is: "
@@ -176,61 +249,7 @@ public class ParserUtilities {
             scanner.close();
             return; // do not crash the game.
         }
-
-        // now parse the direction
-
-        // job done, let's put it in map.
-        positions.put(uId, new Position(x, y, areaId, Direction.fromOrdinal(dir)));
         scanner.close();
-    }
-
-    /**
-     * This method reads in a String and parse it into a LocalTime object, which is used
-     * on client side to render the time. The input String is expected to have the
-     * following format:
-     * 
-     * <p>
-     * Say current time is hh:mm:ss <i>10:20:30</i>:
-     * 
-     * <p>
-     * The string should be <i>"10,20,30"</i>
-     * 
-     * @return
-     */
-    public static LocalTime parseTime(String string) {
-
-        Scanner scanner = new Scanner(string);
-        String line = scanner.nextLine();
-        String[] nums = line.split(",");
-
-        int hour = -1;
-        int minute = -1;
-        int second = -1;
-
-        try {
-            hour = Integer.valueOf(nums[0]);
-            minute = Integer.valueOf(nums[1]);
-            second = Integer.valueOf(nums[2]);
-
-            if (hour < 0 || minute < 0 || second < 0) {
-                System.out.println(
-                        "Error occurred when parsing time. Negative hour, minute, or second. String input is: "
-                                + string);
-                scanner.close();
-                return null; // do not crash the game.
-            }
-        } catch (NumberFormatException e1) {
-            System.out.println(
-                    "Error occurred when parsing time. hour, minute, or second is not integer. String input is: "
-                            + string);
-            scanner.close();
-            return null; // do not crash the game.
-        }
-
-        // job done
-        scanner.close();
-
-        return LocalTime.of(hour, minute, second);
     }
 
     /**
@@ -265,37 +284,22 @@ public class ParserUtilities {
      */
     public static List<String> parseInventory(String string) {
 
-        // currently it just convert it to strings.
         List<String> list = new ArrayList<>();
 
-        Scanner scanner = new Scanner(string);
-        String line;
+        if (string.length() < 1) {
+            return list;
+        }
 
-        while (scanner.hasNextLine()) {
-            line = scanner.nextLine();
-            list.add(line);
+        Scanner scanner = new Scanner(string);
+        String line = scanner.nextLine();
+        String[] items = line.split("|");
+
+        for (String item : items) {
+            list.add(item);
         }
 
         scanner.close();
         return list;
-
-        /*
-         * TODO
-         * 
-         * Here I need some discussion with team. I think the renderer doesn't need to
-         * construct an instance of item. The renderer only need to know what image it
-         * should render, and what description is the item, and the index in inventory.
-         * 
-         * for example:
-         * 
-         * Game knows that the player has an Antidote(Virus type a, description "blabla"),
-         * and a Key(used to open which chest, description "foofoofoo"). Then at the
-         * client side, the renderer only need to draw an antidote, possibly give
-         * description "blabla" somewhere, and knows it's the first item in inventory. It
-         * should not know which type of virus it can cure.
-         * 
-         * So, we should form a format of how the client side interpret the string.
-         */
     }
 
     /**
@@ -341,6 +345,11 @@ public class ParserUtilities {
         return SCANNER.nextLine();
     }
 
+    /**
+     * This method read in a char.
+     * 
+     * @return
+     */
     public static char parseChar() {
 
         String line = SCANNER.nextLine();
