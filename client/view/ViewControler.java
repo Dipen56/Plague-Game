@@ -12,16 +12,10 @@ import javafx.stage.WindowEvent;
 
 /**
  * this is class represents the controller witch will be used to communicate
-<<<<<<< HEAD
- * between client and GUI.
- *
-=======
  * between client and GUI. The controller interprets the mouse and keyboard
  * inputs from the user, informing the model and/or the view to change as
  * appropriate.
- * 
->>>>>>> master
- * @author Dipen
+ *  * @author Dipen
  *
  */
 public class ViewControler {

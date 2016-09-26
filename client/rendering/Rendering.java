@@ -95,7 +95,6 @@ public class Rendering {
 		group.getChildren().add(imageViewNight);
 
 		int boardSize = 10;
-
 		if (direction.equals("up")) {
 			squaresInFront = boardSize - playerLoc.y;
 			squaresToLeft = (boardSize - playerLoc.x) - 1;
@@ -110,8 +109,6 @@ public class Rendering {
 			squaresInFront = squaresToRight;
 			squaresToRight = (boardSize - squaresToLeft);
 		}
-
-
 		// this is used to for the top line points x0 and x1 which will be
 		// scaled from larger to smaller
 		double topLine = centerHeight;
