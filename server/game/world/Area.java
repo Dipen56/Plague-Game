@@ -21,22 +21,22 @@ public class Area {
      * Width of the map.
      */
     private int width;
-    
+
     /**
      * Height of the map.
      */
     private int height;
-    
+
     /**
      * The map itself.
      */
     protected MapElement[][] map;
-    
+
     /**
      * Each area has a unique ID number, which can be used for locating player.
      */
     private int areaId;
-    
+
     /**
      * Empty position, which can be used to spawn players.
      */
@@ -58,7 +58,7 @@ public class Area {
     }
 
     /**
-     * Constructor used only for text client. Can be removed after testing.
+     * Constructor used in initial game load, and test client.
      * @param board
      * @param Area id.
      * @param A list of player spawn locations.
@@ -69,7 +69,7 @@ public class Area {
         this.height = board.length;
         this.areaId = areaID;
     }
-    
+
     /**
      * Constructor used in data storage.
      *
@@ -88,7 +88,7 @@ public class Area {
     public List<int[]> getPlayerPortals(){
     	return this.playerPortals;
     }
-    
+
     public int getWidth() {
         return width;
     }
@@ -104,7 +104,7 @@ public class Area {
     public int getAreaID(){
     	return this.areaId;
     }
-    
+
     /**
      * let this area remember where empty positions are, so that player can be spawned
      * from one of them.
@@ -139,7 +139,7 @@ public class Area {
 
     /**
      * This method checks whether the given position is in this area.
-     * 
+     *
      * @param position
      * @return --- true if the given position is in area; or false if it's out of area
      *         boundary or it's in other area.
@@ -183,7 +183,7 @@ public class Area {
 
     /**
      * Get the MapElement type in front of the player.
-     * 
+     *
      * @param player
      * @return --- the MapElement type in front of the player; or null if that place is
      *         out of current map.

@@ -80,7 +80,7 @@ public class GameAdapter{
 	/**
 	 * An ID number to identify a loaded game against a running game.
 	 */
-	@XmlElements
+	@XmlElement
 	private int gameID;
 
 	/**
