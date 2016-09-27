@@ -3,6 +3,8 @@ package client.rendering;
 import java.awt.Point;
 import java.util.Map;
 
+import javax.swing.ImageIcon;
+
 import client.view.ClientUI;
 import client.view.GUI;
 
@@ -25,65 +27,93 @@ import javafx.scene.paint.ImagePattern;
  */
 
 public class Rendering {
-    private static final String PLAYER_IMAGE = "/standingstillrear.png";
-    // private static final String BACKGROUND_IMAGE = "/background.gif";
-    private static final String BACKGROUND_IMAGE = "/night.jpg";
-    private static final String GRASS_IMAGE = "/grass.png";
-    private static final String TREE_IMAGE = "/tree.png";
-    private static final String CHEST_IMAGE = "/chest.png";
+	private static final String PLAYER_IMAGE = "/standingstillrear.png";
+	// private static final String BACKGROUND_IMAGE = "/background.gif";
+	private static final String BACKGROUND_IMAGE = "/night.jpg";
+	private static final String GRASS_IMAGE = "/grass.png";
+	private static final String TREE_IMAGE = "/tree.png";
+	private static final String CHEST_IMAGE = "/chest.png";
 
-    public double scaleY = 0.85; // lower number less scaling
-    private int gamePaneHeight = GUI.HEIGHT_VALUE - 35; // 35 y alignment of
-                                                        // group
-    private int gamePaneWidth = GUI.GAMEPANE_WIDTH_VALUE - 3; // 3 x alignment
-                                                              // of group
-    private int tileWidth = 200;
-    private int tileHeight = 60;
-    public int centerWidth = gamePaneWidth / 2;
-    public int centerHeght = gamePaneHeight;
-    private MapParser mapParser;
-    private Point playerLoc = new Point(5, 1);
-    private int squaresInFront = 0;
-    private int squaresToLeft = 0;
-    private int squaresToRight = 0;
-    private Player player;
-    private Map<Integer, Player> playersOnMap;
-    private Map<Integer, Area> map;
-    private int avatarID;
-    private String direction;
+	public double scaleY = 0.85; // lower number less scaling
+	private int gamePaneHeight = GUI.HEIGHT_VALUE - 35; // 35 y alignment of
+														// group
+	private int gamePaneWidth = GUI.GAMEPANE_WIDTH_VALUE - 3; // 3 x alignment
+																// of group
+	private int tileWidth = 200;
+	private int tileHeight = 60;
+	public int centerWidth = gamePaneWidth / 2;
+	public int centerHeght = gamePaneHeight;
+	private MapParser mapParser;
+	private Point playerLoc = new Point(5, 1);
+	private int squaresInFront = 0;
+	private int squaresToLeft = 0;
+	private int squaresToRight = 0;
+	private Player player;
+	private Map<Integer, Player> playersOnMap;
+	private Map<Integer, Area> map;
+	private int avatarID;
+	private String direction;
 
-    // for the renderer to get informations from client side controller
-    private ClientUI controller;
+	Group renderGroup;
+	int boardSize = 10;
 
-    public Rendering(ClientUI controller) {
-        this.controller = controller;
-    }
+	// for the renderer to get informations from client side controller
+	private ClientUI controller;
 
-    public Rendering() {
-        // will need to get board size passed in
-        mapParser = new MapParser(10, 10);
-    }
+	public Rendering(ClientUI controller) {
+		this.controller = controller;
+	}
 
-    /**
-     * this constructor is to be used for integration and will be passed in a Player and a
-     * map, and also all the other player on the map and also the avatar id atm.
-     *
-     * @param player
-     */
-    public Rendering(Player player, Map<Integer, Player> playersOnMap,
-            Map<Integer, Area> map, int avatarID) {
-        this.player = player;
-        this.playersOnMap = playersOnMap;
-        this.map = map;
-        this.avatarID = avatarID;
-    }
+	public Rendering() {
+		// will need to get board size passed in
+		mapParser = new MapParser(10, 10);
+	}
 
-    /**
-     * this method is used to render the game
-     *
-     * @param renderGroup
-     */
-    public void render(Group renderGroup, int boardSize) {
+	/**
+	 * this constructor is to be used for integration and will be passed in a
+	 * Player and a map, and also all the other player on the map and also the
+	 * avatar id atm.
+	 *
+	 * @param player
+	 */
+	public Rendering(Player player, Map<Integer, Player> playersOnMap, Map<Integer, Area> map, int avatarID) {
+		this.player = player;
+		this.playersOnMap = playersOnMap;
+		this.map = map;
+		this.avatarID = avatarID;
+	}
+
+	/**
+	 * Redraw the rendering panel.
+	 *
+	 * @param positions
+	 *            --- the position of all player.
+	 * @param areaMap
+	 *            --- the area map represented as a char[][]
+	 * @param visibility
+	 *            --- current visibility.
+	 */
+	private void redraw(Map<Integer, Position> positions, char[][] areaMap, int visibility) {
+		// player's coordinate on board, and direction.
+		Position selfPosition = positions.get(controller.getUid());
+		int x = selfPosition.x;
+		int y = selfPosition.y;
+		Direction direction = selfPosition.getDirection();
+		// TODO redraw the rendering panel
+	}
+
+	/**
+	 * this method is used to render the game
+	 *
+	 * @param renderGroup
+	 */
+	public void render(Map<Integer, Position> positions, char[][] areaMap, int visibility) {
+		// player's coordinate on board, and direction.
+		Position selfPosition = positions.get(controller.getUid());
+		int x = selfPosition.x;
+		int y = selfPosition.y;
+		Direction direction = selfPosition.getDirection();
+		// TODO redraw the rendering panel
 		// TODO: get ride of the renderGroup parameters call the set group
 		// method below first before calling this method
 		Image image = loadImage(BACKGROUND_IMAGE);
@@ -91,7 +121,7 @@ public class Rendering {
 		Image grass = loadImage(GRASS_IMAGE);
 		ImageView imageViewNight = new ImageView();
 		addImage(image, imageViewNight, renderGroup, gamePaneWidth + 3, gamePaneHeight + 35, 0, 0);
-		setNumSquares(direction, boardSize);
+		setNumSquares(direction);
 		// this is used to for the top line points x0 and x1 which will be
 		// scaled from larger to smaller
 		double topLine = centerHeght;
@@ -231,46 +261,149 @@ public class Rendering {
 			topLine = topLine - tileHeight * Math.pow(scaleY, i + 1);
 			// Renders the player onto the board
 		}
-		renderObjects(renderGroup);
+		renderObjects(renderGroup, direction, x, y);
 		charRender();
 	}
 
-	private void setNumSquares(String direction, int boardSize) {
-		if (direction.equals("up")) {
+	private void setNumSquares(Direction direction) {
+		switch (direction) {
+		// needs to be switched over to integers , 0 = north, 1 = east, 2 =
+		// south, 3 = west
+		case North:
 			squaresInFront = boardSize - playerLoc.y;
 			squaresToLeft = (boardSize - playerLoc.x) - 1;
 			squaresToRight = (boardSize - squaresToLeft);
-		}
-
-		else if (direction.equals("down")) {
-
-		}
-
-		else if (direction.equals("left")) {
-			squaresToRight = squaresInFront;
-			squaresInFront = squaresToLeft;
-			squaresToLeft = boardSize - squaresToRight;
-		}
-
-		else if (direction.equals("right")) {
+			break;
+		case East:
 			squaresToLeft = squaresInFront;
 			squaresInFront = squaresToRight;
 			squaresToRight = (boardSize - squaresToLeft);
+			break;
+		case South:
+			// To do
+			break;
+		case West:
+			squaresToRight = squaresInFront;
+			squaresInFront = squaresToLeft;
+			squaresToLeft = boardSize - squaresToRight;
+			break;
 		}
 	}
 
 	public void charRender() {
-		
+
 	}
 
 	/**
 	 * this method is used to render the object in the game.
 	 * 
 	 * @param renderGroup
+	 * 
+	 * @param renderGroup
+	 * @param y
+	 * @param x
 	 */
-	public void renderObjects(Group renderGroup) {
+	public void renderObjects(Group renderGroup, Direction direction, int playerX, int playerY) {
 		String[][] worldMap = mapParser.getMap();
-		
+		switch (direction) {
+		case North:
+			gatherObjectsNorth(worldMap, renderGroup, 0, 0, worldMap.length, playerY, playerX, playerY);
+			break;
+		case East:
+			gatherObjectsEast(worldMap, renderGroup, worldMap.length, 0, playerX, worldMap.length,playerX, playerY);
+			break;
+		case South:
+			gatherObjectsSouth(worldMap, renderGroup, worldMap.length, worldMap.length, 0, playerY, playerX, playerY);
+			break;
+		case West:
+			gatherObjectsWest(worldMap, renderGroup, 0, worldMap.length, playerX, 0,playerX,playerY);
+			break;
+		}
+	}
+
+	// 1) iterate over the array using the given start and end points
+	// 2) if a object marked with either a c for chest, or t for tree appears
+	// within bounds
+	// 3) find out the coordinates of where the image should be drawn
+	// 4) scale the image using another method
+	// 5) draw the image given the specific points from step 3
+
+	//Need to fix how the for-loop iterates
+	private void gatherObjectsNorth(String[][] worldMap, Group renderGroup, int startX, int startY, int endX, int endY,
+			int playerX, int playerY) {
+		for (int rows = startX; startX <= endX; startX++) {
+			int scale = getScale(rows);
+			for (int cols = startY; startY <= endX; startY++) {
+				Image image = getImageFromChar(worldMap[rows][cols], rows, cols);
+				Point p = getImagePoint(scale, image, playerX, playerY, rows, cols);
+				ImageView views = new ImageView();
+				// need to fix width...
+				addImage(image, views, renderGroup, 10, 10, p.x, p.y);
+			}
+		}
+	}
+
+	private void gatherObjectsEast(String[][] worldMap, Group renderGroup, int startX, int startY, int endX, int endY, int playerX, int playerY) {
+		for (int rows = startX; startX <= endX; startX++) {
+			int scale = getScale(rows);
+			for (int cols = startY; startY <= endX; startY++) {
+				Image image = getImageFromChar(worldMap[rows][cols], rows, cols);
+				Point p = getImagePoint(scale, image, playerX, playerY, rows, cols);
+				ImageView views = new ImageView();
+				// need to fix width...
+				addImage(image, views, renderGroup, 10, 10, p.x, p.y);
+			}
+		}
+	}
+
+	private void gatherObjectsSouth(String[][] worldMap, Group renderGroup, int startX, int startY, int endX, int endY,
+			int playerX, int playerY) {
+		for (int rows = startX; startX <= endX; startX++) {
+			int scale = getScale(rows);
+			for (int cols = startY; startY <= endX; startY++) {
+				Image image = getImageFromChar(worldMap[rows][cols], rows, cols);
+				Point p = getImagePoint(scale, image, playerX, playerY, rows, cols);
+				ImageView views = new ImageView();
+				// need to fix width...
+				addImage(image, views, renderGroup, 10, 10, p.x, p.y);
+			}
+		}
+	}
+
+	private void gatherObjectsWest(String[][] worldMap, Group renderGroup, int startX, int startY, int endX, int endY, int playerX, int playerY) {
+		for (int rows = startX; startX <= endX; startX++) {
+			int scale = getScale(rows);
+			for (int cols = startY; startY <= endX; startY++) {
+				Image image = getImageFromChar(worldMap[rows][cols], rows, cols);
+				Point p = getImagePoint(scale, image, playerX, playerY, rows, cols);
+				ImageView views = new ImageView();
+				// need to fix width...
+				addImage(image, views, renderGroup, 10, 10, p.x, p.y);
+			}
+		}
+	}
+
+	private Image getImageFromChar(String input, int rows, int cols) {
+		Image image = null;
+		switch (input) {
+		// Unsure if its trees or T
+		case "tree":
+			image = loadImage(TREE_IMAGE);
+			break;
+		case "chest":
+			image = loadImage(CHEST_IMAGE);
+			break;
+		}
+		return image;
+	}
+
+	private Point getImagePoint(int scale, Image image, int playerX, int playerY, int rows, int cols) {
+		Point temp = null;
+		return temp;
+	}
+
+	private int getScale(int rows) {
+		// check to see if its within view of the character
 	}
 
 	private void addImage(Image image, ImageView imageView, Group renderGroup, double width, double height, double setX,
@@ -288,57 +421,32 @@ public class Rendering {
 		return image;
 	}
 
-    public void setDirection(String dir) {
-        this.direction = dir;
-    }
+	public void setDirection(String dir) {
+		this.direction = dir;
+	}
 
-    /**
-     * this method will render the aviator to the screen
-     */
-    public void renderAvatar() {
-        // TODO: render the avartar to the center of the screen
-    }
+	/**
+	 * this method will render the aviator to the screen
+	 */
+	public void renderAvatar() {
+		// TODO: render the avartar to the center of the screen
+	}
 
-    /**
-     * this method is used to move the player in the screen given player, it then calls
-     * the render method
-     *
-     * @param player
-     */
-    public void movePlayer(Player player) {
-        this.player = player;
-        // TODO: call render;
-        // render();
-    }
+	/**
+	 * this method is used to move the player in the screen given player, it
+	 * then calls the render method
+	 *
+	 * @param player
+	 */
+	public void movePlayer(Player player) {
+		this.player = player;
+		// TODO: call render;
+		// render();
+	}
 
-    /**
-     * Redraw the rendering panel.
-     *
-     * @param positions
-     *            --- the position of all player.
-     * @param areaMap
-     *            --- the area map represented as a char[][]
-     * @param visibility
-     *            --- current visibility.
-     */
-    private void redraw(Map<Integer, Position> positions, char[][] areaMap,
-            int visibility) {
-
-        // player's coordinate on board, and direction.
-        Position selfPosition = positions.get(controller.getUid());
-
-        int x = selfPosition.x;
-        int y = selfPosition.y;
-        Direction direction = selfPosition.getDirection();
-
-        // TODO redraw the rendering panel
-
-    }
-
-    @Override
-    public String toString() {
-
-        return "renderclass";
-    }
+	@Override
+	public String toString() {
+		return "renderclass";
+	}
 
 }
