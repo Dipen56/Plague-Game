@@ -117,7 +117,6 @@ public class Rendering {
 		// TODO: get ride of the renderGroup parameters call the set group
 		// method below first before calling this method
 		Image image = loadImage(BACKGROUND_IMAGE);
-		Image character = loadImage(PLAYER_IMAGE);
 		Image grass = loadImage(GRASS_IMAGE);
 		ImageView imageViewNight = new ImageView();
 		addImage(image, imageViewNight, renderGroup, gamePaneWidth + 3, gamePaneHeight + 35, 0, 0);
@@ -294,6 +293,9 @@ public class Rendering {
 
 	}
 
+	// 1) need to fix how the array iterates
+	// 2) need to get the x points of each image (hard due to scalling)
+
 	/**
 	 * this method is used to render the object in the game.
 	 * 
@@ -310,48 +312,46 @@ public class Rendering {
 			gatherObjectsNorth(worldMap, renderGroup, 0, 0, worldMap.length, playerY, playerX, playerY);
 			break;
 		case East:
-			gatherObjectsEast(worldMap, renderGroup, worldMap.length, 0, playerX, worldMap.length,playerX, playerY);
+			gatherObjectsEast(worldMap, renderGroup, worldMap.length, 0, playerX, worldMap.length, playerX, playerY);
 			break;
 		case South:
 			gatherObjectsSouth(worldMap, renderGroup, worldMap.length, worldMap.length, 0, playerY, playerX, playerY);
 			break;
 		case West:
-			gatherObjectsWest(worldMap, renderGroup, 0, worldMap.length, playerX, 0,playerX,playerY);
+			gatherObjectsWest(worldMap, renderGroup, 0, worldMap.length, playerX, 0, playerX, playerY);
 			break;
 		}
 	}
 
-	// 1) iterate over the array using the given start and end points
-	// 2) if a object marked with either a c for chest, or t for tree appears
-	// within bounds
-	// 3) find out the coordinates of where the image should be drawn
-	// 4) scale the image using another method
-	// 5) draw the image given the specific points from step 3
-
-	//Need to fix how the for-loop iterates
+	// Need to fix how the for-loop iterates
 	private void gatherObjectsNorth(String[][] worldMap, Group renderGroup, int startX, int startY, int endX, int endY,
 			int playerX, int playerY) {
 		for (int rows = startX; startX <= endX; startX++) {
-			int scale = getScale(rows);
+			int scaleY = getScaleY(playerY, rows);
 			for (int cols = startY; startY <= endX; startY++) {
+				int scaleX = getScaleX(playerX, cols);
 				Image image = getImageFromChar(worldMap[rows][cols], rows, cols);
-				Point p = getImagePoint(scale, image, playerX, playerY, rows, cols);
+				Point p = getImagePoint(scaleY, image, playerX, playerY, rows, cols);
 				ImageView views = new ImageView();
 				// need to fix width...
-				addImage(image, views, renderGroup, 10, 10, p.x, p.y);
+				addImage(image, views, renderGroup, (image.getWidth() / scaleX), (image.getHeight() / scaleY), p.x,
+						p.y);
 			}
 		}
 	}
 
-	private void gatherObjectsEast(String[][] worldMap, Group renderGroup, int startX, int startY, int endX, int endY, int playerX, int playerY) {
+	private void gatherObjectsEast(String[][] worldMap, Group renderGroup, int startX, int startY, int endX, int endY,
+			int playerX, int playerY) {
 		for (int rows = startX; startX <= endX; startX++) {
-			int scale = getScale(rows);
+			int scaleY = getScaleY(playerY, rows);
 			for (int cols = startY; startY <= endX; startY++) {
+				int scaleX = getScaleX(playerX, cols);
 				Image image = getImageFromChar(worldMap[rows][cols], rows, cols);
-				Point p = getImagePoint(scale, image, playerX, playerY, rows, cols);
+				Point p = getImagePoint(scaleY, image, playerX, playerY, rows, cols);
 				ImageView views = new ImageView();
 				// need to fix width...
-				addImage(image, views, renderGroup, 10, 10, p.x, p.y);
+				addImage(image, views, renderGroup, (image.getWidth() / scaleX), (image.getHeight() / scaleY), p.x,
+						p.y);
 			}
 		}
 	}
@@ -359,28 +359,42 @@ public class Rendering {
 	private void gatherObjectsSouth(String[][] worldMap, Group renderGroup, int startX, int startY, int endX, int endY,
 			int playerX, int playerY) {
 		for (int rows = startX; startX <= endX; startX++) {
-			int scale = getScale(rows);
+			int scaleY = getScaleY(playerY, rows);
 			for (int cols = startY; startY <= endX; startY++) {
+				int scaleX = getScaleX(playerX, cols);
 				Image image = getImageFromChar(worldMap[rows][cols], rows, cols);
-				Point p = getImagePoint(scale, image, playerX, playerY, rows, cols);
+				Point p = getImagePoint(scaleY, image, playerX, playerY, rows, cols);
 				ImageView views = new ImageView();
 				// need to fix width...
-				addImage(image, views, renderGroup, 10, 10, p.x, p.y);
+				addImage(image, views, renderGroup, (image.getWidth() / scaleX), (image.getHeight() / scaleY), p.x,
+						p.y);
 			}
 		}
 	}
 
-	private void gatherObjectsWest(String[][] worldMap, Group renderGroup, int startX, int startY, int endX, int endY, int playerX, int playerY) {
+	private void gatherObjectsWest(String[][] worldMap, Group renderGroup, int startX, int startY, int endX, int endY,
+			int playerX, int playerY) {
 		for (int rows = startX; startX <= endX; startX++) {
-			int scale = getScale(rows);
+			int scaleY = getScaleY(playerY, rows);
 			for (int cols = startY; startY <= endX; startY++) {
+				int scaleX = getScaleX(playerX, cols);
 				Image image = getImageFromChar(worldMap[rows][cols], rows, cols);
-				Point p = getImagePoint(scale, image, playerX, playerY, rows, cols);
+				Point p = getImagePoint(scaleY, image, playerX, playerY, rows, cols);
 				ImageView views = new ImageView();
 				// need to fix width...
-				addImage(image, views, renderGroup, 10, 10, p.x, p.y);
+				addImage(image, views, renderGroup, (image.getWidth() / scaleX), (image.getHeight() / scaleY), p.x,
+						p.y);
 			}
 		}
+	}
+
+	// Needs more thought
+	private int getScaleY(int playerY, int rows) {
+		return playerY - rows;
+	}
+
+	private int getScaleX(int playerX, int cols) {
+		return playerX - cols;
 	}
 
 	private Image getImageFromChar(String input, int rows, int cols) {
@@ -397,13 +411,17 @@ public class Rendering {
 		return image;
 	}
 
+	// Get points of each image on the board, based on the rows and cols of the
+	// image location, and being relative to the players position
 	private Point getImagePoint(int scale, Image image, int playerX, int playerY, int rows, int cols) {
-		Point temp = null;
-		return temp;
-	}
-
-	private int getScale(int rows) {
-		// check to see if its within view of the character
+		int height = 60;
+		int yCoordinate = playerY;
+		for (int i = scale; i > 0; i--) {
+			yCoordinate += height / i;
+		}
+		// need to fix the xCoordinate
+		Point point = new Point(10, yCoordinate);
+		return point;
 	}
 
 	private void addImage(Image image, ImageView imageView, Group renderGroup, double width, double height, double setX,
