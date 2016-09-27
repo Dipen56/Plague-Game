@@ -1,0 +1,10 @@
+/.classpath
+/.project
+/anotherServer/
+/client/
+/dataStorage/
+/server/
+/src/
+/tests/
+/.gitignore
+/worldmap.txt

@@ -93,14 +93,6 @@ public class Rendering {
 	 * @param visibility
 	 *            --- current visibility.
 	 */
-	private void redraw(Map<Integer, Position> positions, char[][] areaMap, int visibility) {
-		// player's coordinate on board, and direction.
-		Position selfPosition = positions.get(controller.getUid());
-		int x = selfPosition.x;
-		int y = selfPosition.y;
-		Direction direction = selfPosition.getDirection();
-		// TODO redraw the rendering panel
-	}
 
 	/**
 	 * this method is used to render the game

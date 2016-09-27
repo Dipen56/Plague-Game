@@ -11,6 +11,21 @@ public enum Virus {
     // Form BioHazzard. Or we could use other names. Ideas welcomed.
     T_Virus, G_Virus, T_Veronica;
 
+    /**
+     * Get the virus at given index.
+     * 
+     * @param index
+     * @return
+     */
+    public static Virus get(int index) {
+        return Virus.values()[index];
+    }
+
+    /**
+     * Get an random virus type.
+     * 
+     * @return
+     */
     public static Virus randomVirus() {
         int i = (int) (Math.random() * 3);
         switch (i) {
