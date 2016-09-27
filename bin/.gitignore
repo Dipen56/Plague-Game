@@ -6,3 +6,5 @@
 /server/
 /src/
 /tests/
+/.gitignore
+/worldmap.txt

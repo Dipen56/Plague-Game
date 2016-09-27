@@ -30,7 +30,7 @@ import server.game.world.TransitionSpace;
 
 /**
  * This class represents the game.
- * 
+ *
  * TODO <br>
  * 1. the game is not detecting win condition<br>
  * 2. it doesn't support save/load yet<br>
@@ -65,12 +65,12 @@ public class Game {
     // private static final float SPAWN_IN_WORLD_CHANCE = 0.6f;
 
     public static final GroundSpace groundSpace = new GroundSpace();
-    
+
     /**
      * A means by which to simply compare game saves.
      */
     private int gameID = 0;
-    
+
     /**
      * World map
      */
@@ -85,7 +85,7 @@ public class Game {
      */
     private Map<Integer, Player> players;
     /**
-     * For testing. Will be removed.	
+     * For testing. Will be removed.
      */
     private Player player;
     /**
@@ -111,7 +111,7 @@ public class Game {
 
         players = new HashMap<>();
         torches = new ArrayList<>();
-     
+
 
         // TODO parse the file and construct world
 
@@ -127,8 +127,8 @@ public class Game {
     }
 
     /**
-     * Constructor for text-based UI. Will not exist in final version.
-     * 
+     * Constructor for text-based UI and for initial game load.
+     *
      * @param world
      * @param entrances
      */
@@ -143,14 +143,14 @@ public class Game {
     }
 
     /**
-	 * Constructor used for data storage. 
+	 * Constructor used for data storage.
 	 * @param The main game world.
 	 * @param A map from areaID's to areas.
 	 * @param A map from playerID's to players.
 	 * @param A list of torches. This can be null.
 	 */
 	public Game(Area world, Map<Integer, Area> areas, Map<Integer, Player> players, List<Torch> torches, int gameID) {
-		//torhces 
+		//torhces
 
 		this.world = world;
 		this.areas = areas;
@@ -174,7 +174,7 @@ public class Game {
 
     /**
      * Joins a player in game.
-     * 
+     *
      * @param player
      */
     public void joinPlayer(Player player) {
@@ -264,7 +264,7 @@ public class Game {
 
     /**
      * Disconnect the player, and re-distribute all his keys to locked containers.
-     * 
+     *
      * @param player
      */
     public void disconnectPlayer(int playerId) {
@@ -493,7 +493,7 @@ public class Game {
     /**
      * This method let the given player try to unlock a chest, room, or other lockable
      * object in front.
-     * 
+     *
      * @param uid
      * @return --- true if the loackable is unlocked, or false if this action failed.
      *         Failure can be caused by many reasons, for example it's not a lockable in
@@ -536,7 +536,7 @@ public class Game {
     /**
      * This method let the given player try to transit between areas (enter or exit a
      * room).
-     * 
+     *
      * @param uid
      * @return --- true if the player changed to another area, or false if this action
      *         failed for some reason, for example the player is not facing the door, or
@@ -693,7 +693,7 @@ public class Game {
 
     /**
      * Gets the specified player's visibility according to current time.
-     * 
+     *
      * @param uid
      * @return
      */
@@ -733,13 +733,13 @@ public class Game {
     /**
      * This method is used to generate the string for broadcasting world time to clients.
      * The String has the following format:
-     * 
+     *
      * <p>
      * Say current time is hh:mm:ss <i>10:20:30</i>:
-     * 
+     *
      * <p>
      * The string will be <i>"10,20,30"</i>
-     * 
+     *
      * @return
      */
     public String getClockString() {
@@ -755,7 +755,7 @@ public class Game {
 
     /**
      * For testing, will be deleted.
-     * 
+     *
      * @return
      */
     public Player getPlayer() {
@@ -792,7 +792,7 @@ public class Game {
         Player player = players.get(uid);
         return player.getInventory();
     }
-    
+
     public int getGameID(){
     	return this.gameID;
     }
@@ -800,29 +800,29 @@ public class Game {
     /**
      * This method is used to generate the string for broadcasting player's inventory to
      * clients. The String has the following format:
-     * 
+     *
      * <p>
      * Say an item (type A, description B), its string representation will be
      * <i>"A|B"</i>, where A is a single character, B is the return of <i>toString()</i>.
      * Every two items are separated with a line separator.
-     * 
+     *
      * <p>
      * For example, this player has an Antidote (description: "foofoo"), and a Key
      * (description: "barbar").
-     * 
+     *
      * <p>
      * The string representation of his inventory will be <i>"A|foofoo\nB|barbar"</i>
-     * 
+     *
      * <p>
      * Character abbreviation table:<br>
-     * 
+     *
      * <li>A: Antidote<br>
      * <li>K: Key<br>
      * <li>T: Torch<br>
      * <br>
-     * 
+     *
      * @param uid
-     * 
+     *
      * @return
      */
     public String getPlayerInventoryString(int uid) {
@@ -868,9 +868,9 @@ public class Game {
         if (getClass() != obj.getClass())
             return false;
         Game other = (Game) obj;
-        
+
         if (areas == null) {
-        	
+
             if (other.areas != null)
                 return false;
         } else if (!areas.equals(other.areas))
