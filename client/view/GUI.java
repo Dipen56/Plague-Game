@@ -22,6 +22,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.WindowEvent;
+import server.game.player.Direction;
+import server.game.player.Position;
 
 import java.nio.file.attribute.PosixFilePermission;
 import javafx.application.Application;
@@ -30,6 +32,8 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 
 import java.time.LocalTime;
+import java.util.HashMap;
+import java.util.Map;
 
 import client.rendering.Rendering;
 
@@ -67,7 +71,7 @@ public class GUI extends Application {
 	private Label textAreaLable;
 	private TextField msg;
 	private Button send;
-	private Group group = new Group();
+	public static Group group = new Group();
 	// panes
 	// right pane with vertical alligment
 	private VBox rightPanel;
@@ -267,7 +271,8 @@ public class GUI extends Application {
 		group.prefHeight(HEIGHT_VALUE);
 
 		// Calls the rendering
-		render.render(group, 10);
+		//Needs to call rendering once again
+		//render.render(group, 10);
 		group.setLayoutX(3);
 		group.setLayoutY(35);
 		// only anchor sort of works

@@ -18,6 +18,7 @@ import client.ParserUtilities;
 import client.rendering.Rendering;
 import server.Packet;
 import server.game.player.Avatar;
+import server.game.player.Direction;
 import server.game.player.Position;
 import server.game.player.Virus;
 
@@ -448,16 +449,16 @@ public class ClientUI {
                     // to play the game
                 } else if (event.toString().contains("Login")) {
                     // parse the port number to int
-                    int port = -1;
-                    try {
-                        port = Integer.valueOf(gui.getPortString());
-                    } catch (NumberFormatException e) {
-                        GUI.showWarningPane("Port number should be an integer");
-                        return;
-                    }
-
-                    loginPlayer(gui.getIpAddress(), port, gui.getUserName(),
-                            gui.getAvatarIndex());
+//                    int port = -1;
+//                    try {
+//                        port = Integer.valueOf(gui.getPortString());
+//                    } catch (NumberFormatException e) {
+//                        GUI.showWarningPane("Port number should be an integer");
+//                        return;
+//                    }
+//
+//                    loginPlayer(gui.getIpAddress(), port, gui.getUserName(),
+//                            gui.getAvatarIndex());
 
                     // in the waiting room
                     gui.waitingRoom();
@@ -466,7 +467,10 @@ public class ClientUI {
                     // this is for the login screen
                     gui.getWindow().close();
                 } else if (event.toString().contains("Ready")) {
-
+                	//Temporary placement for testing rendering
+                	Map<Integer, Position> positions = new HashMap<Integer, Position>();
+                	positions.put(1, new Position(5, 50, 1, Direction.North));
+                	render.render(gui.group, positions,areas.get(1) , 1, uid);
                     /*
                      * TODO set the ready button unavailable. tell the player it's waiting
                      * for others.
