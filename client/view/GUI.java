@@ -18,6 +18,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.image.ImageView;
 import javafx.geometry.Pos;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -42,7 +43,6 @@ import client.rendering.Rendering;
  */
 public class GUI extends Application {
 
-
 	// GUI Style CSS
 	private static final String STYLE_CSS = "/main.css";
 	// Constants Images
@@ -50,7 +50,8 @@ public class GUI extends Application {
 	private static final String INVENTORY_IMAGE = "/item-tray.png";
 	private static final String SLASH_SCREEN_IMAGE = "/spash-screen-background.png";
 
-	private static final String AVATAR_ONE_IMAGE = "/standingstillrear.png";
+	private static String[] AVATAR_IMAGES = { "/front_stand_1.png", "/front_stand_2.png", "/front_stand_3.png",
+			"/front_stand_4.png", "/front_stand_5.png" };
 
 	// Constants Dimensions
 	public static final int WIDTH_VALUE = 1000;
@@ -67,7 +68,8 @@ public class GUI extends Application {
 	private Label textAreaLable;
 	private TextField msg;
 	private Button send;
-	private Group group = new Group();
+	// private Group group = new Group();
+	private Pane group = new Pane();
 	// panes
 	// right pane with vertical alligment
 	private VBox rightPanel;
@@ -109,6 +111,8 @@ public class GUI extends Application {
 	private EventHandler<MouseEvent> mouseEvent;
 	// for window resizing not really need else where
 	private EventHandler<WindowEvent> windowEvent;
+
+	private static int avatarIndex = 0;
 
 	public GUI(ClientUI viewControler, Rendering rendering) {
 		this.viewControler = viewControler;
@@ -180,15 +184,15 @@ public class GUI extends Application {
 		keyEvent = viewControler.getKeyEventHander();
 		mouseEvent = viewControler.getMouseEventHander();
 		windowEvent = viewControler.getWindowEventHander();
-		VBox loginBox = new VBox(5);
+		VBox loginBox = new VBox(10);
 		info = new Label();
 		info.setText("Enter The IP,Port and UserName");
 		loginBox.getChildren().add(info);
 		BorderPane loginBorderPane = new BorderPane();
 
 		VBox inputStore = new VBox(5);
-
 		HBox userNameBox = new HBox(3);
+
 		Label user = new Label("Enter UserName");
 		userNameInput = new TextField();
 		userNameBox.getChildren().addAll(user, userNameInput);
@@ -201,6 +205,8 @@ public class GUI extends Application {
 		// loginBox.getChildren().add(ipBox);
 
 		HBox portBox = new HBox(3);
+		portBox.alignmentProperty().set(Pos.CENTER);
+
 		Label port = new Label("Enter Port");
 		portInput = new TextField();
 		portBox.getChildren().addAll(port, portInput);
@@ -209,12 +215,15 @@ public class GUI extends Application {
 		loginBorderPane.setLeft(inputStore);
 		loginBox.getChildren().add(loginBorderPane);
 		avatarGroup = new Group();
-		Image avatarImg = loadImage(AVATAR_ONE_IMAGE);
+		Image avatarImg = loadImage(AVATAR_IMAGES[avatarIndex]);
 		ImageView avatarImage = new ImageView(avatarImg);
+		avatarImage.setFitHeight(80);
+		avatarImage.setFitWidth(80);
 		avatarGroup.getChildren().add(avatarImage);
+		avatarGroup.setOnMousePressed(mouseEvent);
 		loginBorderPane.setRight(avatarGroup);
-		// TODO: need to add some from of action listener here to change images
 		FlowPane buttons = new FlowPane();
+		buttons.alignmentProperty().set(Pos.CENTER);
 		buttons.setHgap(10);
 		login = new Button("Login");
 		login.setOnAction(actionEvent);
@@ -222,7 +231,7 @@ public class GUI extends Application {
 		quitLogin.setOnAction(actionEvent);
 		buttons.getChildren().addAll(login, quitLogin);
 		loginBox.getChildren().add(buttons);
-		Scene slashScene = new Scene(loginBox, WIDTH_VALUE / 2, HEIGHT_VALUE / 2);
+		Scene slashScene = new Scene(loginBox, 350, 160);
 		window.setScene(slashScene);
 	}
 
@@ -230,7 +239,7 @@ public class GUI extends Application {
 		VBox waitingRoomBox = new VBox(5);
 		Label waitingMsg = new Label();
 		waitingMsg.setText(
-				"Welome Players! This is the Waiting, You are seeing this room as this game reqires min of 2 players to play. Game Will Start as soon as there are 2 players or more players");
+				"Welome Players! When Your Ready To Start Click Ready. When The Minimum Number Of Player Have Connect The Game Will Start");
 		waitingMsg.setWrapText(true);
 		waitingRoomBox.getChildren().add(waitingMsg);
 		playersWaiting = new FlowPane();
@@ -242,9 +251,10 @@ public class GUI extends Application {
 		readyGame.setOnAction(actionEvent);
 		quitWaitingRoom = new Button("Leave Game");
 		quitWaitingRoom.setOnAction(actionEvent);
+		buttons.setAlignment(Pos.CENTER);
 		buttons.getChildren().addAll(readyGame, quitWaitingRoom);
 		waitingRoomBox.getChildren().add(buttons);
-		Scene slashScene = new Scene(waitingRoomBox, WIDTH_VALUE, HEIGHT_VALUE);
+		Scene slashScene = new Scene(waitingRoomBox, 400, 170);
 		window.setScene(slashScene);
 	}
 
@@ -253,31 +263,34 @@ public class GUI extends Application {
 		rightPanel = new VBox(10);
 		rightPanel.setPrefSize(RIGHTPANE_WIDTH_VALUE, HEIGHT_VALUE);
 		rightPanel.getStyleClass().add("cotrolvbox");
-		borderPane = new BorderPane();
-		borderPane.setRight(rightPanel);
 
-		// creates a scene
+		borderPane = new BorderPane();
+
 		setMenuBar();
 		setWorldTime();
 		setminiMap();
 		setchat();
 		setItems();
-
 		group.prefWidth(GAMEPANE_WIDTH_VALUE);
 		group.prefHeight(HEIGHT_VALUE);
-
 		// Calls the rendering
-		render.render(group);
+		// render.setGroup(group);
+		// render.renderNorth();
 		group.setLayoutX(3);
 		group.setLayoutY(35);
-		// only anchor sort of works
-		// AnchorPane temp = new AnchorPane();
-		borderPane.getChildren().add(group);
+		HBox hbox = new HBox(5);
+		hbox.getChildren().addAll(group, rightPanel);
 
+		borderPane.setCenter(hbox);
 		Scene scene = new Scene(borderPane, WIDTH_VALUE, HEIGHT_VALUE);
 		scene.getStylesheets().add(this.getClass().getResource(STYLE_CSS).toExternalForm());
 		scene.setOnKeyPressed(keyEvent);
 		window.setScene(scene);
+	}
+
+	private void setHealthBar() {
+		// TODO: creat the health bar with the avatar next to the alsoo add
+		// north, south, east and west
 	}
 
 	/**
@@ -487,24 +500,46 @@ public class GUI extends Application {
 	 * @return
 	 */
 	public int getAvatarIndex() {
-		// FIXME to be implemented. Note that it's 0-indexed.
-		return 0;
+		return avatarIndex;
 	}
 
-    /**
-     * this method will set the world time
-     * 
-     * @param worldTime
-     */
-    public void setTime(String time) {
+	/**
+	 * this method will set the world time
+	 * 
+	 * @param worldTime
+	 */
+	public void setTime(String time) {
 
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                timeLable.setText(time);
-            }
-        });
-    }
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				timeLable.setText(time);
+			}
+		});
+	}
+
+	public void changeAvatar() {
+		if (avatarIndex == 4) {
+			avatarIndex = 0;
+		} else {
+			avatarIndex++;
+		}
+		avatarGroup.getChildren().clear();
+		Image avatarImg = loadImage(AVATAR_IMAGES[avatarIndex]);
+		ImageView avatarImage = new ImageView(avatarImg);
+		avatarImage.setFitHeight(80);
+		avatarImage.setFitWidth(80);
+		avatarGroup.getChildren().add(avatarImage);
+	}
+
+	
+	public void setWaitingRoomAvatar() {
+		Image avatarImg = loadImage(AVATAR_IMAGES[avatarIndex]);
+		ImageView avatarImage = new ImageView(avatarImg);
+		avatarImage.setFitHeight(80);
+		avatarImage.setFitWidth(80);
+		playersWaiting.getChildren().add(avatarImage);
+	}
 
 	/**
 	 * this method will return the window
