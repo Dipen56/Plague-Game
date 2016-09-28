@@ -1,5 +1,10 @@
 package server.game.world;
 
+/**
+ * 
+ * @author Hector (Fang Zhao 300364061)
+ *
+ */
 public class GroundSpace implements MapElement {
 
     @Override

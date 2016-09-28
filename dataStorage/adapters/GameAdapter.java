@@ -17,163 +17,162 @@ import server.game.player.Player;
 import server.game.world.Area;
 
 /**
- * This class represents the an alternate version of the Game class, specifically for XML parsing.
+ * This class represents the an alternate version of the Game class, specifically for XML
+ * parsing.
  *
  * @author Daniel Anastasi (anastadani 300145878)
  *
  */
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-public class GameAdapter{
+public class GameAdapter {
 
+    /**
+     * Whatever you do don't delete either this altObstTypeProtector or
+     * altChestTypeProtector. I don't know why but them being here allows the parser to
+     * put objects of their types into the xml file. Without it, the parser does not
+     * recognise these types of object, and they will not be written to the game save.
+     */
+    @XmlElement
+    private ObstacleAdapter ObstTypeProtector = new ObstacleAdapter();
+    @XmlElement
+    private ChestAdapter ChestTypeProtector = new ChestAdapter();
+    @XmlElement
+    private AntidoteAdapter AntidoteTypeProtector = new AntidoteAdapter();
+    @XmlElement
+    private KeyAdapter KeyTypeProtector = new KeyAdapter();
+    @XmlElement
+    private TorchAdapter TorchTypeProtector = new TorchAdapter();
+    @XmlElement
+    private CupboardAdapter CupboardTypeProtector = new CupboardAdapter();
+    @XmlElement
+    private ScrapPileAdapter ScrapPileTypeProtector = new ScrapPileAdapter();
+    @XmlElement
+    private TransitionSpaceAdapter TransitionSpaceTypeProtector = new TransitionSpaceAdapter();
 
-	/**
-	 * Whatever you do don't delete either this altObstTypeProtector or altChestTypeProtector.
-	 * I don't know why but them being here allows the parser to put objects of their types into the xml file.
-	 * Without it, the parser does not recognise these types of object, and they will not be written to the game save.
-	 */
-	@XmlElement
-	private ObstacleAdapter ObstTypeProtector = new ObstacleAdapter();
-	@XmlElement
-	private ChestAdapter ChestTypeProtector = new ChestAdapter();
-	@XmlElement
-	private AntidoteAdapter AntidoteTypeProtector = new AntidoteAdapter();
-	@XmlElement
-	private KeyAdapter KeyTypeProtector = new KeyAdapter();
-	@XmlElement
-	private TorchAdapter TorchTypeProtector = new TorchAdapter();
-	@XmlElement
-	private CupboardAdapter CupboardTypeProtector = new CupboardAdapter();
-	@XmlElement
-	private ScrapPileAdapter ScrapPileTypeProtector = new ScrapPileAdapter();
-	@XmlElement
-	private TransitionSpaceAdapter TransitionSpaceTypeProtector = new TransitionSpaceAdapter();
+    public static final GroundSpaceAdapter groundSpaceAdapter = new GroundSpaceAdapter();
 
+    /**
+     * An alternate version of a World object.
+     */
+    @XmlElement
+    private AreaAdapter world = null;
 
-	public static final GroundSpaceAdapter groundSpaceAdapter= new GroundSpaceAdapter();
+    /**
+     * Keep track on each room with its entrance position.
+     */
+    @XmlElement
+    private Map<Integer, AreaAdapter> areas;
 
-	/**
-	 * An alternate version of a World object.
-	 */
-	@XmlElement
-	private AreaAdapter world = null;
+    /**
+     * Players and their id. Server can find player easily by looking by id.
+     */
+    @XmlElement
+    private Map<Integer, PlayerAdapter> players;
 
-	/**
-	 * Keep track on each room with its entrance position.
-	 */
-	@XmlElement
-	private Map<Integer, AreaAdapter> areas;
+    /**
+     * All torches in this world. It is used to track torch burning status in timer.
+     */
+    @XmlElement
+    private TorchAdapter[] torches;
 
+    /**
+     * An ID number to identify a loaded game against a running game.
+     */
+    @XmlElements
+    private int gameID;
 
-	/**
-	 * Players and their id. Server can find player easily by looking by id.
-	 */
-	@XmlElement
-	private Map<Integer, PlayerAdapter> players;
+    /**
+     * Only to be called by XML marshaller.
+     **/
+    GameAdapter() {
 
-	/**
-	 * All torches in this world. It is used to track torch burning status in timer.
-	 */
-	@XmlElement
-	private TorchAdapter[] torches;
+    }
 
-	/**
-	 * An ID number to identify a loaded game against a running game.
-	 */
-	@XmlElements
-	private int gameID;
+    /**
+     * @param The
+     *            object on which to base this object
+     **/
+    public GameAdapter(Game game) {
+        if (game == null)
+            throw new IllegalArgumentException("Argument is null");
 
-	/**
-	 * Only to be called by XML marshaller.
-	 **/
-	GameAdapter(){
+        this.world = new AreaAdapter(game.getWorld());
+        areas = new HashMap<>();
+        this.players = new HashMap<>();
+        Area area = null;
+        Player p = null;
+        Integer myInt = -1;
 
-	}
+        AreaAdapter altArea = null;
+        // Copies all entries from original area list, replacing values with alternative
+        // objects
+        for (Map.Entry<Integer, Area> m : game.getAreas().entrySet()) {
+            myInt = m.getKey(); // The key from the entry.
+            area = m.getValue(); // The value from the entry.
 
-	/**
-	 *@param The object on which to base this object
-	 **/
-	public GameAdapter(Game game){
-		if(game == null)
-			throw new IllegalArgumentException("Argument is null");
+            if (area == null) {
+                throw new RuntimeException("Integer mapped to null");
+            } else
+                altArea = new AreaAdapter(area);
+            areas.put(myInt, altArea);
+            altArea = null;
+        }
 
-		this.world = new AreaAdapter(game.getWorld());
-		areas = new HashMap<>();
-		this.players = new HashMap<>();
-		Area area = null;
-		Player p = null;
-		Integer myInt = -1;
+        // Copies all players to the players map.
+        for (Map.Entry<Integer, Player> m : game.getPlayers().entrySet()) {
+            myInt = m.getKey(); // The key from the entry.
+            p = m.getValue(); // The value from the entry.
+            if (p == null) {
+                throw new RuntimeException("Integer mapped to null");
+            }
+            this.players.put(myInt, new PlayerAdapter(p));
+        }
 
-		AreaAdapter altArea = null;
-		// Copies all entries from original area list, replacing values with alternative objects
-		for(Map.Entry<Integer, Area> m: game.getAreas().entrySet()){
-			myInt = m.getKey();	//The key from the entry.
-			area = m.getValue();	//The value from the entry.
+        List<Torch> gameTorches = game.getTorches();
+        this.torches = new TorchAdapter[gameTorches.size()];
+        // If there are no torches in list, none are saved into array.
 
-			if(area == null){
-				throw new RuntimeException("Integer mapped to null");
-			}
-			else
-				altArea = new AreaAdapter(area);
-			areas.put(myInt, altArea);
-			altArea = null;
-		}
+        if (!gameTorches.isEmpty()) {
+            // Copies all torches to the torches array. Field cannot be list due to xml
+            // complications.
+            for (int i = 0; i < gameTorches.size(); i++) {
+                this.torches[i] = new TorchAdapter(gameTorches.get(i));
+            }
+        }
+        gameID = game.getGameID();
+    }
 
-		//Copies all players to the players map.
-		for(Map.Entry<Integer, Player> m: game.getPlayers().entrySet()){
-			myInt = m.getKey();	//The key from the entry.
-			p = m.getValue();	//The value from the entry.
-			if(p == null){
-				throw new RuntimeException("Integer mapped to null");
-			}
-			this.players.put(myInt, new PlayerAdapter(p));
-		}
+    /**
+     * Returns a Game object, identical to that which this object was originally based.
+     * 
+     * @return The Game
+     **/
+    public Game getOriginal() {
+        Area world = this.world.getOriginal();
+        Map<Integer, Area> areas = new HashMap<>();
+        for (Map.Entry<Integer, AreaAdapter> m : this.areas.entrySet()) {
+            AreaAdapter adapter = m.getValue();
+            Area area = adapter.getOriginal();
+            areas.put(m.getKey(), area);
+        }
 
-		List<Torch> gameTorches = game.getTorches();
-		this.torches = new TorchAdapter[gameTorches.size()];
-		//If there are no torches in list, none are saved into array.
+        // Restores Players
+        Map<Integer, Player> players = new HashMap<>();
+        for (Map.Entry<Integer, PlayerAdapter> m : this.players.entrySet()) {
+            Player p = ((PlayerAdapter) m.getValue()).getOriginal();
+            players.put(m.getKey(), p);
+        }
+        // Restores Torches
+        List<Torch> torches = new ArrayList<>();
+        if (this.torches != null) {
+            for (int i = 0; i < this.torches.length; i++) {
+                torches.add(this.torches[i].getOriginal());
+            }
+        }
+        Game game = new Game(world, areas, players, torches, gameID);
 
-		if(!gameTorches.isEmpty()){
-			// Copies all torches to the torches array. Field cannot be list due to xml complications.
-			for(int i = 0; i < gameTorches.size();i++){
-				this.torches[i] = new TorchAdapter(gameTorches.get(i));
-			}
-		}
-		gameID = game.getGameID();
-	}
-
-
-	/**
-	 * Returns a Game object, identical to that which this object was originally based.
-	 *@return The Game
-	 **/
-	public Game getOriginal(){
-		Area world = this.world.getOriginal();
-		Map<Integer, Area> areas = new HashMap<>();
-		for(Map.Entry<Integer, AreaAdapter> m: this.areas.entrySet()){
-			AreaAdapter adapter = m.getValue();
-			Area area = adapter.getOriginal();
-			areas.put(m.getKey(), area);
-		}
-
-		//Restores Players
-		Map<Integer, Player> players = new HashMap<>();
-		for(Map.Entry<Integer, PlayerAdapter> m: this.players.entrySet()){
-			Player p = ((PlayerAdapter)m.getValue()).getOriginal();
-			players.put(m.getKey(), p);
-		}
-		//Restores Torches
-		List<Torch>torches = new ArrayList<>();
-		if(this.torches != null){
-			for(int i = 0; i < this.torches.length;i++){
-				torches.add(this.torches[i].getOriginal());
-			}
-		}
-		Game game =  new Game(world, areas, players, torches, gameID);
-
-		return game;
-	}
-
+        return game;
+    }
 
 }
-

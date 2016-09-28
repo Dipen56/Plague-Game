@@ -1,7 +1,10 @@
 package server.game.world;
 
-import javax.xml.bind.annotation.XmlRootElement;
-
+/**
+ * 
+ * @author Hector (Fang Zhao 300364061)
+ *
+ */
 public interface Lockable {
 
     /**

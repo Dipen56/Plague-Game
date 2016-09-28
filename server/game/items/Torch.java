@@ -12,13 +12,22 @@ public class Torch extends Item implements Destroyable, Tradable {
      * Each torch can burn up to 3 minute.
      */
     private static final int INIT_TIME = 3 * 60;
+
+    /**
+     * The "health" of this torch. The number indicates how many seconds left to burn.
+     */
     private int timeLimit;
+
+    /**
+     * Is this torch lighted?
+     */
     private boolean isFlaming;
 
     /**
-     *
+     * Constructor
+     * 
      * @param description
-     * @param sprite
+     *            --- the description
      */
     public Torch(String description) {
         super(description);
@@ -29,12 +38,12 @@ public class Torch extends Item implements Destroyable, Tradable {
     /**
      * To be used in game load by XML parser only.
      * 
-     * @param Description
-     *            of this torch.
-     * @param Time
-     *            limit on torch burning.
-     * @param True
-     *            if this torch is flaming.
+     * @param description
+     *            --- the description of this torch.
+     * @param timeLimit
+     *            --- Time limit on torch burning.
+     * @param isFlaming
+     *            --- True if this torch is flaming.
      */
     public Torch(String description, int timeLimit, boolean isFlaming) {
         super(description);
@@ -45,7 +54,7 @@ public class Torch extends Item implements Destroyable, Tradable {
     /**
      * Get the current status of this torch, i.e. whether it is flaming.
      *
-     * @return
+     * @return --- true if it is burning; or false if it isn't.
      */
     public boolean isFlaming() {
         return isFlaming;
@@ -56,6 +65,7 @@ public class Torch extends Item implements Destroyable, Tradable {
      * when this torch is not used up.
      *
      * @param isFlaming
+     *            --- true to light it, false to put it down.
      */
     public void setIsFlaming(boolean isFlaming) {
         if (timeLimit > 0) {
@@ -75,6 +85,11 @@ public class Torch extends Item implements Destroyable, Tradable {
         }
     }
 
+    /**
+     * Get the time left of this torch.
+     * 
+     * @return --- how many seconds left for this torch to burn
+     */
     public int getTimeLeft() {
         return timeLimit;
     }
