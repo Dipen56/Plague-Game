@@ -61,6 +61,8 @@ public class ServerMain {
         // create the game world
         game = new Game(TestConst.world, TestConst.areas);
 
+        
+        
         runServer(numPlayers);
     }
 

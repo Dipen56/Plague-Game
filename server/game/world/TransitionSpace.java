@@ -7,38 +7,50 @@ import server.game.player.Position;
  * A space in the map, on which the player must be standing in order to enter a
  * destination Area.
  * 
- * @author Daniel Anastasi 300145878, Hector (Fang Zhao 300364061)
+ * @author Hector (Fang Zhao 300364061), Daniel Anastasi 300145878
  *
  */
 public class TransitionSpace extends GroundSpace {
 
     /**
-     * The position of this object in the area, which specifies areaId, coordinates, and
-     * facing direction before transition.
+     * The position in this area, which specifies areaId, coordinates, and facing
+     * direction before transition.
      */
     private final Position currentPosition;
 
     /**
-     * The position in the destination area from this space. which specifies areaId,
+     * The destination position in the destination area, which specifies areaId,
      * coordinates, and facing direction before transition.
      */
     private final Position destPosition;
 
     /**
-     * @param The position of this object on the map.
-     * @param The destination position in the destination area.
-     * @param Direction
-     *            to face in order to enter destination area.
+     * Constructor
+     * 
+     * @param pos
+     *            --- The position in this area.
+     * @param destPos
+     *            --- The destination position in the destination area.
      */
     public TransitionSpace(Position pos, Position destPos) {
         this.currentPosition = pos;
         this.destPosition = destPos;
     }
-    
+
+    /**
+     * Get the position in this area.
+     * 
+     * @return --- the position in this area.
+     */
     public Position getCurrentPosition() {
         return currentPosition;
     }
 
+    /**
+     * Get the destination position in the destination area.
+     * 
+     * @return --- The destination position in the destination area.
+     */
     public Position getDestination() {
         return destPosition;
     }

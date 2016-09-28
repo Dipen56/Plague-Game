@@ -17,6 +17,7 @@ import server.game.player.Position;
  *
  */
 public class Area {
+
     /**
      * Width of the map.
      */
@@ -53,15 +54,17 @@ public class Area {
      */
     public Area(String filename) {
 
-        // FIXME: Not useful yet
+        // TODO: Not useful yet
 
     }
 
     /**
-     * Constructor used in initial game load, and test client.
+     * Constructor used only for text client.
+     * 
      * @param board
-     * @param Area id.
-     * @param A list of player spawn locations.
+     *            --- a 2d-array of MapElement representing the board.
+     * @param areaID
+     *            --- an unique if of this area.
      */
     public Area(MapElement[][] board, int areaID) {
         this.map = board;
@@ -74,8 +77,11 @@ public class Area {
      * Constructor used in data storage.
      *
      * @param board
-     * @param Area id.
-     * @param A list of player spawn locations.
+     *            --- board
+     * @param areaID
+     *            --- Area id.
+     * @param playerPortals
+     *            --- A list of player spawn locations.
      */
     public Area(MapElement[][] board, int areaID, List<int[]> playerPortals) {
         this.map = board;
@@ -85,24 +91,49 @@ public class Area {
         this.playerPortals = playerPortals;
     }
 
-    public List<int[]> getPlayerPortals(){
-    	return this.playerPortals;
+    /**
+     * Get all player portals.
+     * 
+     * @return --- all player portals as a list.
+     */
+    public List<int[]> getPlayerPortals() {
+        return this.playerPortals;
     }
 
+    /**
+     * Get the width of this board.
+     * 
+     * @return --- width
+     */
     public int getWidth() {
         return width;
     }
 
+    /**
+     * Get the height of this board.
+     * 
+     * @return --- height
+     */
     public int getHeight() {
         return this.height;
     }
 
+    /**
+     * Get the board.
+     * 
+     * @return --- the board as a 2d-array of MapElement
+     */
     public MapElement[][] getMap() {
         return this.map;
     }
 
-    public int getAreaID(){
-    	return this.areaId;
+    /**
+     * Get the area ID
+     * 
+     * @return --- area ID
+     */
+    public int getAreaID() {
+        return this.areaId;
     }
 
     /**
@@ -123,6 +154,7 @@ public class Area {
      * Get a random empty position to spawn a player.
      *
      * @param game
+     *            --- the game instance
      * @return --- an empty position to spawn player. If this area is so occupied that
      *         there is no empty space, null will be returned.
      */
@@ -141,6 +173,7 @@ public class Area {
      * This method checks whether the given position is in this area.
      *
      * @param position
+     *            --- the position to be checked.
      * @return --- true if the given position is in area; or false if it's out of area
      *         boundary or it's in other area.
      */
@@ -185,6 +218,7 @@ public class Area {
      * Get the MapElement type in front of the player.
      *
      * @param player
+     *            --- the player
      * @return --- the MapElement type in front of the player; or null if that place is
      *         out of current map.
      */
@@ -220,6 +254,7 @@ public class Area {
      * Get the MapElement type behind the player.
      *
      * @param player
+     *            --- the player
      * @return --- the MapElement type behind the player; or null if that space is out of
      *         current map.
      */
@@ -255,6 +290,7 @@ public class Area {
      * Get the MapElement type on the left of the player.
      *
      * @param player
+     *            --- the player
      * @return --- the MapElement type on the left of the player; or null if that space is
      *         out of current map.
      */
@@ -290,6 +326,7 @@ public class Area {
      * Get the MapElement type on the right of the player.
      *
      * @param player
+     *            --- the player
      * @return --- the MapElement type on the right of the player; or null if that space
      *         is out of current map.
      */
@@ -365,10 +402,10 @@ public class Area {
 
         for (MapElement[] row : map) {
             for (MapElement col : row) {
-            	if(col != null)
-            		sb.append(col.toString());
-            	else
-            		sb.append(" ");
+                if (col != null)
+                    sb.append(col.toString());
+                else
+                    sb.append(" ");
             }
             sb.append("\n");
         }

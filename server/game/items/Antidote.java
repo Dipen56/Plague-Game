@@ -15,19 +15,36 @@ public class Antidote extends Item implements Destroyable, Tradable {
      * number is set to 2 hours (equivalent 2 minutes in game).
      */
     public static final int EFFECT = 2 * 60;
+
     /**
      * If this antidote is of a wrong type, the player can be cured by this chance (a
      * relatively low chance).
      */
     public static final float CURE_CHANCE = 0.2f;
 
+    /**
+     * What type of virus does this antidote used for?
+     */
     private Virus virus;
 
+    /**
+     * Constructor, give the antidote a description and virus type.
+     * 
+     * @param description
+     *            --- description
+     * @param virus
+     *            --- What type of virus does this antidote used for
+     */
     public Antidote(String description, Virus virus) {
         super(description);
         this.virus = virus;
     }
 
+    /**
+     * Get the virus type that the antidote can be used for.
+     * 
+     * @return --- the virus type
+     */
     public Virus getVirus() {
         return virus;
     }

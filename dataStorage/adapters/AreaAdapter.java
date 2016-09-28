@@ -163,7 +163,7 @@ public class AreaAdapter{
 					board[row][col] = ((TransitionSpaceAdapter)this.board[row][col]).getOriginal();
 				}
 				else if(ame instanceof GroundSpaceAdapter)
-					board[row][col] = Game.groundSpace;
+					board[row][col] = Game.GROUND_SPACE;
 				else if(ame instanceof MapElementAdapter){
 					continue;	//xml load has reduced empty object, such as GroundSpace to a MapElementAdapter which does not register as null.
 				}

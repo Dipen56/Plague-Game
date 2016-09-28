@@ -11,9 +11,9 @@ public enum Direction {
     North, East, South, West;
 
     /**
-     * Get the the left of current direction.
+     * Get the left of current direction.
      * 
-     * @return
+     * @return --- the left of current direction.
      */
     public Direction left() {
         switch (this) {
@@ -31,9 +31,9 @@ public enum Direction {
     }
 
     /**
-     * Get the the right of current direction.
+     * Get the right of current direction.
      * 
-     * @return
+     * @return --- the right of current direction.
      */
     public Direction right() {
         switch (this) {
@@ -53,7 +53,7 @@ public enum Direction {
     /**
      * Generate a random direction
      * 
-     * @return
+     * @return --- a random direction.
      */
     public static Direction randomDirection() {
         int i = (int) (Math.random() * 4);
@@ -76,27 +76,23 @@ public enum Direction {
      * illegal, an <i>IndexOutOfBoundsException</i> is thrown.
      * 
      * @param index
-     * @return
+     *            --- the ordinal number
+     * @return --- the Direction at the given index.
      */
     public static Direction fromOrdinal(int index) {
         if (index < 0 || index >= Direction.values().length) {
             throw new IndexOutOfBoundsException();
         }
 
-        switch (index) {
-        case 0:
-            return North;
-        case 1:
-            return East;
-        case 2:
-            return South;
-        case 3:
-            return West;
-        default:
-            return null; // dead code
-        }
+        return Direction.values()[index];
     }
 
+    /**
+     * Return a character representation of the direction. This method is used in
+     * text-based UI.
+     * 
+     * @return --- East: '>'; North: '^'; South: 'v'; West: '<'.
+     */
     public char getChar() {
         switch (this) {
         case East:

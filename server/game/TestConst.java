@@ -23,8 +23,8 @@ import server.game.world.ScrapPile;
 import server.game.world.TransitionSpace;
 
 /**
- * OK, this class will NOT be used in our final game. It is created to provide a tiny game
- * world for testing.
+ * This class is NOT used in our final game. It is created to provide a tiny game world
+ * for testing.
  *
  * @author Hector (Fang Zhao 300364061)
  *
@@ -34,9 +34,11 @@ public class TestConst {
     /*
      * world area id: 0, the room area id: 1
      */
-
     public static Area world;
 
+    /**
+     * areas
+     */
     public static Map<Integer, Area> areas;
 
     static {

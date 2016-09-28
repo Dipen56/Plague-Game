@@ -9,22 +9,27 @@ import java.util.List;
  *
  */
 public class Room extends Area implements Lockable {
+
     /**
      * The keyID specifies which key can open the door to this room. Only the key with the
      * same keyID can open the door to this room.
      */
     private int keyID;
+
     /**
      * Is this room locked? If so the player needs a right key to open this room.
      */
     private boolean isLocked;
 
     /**
-     * Constructor
+     * Constructor used to parse in a file. NOT used currently.
      *
      * @param filename
+     *            --- the XML file recording details of this room
      * @param keyID
+     *            --- the key id
      * @param isLocked
+     *            -- whether it is locked.
      */
     public Room(String filename, int keyID, boolean isLocked) {
         super(filename);
@@ -32,14 +37,17 @@ public class Room extends Area implements Lockable {
         this.isLocked = isLocked;
     }
 
-
     /**
      * Constructor used during game creation.
      *
      * @param board
+     *            --- the board represented as 2d-array of MapElement
      * @param areaID
+     *            --- area id
      * @param keyID
+     *            --- the key id
      * @param isLocked
+     *            -- whether it is locked.
      */
     public Room(MapElement[][] board, int areaID, int keyID, boolean isLocked) {
         super(board, areaID);
@@ -51,12 +59,18 @@ public class Room extends Area implements Lockable {
      * Constructor used in game load.
      *
      * @param board
+     *            --- the board represented as 2d-array of MapElement
      * @param areaID
+     *            --- area id
      * @param keyID
+     *            --- the key id
      * @param isLocked
-     * @param A list of possible player spawn locations.
+     *            -- whether it is locked.
+     * @param playerPortals
+     *            --- A list of possible player spawn locations.
      */
-    public Room(MapElement[][] board, int areaID, int keyID, boolean isLocked, List<int[]> playerPortals) {
+    public Room(MapElement[][] board, int areaID, int keyID, boolean isLocked,
+            List<int[]> playerPortals) {
         super(board, areaID, playerPortals);
         this.keyID = keyID;
         this.isLocked = isLocked;
