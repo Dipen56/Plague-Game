@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import antherrendering.AnotherRendering;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -38,78 +40,6 @@ public class ClientUI {
      * The period between every update
      */
     public static final int DEFAULT_CLK_PERIOD = 100;
-
-    /**
-     * This is designed as a table for renderer to index char board to render objects.
-     */
-    public static final Map<Character, String> MAP_OBJECTS_TABLE;
-
-    // ITEM_TABLE is not a good idea. leave it aside for now.
-    public static final Map<Character, String> ITEM_TABLE;
-
-    /*
-     * Initialise the table for Renderer. Each table contains a map which maps a char to
-     * the corresponding object, so the Renderer knows what to render by knowing what char
-     * was sent by server.
-     */
-    static {
-        MAP_OBJECTS_TABLE = new HashMap<>();
-        ITEM_TABLE = new HashMap<>();
-
-        /*
-         * TODO This is probably not appropriate, some map objects may need more than one
-         * png path, e.g. a room has four sides of views, each of them should be
-         * different.
-         * 
-         * But the idea is, we initialise this map for renderer so that renderer knows
-         * what map object to render by looking into this map.
-         */
-
-        // ============= map objects ====================
-
-        /*
-         * E: Room Obstacle
-         * 
-         * G: Ground Space
-         * 
-         * T: Tree
-         * 
-         * R: Rock
-         * 
-         * B: Barrel
-         * 
-         * A: Table
-         * 
-         * C: Chest
-         * 
-         * U: Cupboard
-         * 
-         * P: Scrap Pile
-         * 
-         * H: chair
-         * 
-         * D: a door. This should be rendered as ground, but it indicates which direction
-         * the room should be facing.
-         * 
-         */
-        MAP_OBJECTS_TABLE.put('T', "/Resourse/Tree.png");
-        MAP_OBJECTS_TABLE.put('R', "/Resourse/Rock.png");
-        MAP_OBJECTS_TABLE.put('C', "/Resourse/Chest.png");
-        MAP_OBJECTS_TABLE.put('G', "/Resourse/Ground.png");
-        MAP_OBJECTS_TABLE.put('B', "/Resourse/Barrel.png");
-        MAP_OBJECTS_TABLE.put('A', "/Resourse/Table.png");
-        MAP_OBJECTS_TABLE.put('U', "/Resourse/Cupboard.png");
-        MAP_OBJECTS_TABLE.put('P', "/Resourse/ScrapPile.png");
-        // this is the TransitionSpace, which is actually a normal ground for renderer.
-        MAP_OBJECTS_TABLE.put('D', "/Resourse/Ground.png");
-
-        // ============= inventory objects ====================
-
-        ITEM_TABLE.put('A', "/Resourse/Antidote.png");
-        ITEM_TABLE.put('K', "/Resourse/Key.png");
-        ITEM_TABLE.put('T', "/Resourse/Torch.png");
-
-    }
 
     // ============ info fields =================
 
@@ -189,7 +119,7 @@ public class ClientUI {
     /**
      * The renderer
      */
-    private Rendering render;
+    private AnotherRendering render;
 
     /**
      * The client side socket connection maintainer
@@ -233,9 +163,9 @@ public class ClientUI {
         torchStatus = new HashMap<>();
 
         // TODO: need to uses the other constructor
-        render = new Rendering();
+        // render = new Rendering();
+        render = new AnotherRendering();
         // TODO: get the actual player direction
-        render.setDirection("up");
         gui = new GUI(this, render);
 
         GUI.launch(GUI.class);
@@ -458,6 +388,7 @@ public class ClientUI {
         // a. update minimap
 
         // b. update the inventory
+        gui.setInventory(inventory);
 
         // c. update the health bar if it is in right panel in GUI.
 
@@ -516,28 +447,7 @@ public class ClientUI {
             public void run() {
                 gui.startGame();
 
-                List<String> items = new ArrayList<String>();
-				String anti = "A|antedote";
-				String key = "K|key";
-				String torch = "T|torch";
-				String anti2 = "A|antedote";
-				String key2 = "K|key";
-				String torch2 = "T|torch";
-				String anti3 = "A|antedote";
-				String key3 = "K|key";
-				String torch3 = "T|torch";
-				items.add(anti);
-				items.add(key);
-				items.add(torch);
-				items.add(anti2);
-				items.add(key2);
-				items.add(torch2);
-				items.add(anti2);
-				items.add(key2);
-				items.add(torch2);
-
-				gui.setInventory(items);
-
+                render.updatePlayer("5,5,0");
 
                 clockThread = new ClockThread(DEFAULT_CLK_PERIOD, ClientUI.this);
                 clockThread.start();
@@ -678,15 +588,17 @@ public class ClientUI {
                 // TODO: some how make it work with items
                 System.out.println("here");
                 if (event.toString().contains("Group")) {
-					gui.changeAvatar();
-				} else if (event.toString().contains("Grid")) {
-					// System.out.println(event.getX());
-					int itemX = (int) (event.getX() / 60);
-					int itemY = (int) (event.getY() / 60);
-					gui.setItemDescription(itemX, itemY);
-					//System.out.println(itemX + " " + itemY);
 
-				}
+                    gui.changeAvatar();
+                } else if (event.toString().contains("Grid")) {
+                    // System.out.println(event.getX());
+                    int itemX = (int) (event.getX() / 60);
+                    int itemY = (int) (event.getY() / 60);
+                    gui.setItemDescription(itemX, itemY);
+                    // System.out.println(itemX + " " + itemY);
+
+                }
+
             }
         };
     }

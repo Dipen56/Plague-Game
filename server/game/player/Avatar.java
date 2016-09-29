@@ -8,7 +8,7 @@ package server.game.player;
  */
 public enum Avatar {
 
-    Avatar_1, Avatar_2, Avatar_3, Avatar_4;
+    Avatar_1, Avatar_2, Avatar_3, Avatar_4, Avatar_5;
 
     /**
      * This method get the avatar by its ordinal number. If the index is illegal, an
