@@ -143,7 +143,7 @@ public class Cupboard extends Obstacle implements Container, Lockable {
 
     @Override
     public String toString() {
-        return "B";
+        return "U";
     }
 
 }

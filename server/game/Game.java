@@ -1,6 +1,5 @@
 package server.game;
 
-import java.io.File;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -111,39 +110,9 @@ public class Game {
     private LocalTime clock;
 
     /**
-     * Constructor, take in an XML file that describes the game world, and construct it
-     * with details in the file.
-     *
-     * @param file
-     *            --- the XML file that stores every detail of the game world.
-     */
-    public Game(File file) {
-
-        players = new HashMap<>();
-        torches = new ArrayList<>();
-
-        // the world clock starts from a random time from 00:00:00 to 23:59:59
-        Random ran = new Random();
-        int hour = ran.nextInt(24);
-        int minute = ran.nextInt(60);
-        int second = ran.nextInt(60);
-        clock = LocalTime.of(hour, minute, second);
-
-        // TODO parse the file and construct world
-
-        // TODO scan the world, so some initialisation job:
-        // 1. remember all containers (for key re-distribution, and for open/close status
-        // update for rendering)
-        // 2. remember all torches and put them into torches list (for torch track)
-        // 3. join in players
-
-        // last, start timing.
-
-        // these could be integrated into one method initialise();
-    }
-
-    /**
-     * Constructor for text-based UI and for initial game load.
+     * Constructor a game world without any players inside. Note that the first parameter
+     * is not really necessary, as the second parameter will contain the world map. It is
+     * a legacy parameter.
      *
      * @param world
      *            --- The main game world.
@@ -165,6 +134,14 @@ public class Game {
         int minute = ran.nextInt(60);
         int second = ran.nextInt(60);
         clock = LocalTime.of(hour, minute, second);
+
+        // TODO scan the world, so some initialisation job:
+        // 1. remember all containers (for key re-distribution, and for open/close status
+        // update for rendering)
+        // 2. remember all torches and put them into torches list (for torch track)
+
+        // these could be integrated into one method initialise();
+
     }
 
     /**
@@ -183,7 +160,6 @@ public class Game {
      */
     public Game(Area world, Map<Integer, Area> areas, Map<Integer, Player> players,
             List<Torch> torches, int gameID) {
-        // torhces
 
         this.world = world;
         this.areas = areas;
@@ -881,6 +857,34 @@ public class Game {
             sb.append(p.getId());
             sb.append(",");
             sb.append(p.getAvatar().ordinal());
+            sb.append("|");
+        }
+        return sb.toString();
+    }
+
+    /**
+     * Generate a String of the status of all players' torch, i.e. whether he is holding a
+     * (lighted) torch or not. This is used for the renderer at client side. The String
+     * has the following format: <i>"uId_1,true/false|uId_2,true/false"</i>, where true or
+     * false is represented as 1 or 0.
+     * 
+     * <p>
+     * Say 2 players currently in game:
+     * <li>player 1, id 111, is holding torch
+     * <li>player 2, id 222, is not holding torch<br>
+     * <br>
+     * <p>
+     * The string representation will be <i>"111,1|222,0"</i>
+     * 
+     * @return --- a string representation of the status of all players' torch. This is
+     *         used for network transmission.
+     */
+    public String getTorchStatusString() {
+        StringBuilder sb = new StringBuilder();
+        for (Player p : players.values()) {
+            sb.append(p.getId());
+            sb.append(",");
+            sb.append(p.isHoldingTorch() ? '0' : '1');
             sb.append("|");
         }
         return sb.toString();

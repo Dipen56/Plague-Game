@@ -6,10 +6,12 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.Map;
 
 import server.game.Game;
 import server.game.player.Avatar;
 import server.game.player.Player;
+import server.game.world.Area;
 
 /**
  * This class represents a single thread that handles communication with a connected
@@ -20,31 +22,38 @@ import server.game.player.Player;
  *
  */
 public class Receptionist extends Thread {
+
     /**
      * The game instance running on server side.
      */
     private final Game game;
+
     /**
      * User (client) id of this connection.
      */
     private final int uid;
+
     /**
      * The communicating socket.
      */
     private final Socket socket;
+
     /**
      * The download link from the client.
      */
     private DataInputStream input;
+
     /**
      * The upload link to the client
      */
     private DataOutputStream output;
+
     /**
      * A flag indicating whether this client is ready to enter game. If it's false, the
      * server will keep this client in lobby waiting for all clients ready.
      */
     private boolean isClientReady = false;
+
     /**
      * A flag indicating whether the game is running or not.
      */
@@ -82,17 +91,13 @@ public class Receptionist extends Thread {
      * Send the game world maps as strings to client, and tell the client his id.
      */
     public void sendMapID() {
-        /*
-         * TODO It's sending the mock game world currently. should write a method to
-         * convert the map directly into string
-         */
-        String areaString1 = "0,8,7\nEECRT111\nETRRE111\nEEEEE111\nERRETCDE\nERRETTTE\nEREEEEEE\nCRETTEET";
-        String areaString2 = "1,3,3\nEEC\nESB\nEDE";
 
         try {
             // tell the client all maps
-            output.writeUTF(areaString1);
-            output.writeUTF(areaString2);
+            Map<Integer, Area> areas = game.getAreas();
+            for (Area map : areas.values()) {
+                output.writeUTF(map.toString());
+            }
             output.writeUTF("Fin");
             output.flush();
 
@@ -156,7 +161,7 @@ public class Receptionist extends Thread {
     /**
      * Is this client ready to enter game?
      * 
-     * @return
+     * @return --- true/false for yes/no
      */
     public boolean isReady() {
         return isClientReady;
@@ -301,12 +306,14 @@ public class Receptionist extends Thread {
      * <li>Visibility
      * <li>Positions of all players
      * <li>The inventory of the player in this client
+     * <li>The status of player holding torch or not.
      * 
      * <p>
      * Each one of them is separated by a new line character '\n'. The format of each part
      * should refer to {@link client.ParserUtilities #parseTime(String) parseTime},
      * {@link client.ParserUtilities #parsePosition(java.util.Map, String) parsePosition},
-     * and {@link client.ParserUtilities #parseInventory(String) parseInventory}.
+     * {@link client.ParserUtilities #parseInventory(String) parseInventory}, and
+     * {@link client.ParserUtilities #parseTorchStatus(Map, String) parseTorchStatus}.
      * 
      * @return --- a String representation of the game status
      */
@@ -340,6 +347,19 @@ public class Receptionist extends Thread {
         String inventory = game.getPlayerInventoryString(uid);
         gameString.append(inventory);
         gameString.append('\n');
+
+        // 6. holding torch or not for all players.
+        String torchStatus = game.getTorchStatusString();
+        gameString.append(torchStatus);
+        gameString.append('\n');
+
+        /*
+         * TODO 7. user-specified content
+         * 
+         * is holding torch?
+         * 
+         * chat message
+         */
 
         return gameString.toString();
     }

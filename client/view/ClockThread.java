@@ -37,7 +37,7 @@ public class ClockThread extends Thread {
                 Thread.sleep(delay);
 
                 // update Renderer and GUI.
-                // controller.updateRenderAndGui();
+                controller.updateRenderAndGui();
 
             } catch (InterruptedException e) {
                 // should never happen
