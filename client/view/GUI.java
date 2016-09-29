@@ -14,47 +14,50 @@ import javafx.scene.Group;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.layout.StackPane;
 import javafx.scene.image.ImageView;
 import javafx.geometry.Pos;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.WindowEvent;
 import server.game.player.Direction;
 import server.game.player.Position;
-
-import java.nio.file.attribute.PosixFilePermission;
+import server.game.player.Direction;
+import server.game.player.Position;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 
-import java.time.LocalTime;
+import java.awt.Point;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import client.rendering.Rendering;
 
 /**
- * This class represents the main GUI class this class bring together all the
- * different components of the GUI.
+ * This class represents the main GUI class this class bring together all the different
+ * components of the GUI.
  *
  * @author Dipen
  *
  */
 public class GUI extends Application {
-
-
-	// GUI Style CSS
+    
+    // GUI Style CSS
 	private static final String STYLE_CSS = "/main.css";
 	// Constants Images
 	private static final String GAMEICON_IMAGE = "/game-icon.png";
 	private static final String INVENTORY_IMAGE = "/item-tray.png";
 	private static final String SLASH_SCREEN_IMAGE = "/spash-screen-background.png";
 
-	private static final String AVATAR_ONE_IMAGE = "/standingstillrear.png";
+	private static String[] AVATAR_IMAGES = { "/front_stand_1.png", "/front_stand_2.png", "/front_stand_3.png",
+			"/front_stand_4.png", "/front_stand_5.png" };
 
 	// Constants Dimensions
 	public static final int WIDTH_VALUE = 1000;
@@ -62,8 +65,51 @@ public class GUI extends Application {
 	private static final int RIGHTPANE_WIDTH_VALUE = WIDTH_VALUE - 600;
 	public static final int GAMEPANE_WIDTH_VALUE = WIDTH_VALUE - 400;
 
+    private static final int MINIMAP_TILE_WIDTH = 10;
+
+    // mini map color table
+    private static final Map<Character, Color> MINIMAP_COLOR_TABLE;
+
+    static {
+        MINIMAP_COLOR_TABLE = new HashMap<>();
+
+        // ========== obstacles: Grey, Rock, Barrel, Table ===========
+
+        // Rock
+        MINIMAP_COLOR_TABLE.put('R', Color.rgb(83, 86, 102, 1.0));
+        // Barrel
+        MINIMAP_COLOR_TABLE.put('B', Color.rgb(83, 86, 102, 1.0));
+        // Table
+        MINIMAP_COLOR_TABLE.put('A', Color.rgb(83, 86, 102, 1.0));
+
+        // ===== Containers: golden, chest, cupboard, scrap pile =====
+
+        // Chest
+        MINIMAP_COLOR_TABLE.put('C', Color.rgb(255, 170, 37, 1.0));
+        // Cupboard
+        MINIMAP_COLOR_TABLE.put('U', Color.rgb(255, 170, 37, 1.0));
+        // Scrap pile
+        MINIMAP_COLOR_TABLE.put('T', Color.rgb(255, 170, 37, 1.0));
+
+        // ============== Tree or ground: green ======================
+
+        // Tree, dark grenn
+        MINIMAP_COLOR_TABLE.put('T', Color.rgb(68, 170, 58, 1.0));
+        // Ground, light green
+        MINIMAP_COLOR_TABLE.put('G', Color.rgb(200, 236, 204, 1.0));
+        // Door space, this is just ground
+        MINIMAP_COLOR_TABLE.put('D', Color.rgb(200, 236, 204, 1.0));
+
+        // =========== Room obstacles: blue ====================
+
+        // Room obstacles
+        MINIMAP_COLOR_TABLE.put('E', Color.rgb(19, 137, 245, 1.0));
+
+    }
+    
 	// main window
 	private static Stage window;
+    
 	// controls
 	private MenuBar menuBar;
 	private Label timeLable;
@@ -71,12 +117,16 @@ public class GUI extends Application {
 	private Label textAreaLable;
 	private TextField msg;
 	private Button send;
-	public static Group group = new Group();
+    
+	// private Group group = new Group();
+	public Pane group = new Pane();
+    
 	// panes
 	// right pane with vertical alligment
 	private VBox rightPanel;
 	private GridPane itemGrid;
 	private GridPane iteminfo;
+    
 	// standard layout
 	private BorderPane borderPane;
 	private String chatText = "HARDD: Welcome Players";
@@ -91,6 +141,7 @@ public class GUI extends Application {
 	private Button play;
 	private Button quit;
 	private Button help;
+    
 	// Controls for the login Screen
 	private Label info;
 	private Button login;
@@ -100,10 +151,14 @@ public class GUI extends Application {
 	private TextField portInput;
 	private Group avatarGroup;
 	private String selectedAvatar;
+	private Label zoomedItem;
+	private Label itemDetail;
+    
 	// waiting room Controls
 	private FlowPane playersWaiting;
 	private Button readyGame;
 	private Button quitWaitingRoom;
+    
 	// this is for event
 	// for action events
 	private EventHandler<ActionEvent> actionEvent;
@@ -113,6 +168,9 @@ public class GUI extends Application {
 	private EventHandler<MouseEvent> mouseEvent;
 	// for window resizing not really need else where
 	private EventHandler<WindowEvent> windowEvent;
+
+	private static int avatarIndex = 0;
+	private Map<Point, String> itemsDescription = new HashMap<Point, String>();
 
 	public GUI(ClientUI viewControler, Rendering rendering) {
 		this.viewControler = viewControler;
@@ -184,15 +242,15 @@ public class GUI extends Application {
 		keyEvent = viewControler.getKeyEventHander();
 		mouseEvent = viewControler.getMouseEventHander();
 		windowEvent = viewControler.getWindowEventHander();
-		VBox loginBox = new VBox(5);
+		VBox loginBox = new VBox(10);
 		info = new Label();
 		info.setText("Enter The IP,Port and UserName");
 		loginBox.getChildren().add(info);
 		BorderPane loginBorderPane = new BorderPane();
 
 		VBox inputStore = new VBox(5);
-
 		HBox userNameBox = new HBox(3);
+
 		Label user = new Label("Enter UserName");
 		userNameInput = new TextField();
 		userNameBox.getChildren().addAll(user, userNameInput);
@@ -205,6 +263,8 @@ public class GUI extends Application {
 		// loginBox.getChildren().add(ipBox);
 
 		HBox portBox = new HBox(3);
+		portBox.alignmentProperty().set(Pos.CENTER);
+
 		Label port = new Label("Enter Port");
 		portInput = new TextField();
 		portBox.getChildren().addAll(port, portInput);
@@ -213,12 +273,15 @@ public class GUI extends Application {
 		loginBorderPane.setLeft(inputStore);
 		loginBox.getChildren().add(loginBorderPane);
 		avatarGroup = new Group();
-		Image avatarImg = loadImage(AVATAR_ONE_IMAGE);
+		Image avatarImg = loadImage(AVATAR_IMAGES[avatarIndex]);
 		ImageView avatarImage = new ImageView(avatarImg);
+		avatarImage.setFitHeight(80);
+		avatarImage.setFitWidth(80);
 		avatarGroup.getChildren().add(avatarImage);
+		avatarGroup.setOnMousePressed(mouseEvent);
 		loginBorderPane.setRight(avatarGroup);
-		// TODO: need to add some from of action listener here to change images
 		FlowPane buttons = new FlowPane();
+		buttons.alignmentProperty().set(Pos.CENTER);
 		buttons.setHgap(10);
 		login = new Button("Login");
 		login.setOnAction(actionEvent);
@@ -226,7 +289,7 @@ public class GUI extends Application {
 		quitLogin.setOnAction(actionEvent);
 		buttons.getChildren().addAll(login, quitLogin);
 		loginBox.getChildren().add(buttons);
-		Scene slashScene = new Scene(loginBox, WIDTH_VALUE / 2, HEIGHT_VALUE / 2);
+		Scene slashScene = new Scene(loginBox, 350, 160);
 		window.setScene(slashScene);
 	}
 
@@ -234,7 +297,7 @@ public class GUI extends Application {
 		VBox waitingRoomBox = new VBox(5);
 		Label waitingMsg = new Label();
 		waitingMsg.setText(
-				"Welome Players! This is the Waiting, You are seeing this room as this game reqires min of 2 players to play. Game Will Start as soon as there are 2 players or more players");
+				"Welome Players! When Your Ready To Start Click Ready. When The Minimum Number Of Player Have Connect The Game Will Start");
 		waitingMsg.setWrapText(true);
 		waitingRoomBox.getChildren().add(waitingMsg);
 		playersWaiting = new FlowPane();
@@ -246,9 +309,10 @@ public class GUI extends Application {
 		readyGame.setOnAction(actionEvent);
 		quitWaitingRoom = new Button("Leave Game");
 		quitWaitingRoom.setOnAction(actionEvent);
+		buttons.setAlignment(Pos.CENTER);
 		buttons.getChildren().addAll(readyGame, quitWaitingRoom);
 		waitingRoomBox.getChildren().add(buttons);
-		Scene slashScene = new Scene(waitingRoomBox, WIDTH_VALUE, HEIGHT_VALUE);
+		Scene slashScene = new Scene(waitingRoomBox, 400, 170);
 		window.setScene(slashScene);
 	}
 
@@ -257,32 +321,32 @@ public class GUI extends Application {
 		rightPanel = new VBox(10);
 		rightPanel.setPrefSize(RIGHTPANE_WIDTH_VALUE, HEIGHT_VALUE);
 		rightPanel.getStyleClass().add("cotrolvbox");
-		borderPane = new BorderPane();
-		borderPane.setRight(rightPanel);
 
-		// creates a scene
+		borderPane = new BorderPane();
+
 		setMenuBar();
 		setWorldTime();
 		setminiMap();
 		setchat();
 		setItems();
-
 		group.prefWidth(GAMEPANE_WIDTH_VALUE);
 		group.prefHeight(HEIGHT_VALUE);
-
 		// Calls the rendering
-		//Needs to call rendering once again
-		//render.render(group, 10);
 		group.setLayoutX(3);
 		group.setLayoutY(35);
-		// only anchor sort of works
-		// AnchorPane temp = new AnchorPane();
-		borderPane.getChildren().add(group);
+		HBox hbox = new HBox(5);
+		hbox.getChildren().addAll(group, rightPanel);
 
+		borderPane.setCenter(hbox);
 		Scene scene = new Scene(borderPane, WIDTH_VALUE, HEIGHT_VALUE);
 		scene.getStylesheets().add(this.getClass().getResource(STYLE_CSS).toExternalForm());
 		scene.setOnKeyPressed(keyEvent);
 		window.setScene(scene);
+	}
+
+	private void setHealthBar() {
+		// TODO: creat the health bar with the avatar next to the alsoo add
+		// north, south, east and west
 	}
 
 	/**
@@ -384,7 +448,9 @@ public class GUI extends Application {
 		titlePane.setText("Item Inventory");
 		HBox hbox = new HBox(5);
 		itemGrid = new GridPane();
-		hbox.setOnMousePressed(mouseEvent);
+		itemGrid.setOnMouseMoved(mouseEvent);
+		//hbox.setOnMousePressed(mouseEvent);
+		itemGrid.setOnMousePressed(mouseEvent);
 		hbox.getStyleClass().add("itempane-background");
 		itemGrid.setGridLinesVisible(true);
 		for (int i = 0; i < 3; i++) {
@@ -407,7 +473,7 @@ public class GUI extends Application {
 		hbox.getChildren().add(itemGrid);
 		iteminfo = new GridPane();
 		iteminfo.setGridLinesVisible(true);
-		Label zoomedItem = new Label();
+		zoomedItem = new Label();
 		Image img = loadImage(INVENTORY_IMAGE);
 		ImageView image = new ImageView();
 		image.setFitWidth(100);
@@ -418,7 +484,7 @@ public class GUI extends Application {
 		GridPane.setColumnIndex(zoomedItem, 0);
 		iteminfo.getChildren().add(zoomedItem);
 		// makes the extra box for the info of the item
-		Label itemDetail = new Label("No Item Currently Selected");
+		 itemDetail = new Label("No Item Currently Selected");
 		itemDetail.getStyleClass().add("item-lable");
 		GridPane.setRowIndex(itemDetail, 1);
 		GridPane.setColumnIndex(itemDetail, 0);
@@ -492,24 +558,45 @@ public class GUI extends Application {
 	 * @return
 	 */
 	public int getAvatarIndex() {
-		// FIXME to be implemented. Note that it's 0-indexed.
-		return 0;
+		return avatarIndex;
 	}
 
-    /**
-     * this method will set the world time
-     * 
-     * @param worldTime
-     */
-    public void setTime(String time) {
+	/**
+	 * this method will set the world time
+	 * 
+	 * @param worldTime
+	 */
+	public void setTime(String time) {
 
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                timeLable.setText(time);
-            }
-        });
-    }
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				timeLable.setText(time);
+			}
+		});
+	}
+
+	public void changeAvatar() {
+		if (avatarIndex == 4) {
+			avatarIndex = 0;
+		} else {
+			avatarIndex++;
+		}
+		avatarGroup.getChildren().clear();
+		Image avatarImg = loadImage(AVATAR_IMAGES[avatarIndex]);
+		ImageView avatarImage = new ImageView(avatarImg);
+		avatarImage.setFitHeight(80);
+		avatarImage.setFitWidth(80);
+		avatarGroup.getChildren().add(avatarImage);
+	}
+
+	public void setWaitingRoomAvatar() {
+		Image avatarImg = loadImage(AVATAR_IMAGES[avatarIndex]);
+		ImageView avatarImage = new ImageView(avatarImg);
+		avatarImage.setFitHeight(80);
+		avatarImage.setFitWidth(80);
+		playersWaiting.getChildren().add(avatarImage);
+	}
 
 	/**
 	 * this method will return the window
@@ -531,6 +618,192 @@ public class GUI extends Application {
 		return image;
 	}
 
+	public void setInventory(List<String> inventory) {
+		int index = 0;
+		int row = 0;
+		int col = 0;
+		String tempPath = "/antidote.png";
+		for (String s : inventory) {
+			if (s.startsWith("A")) {
+				String description = s.substring(2, s.length());
+				// String imagePath=ClientUI.ITEM_TABLE.get('A');
+				Image image = loadImage(tempPath);
+				ImageView imageView = new ImageView(image);
+				Label item = new Label();
+				item.getStyleClass().add("item-grid");
+				imageView.setFitWidth(60);
+				imageView.setFitHeight(60);
+				imageView.setImage(image);
+				item.setGraphic(imageView);
+				GridPane.setRowIndex(item, row);
+				GridPane.setColumnIndex(item, col);
+				itemGrid.getChildren().add(item);
+				itemsDescription.put(new Point(col, row), s);
+				col++;
+			} else if (s.startsWith("K")) {
+				String description = s.substring(2, s.length());
+				// String imagePath=ClientUI.ITEM_TABLE.get('A');
+				Image image = loadImage(tempPath);
+				ImageView imageView = new ImageView(image);
+				Label item = new Label();
+				item.getStyleClass().add("item-grid");
+				imageView.setFitWidth(60);
+				imageView.setFitHeight(60);
+				imageView.setImage(image);
+				item.setGraphic(imageView);
+				GridPane.setRowIndex(item, row);
+				GridPane.setColumnIndex(item, col);
+				itemGrid.getChildren().add(item);
+				itemsDescription.put(new Point(col, row), s);
+				col++;
+			} else if (s.startsWith("T")) {
+				String description = s.substring(2, s.length());
+				// String imagePath=ClientUI.ITEM_TABLE.get('A');
+				Image image = loadImage(tempPath);
+				ImageView imageView = new ImageView(image);
+				Label item = new Label();
+				item.getStyleClass().add("item-grid");
+				imageView.setFitWidth(60);
+				imageView.setFitHeight(60);
+				imageView.setImage(image);
+				item.setGraphic(imageView);
+				GridPane.setRowIndex(item, row);
+				GridPane.setColumnIndex(item, col);
+				itemGrid.getChildren().add(item);
+				itemsDescription.put(new Point(col, row), s);
+				col++;
+			}
+			if (col == 4) {
+				col = 0;
+				row++;
+			}
+		}
+
+	}
+
+        /**
+     * This method draws a minimap on the minimap panel.
+     * 
+     * @param uId
+     * @param positions
+     * @param areaMap
+     * @param visibility
+     */
+    public void updateMinimap(int uId, Map<Integer, Position> positions, char[][] areaMap,
+            int visibility) {
+
+        // player's coordinate on board, and direction.
+        Position selfPosition = positions.get(uId);
+        int selfAreaId = selfPosition.areaId;
+        int selfX = selfPosition.x;
+        int selfY = selfPosition.y;
+        Direction selDir = selfPosition.getDirection();
+
+        // the width of height of current map
+        int width = areaMap[0].length;
+        int height = areaMap.length;
+
+        // the top and left of the minimap
+        // FIXME this should be changed to make the minimap in the center
+        int left = 0;
+        int top = 0;
+
+        // draw the minimap
+        Color color = null;
+        for (int row = 0; row < areaMap.length; row++) {
+            for (int col = 0; col < areaMap.length; col++) {
+
+                color = MINIMAP_COLOR_TABLE.get(areaMap[row][col]);
+
+                if (color == null) {
+                    // ERROR, this is an unknown character/MapElement
+                    continue;
+                }
+
+                // 1. set colour
+
+                // 2. drawRect(left + col * MINIMAP_TILE_WIDTH, top + row *
+                // MINIMAP_TILE_WIDTH, MINIMAP_TILE_WIDTH, MINIMAP_TILE_WIDTH);
+
+            }
+        }
+
+        // TODO use four images to represents four directions.
+
+        // draw player arrow on map
+        for (Position p : positions.values()) {
+            // if this player is not in the same map, skip.
+            if (p.areaId != selfAreaId) {
+                continue;
+            }
+
+            // this player's x, y, and direction
+            int x = p.x;
+            int y = p.y;
+            Direction dir = p.getDirection();
+
+            // if this player isn't within visible distance, skip
+            if (Math.abs(x - selfX) > visibility || Math.abs(y - selfY) > visibility) {
+                continue;
+            }
+
+            // 1. draw an arrow on the above mini map.
+
+            // 2. drawIamge(left + x * MINIMAP_TILE_WIDTH, top + y *
+            // MINIMAP_TILE_WIDTH, MINIMAP_TILE_WIDTH, MINIMAP_TILE_WIDTH);
+
+        }
+
+    }
+    
+	public void setItemDescription(int x, int y) {
+		String item = "N|null";
+		for (Point p : itemsDescription.keySet()) {
+			if (p.x == x && p.y == y) {
+				item = itemsDescription.get(p);
+			}
+		}
+
+		String description = item.substring(2, item.length());
+		String tempPath = "/antidote.png";
+		if (item.startsWith("A")) {
+			Image img = loadImage(tempPath);
+			ImageView image = new ImageView();
+			image.setFitWidth(100);
+			image.setFitHeight(100);
+			image.setImage(img);
+			zoomedItem.setGraphic(image);
+			itemDetail.setText(description);
+
+		} else if (item.startsWith("K")) {
+			Image img = loadImage(tempPath);
+			ImageView image = new ImageView();
+			image.setFitWidth(100);
+			image.setFitHeight(100);
+			image.setImage(img);
+			zoomedItem.setGraphic(image);
+			itemDetail.setText(description);
+
+		} else if (item.startsWith("T")) {
+			Image img = loadImage(tempPath);
+			ImageView image = new ImageView();
+			image.setFitWidth(100);
+			image.setFitHeight(100);
+			image.setImage(img);
+			zoomedItem.setGraphic(image);
+			itemDetail.setText(description);
+
+		} else {
+			Image img = loadImage(INVENTORY_IMAGE);
+			ImageView image = new ImageView();
+			image.setFitWidth(100);
+			image.setFitHeight(100);
+			image.setImage(img);
+			zoomedItem.setGraphic(image);
+			itemDetail.setText("No Item Currently Selected");
+		}
+	}
+
 	/**
 	 * This static helper method will pop up a warning dialog to user.
 	 *
@@ -545,5 +818,4 @@ public class GUI extends Application {
 		});
 		System.err.println(msg);
 	}
-
 }

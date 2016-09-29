@@ -122,8 +122,8 @@ public class TextUI {
             break;
         case 'i':
             // the player wants to see what's inside the inventory
-            game.getPlayerInventory(MOCK_UID).stream()
-                    .forEach(e -> System.out.println(e));
+            // game.getPlayerInventory(MOCK_UID).stream()
+            // .forEach(e -> System.out.println(e));
             break;
         case 'c':
             // the player wants to see time & health left

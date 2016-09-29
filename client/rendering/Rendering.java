@@ -12,6 +12,7 @@ import client.view.GUI;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Pane;
 import javafx.scene.shape.Polygon;
 import server.game.player.Direction;
 import server.game.player.Player;
@@ -92,16 +93,16 @@ public class Rendering {
 	 *
 	 * @param renderGroup
 	 */
-	public void render(Group renderGroup, Map<Integer, Position> positions, char[][] worldMap, int visibility,
-			int uid) {
+	// public void render(Pane renderGroup, Map<Integer, Position> positions,
+	// char[][] worldMap, int visibility, int uid) {
+	public void render(Pane renderGroup, Position pos, char[][] worldMap, int visibility, int uid) {
 		// player's coordinate on board, and direction.
 		// need to get position from param (uid)
 		// Position selfPosition = positions.get(uid);
-		Position selfPosition = new Position(5, 10, 1, Direction.North);
-		int x = selfPosition.x;
-		int y = selfPosition.y;
-		Direction direction = selfPosition.getDirection();
-
+		// Position selfPosition = new Position(5, 10, 1, Direction.North);
+		int x = pos.x;
+		int y = pos.y;
+		Direction direction = pos.getDirection();
 		Image background = loadImage(BACKGROUND_IMAGE);
 		Image grass = loadImage(GRASS_IMAGE);
 		addImage(renderGroup, background, gamePanelWidth + 3, gamePaneHeight + 35, 0, 0);
@@ -114,56 +115,49 @@ public class Rendering {
 		// person
 		// ====================================================================================================
 		for (int i = 0; i < squaresInFront; i++) {
-			Polygon squareFront = new Polygon();
-			squareFront.setFill(new ImagePattern(grass));
-			squareFront.setLayoutY(10);
+//			Polygon squareFront = new Polygon();
+//			squareFront.setFill(new ImagePattern(grass));
+//			squareFront.setLayoutY(10);
 			double currentTileWidth = tileWidth * Math.pow(scaleY, i + 1);
 			double previousTileWidth = Math.abs(xRight - xLeft);
 			double xLeftTop = centerWidth - currentTileWidth / 2;
 			double yTop = yBottom - tileHeight * Math.pow(scaleY, i + 1);
-			addTile(squareFront, xLeft, yBottom, xRight, yTop, xLeftTop + currentTileWidth, xLeftTop, renderGroup);
+			// addTile(squareFront, xLeft, yBottom, xRight, yTop, xLeftTop +
+			// currentTileWidth, xLeftTop, renderGroup);
 			for (int j = 0; j < squaresToLeft; j++) {
 				Polygon squareLeft = new Polygon();
 				squareLeft.setLayoutY(10);
 				squareLeft.setFill(new ImagePattern(grass));
-				addTile(squareLeft, xLeft - (j * previousTileWidth), yBottom, xRight - (j * previousTileWidth), yTop,
-						xLeftTop + currentTileWidth - j * currentTileWidth, xLeftTop - j * currentTileWidth,
+				double tileXLeftBottom = xLeft - (j * previousTileWidth);
+				double tileXRightBottom = xRight - (j * previousTileWidth);
+				double tileXRightTop = xLeftTop + currentTileWidth - j * currentTileWidth;
+				double tileXLeftTop = xLeftTop - j * currentTileWidth;
+				addTile(squareLeft, tileXLeftBottom, yBottom, yTop, tileXRightBottom, tileXRightTop, tileXLeftTop,
 						renderGroup);
+//				addObject(tileXLeftBottom, yBottom, tileXRightBottom, renderGroup);
 			}
 			for (int j = 0; j < squaresToRight; j++) {
 				Polygon squareRight = new Polygon();
 				squareRight.setFill(new ImagePattern(grass));
 				squareRight.setLayoutY(10);
 				double tileXLeftBottom = xLeft + (j * previousTileWidth);
-				if (tileXLeftBottom > gamePanelWidth) {
-					tileXLeftBottom = gamePanelWidth;
-				}
 				double tileXRightBottom = xRight + (j * previousTileWidth);
-				if (tileXRightBottom > gamePanelWidth) {
-					tileXRightBottom = gamePanelWidth;
-				}
 				double tileXRightTop = xLeftTop + currentTileWidth + j * currentTileWidth;
-				if (tileXRightTop > gamePanelWidth) {
-					tileXRightTop = gamePanelWidth;
-				}
 				double tileXLeftTop = xLeftTop + j * currentTileWidth;
-				if (tileXLeftTop > gamePanelWidth) {
-					tileXLeftTop = gamePanelWidth;
-				}
-
 				addTile(squareRight, tileXLeftBottom, yBottom, yTop, tileXRightBottom, tileXRightTop, tileXLeftTop,
 						renderGroup);
 			}
 			xLeft = xLeftTop;
 			xRight = xLeftTop + currentTileWidth;
 			yBottom = yTop;
+
 		}
 		renderObjects(renderGroup, worldMap, direction, x, y);
 		charRender();
 	}
 
 	private void addTile(Polygon p, double xLeftBottom, double yBottom, double yTop, double xRightBottom,
-			double xRightTop, double xLeftTop, Group renderGroup) {
+			double xRightTop, double xLeftTop, Pane renderGroup) {
 		p.getPoints().add(xLeftBottom);
 		p.getPoints().add(yBottom);
 		p.getPoints().add(xRightBottom);
@@ -209,19 +203,7 @@ public class Rendering {
 
 	}
 
-	// 1) need to fix how the array iterates
-	// 2) need to get the x points of each image (hard due to scalling)
-
-	/**
-	 * this method is used to render the object in the game.
-	 * 
-	 * @param renderGroup
-	 * 
-	 * @param renderGroup
-	 * @param y
-	 * @param x
-	 */
-	public void renderObjects(Group renderGroup, char[][] worldMap, Direction direction, int playerX, int playerY) {
+	public void renderObjects(Pane renderGroup, char[][] worldMap, Direction direction, int playerX, int playerY) {
 		switch (direction) {
 		case North:
 			gatherObjectsNorth(renderGroup, worldMap, 0, 0, worldMap.length - 1, playerY, playerX, playerY);
@@ -241,7 +223,7 @@ public class Rendering {
 	}
 
 	// North facing
-	private void gatherObjectsNorth(Group renderGroup, char[][] worldMap, int startX, int startY, int endX, int endY,
+	private void gatherObjectsNorth(Pane renderGroup, char[][] worldMap, int startX, int startY, int endX, int endY,
 			int playerX, int playerY) {
 		for (int rows = startX; rows <= endX; rows++) {
 			int scale = getScale(playerY, rows);
@@ -257,7 +239,7 @@ public class Rendering {
 	}
 
 	// East Facing
-	private void gatherObjectsEast(Group renderGroup, char[][] worldMap, int startX, int startY, int endX, int endY,
+	private void gatherObjectsEast(Pane renderGroup, char[][] worldMap, int startX, int startY, int endX, int endY,
 			int playerX, int playerY) {
 		for (int cols = startX; cols <= endX; cols--) {
 			int scale = getScale(playerY, cols);
@@ -270,7 +252,7 @@ public class Rendering {
 	}
 
 	// South Facing
-	private void gatherObjectsSouth(Group renderGroup, char[][] worldMap, int startX, int startY, int endX, int endY,
+	private void gatherObjectsSouth(Pane renderGroup, char[][] worldMap, int startX, int startY, int endX, int endY,
 			int playerX, int playerY) {
 		for (int rows = startX; rows <= endX; rows--) {
 			int scale = getScale(playerY, rows);
@@ -283,7 +265,7 @@ public class Rendering {
 	}
 
 	// West facing
-	private void gatherObjectsWest(Group renderGroup, char[][] worldMap, int startX, int startY, int endX, int endY,
+	private void gatherObjectsWest(Pane renderGroup, char[][] worldMap, int startX, int startY, int endX, int endY,
 			int playerX, int playerY) {
 		for (int cols = startX; cols <= endX; cols++) {
 			int scale = getScale(playerY, cols);
@@ -327,7 +309,7 @@ public class Rendering {
 		return point;
 	}
 
-	private void addImage(Group renderGroup, Image image, double width, double height, double setX, double setY) {
+	private void addImage(Pane renderGroup, Image image, double width, double height, double setX, double setY) {
 		ImageView imageView = new ImageView();
 		imageView.setImage(image);
 		imageView.setFitHeight(height);

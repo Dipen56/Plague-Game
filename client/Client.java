@@ -4,14 +4,9 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
-import java.util.HashMap;
-import java.util.Map;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.net.Socket;
+import java.util.Map;
 import java.util.Scanner;
 
 import client.view.ClientUI;
@@ -28,30 +23,37 @@ import server.ServerMain;
  *
  */
 public class Client extends Thread {
+
     /**
      * The period between every broadcast
      */
     public static final int DEFAULT_UPDATE_CLK_PERIOD = 20;
+
     /**
      * The pointer to the controller so we can let controller update renderer and GUI.
      */
     private ClientUI controller;
+
     /**
      * The socket connection with server
      */
     private final Socket socket;
+
     /**
      * The upload link to the server
      */
     private DataOutputStream output;
+
     /**
      * The download link from the server
      */
     private DataInputStream input;
+
     /**
      * This flag is used to indicate whether the user is ready to enter the game.
      */
     private boolean isUserReady;
+
     /**
      * This flag is used to indicate whether the game is running
      */
@@ -134,8 +136,8 @@ public class Client extends Thread {
             String incoming = input.readUTF();
             while (!incoming.equals("Fin")) {
                 controller.parseMap(incoming);
-                incoming = input.readUTF();
                 System.out.println("received map string:\n" + incoming);
+                incoming = input.readUTF();
             }
 
             // 2. get the uId from server.
@@ -241,12 +243,14 @@ public class Client extends Thread {
      * <li>Visibility
      * <li>Positions of all players
      * <li>The inventory of the player in this client
+     * <li>The status of player holding torch or not.
      * 
      * <p>
      * Each one of them is separated by a new line character '\n'. The format of each part
      * should refer to {@link client.ParserUtilities #parseTime(String) parseTime},
      * {@link client.ParserUtilities #parsePosition(java.util.Map, String) parsePosition},
-     * and {@link client.ParserUtilities #parseInventory(String) parseInventory}.
+     * {@link client.ParserUtilities #parseInventory(String) parseInventory}, and
+     * {@link client.ParserUtilities #parseTorchStatus(Map, String) parseTorchStatus}..
      * 
      * @return --- a String representation of the game status
      */
@@ -318,6 +322,17 @@ public class Client extends Thread {
             controller.parseInventory(line);
         } else {
             System.out.println("Data incomplete, no inventory received.");
+            // Data is incomplete, ignore.
+            s.close();
+            return;
+        }
+
+        // 6. holding torch or not for all players.
+        if (s.hasNextLine()) {
+            line = s.nextLine();
+            controller.parseTorchStatus(line);
+        } else {
+            System.out.println("Data incomplete, no torch status received.");
             // Data is incomplete, ignore.
             s.close();
             return;

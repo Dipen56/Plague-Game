@@ -12,19 +12,24 @@ public enum Virus {
     T_Virus, G_Virus, T_Veronica;
 
     /**
-     * Get the virus at given index.
+     * Get the virus at given index. If the index is illegal, an
+     * <i>IndexOutOfBoundsException</i> is thrown.
      * 
      * @param index
-     * @return
+     *            --- the ordinal number
+     * @return --- the virus type at the given index.
      */
     public static Virus get(int index) {
+        if (index < 0 || index >= Virus.values().length) {
+            throw new IndexOutOfBoundsException();
+        }
         return Virus.values()[index];
     }
 
     /**
-     * Get an random virus type.
+     * Get a random virus type.
      * 
-     * @return
+     * @return --- a random virus type.
      */
     public static Virus randomVirus() {
         int i = (int) (Math.random() * 3);

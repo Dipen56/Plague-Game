@@ -7,9 +7,10 @@ import java.net.Socket;
 import java.util.HashMap;
 
 import client.ParserUtilities;
+import dataStorage.InitialGameLoader;
+import dataStorage.XmlFunctions;
 import server.game.Game;
 import server.game.GameError;
-import server.game.TestConst;
 import server.view.ServerGui;
 
 /**
@@ -19,31 +20,32 @@ import server.view.ServerGui;
  *
  */
 public class ServerMain {
+
     /**
      * The period between every broadcast
      */
     public static final int DEFAULT_BROADCAST_CLK_PERIOD = 50;
+
     /**
      * A series of port number, in case the port is used.
      */
     public static final int[] PORT_NUM = { 6000, 6001, 6002, 6003, 6004, 6005 };
+
     /**
      * The server socket waiting for connection.
      */
     private ServerSocket serverSocket;
+
     /**
      * The game
      */
     private Game game;
+
     /**
      * This map keeps track of every Receptionist for every connected client. The key is
      * the unique id of each client
      */
     private HashMap<Integer, Receptionist> receptionists;
-
-    /**
-     * this is the server GUI which is used to display the ip an port of the server
-     */
 
     /**
      * Constructor
@@ -55,12 +57,16 @@ public class ServerMain {
         System.out.println("How many players (between 2 and 4):");
         int numPlayers = ParserUtilities.parseInt(2, 4);
 
-        // Parsing a file to construct the world
-        // game = new Game(file);
+        // create the game world with test version tiny world.
+        // game = new Game(TestConst.world, TestConst.areas);
 
-        // create the game world
-        game = new Game(TestConst.world, TestConst.areas);
+        // load from game maker
+        game = InitialGameLoader.makeGame();
 
+        // just for integration day demo
+        XmlFunctions.saveInitialFile(game);
+
+        // run the server
         runServer(numPlayers);
     }
 
@@ -79,9 +85,7 @@ public class ServerMain {
                 + serverSocket.getInetAddress().toString() + ", port: "
                 + serverSocket.getLocalPort());
 
-        /*
-         * TODO integrate the server into GUI
-         */
+        // A simple GUI to display server running.
         new Thread() {
             public void run() {
                 ServerGui.port = serverSocket.getLocalPort();
@@ -209,7 +213,7 @@ public class ServerMain {
     }
 
     /**
-     * Main function
+     * Main function, start the server.
      * 
      * @param args
      */

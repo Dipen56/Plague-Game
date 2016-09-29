@@ -32,7 +32,6 @@ import server.ServerMain;
  * @author Dipen
  *
  */
-
 public class ServerGui extends Application {
 
     private static final String GAMEICON_IMAGE = "/game-icon.png";

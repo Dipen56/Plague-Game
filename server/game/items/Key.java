@@ -9,16 +9,29 @@ package server.game.items;
 public class Key extends Item implements Tradable {
 
     /**
-     * The keyID specifies which door it can open. Only the door with the same keyID can
-     * be opened by this key.
+     * The keyID specifies which lockable it can open. Only the lockable with the same
+     * keyID can be opened by this key.
      */
     private int keyID;
 
+    /**
+     * Constructor
+     * 
+     * @param description
+     *            --- the description
+     * @param keyID
+     *            --- the keyID that specifies which lockable it can open.
+     */
     public Key(String description, int keyID) {
         super(description);
         this.keyID = keyID;
     }
 
+    /**
+     * Get the key id.
+     * 
+     * @return --- key id
+     */
     public int getKeyID() {
         return keyID;
     }

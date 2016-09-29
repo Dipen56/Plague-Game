@@ -13,16 +13,14 @@ import server.game.player.Position;
  * This class is a utility class containing static methods to parse communications between
  * server and client.
  * 
- * 
- * this class represent the parser for the game world. this class will basically take a
- * txt file and create a string form of the world map which will be used to render the
- * game world.
- * 
- * @author Dipen, Rafaela & Hector
+ * @author Dipen, Rafaela & Hector (Fang Zhao 300364061)
  *
  */
 public class ParserUtilities {
 
+    /**
+     * A universally used console input scanner. It's used in test based UI
+     */
     private static final Scanner SCANNER = new Scanner(System.in);
 
     /**
@@ -39,19 +37,23 @@ public class ParserUtilities {
      * <p>
      * Say we have a 3 by 3 room (room's areaId is 1):<br>
      * <p>
-     * EEE<br>
-     * EEC<br>
-     * EDE<br>
-     * 
-     * 
-     * <p>
-     * E stands for empty space, C stands for chest, D stands for door.
+     * GGG<br>
+     * GGC<br>
+     * GDG<br>
      * 
      * <p>
-     * The string should be <i>"1,3,3\nEEE\nEEC\nETE"</i>
+     * G stands for empty space, C stands for chest, D stands for door.
+     * 
+     * <p>
+     * The string should be <i>"1,3,3\nGGG\nGGC\nGTG"</i>, [areaId, width,
+     * height\nMapChars]
      * 
      * @param areas
+     *            --- a map recording all area boards in game, where the key is area Id,
+     *            and the value is a char[][] representation of board.
      * @param string
+     *            --- a string recording all area boards in game, received by client from
+     *            server.
      */
     public static void parseMap(Map<Integer, char[][]> areas, String string) {
 
@@ -142,7 +144,11 @@ public class ParserUtilities {
      * The string representation will be <i>"111,0|222,1"</i>
      * 
      * @param avatars
+     *            --- a map recording all player's avatars, where the key is player Id,
+     *            and the value is the avatar.
      * @param avatarsStr
+     *            --- a string recording all player's avatars, received by client from
+     *            server.
      */
     public static void parseAvatar(Map<Integer, Avatar> avatars, String avatarsStr) {
         Scanner scanner = new Scanner(avatarsStr);
@@ -187,6 +193,72 @@ public class ParserUtilities {
     }
 
     /**
+     * This method reads in a String and parse it into torch status for each player in
+     * game, which is then used on client side to render player holding torch and player
+     * not holding torch with different image. Result is recorded in
+     * <i><b>torchStatus</b></i> given as parameter. The input String is expected to have
+     * the following format: <i>"uId_1,true/false|uId_2,true/false"</i>
+     * 
+     * <p>
+     * Say 2 players currently in game:
+     * <li>player 1, id 111, is holding torch
+     * <li>player 2, id 222, is not holding torch<br>
+     * <br>
+     * <p>
+     * The string representation will be <i>"111,1|222,0"</i>
+     * 
+     * @param torchStatus
+     *            --- a map recording all player's status of holding torch or not, where
+     *            the key is player Id, and the value is a boolean value for holding or
+     *            not holding torch.
+     * @param torchStatusStr
+     *            --- a string recording all player's status of holding torch or not,
+     *            received by client from server.
+     */
+    public static void parseTorchStatus(Map<Integer, Boolean> torchStatus,
+            String torchStatusStr) {
+        Scanner scanner = new Scanner(torchStatusStr);
+        String line = scanner.nextLine();
+
+        String[] posStrs = line.split("\\|"); // not '|' I spent days debugging this!
+
+        int uId = -1;
+        int isHoldingTorch = -1;
+
+        try {
+            for (String posStr : posStrs) {
+
+                if (posStr.length() < 1) {
+                    continue;
+                }
+
+                String[] nums = posStr.split(",");
+                uId = Integer.valueOf(nums[0]);
+                isHoldingTorch = Integer.valueOf(nums[1]);
+
+                if (uId < 0 || isHoldingTorch < 0 || isHoldingTorch > 1) {
+                    System.out.println(
+                            "Error occurred when parsing postion. Negative uId or torch status. String input is: "
+                                    + torchStatusStr);
+                    scanner.close();
+                    return; // do not crash the game.
+                }
+
+                torchStatus.put(uId, isHoldingTorch == 0 ? false : true);
+            }
+
+        } catch (NumberFormatException e1) {
+            System.out.println(
+                    "Error occurred when parsing postion. uId or torch status is not integer. String input is: "
+                            + torchStatusStr);
+            scanner.close();
+            return; // do not crash the game.
+        }
+        scanner.close();
+
+    }
+
+    /**
      * This method reads in a String and parse it into positions, which is used on client
      * side to locate all connected players and render them. Result is recorded in
      * <i><b>positions</b></i> given as parameter. The input String is expected to have
@@ -200,12 +272,18 @@ public class ParserUtilities {
      * <p>
      * The string should be <i>"123,456,78,90,0"</i>
      * 
-     * @param areas
-     * @param string
+     * @param positions
+     *            --- a map recording all player's positions, where the key is player Id,
+     *            and the value is the position information containing areaId,
+     *            coordinates(x,y), and direction.
+     * @param positionsStr
+     *            --- a string recording all player's positions, received by client from
+     *            server.
      */
-    public static void parsePosition(Map<Integer, Position> positions, String string) {
+    public static void parsePosition(Map<Integer, Position> positions,
+            String positionsStr) {
 
-        Scanner scanner = new Scanner(string);
+        Scanner scanner = new Scanner(positionsStr);
         String line = scanner.nextLine();
 
         String[] posStrs = line.split("\\|"); // not '|' I spent days debugging this!
@@ -233,7 +311,7 @@ public class ParserUtilities {
                 if (uId < 0 || areaId < 0 || x < 0 || y < 0 || dir < 0) {
                     System.out.println(
                             "Error occurred when parsing postion. Negative uId, areaId, x, y or direction. String input is: "
-                                    + string);
+                                    + positionsStr);
                     scanner.close();
                     return; // do not crash the game.
                 }
@@ -245,7 +323,7 @@ public class ParserUtilities {
         } catch (NumberFormatException e1) {
             System.out.println(
                     "Error occurred when parsing postion. uId, areaId, x, y or direction is not integer. String input is: "
-                            + string);
+                            + positionsStr);
             scanner.close();
             return; // do not crash the game.
         }
@@ -278,19 +356,21 @@ public class ParserUtilities {
      * <li>T: Torch<br>
      * <br>
      * 
-     * @param uid
+     * @param invenStr
+     *            --- a string recording all items in this player's inventory, received by
+     *            client from server.
      * 
-     * @return
+     * @return --- a list of items (still as string.)
      */
-    public static List<String> parseInventory(String string) {
+    public static List<String> parseInventory(String invenStr) {
 
         List<String> list = new ArrayList<>();
 
-        if (string.length() < 1) {
+        if (invenStr.length() < 1) {
             return list;
         }
 
-        Scanner scanner = new Scanner(string);
+        Scanner scanner = new Scanner(invenStr);
         String line = scanner.nextLine();
         String[] items = line.split("|");
 
@@ -339,16 +419,17 @@ public class ParserUtilities {
     /**
      * This method read in a user input.
      * 
-     * @return
+     * @return --- a line of string input from standard input.
      */
     public static String parseString() {
         return SCANNER.nextLine();
     }
 
     /**
-     * This method read in a char.
+     * This method read in a char. If more than one character is input, the user will be
+     * asked to re-type a char.
      * 
-     * @return
+     * @return --- a char from standard input.
      */
     public static char parseChar() {
 

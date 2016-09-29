@@ -9,19 +9,28 @@ package server.game.items;
  */
 public abstract class Item {
 
+    /**
+     * The description of this item.
+     */
     private String description;
 
     /**
      * Constructor
      *
      * @param description
+     *            --- The description of this item.
      */
     public Item(String description) {
         this.description = description;
     }
-    
-    public String getDescription(){
-    	return description;
+
+    /**
+     * Get the description of this item.
+     * 
+     * @return --- the description
+     */
+    public String getDescription() {
+        return description;
     }
 
     /**

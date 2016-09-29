@@ -1,14 +1,11 @@
 package server.game;
 
-import java.io.File;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Random;
-import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -17,7 +14,6 @@ import server.game.items.Destroyable;
 import server.game.items.Item;
 import server.game.items.Key;
 import server.game.items.Torch;
-import server.game.player.Avatar;
 import server.game.player.Player;
 import server.game.player.Position;
 import server.game.player.Virus;
@@ -49,11 +45,13 @@ public class Game {
      * distance on world grid is visible.
      */
     public static final int DAY_VISIBLIITY = 8;
+
     /**
      * The visibility in night time. This number indicates that everything within this
      * distance on world grid is visible.
      */
     public static final int NIGHT_VISIBILITY = 2;
+
     /**
      * The visibility if the player is holding a torch in night time. This number
      * indicates that everything within this distance on world grid is visible.
@@ -61,12 +59,9 @@ public class Game {
     public static final int TORCH_VISIBILITY = 5;
 
     /**
-     * A new player has this chance of spawning in world map. If not spawned in world, the
-     * player will be spawned in a random room.
+     * A static instance used in board grid to represent the ground space (no map object).
      */
-    // private static final float SPAWN_IN_WORLD_CHANCE = 0.6f;
-
-    public static final GroundSpace groundSpace = new GroundSpace();
+    public static final GroundSpace GROUND_SPACE = new GroundSpace();
 
     /**
      * A means by which to simply compare game saves.
@@ -74,72 +69,55 @@ public class Game {
     private int gameID = 0;
 
     /**
-     * World map
+     * World map.
+     * 
+     * <p>
+     * This field is actually redundant, because the world map is contained in
+     * <i>areas</i> field as well. I keep it here just for not bringing major changes to
+     * data storage component.
      */
     private Area world;
+
     /**
-     * Each area has its unique area id number. All areas and their corresponding id
-     * number is recorded in this map.
+     * A table of all areas. Each area has its unique area id number. All areas and their
+     * corresponding id number is recorded in this table.
      */
     private Map<Integer, Area> areas;
+
     /**
      * players and their id. Server can find player easily by looking by id.
      */
     private Map<Integer, Player> players;
+
     /**
-     * For testing. Will be removed.
+     * FIXME For testing. Will be removed.
      */
     private Player player;
+
     /**
      * All torches in this world. It is used to track torch burning status in timer.
      */
     private List<Torch> torches;
+
     /**
      * A timer for world clock. It starts when the Game object is constructed.
      */
     private Timer timer;
+
     /**
      * The world clock. It starts from a random time from 00:00:00 to 23:59:59
      */
     private LocalTime clock;
 
     /**
-     * Constructor, take in an XML file that describes the game world, and construct it
-     * with details in the file.
-     *
-     * @param file
-     */
-    public Game(File file) {
-
-        players = new HashMap<>();
-        torches = new ArrayList<>();
-
-
-        // the world clock starts from a random time from 00:00:00 to 23:59:59
-        Random ran = new Random();
-        int hour = ran.nextInt(24);
-        int minute = ran.nextInt(60);
-        int second = ran.nextInt(60);
-        clock = LocalTime.of(hour, minute, second);
-
-        // TODO parse the file and construct world
-
-        // TODO scan the world, so some initialisation job:
-        // 1. remember all containers (for key re-distribution, and for open/close status
-        // update for rendering)
-        // 2. remember all torches and put them into torches list (for torch track)
-        // 3. join in players
-
-        // last, start timing.
-
-        // these could be integrated into one method initialise();
-    }
-
-    /**
-     * Constructor for text-based UI and for initial game load.
+     * Constructor a game world without any players inside. Note that the first parameter
+     * is not really necessary, as the second parameter will contain the world map. It is
+     * a legacy parameter.
      *
      * @param world
-     * @param entrances
+     *            --- The main game world.
+     * @param areas
+     *            --- A map from areaID's to areas.
      */
     public Game(Area world, Map<Integer, Area> areas) {
 
@@ -156,32 +134,46 @@ public class Game {
         int minute = ran.nextInt(60);
         int second = ran.nextInt(60);
         clock = LocalTime.of(hour, minute, second);
+
+        // TODO scan the world, so some initialisation job:
+        // 1. remember all containers (for key re-distribution, and for open/close status
+        // update for rendering)
+        // 2. remember all torches and put them into torches list (for torch track)
+
+        // these could be integrated into one method initialise();
+
     }
 
     /**
-	 * Constructor used for data storage.
-	 * @param The main game world.
-	 * @param A map from areaID's to areas.
-	 * @param A map from playerID's to players.
-	 * @param A list of torches. This can be null.
-	 */
-	public Game(Area world, Map<Integer, Area> areas, Map<Integer, Player> players, List<Torch> torches, int gameID) {
-		//torhces
+     * Constructor used for data storage.
+     * 
+     * @param world
+     *            --- The main game world.
+     * @param areas
+     *            --- A map from areaID's to areas.
+     * @param players
+     *            --- A map from playerID's to players.
+     * @param torches
+     *            --- A list of torches. This can be null.
+     * @param gameID
+     *            --- A unique hash number for each game instance.
+     */
+    public Game(Area world, Map<Integer, Area> areas, Map<Integer, Player> players,
+            List<Torch> torches, int gameID) {
 
-		this.world = world;
-		this.areas = areas;
-		this.players = players;
-		this.players = new HashMap<>();
-		if(torches == null){
-			this.torches = new ArrayList<>();
-		}
-		else{
-			this.torches = torches;
-		}
-		for(Player p : players.values()){
-			joinPlayer(p);
-		}
-		this.gameID = gameID;
+        this.world = world;
+        this.areas = areas;
+        this.players = players;
+        this.players = new HashMap<>();
+        if (torches == null) {
+            this.torches = new ArrayList<>();
+        } else {
+            this.torches = torches;
+        }
+        for (Player p : players.values()) {
+            joinPlayer(p);
+        }
+        this.gameID = gameID;
 
         // the world clock starts from a random time from 00:00:00 to 23:59:59
         Random ran = new Random();
@@ -189,42 +181,15 @@ public class Game {
         int minute = ran.nextInt(60);
         int second = ran.nextInt(60);
         clock = LocalTime.of(hour, minute, second);
-	}
-
-	public List<Torch> getTorches() {
-		return this.torches;
-	}
+    }
 
     /**
      * Joins a player in game.
      *
      * @param player
+     *            --- the player to be joined in
      */
     public void joinPlayer(Player player) {
-
-        // =======================================
-        /*
-         * this commented code randomely spawn player in World or in Room. Sounds fun. But
-         * that brings a problem of level design, which is where the key should be
-         * located. For example, if a player is spawned inside a room, and it's locked,
-         * and the key is not located inside room, the player is doomed. The key cannot
-         * simply placed inside room as well, cos outside players can't get the key to
-         * unlock room and get in.
-         */
-
-        // // more chance to spawn in world map, less chance to spawn in room
-        // Random ran = new Random();
-        // if (ran.nextFloat() < SPAWN_IN_WORLD_CHANCE) {
-        // // let's spawn the player in world
-        // gs = world.getPlayerSpawnPos(this);
-        // } else {
-        // // let's spawn the player in a random room
-        // List<Room> roomsList = new ArrayList<>(rooms.values());
-        // int index = ran.nextInt(roomsList.size());
-        // gs = roomsList.get(index).getPlayerSpawnPos(this);
-        // }
-
-        // ================================================================
 
         players.put(player.getId(), player);
 
@@ -255,7 +220,6 @@ public class Game {
      * is running, no other events will stop it.
      */
     public void startTiming() {
-
         // start ticking
         timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
@@ -281,8 +245,9 @@ public class Game {
 
     /**
      * Disconnect the player, and re-distribute all his keys to locked containers.
-     *
-     * @param player
+     * 
+     * @param playerId
+     *            --- the id number of the disconnected player
      */
     public void disconnectPlayer(int playerId) {
         // delete player from player list.
@@ -301,6 +266,7 @@ public class Game {
      * This method check if the given position is occupied by other player.
      *
      * @param position
+     *            --- a coordinate to be checked
      * @return --- true if there is another player in that position; or false if not.
      */
     public boolean isOccupiedByOtherPlayer(Position position) {
@@ -327,6 +293,7 @@ public class Game {
      * This method tries to move the given player one step forward.
      *
      * @param uid
+     *            --- the id number of the player
      * @return --- true if successful, or false if the player cannot move forward for some
      *         reason, e.g. blocked by obstacle.
      */
@@ -362,6 +329,7 @@ public class Game {
      * This method tries to move the given player one step backward.
      *
      * @param uid
+     *            --- the id number of the player
      * @return --- true if successful, or false if the player cannot move backward for
      *         some reason, e.g. blocked by obstacle.
      */
@@ -397,6 +365,7 @@ public class Game {
      * This method tries to move the given player one step to the left.
      *
      * @param uid
+     *            --- the id number of the player
      * @return --- true if successful, or false if the player cannot move left for some
      *         reason, e.g. blocked by obstacle.
      */
@@ -432,6 +401,7 @@ public class Game {
      * This method tries to move the given player one step to the right.
      *
      * @param uid
+     *            --- the id number of the player
      * @return --- true if successful, or false if the player cannot move right for some
      *         reason, e.g. blocked by obstacle.
      */
@@ -467,6 +437,7 @@ public class Game {
      * This method let the given player turn left.
      *
      * @param uid
+     *            --- the id number of the player
      */
     public void playerTurnLeft(int uid) {
         Player player = players.get(uid);
@@ -489,6 +460,7 @@ public class Game {
      * This method let the given player turn right.
      *
      * @param uid
+     *            --- the id number of the player
      */
     public void playerTurnRight(int uid) {
         Player player = players.get(uid);
@@ -512,6 +484,7 @@ public class Game {
      * object in front.
      *
      * @param uid
+     *            --- the id number of the player
      * @return --- true if the loackable is unlocked, or false if this action failed.
      *         Failure can be caused by many reasons, for example it's not a lockable in
      *         front, or the player doesn't have a right key to open it.
@@ -555,6 +528,7 @@ public class Game {
      * room).
      *
      * @param uid
+     *            --- the id number of the player
      * @return --- true if the player changed to another area, or false if this action
      *         failed for some reason, for example the player is not facing the door, or
      *         he is too far from it.
@@ -600,6 +574,7 @@ public class Game {
      * take as many as he can until his inventory is full.
      *
      * @param uid
+     *            --- the id number of the player
      * @return --- true if he has taken at least one item from the container, or false if
      *         he has taken none from the container.
      */
@@ -622,6 +597,7 @@ public class Game {
      * etc.) in front.
      *
      * @param uid
+     *            --- the id number of the player
      * @param index
      *            --- the index in inventory of item to be put in
      * @return --- true if the action succeeded; or false if failed (most likely when the
@@ -645,7 +621,9 @@ public class Game {
      * This method let the player use an item at index in inventory.
      *
      * @param uid
+     *            --- the id number of the player
      * @param index
+     *            --- the index in inventory of item to be used
      * @return --- true if the item is used, or false if the action failed.
      */
     public boolean playerUseItem(int uid, int index) {
@@ -669,14 +647,8 @@ public class Game {
             player.lightUpTorch((Torch) item);
             return true;
         } else if (item instanceof Key) {
-            // Key
+            // Key is not to be used manually
             return false;
-            /*
-             * XXX We can but I don't really want the key to be directly used. A key
-             * should be in player's inventory waiting to be automatically consumed when
-             * the player unlocks a chest or room.
-             */
-
         }
 
         // could have more else if clause if there are more types
@@ -688,7 +660,9 @@ public class Game {
      * This method let the player try to destroy an item.
      *
      * @param uid
+     *            --- the id number of the player
      * @param index
+     *            --- the index in inventory of item to be destroyed
      * @return --- true if the item is destroyed, or false if the action failed.
      */
     public boolean playerDestroyItem(int uid, int index) {
@@ -712,7 +686,13 @@ public class Game {
      * Gets the specified player's visibility according to current time.
      *
      * @param uid
-     * @return
+     *            --- the id number of the player
+     * @return --- the visibility of this player. In particular, it would be
+     *         {@link server.game.Game #DAY_VISIBLIITY DAY_VISIBLIITY} at day time,
+     *         {@link server.game.Game #NIGHT_VISIBILITY NIGHT_VISIBILITY} at night time
+     *         if the player isn't holding a burning torch, and
+     *         {@link server.game.Game #TORCH_VISIBILITY TORCH_VISIBILITY} at night time
+     *         if the player is holding a burning torch.
      */
     public int getPlayerVisibility(int uid) {
         Player player = players.get(uid);
@@ -730,10 +710,21 @@ public class Game {
         }
     }
 
+    /**
+     * Get the world map
+     * 
+     * @return --- the world map
+     */
     public Area getWorld() {
         return world;
     }
 
+    /**
+     * Get the table of areas
+     * 
+     * @return --- the table of areas as a Map where the key is areaId, and the value is
+     *         area.
+     */
     public Map<Integer, Area> getAreas() {
         return areas;
     }
@@ -741,71 +732,47 @@ public class Game {
     /**
      * This method returns the clock of the world. The world time is constantly advancing.
      *
-     * @return
+     * @return --- current time in the world.
      */
     public LocalTime getClock() {
         return clock;
     }
 
     /**
-     * This method is used to generate the string for broadcasting world time to clients.
-     * The String has the following format:
-     *
-     * <p>
-     * Say current time is hh:mm:ss <i>10:20:30</i>:
-     *
-     * <p>
-     * The string will be <i>"10:20:30"</i>
-     * @return
+     * Get all torches in this world.
+     * 
+     * @return --- all torches in this world as a list.
      */
-    public synchronized String getClockString() {
-        int hour = clock.getHour();
-        int minute = clock.getMinute();
-        int second = clock.getSecond();
-        return hour + ":" + minute + ":" + second;
-
-        // return clock.toString();
-    }
-
-    public Map<Integer, Player> getPlayers() {
-        return players;
-    }
-
-    /**
-     * Generate a String of all players' avatars so the client who get this string will
-     * know other player's avatar. The String has the following format:
-     * <i>"uId_1,avatar_index_1|uId_2,avatar_index_2"</i>
-     *
-     * <p>
-     * Say 2 players currently in game:
-     * <li>player 1, id 111, avatar index 0
-     * <li>player 2, id 222, avatar index 1<br>
-     * <br>
-     * <p>
-     * The string representation will be <i>"111,0|222,1"</i>
-     *
-     * @return
-     */
-    public String getAvatarsString() {
-        StringBuilder sb = new StringBuilder();
-        for (Player p : players.values()) {
-            sb.append(p.getId());
-            sb.append(",");
-            sb.append(p.getAvatar().ordinal());
-            sb.append("|");
-        }
-        return sb.toString();
+    public List<Torch> getTorches() {
+        return this.torches;
     }
 
     /**
      * For testing, will be deleted.
-     *
+     * 
      * @return
      */
     public Player getPlayer() {
         return player;
     }
 
+    /**
+     * Get all players currently logged in game.
+     * 
+     * @return --- all players as a map, where the key is player id, and the value is the
+     *         player.
+     */
+    public Map<Integer, Player> getPlayers() {
+        return players;
+    }
+
+    /**
+     * Get the player by the player id.
+     * 
+     * @param uid
+     *            --- the id number of the player
+     * @return --- the corresponding player.
+     */
     public Player getPlayerById(int uid) {
         Player player = players.get(uid);
         if (player == null) {
@@ -819,7 +786,8 @@ public class Game {
      * Get the player's health left in seconds.
      *
      * @param uid
-     * @return
+     *            --- the id number of the player
+     * @return --- the current health of this player.
      */
     public int getPlayerHealth(int uid) {
         Player player = players.get(uid);
@@ -830,7 +798,8 @@ public class Game {
      * Get the player's Virus type
      *
      * @param uid
-     * @return
+     *            --- the id number of the player
+     * @return --- the player's virus type.
      */
     public Virus getPlayerVirus(int uid) {
         Player player = players.get(uid);
@@ -838,18 +807,87 @@ public class Game {
     }
 
     /**
-     * Get all items in the player's inventory as a list.
-     *
-     * @param uid
-     * @return
+     * Get the unique game instance id.
+     * 
+     * @return --- the unique game instance id
      */
-    public List<Item> getPlayerInventory(int uid) {
-        Player player = players.get(uid);
-        return player.getInventory();
+    public int getGameID() {
+        return this.gameID;
     }
 
-    public int getGameID(){
-    	return this.gameID;
+    /**
+     * This method is used to generate the string for broadcasting world time to clients.
+     * The String has the following format:
+     * 
+     * <p>
+     * Say current time is hh:mm:ss <i>10:20:30</i>:
+     * 
+     * <p>
+     * The string will be <i>"10:20:30"</i>
+     * 
+     * @return --- a string representation of the world time. This is used for network
+     *         transmission.
+     */
+    public synchronized String getClockString() {
+        int hour = clock.getHour();
+        int minute = clock.getMinute();
+        int second = clock.getSecond();
+        return hour + ":" + minute + ":" + second;
+    }
+
+    /**
+     * Generate a String of all players' avatars so the client who get this string will
+     * know other player's avatar. The String has the following format:
+     * <i>"uId_1,avatar_index_1|uId_2,avatar_index_2"</i>
+     * 
+     * <p>
+     * Say 2 players currently in game:
+     * <li>player 1, id 111, avatar index 0
+     * <li>player 2, id 222, avatar index 1<br>
+     * <br>
+     * <p>
+     * The string representation will be <i>"111,0|222,1"</i>
+     * 
+     * @return --- a string representation of all players and their chosen avatars. This
+     *         is used for network transmission.
+     */
+    public String getAvatarsString() {
+        StringBuilder sb = new StringBuilder();
+        for (Player p : players.values()) {
+            sb.append(p.getId());
+            sb.append(",");
+            sb.append(p.getAvatar().ordinal());
+            sb.append("|");
+        }
+        return sb.toString();
+    }
+
+    /**
+     * Generate a String of the status of all players' torch, i.e. whether he is holding a
+     * (lighted) torch or not. This is used for the renderer at client side. The String
+     * has the following format: <i>"uId_1,true/false|uId_2,true/false"</i>, where true or
+     * false is represented as 1 or 0.
+     * 
+     * <p>
+     * Say 2 players currently in game:
+     * <li>player 1, id 111, is holding torch
+     * <li>player 2, id 222, is not holding torch<br>
+     * <br>
+     * <p>
+     * The string representation will be <i>"111,1|222,0"</i>
+     * 
+     * @return --- a string representation of the status of all players' torch. This is
+     *         used for network transmission.
+     */
+    public String getTorchStatusString() {
+        StringBuilder sb = new StringBuilder();
+        for (Player p : players.values()) {
+            sb.append(p.getId());
+            sb.append(",");
+            sb.append(p.isHoldingTorch() ? '0' : '1');
+            sb.append("|");
+        }
+        return sb.toString();
     }
 
     /**
@@ -875,8 +913,9 @@ public class Game {
      * <br>
      *
      * @param uid
-     *
-     * @return
+     *            --- the id number of the player
+     * @return --- a string representation of all items in this player's inventory. This
+     *         is used for network transmission.
      */
     public String getPlayerInventoryString(int uid) {
         Player player = players.get(uid);

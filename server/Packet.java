@@ -6,69 +6,94 @@ package server;
  * For efficiency each Packet should be converted to byte in transition. This class also
  * provides methods to perform byte <--> Packet conversion.
  *
- * XXX if we need more packet, we can just simply add it here, and then add more clause in
- * client and receptionist.
- *
  * @author Rafaela & Hector
  *
  */
 public enum Packet {
+
     /**
-     * Move forward. This is used at client side, and it doesn't need any acknowledgement.
+     * Move forward.
      */
     Forward,
+
     /**
-     * Move backward. This is used at client side, and it doesn't need any
-     * acknowledgement.
+     * Move backward.
      */
     Backward,
+
     /**
-     * Move left. This is used at client side, and it doesn't need any acknowledgement.
+     * Move left.
      */
     Left,
+
     /**
-     * Move right. This is used at client side, and it doesn't need any acknowledgement.
+     * Move right.
      */
     Right,
+
     /**
-     * Turn Light. This is used at client side, and it doesn't need any acknowledgement.
+     * Turn Light.
      */
     TurnLeft,
+
     /**
-     * Turn Right. This is used at client side, and it doesn't need any acknowledgement.
+     * Turn Right.
      */
     TurnRight,
+
     /**
-     * Transit between areas. This is used at client side, and it doesn't need any
-     * acknowledgement.
+     * Transit between areas.
      */
     Transit,
+
     /**
-     * Use an Item. This is used at client side, and should be followed by an int
-     * indicating which item in inventory. This packet also needs an acknowledgement from
-     * server, so that the client can properly render what's changed.
+     * Use an Item. This should be followed by an index indicating which item in
+     * inventory.
      */
     UseItem,
+
     /**
-     * Destroy an Item. This is used at client side, and should be followed by int
-     * indicating which item in inventory. This packet also needs an acknowledgement from
-     * server, so that the client can properly render what's changed.
+     * Destroy an Item. This should be followed by index indicating which item in
+     * inventory.
      */
     DestroyItem,
+
     /**
-     * Take out items from a container. This is used at client side, and it doesn't need
-     * any acknowledgement.
+     * Put an item inside a container. This should be followed by index indicating which
+     * item in inventory.
+     */
+    PutItemIntoContainer,
+
+    /**
+     * Take out items from a container.
      */
     TakeOutItem,
+
     /**
-     * Unlock a lockable object in front. This is used at client side, and it doesn't need
-     * any acknowledgement.
+     * Unlock a lockable object in front.
      */
     Unlock,
+
     /**
      * Disconnect with server/client. This is used for both side.
      */
     Disconnect,
+
+    /**
+     * Save game status
+     */
+    Save,
+
+    /**
+     * Load game status
+     */
+    Load,
+
+    /**
+     * Chat massage
+     */
+    Chat,
+
     /**
      * A flag indicating ready.
      */
@@ -82,12 +107,13 @@ public enum Packet {
      *
      * TODO:
      *
-     * need to add: Put_Items_in_container
+     * need to add:
      */
 
     /**
      * Convert the Packet into byte.
-     * @return
+     * 
+     * @return --- a byte value which equals the ordinal number.
      */
     public byte toByte() {
         // We are never going to have more than 127 values in this enum. Safe to cast.
@@ -98,7 +124,8 @@ public enum Packet {
      * Convert a byte back to a Packet.
      *
      * @param b
-     * @return
+     *            --- a byte balue
+     * @return --- the Packet whose ordinal number equals the byte.
      */
     public static Packet fromByte(byte b) {
         if (b < 0 || b >= Packet.values().length) {

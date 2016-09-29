@@ -8,18 +8,22 @@ package server.game.player;
  *
  */
 public class Position {
+
     /**
      * X coordinate.
      */
     public final int x;
+
     /**
      * Y coordinate.
      */
     public final int y;
+
     /**
      * Which area is this position.
      */
     public final int areaId;
+
     /**
      * The player's facing direction
      */
@@ -29,8 +33,13 @@ public class Position {
      * Constructor
      * 
      * @param x
+     *            --- x
      * @param y
+     *            --- y
      * @param areaId
+     *            --- areaId
+     * @param direction
+     *            --- direction
      */
     public Position(int x, int y, int areaId, Direction direction) {
         this.x = x;
@@ -40,21 +49,29 @@ public class Position {
     }
 
     /**
+     * Get the direction
      * 
-     * @return
+     * @return --- the direction.
      */
     public Direction getDirection() {
         return direction;
     }
 
     /**
+     * Set the direction
      * 
      * @param direction
+     *            --- the new direction
      */
     public void setDirection(Direction direction) {
         this.direction = direction;
     }
 
+    /**
+     * Get the position in front of this position. Direction remain unchanged.
+     * 
+     * @return --- The position in front of this position. Direction remain unchanged.
+     */
     public Position frontPosition() {
         switch (direction) {
         case East:
@@ -70,6 +87,11 @@ public class Position {
         }
     }
 
+    /**
+     * Get the position at back of this position. Direction remain unchanged.
+     * 
+     * @return --- The position at back of this position. Direction remain unchanged.
+     */
     public Position backPosition() {
         switch (direction) {
         case East:
@@ -85,6 +107,11 @@ public class Position {
         }
     }
 
+    /**
+     * Get the position on the left of this position. Direction remain unchanged.
+     * 
+     * @return --- The position on the left of this position. Direction remain unchanged.
+     */
     public Position leftPosition() {
         switch (direction) {
         case East:
@@ -100,6 +127,11 @@ public class Position {
         }
     }
 
+    /**
+     * Get the position on the right of this position. Direction remain unchanged.
+     * 
+     * @return --- The position on the right of this position. Direction remain unchanged.
+     */
     public Position rightPosition() {
         switch (direction) {
         case East:

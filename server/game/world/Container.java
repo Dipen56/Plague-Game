@@ -3,10 +3,15 @@ package server.game.world;
 import java.util.List;
 import server.game.items.Item;
 import server.game.player.Player;
-import javax.xml.bind.annotation.XmlRootElement;
 
-import server.game.items.Item;
-
+/**
+ * This interface represents the property of being able to contain items inside. It can be
+ * used in many Items or MapElements to create diversity of Item usage and map
+ * interaction.
+ * 
+ * @author Hector (Fang Zhao 300364061)
+ *
+ */
 public interface Container {
 
     /**

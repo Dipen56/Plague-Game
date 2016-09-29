@@ -21,7 +21,7 @@ public class Chest extends Obstacle implements Container, Lockable {
      * can open it.
      */
     private int keyID;
-    
+
     /**
      * True if the chest is locked.
      */
@@ -32,6 +32,18 @@ public class Chest extends Obstacle implements Container, Lockable {
      */
     private List<Item> loot;
 
+    /**
+     * Constructor
+     * 
+     * @param description
+     *            --- description
+     * @param keyID
+     *            --- the key Id used to identify the matching key
+     * @param isLocked
+     *            --- whether it is locked
+     * @param loot
+     *            --- the loot inside.
+     */
     public Chest(String description, int keyID, boolean isLocked, List<Item> loot) {
         super(description);
         this.keyID = keyID;
@@ -130,7 +142,7 @@ public class Chest extends Obstacle implements Container, Lockable {
 
     @Override
     public String toString() {
-        return "c";
+        return "C";
     }
 
 }

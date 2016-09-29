@@ -1,10 +1,7 @@
 package server.game.world;
 
-
 import java.util.Iterator;
 import java.util.List;
-
-import javax.xml.bind.annotation.XmlRootElement;
 
 import server.game.GameError;
 import server.game.items.Item;
@@ -14,7 +11,7 @@ import server.game.player.Player;
  * This class represents a cupboard (normally in rooms). A cupboard can contain loot, and
  * it's lockable.
  * 
- * @author Hector
+ * @author Hector (Fang Zhao 300364061)
  *
  */
 public class Cupboard extends Obstacle implements Container, Lockable {
@@ -24,10 +21,29 @@ public class Cupboard extends Obstacle implements Container, Lockable {
      * same keyID can open the door to this room.
      */
     private int keyID;
+
+    /**
+     * Whether it is locked or not.
+     */
     private boolean isLocked;
 
+    /**
+     * The loot inside.
+     */
     private List<Item> loot;
 
+    /**
+     * Constructor
+     * 
+     * @param description
+     *            --- description
+     * @param keyID
+     *            --- the key Id used to identify the matching key
+     * @param isLocked
+     *            --- whether it is locked
+     * @param loot
+     *            --- the loot inside.
+     */
     public Cupboard(String description, int keyID, boolean isLocked, List<Item> loot) {
         super(description);
 
@@ -127,7 +143,7 @@ public class Cupboard extends Obstacle implements Container, Lockable {
 
     @Override
     public String toString() {
-        return "C";
+        return "U";
     }
 
 }
