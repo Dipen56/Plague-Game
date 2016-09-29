@@ -24,6 +24,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.WindowEvent;
 
+import java.awt.Point;
 import java.nio.file.attribute.PosixFilePermission;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -31,6 +32,9 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 
 import java.time.LocalTime;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import client.rendering.Rendering;
 
@@ -98,6 +102,8 @@ public class GUI extends Application {
 	private TextField portInput;
 	private Group avatarGroup;
 	private String selectedAvatar;
+	private Label zoomedItem;
+	private Label itemDetail;
 	// waiting room Controls
 	private FlowPane playersWaiting;
 	private Button readyGame;
@@ -113,6 +119,7 @@ public class GUI extends Application {
 	private EventHandler<WindowEvent> windowEvent;
 
 	private static int avatarIndex = 0;
+	private Map<Point, String> itemsDescription = new HashMap<Point, String>();
 
 	public GUI(ClientUI viewControler, Rendering rendering) {
 		this.viewControler = viewControler;
@@ -392,7 +399,9 @@ public class GUI extends Application {
 		titlePane.setText("Item Inventory");
 		HBox hbox = new HBox(5);
 		itemGrid = new GridPane();
-		hbox.setOnMousePressed(mouseEvent);
+		itemGrid.setOnMouseMoved(mouseEvent);
+		//hbox.setOnMousePressed(mouseEvent);
+		itemGrid.setOnMousePressed(mouseEvent);
 		hbox.getStyleClass().add("itempane-background");
 		itemGrid.setGridLinesVisible(true);
 		for (int i = 0; i < 3; i++) {
@@ -415,7 +424,7 @@ public class GUI extends Application {
 		hbox.getChildren().add(itemGrid);
 		iteminfo = new GridPane();
 		iteminfo.setGridLinesVisible(true);
-		Label zoomedItem = new Label();
+		zoomedItem = new Label();
 		Image img = loadImage(INVENTORY_IMAGE);
 		ImageView image = new ImageView();
 		image.setFitWidth(100);
@@ -426,7 +435,7 @@ public class GUI extends Application {
 		GridPane.setColumnIndex(zoomedItem, 0);
 		iteminfo.getChildren().add(zoomedItem);
 		// makes the extra box for the info of the item
-		Label itemDetail = new Label("No Item Currently Selected");
+		 itemDetail = new Label("No Item Currently Selected");
 		itemDetail.getStyleClass().add("item-lable");
 		GridPane.setRowIndex(itemDetail, 1);
 		GridPane.setColumnIndex(itemDetail, 0);
@@ -532,7 +541,6 @@ public class GUI extends Application {
 		avatarGroup.getChildren().add(avatarImage);
 	}
 
-	
 	public void setWaitingRoomAvatar() {
 		Image avatarImg = loadImage(AVATAR_IMAGES[avatarIndex]);
 		ImageView avatarImage = new ImageView(avatarImg);
@@ -559,6 +567,117 @@ public class GUI extends Application {
 	public static Image loadImage(String name) {
 		Image image = new Image(GUI.class.getResourceAsStream(name));
 		return image;
+	}
+
+	public void setInventory(List<String> inventory) {
+		int index = 0;
+		int row = 0;
+		int col = 0;
+		String tempPath = "/antidote.png";
+		for (String s : inventory) {
+			if (s.startsWith("A")) {
+				String description = s.substring(2, s.length());
+				// String imagePath=ClientUI.ITEM_TABLE.get('A');
+				Image image = loadImage(tempPath);
+				ImageView imageView = new ImageView(image);
+				Label item = new Label();
+				item.getStyleClass().add("item-grid");
+				imageView.setFitWidth(60);
+				imageView.setFitHeight(60);
+				imageView.setImage(image);
+				item.setGraphic(imageView);
+				GridPane.setRowIndex(item, row);
+				GridPane.setColumnIndex(item, col);
+				itemGrid.getChildren().add(item);
+				itemsDescription.put(new Point(col, row), s);
+				col++;
+			} else if (s.startsWith("K")) {
+				String description = s.substring(2, s.length());
+				// String imagePath=ClientUI.ITEM_TABLE.get('A');
+				Image image = loadImage(tempPath);
+				ImageView imageView = new ImageView(image);
+				Label item = new Label();
+				item.getStyleClass().add("item-grid");
+				imageView.setFitWidth(60);
+				imageView.setFitHeight(60);
+				imageView.setImage(image);
+				item.setGraphic(imageView);
+				GridPane.setRowIndex(item, row);
+				GridPane.setColumnIndex(item, col);
+				itemGrid.getChildren().add(item);
+				itemsDescription.put(new Point(col, row), s);
+				col++;
+			} else if (s.startsWith("T")) {
+				String description = s.substring(2, s.length());
+				// String imagePath=ClientUI.ITEM_TABLE.get('A');
+				Image image = loadImage(tempPath);
+				ImageView imageView = new ImageView(image);
+				Label item = new Label();
+				item.getStyleClass().add("item-grid");
+				imageView.setFitWidth(60);
+				imageView.setFitHeight(60);
+				imageView.setImage(image);
+				item.setGraphic(imageView);
+				GridPane.setRowIndex(item, row);
+				GridPane.setColumnIndex(item, col);
+				itemGrid.getChildren().add(item);
+				itemsDescription.put(new Point(col, row), s);
+				col++;
+			}
+			if (col == 4) {
+				col = 0;
+				row++;
+			}
+		}
+
+	}
+
+	public void setItemDescription(int x, int y) {
+		String item = "N|null";
+		for (Point p : itemsDescription.keySet()) {
+			if (p.x == x && p.y == y) {
+				item = itemsDescription.get(p);
+			}
+		}
+
+		String description = item.substring(2, item.length());
+		String tempPath = "/antidote.png";
+		if (item.startsWith("A")) {
+			Image img = loadImage(tempPath);
+			ImageView image = new ImageView();
+			image.setFitWidth(100);
+			image.setFitHeight(100);
+			image.setImage(img);
+			zoomedItem.setGraphic(image);
+			itemDetail.setText(description);
+
+		} else if (item.startsWith("K")) {
+			Image img = loadImage(tempPath);
+			ImageView image = new ImageView();
+			image.setFitWidth(100);
+			image.setFitHeight(100);
+			image.setImage(img);
+			zoomedItem.setGraphic(image);
+			itemDetail.setText(description);
+
+		} else if (item.startsWith("T")) {
+			Image img = loadImage(tempPath);
+			ImageView image = new ImageView();
+			image.setFitWidth(100);
+			image.setFitHeight(100);
+			image.setImage(img);
+			zoomedItem.setGraphic(image);
+			itemDetail.setText(description);
+
+		} else {
+			Image img = loadImage(INVENTORY_IMAGE);
+			ImageView image = new ImageView();
+			image.setFitWidth(100);
+			image.setFitHeight(100);
+			image.setImage(img);
+			zoomedItem.setGraphic(image);
+			itemDetail.setText("No Item Currently Selected");
+		}
 	}
 
 	/**

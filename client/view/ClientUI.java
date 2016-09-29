@@ -2,6 +2,7 @@ package client.view;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -413,6 +414,27 @@ public class ClientUI {
             @Override
             public void run() {
                 gui.startGame();
+                List<String> items = new ArrayList<String>();
+				String anti = "A|antedote";
+				String key = "K|key";
+				String torch = "T|torch";
+				String anti2 = "A|antedote";
+				String key2 = "K|key";
+				String torch2 = "T|torch";
+				String anti3 = "A|antedote";
+				String key3 = "K|key";
+				String torch3 = "T|torch";
+				items.add(anti);
+				items.add(key);
+				items.add(torch);
+				items.add(anti2);
+				items.add(key2);
+				items.add(torch2);
+				items.add(anti2);
+				items.add(key2);
+				items.add(torch2);
+
+				gui.setInventory(items);
 
                 clockThread = new ClockThread(DEFAULT_CLK_PERIOD, ClientUI.this);
 
@@ -551,6 +573,16 @@ public class ClientUI {
                 // Currently this listen to clicks on the items
                 // TODO: some how make it work with items
                 System.out.println("here");
+                if (event.toString().contains("Group")) {
+					gui.changeAvatar();
+				} else if (event.toString().contains("Grid")) {
+					// System.out.println(event.getX());
+					int itemX = (int) (event.getX() / 60);
+					int itemY = (int) (event.getY() / 60);
+					gui.setItemDescription(itemX, itemY);
+					//System.out.println(itemX + " " + itemY);
+
+				}
             }
         };
     }
