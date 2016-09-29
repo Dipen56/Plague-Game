@@ -2,7 +2,7 @@ package server.game;
 
 import java.util.Scanner;
 
-import server.ParserUtilities;
+import client.ParserUtilities;
 import server.game.player.Avatar;
 import server.game.player.Player;
 import server.game.player.Position;
@@ -122,8 +122,8 @@ public class TextUI {
             break;
         case 'i':
             // the player wants to see what's inside the inventory
-            game.getPlayerInventory(MOCK_UID).stream()
-                    .forEach(e -> System.out.println(e));
+            // game.getPlayerInventory(MOCK_UID).stream()
+            // .forEach(e -> System.out.println(e));
             break;
         case 'c':
             // the player wants to see time & health left

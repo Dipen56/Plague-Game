@@ -10,6 +10,12 @@ package server.game;
 @SuppressWarnings("serial")
 public class GameError extends RuntimeException {
 
+    /**
+     * Constructor
+     * 
+     * @param string
+     *            --- error message
+     */
     public GameError(String string) {
         super(string);
     }

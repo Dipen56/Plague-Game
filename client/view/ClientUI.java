@@ -2,13 +2,10 @@ package client.view;
 
 import java.io.IOException;
 import java.net.Socket;
-import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.swing.JOptionPane;
-
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -18,13 +15,12 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.WindowEvent;
 
 import client.Client;
-import client.ClientMain;
+import client.ParserUtilities;
 import client.rendering.Rendering;
 import server.Packet;
-import server.ParserUtilities;
 import server.game.player.Avatar;
-import server.game.player.Direction;
 import server.game.player.Position;
+import server.game.player.Virus;
 
 /**
  * This class is the client side UI, which is where the user start the game from. It also
@@ -38,15 +34,18 @@ import server.game.player.Position;
  */
 public class ClientUI {
 
-    // ============ info fields =================
+    /**
+     * The period between every update
+     */
+    public static final int DEFAULT_CLK_PERIOD = 100;
 
     /**
      * This is designed as a table for renderer to index char board to render objects.
      */
-    private static final Map<Character, String> MAP_OBJECTS_TABLE;
+    public static final Map<Character, String> MAP_OBJECTS_TABLE;
 
     // ITEM_TABLE is not a good idea. leave it aside for now.
-    private static final Map<Character, String> ITEM_TABLE;
+    public static final Map<Character, String> ITEM_TABLE;
 
     /*
      * Initialise the table for Renderer. Each table contains a map which maps a char to
@@ -54,7 +53,6 @@ public class ClientUI {
      * was sent by server.
      */
     static {
-
         MAP_OBJECTS_TABLE = new HashMap<>();
         ITEM_TABLE = new HashMap<>();
 
@@ -69,24 +67,39 @@ public class ClientUI {
 
         // ============= map objects ====================
 
-        MAP_OBJECTS_TABLE.put('E', "/Resourse/Ground.png");
-        MAP_OBJECTS_TABLE.put('C', "/Resourse/Chest.png");
+        /*
+         * E: Room Obstacle
+         * 
+         * G: Ground Space
+         * 
+         * T: Tree
+         * 
+         * R: Rock
+         * 
+         * B: Barrel
+         * 
+         * A: Table
+         * 
+         * C: Chest
+         * 
+         * U: Cupboard
+         * 
+         * P: Scrap Pile
+         * 
+         * H: chair
+         * 
+         * D: a door. This should be rendered as ground, but it indicates which direction
+         * the room should be facing.
+         * 
+         */
         MAP_OBJECTS_TABLE.put('T', "/Resourse/Tree.png");
         MAP_OBJECTS_TABLE.put('R', "/Resourse/Rock.png");
-        MAP_OBJECTS_TABLE.put('B', "/Resourse/Cupboard.png");
-        MAP_OBJECTS_TABLE.put('S', "/Resourse/ScrapPile.png");
-        MAP_OBJECTS_TABLE.put('1', "/Resourse/Room_1.png");
-        MAP_OBJECTS_TABLE.put('2', "/Resourse/Room_2.png");
-        MAP_OBJECTS_TABLE.put('3', "/Resourse/Room_3.png");
-        MAP_OBJECTS_TABLE.put('4', "/Resourse/Room_4.png");
-        MAP_OBJECTS_TABLE.put('5', "/Resourse/Room_5.png");
-        MAP_OBJECTS_TABLE.put('6', "/Resourse/Room_6.png");
-        MAP_OBJECTS_TABLE.put('7', "/Resourse/Room_7.png");
-        MAP_OBJECTS_TABLE.put('8', "/Resourse/Room_8.png");
-        MAP_OBJECTS_TABLE.put('9', "/Resourse/Room_9.png");
-        MAP_OBJECTS_TABLE.put('a', "/Resourse/Room_10.png");
-        MAP_OBJECTS_TABLE.put('b', "/Resourse/Room_11.png");
-
+        MAP_OBJECTS_TABLE.put('C', "/Resourse/Chest.png");
+        MAP_OBJECTS_TABLE.put('G', "/Resourse/Ground.png");
+        MAP_OBJECTS_TABLE.put('B', "/Resourse/Barrel.png");
+        MAP_OBJECTS_TABLE.put('A', "/Resourse/Table.png");
+        MAP_OBJECTS_TABLE.put('U', "/Resourse/Cupboard.png");
+        MAP_OBJECTS_TABLE.put('P', "/Resourse/ScrapPile.png");
         // this is the TransitionSpace, which is actually a normal ground for renderer.
         MAP_OBJECTS_TABLE.put('D', "/Resourse/Ground.png");
 
@@ -98,36 +111,56 @@ public class ClientUI {
 
     }
 
+    // ============ info fields =================
+
     /**
      * User id of this connection.
      */
     private int uid;
+
     /**
      * User name of this connection.
      */
     private String userName;
+
     /**
-     * Avatar index of this connection.
+     * Avatar type of this connection.
      */
-    private int avatarindex;
+    private Avatar avatar;
+
+    /**
+     * Virus type of the player at this connection
+     */
+    private Virus virus;
+
     /**
      * The health left. This is updated by server broadcast.
      */
     private int health;
+
     /**
      * The visibility. This is updated by server broadcast.
      */
     private int visibility;
+
     /**
      * This map keeps track of all player's avatars. Renderer can look for which avatar to
      * render from here.
      */
     private Map<Integer, Avatar> avatars;
+
     /**
      * This map keeps track of all player's Positions. Renderer can look for where to
      * render different players from here.
      */
     private Map<Integer, Position> positions;
+
+    /**
+     * This map keeps track of the status for all players that whether he is holding a
+     * torch.
+     */
+    private Map<Integer, Boolean> torchStatus;
+
     /**
      * This list keeps track of this player's inventory. Each item is represented as a
      * String whose format is: Character|Description. <br>
@@ -138,6 +171,7 @@ public class ClientUI {
      * used to pop up a hover tootip for this item.
      */
     private List<String> inventory;
+
     /**
      * This is a mirror of the field, Map<Integer, Area> areas, in Game class, except the
      * area is represented as a char[][]. Renderer can look for what map object to render
@@ -146,48 +180,84 @@ public class ClientUI {
     private Map<Integer, char[][]> areas;
 
     // ============ Model and Views =============
+
+    /**
+     * The Gui
+     */
     private GUI gui;
+
+    /**
+     * The renderer
+     */
     private Rendering render;
+
+    /**
+     * The client side socket connection maintainer
+     */
     private Client client;
+
+    /**
+     * A clock thread for generating constant pulse to update rendering and GUI.
+     */
     private ClockThread clockThread;
 
     // ============ Event Handlers ==============
 
-    // for clicks
+    /**
+     * Event Handler for buttons
+     */
     private EventHandler<ActionEvent> actionEvent;
-    // for keys inputs
+
+    /**
+     * Event Handler for key events
+     */
     private EventHandler<KeyEvent> keyEvent;
-    // for mouse events
+
+    /**
+     * Event Handler for mouse events
+     */
     private EventHandler<MouseEvent> mouseEvent;
-    // for window resizing not really need else where
+
+    /**
+     * Event Handler for window events
+     */
     private EventHandler<WindowEvent> windowEvent;
 
+    /**
+     * Constructor
+     */
     public ClientUI() {
-        // initialise the info fields.
         areas = new HashMap<>();
         avatars = new HashMap<>();
         positions = new HashMap<>();
+        torchStatus = new HashMap<>();
 
         // TODO: need to uses the other constructor
-        render = new Rendering(this);
+        render = new Rendering();
         // TODO: get the actual player direction
         render.setDirection("up");
         gui = new GUI(this, render);
+
         GUI.launch(GUI.class);
     }
 
     /**
-     * this method is used to connect the players to the client which then connects them
+     * This method is used to connect the players to the client which then connects them
      * to the server
      * 
      * @param ip
+     *            --- the server ip address.
      * @param port
+     *            --- the port number
      * @param userName
+     *            --- the user name
      * @param avatarIndex
+     *            --- the index of Avatar that the player chose.
      * @return
      */
     public boolean loginPlayer(String ip, int port, String userName, int avatarIndex) {
 
+        // ip address format check
         if (!ip.matches("\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}")) {
             GUI.showWarningPane("It's not a proper ip address.");
             return false;
@@ -205,13 +275,13 @@ public class ClientUI {
 
         client = new Client(s, this);
         this.userName = userName;
-        this.avatarindex = avatarIndex;
+        this.avatar = Avatar.get(avatarIndex);
         client.start();
         return true;
     }
 
     /**
-     * this method is used to start the listeners
+     * This method is used to start the listeners
      */
     public void startListeners() {
         // start the gui components listener, key listener, and mouse listener
@@ -221,8 +291,8 @@ public class ClientUI {
     }
 
     /**
-     * this method is called client receives a msg from anther client and need to update
-     * this client. will need to pass a user or give the player to the constructor.
+     * This method is called by client receives a msg from anther client and need to
+     * update this client. will need to pass a user or give the player to the constructor.
      * 
      * @param msg
      * @param user
@@ -244,9 +314,21 @@ public class ClientUI {
      * local user ID.
      * 
      * @param uid
+     *            --- user id
      */
     public void parseUID(int uid) {
         this.uid = uid;
+    }
+
+    /**
+     * When the client receives the user's virus type from the server, this method will
+     * update the local record
+     * 
+     * @param virusIndex
+     *            --- index of virus, which is equal to its ordinal number.
+     */
+    public void parseVirus(int virusIndex) {
+        this.virus = Virus.get(virusIndex);
     }
 
     /**
@@ -254,19 +336,33 @@ public class ClientUI {
      * local table which records every area's map (in a plain char matrix).
      * 
      * @param mapStr
+     *            --- a string representation of all maps in game.
      */
     public void parseMap(String mapStr) {
         ParserUtilities.parseMap(areas, mapStr);
     }
 
     /**
-     * When the client receives a position string from the server, this method will update
-     * the local table which records every player's position.
+     * When the client receives the string recording all players positions from the
+     * server, this method will update the local table which records every player's
+     * position.
      * 
      * @param posStr
+     *            --- a string representation of all positions of players.
      */
     public void parsePosition(String posStr) {
         ParserUtilities.parsePosition(positions, posStr);
+    }
+
+    /**
+     * When the client receives the string recording all players avatars from the server,
+     * this method will update the local table which records every player's avatar.
+     * 
+     * @param avatarsStr
+     *            --- a string representation of all avatars of all players.
+     */
+    public void parseAvatars(String avatarsStr) {
+        ParserUtilities.parseAvatar(avatars, avatarsStr);
     }
 
     /**
@@ -274,10 +370,10 @@ public class ClientUI {
      * local time.
      * 
      * @param timeStr
+     *            --- a string representation of world time.
      */
     public void parseTime(String timeStr) {
-        LocalTime time = ParserUtilities.parseTime(timeStr);
-        gui.setTime(time);
+        gui.setTime(timeStr);
     }
 
     /**
@@ -285,6 +381,7 @@ public class ClientUI {
      * the local health.
      * 
      * @param health
+     *            --- the health left
      */
     public void parseHealth(int health) {
         this.health = health;
@@ -295,6 +392,7 @@ public class ClientUI {
      * the local health.
      * 
      * @param visibility
+     *            --- the visibility
      */
     public void parseVisibility(int visibility) {
         this.visibility = visibility;
@@ -306,53 +404,40 @@ public class ClientUI {
      * update the local inventory.
      * 
      * @param invenStr
+     *            --- a string representation of inventory items.
      */
     public void parseInventory(String invenStr) {
         inventory = ParserUtilities.parseInventory(invenStr);
     }
 
     /**
+     * When the client receives the string recording the status of player holding torch
+     * from the server, this method will update the local table which records every
+     * player's status of holding torch.
+     * 
+     * @param torchStatusStr
+     *            --- a string representation of the status of player holding torch
+     */
+    public void parseTorchStatus(String torchStatusStr) {
+        ParserUtilities.parseTorchStatus(torchStatus, torchStatusStr);
+    }
+
+    /**
      * Get the user name
      * 
-     * @return
+     * @return --- the player's choice of user name
      */
     public String getUserName() {
         return userName;
     }
 
     /**
-     * get uId of this client
+     * Get the avatar.
      * 
-     * @return
+     * @return --- the player's choice of avatar
      */
-    public int getUid() {
-        return uid;
-    }
-
-    /**
-     * Get the avatar index.
-     * 
-     * @return
-     */
-    public int getAvatarIndex() {
-        return avatarindex;
-    }
-
-    /**
-     * Get positions of all players.
-     * 
-     * @return
-     */
-    public Map<Integer, Position> getPositions() {
-        return positions;
-    }
-
-    public char[][] getCharMapByAreaId(int id) {
-        return areas.get(id);
-    }
-
-    public int getVisibility() {
-        return visibility;
+    public Avatar getAvatar() {
+        return avatar;
     }
 
     /*
@@ -363,20 +448,106 @@ public class ClientUI {
      * ===============================
      */
 
-    public void startGame() {
+    /**
+     * This method is called by ClockThread periodically to update the renderer and GUI.
+     */
+    public void updateRenderAndGui() {
 
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                gui.startGame();
-                clockThread.start();
-            }
-        });
+        // 1. update GUI
+
+        // a. update minimap
+
+        // b. update the inventory
+
+        // c. update the health bar if it is in right panel in GUI.
+
+        // 2. update Renderer
+
+        // a. call update renderer method.
+
+        // ====================
+        // These method should be somewhere for rendering
+
+        // /**
+        // * Redraw the rendering panel
+        // */
+        // public void redraw() {
+        // Map<Integer, Position> positions = controller.getPositions();
+        // Position selfPosition = positions.get(controller.getUid());
+        // int areaId = selfPosition.areaId;
+        // char[][] map = controller.getCharMapByAreaId(areaId);
+        // int visibility = controller.getVisibility();
+        //
+        // redraw(positions, map, visibility);
+        // }
+        //
+        // /**
+        // * Redraw the rendering panel.
+        // *
+        // * @param positions
+        // * --- the position of all player.
+        // * @param areaMap
+        // * --- the area map represented as a char[][]
+        // * @param visibility
+        // * --- current visibility.
+        // */
+        // private void redraw(Map<Integer, Position> positions, char[][] areaMap,
+        // int visibility) {
+        //
+        // // player's coordinate on board, and direction.
+        // Position selfPosition = positions.get(controller.getUid());
+        //
+        // int x = selfPosition.x;
+        // int y = selfPosition.y;
+        // Direction direction = selfPosition.getDirection();
+        //
+        // // TODO redraw the rendering panel
+        //
+        // }
 
     }
 
     /**
-     * this method is used to check for action and give a implementation of handle method
+     * Alert the Renderer and GUI to start the game.
+     */
+    public void startGame() {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                gui.startGame();
+
+                List<String> items = new ArrayList<String>();
+				String anti = "A|antedote";
+				String key = "K|key";
+				String torch = "T|torch";
+				String anti2 = "A|antedote";
+				String key2 = "K|key";
+				String torch2 = "T|torch";
+				String anti3 = "A|antedote";
+				String key3 = "K|key";
+				String torch3 = "T|torch";
+				items.add(anti);
+				items.add(key);
+				items.add(torch);
+				items.add(anti2);
+				items.add(key2);
+				items.add(torch2);
+				items.add(anti2);
+				items.add(key2);
+				items.add(torch2);
+
+				gui.setInventory(items);
+
+
+                clockThread = new ClockThread(DEFAULT_CLK_PERIOD, ClientUI.this);
+                clockThread.start();
+            }
+        });
+    }
+
+    /**
+     * This method is used to set action event handlers. The actions for certain button or
+     * FX component events are defined here.
      */
     private void setActionEventHandler() {
         actionEvent = new EventHandler<ActionEvent>() {
@@ -436,7 +607,8 @@ public class ClientUI {
     }
 
     /**
-     * this methods is used to listen for keys being pressed and will respond Accordingly
+     * This method is used to set Key event handlers. The actions for Key events are
+     * defined here.
      */
     private void setKeyEventHander() {
         keyEvent = new EventHandler<KeyEvent>() {
@@ -494,7 +666,8 @@ public class ClientUI {
     }
 
     /**
-     * this this is used to listen for mouse clicks on different controls
+     * This method is used to set mouse event handlers. The actions for mouse events are
+     * defined here.
      */
     private void setMouseEventHander() {
         mouseEvent = new EventHandler<MouseEvent>() {
@@ -504,47 +677,58 @@ public class ClientUI {
                 // Currently this listen to clicks on the items
                 // TODO: some how make it work with items
                 System.out.println("here");
+                if (event.toString().contains("Group")) {
+					gui.changeAvatar();
+				} else if (event.toString().contains("Grid")) {
+					// System.out.println(event.getX());
+					int itemX = (int) (event.getX() / 60);
+					int itemY = (int) (event.getY() / 60);
+					gui.setItemDescription(itemX, itemY);
+					//System.out.println(itemX + " " + itemY);
+
+				}
             }
         };
     }
 
     /**
-     * this method will return the action listeners
+     * This method will return the action listeners
      * 
-     * @return
+     * @return --- the action listeners
      */
     public EventHandler<ActionEvent> getActionEventHandler() {
         return actionEvent;
     }
 
     /**
-     * this method will return the key listeners
+     * This method will return the key listeners
      * 
-     * @return
+     * @return --- the key listeners
      */
     public EventHandler<KeyEvent> getKeyEventHander() {
         return keyEvent;
     }
 
     /**
-     * this method will return the mouse listener
+     * This method will return the mouse listener
      * 
-     * @return
+     * @return --- the mouse listener
      */
     public EventHandler<MouseEvent> getMouseEventHander() {
         return mouseEvent;
     }
 
     /**
-     * this method will return the window listener
+     * This method will return the window listener
      * 
-     * @return
+     * @return --- the window listener
      */
     public EventHandler<WindowEvent> getWindowEventHander() {
         return windowEvent;
     }
 
     /**
+     * Main function.
      * 
      * @param args
      */

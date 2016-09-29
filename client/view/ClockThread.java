@@ -1,16 +1,7 @@
 package client.view;
 
-import client.rendering.Rendering;
-import server.game.Game;
-
 /**
- * This class is used for periodically job.
- * 
- * could be updating rendering panel.
- * 
- * could be updating game status.
- * 
- * needs to be decided.
+ * This class is used for periodically updating GUI and Renderer.
  * 
  * @author Rafaela & Hector
  *
@@ -18,9 +9,10 @@ import server.game.Game;
 public class ClockThread extends Thread {
 
     /**
-     * The client side renderer
+     * The pointer to controller
      */
-    private final Rendering renderer;
+    private ClientUI controller;
+
     /**
      * the period between every update.
      */
@@ -32,8 +24,8 @@ public class ClockThread extends Thread {
      * @param delay
      * @param game
      */
-    public ClockThread(int delay, Rendering renderer) {
-        this.renderer = renderer;
+    public ClockThread(int delay, ClientUI controller) {
+        this.controller = controller;
         this.delay = delay;
     }
 
@@ -44,8 +36,8 @@ public class ClockThread extends Thread {
             try {
                 Thread.sleep(delay);
 
-                // rendering update
-                renderer.redraw();
+                // update Renderer and GUI.
+                controller.updateRenderAndGui();
 
             } catch (InterruptedException e) {
                 // should never happen

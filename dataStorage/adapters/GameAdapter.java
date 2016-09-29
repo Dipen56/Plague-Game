@@ -17,7 +17,8 @@ import server.game.player.Player;
 import server.game.world.Area;
 
 /**
- * This class represents the an alternate version of the Game class, specifically for XML parsing.
+ * This class represents the an alternate version of the Game class, specifically for XML
+ * parsing.
  *
  * @author Daniel Anastasi (anastadani 300145878)
  *
@@ -80,7 +81,7 @@ public class GameAdapter{
 	/**
 	 * An ID number to identify a loaded game against a running game.
 	 */
-	@XmlElements
+	@XmlElement
 	private int gameID;
 
 	/**
@@ -174,6 +175,4 @@ public class GameAdapter{
 		return game;
 	}
 
-
 }
-

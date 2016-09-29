@@ -3,8 +3,6 @@ package server.game.world;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.xml.bind.annotation.XmlRootElement;
-
 import server.game.GameError;
 import server.game.items.Item;
 import server.game.player.Player;
@@ -12,14 +10,24 @@ import server.game.player.Player;
 /**
  * This class represents a pile of scrap. A pile of scrap can contain loot.
  * 
- * @author Hector
+ * @author Hector (Fang Zhao 300364061)
  *
  */
-
 public class ScrapPile extends Obstacle implements Container {
 
+    /**
+     * The loot inside
+     */
     private List<Item> loot;
 
+    /**
+     * Constructor
+     * 
+     * @param description
+     *            --- description
+     * @param loot
+     *            --- The loot inside
+     */
     public ScrapPile(String description, List<Item> loot) {
         super(description);
 
@@ -89,7 +97,7 @@ public class ScrapPile extends Obstacle implements Container {
 
     @Override
     public String toString() {
-        return "S";
+        return "P";
     }
 
 }

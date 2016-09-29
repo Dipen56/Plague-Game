@@ -5,54 +5,47 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
-import client.view.ClockThread;
+import client.ParserUtilities;
+import dataStorage.InitialGameLoader;
+import dataStorage.XmlFunctions;
 import server.game.Game;
 import server.game.GameError;
-import server.game.TestConst;
 import server.view.ServerGui;
 
 /**
- * This is a server main class I (Hector) copied from Rafaela's code. Some modifications.
+ * This class is where the server is started.
  * 
  * @author Rafaela & Hector
  *
  */
 public class ServerMain {
-    /**
-     * The period between every update
-     */
-    public static final int DEFAULT_CLK_PERIOD = 100;
+
     /**
      * The period between every broadcast
      */
     public static final int DEFAULT_BROADCAST_CLK_PERIOD = 50;
+
     /**
      * A series of port number, in case the port is used.
      */
     public static final int[] PORT_NUM = { 6000, 6001, 6002, 6003, 6004, 6005 };
+
     /**
      * The server socket waiting for connection.
      */
     private ServerSocket serverSocket;
-    /**
-     * A thread pool handling all clients
-     */
-    private ExecutorService clientsPool;
+
     /**
      * The game
      */
     private Game game;
-    /**
-     * This map keeps track of every Receptionist for every connected client
-     */
-    private HashMap<Integer, Receptionist> receptionists;
 
     /**
-     * this is the server GUI which is used to display the ip an port of the server
+     * This map keeps track of every Receptionist for every connected client. The key is
+     * the unique id of each client
      */
+    private HashMap<Integer, Receptionist> receptionists;
 
     /**
      * Constructor
@@ -64,13 +57,16 @@ public class ServerMain {
         System.out.println("How many players (between 2 and 4):");
         int numPlayers = ParserUtilities.parseInt(2, 4);
 
-        // Parsing a file to construct the world
-        // game = new Game(file);
+        // create the game world with test version tiny world.
+        // game = new Game(TestConst.world, TestConst.areas);
 
-        // create the game world
-        game = new Game(TestConst.world, TestConst.areas);
-        clientsPool = Executors.newFixedThreadPool(numPlayers);
+        // load from game maker
+        game = InitialGameLoader.makeGame();
 
+        // just for integration day demo
+        XmlFunctions.saveInitialFile(game);
+
+        // run the server
         runServer(numPlayers);
     }
 
@@ -78,9 +74,8 @@ public class ServerMain {
      * This method listens to client connections, and when all clients are ready, a
      * multi-player game is started.
      * 
-     * @param game
      * @param numPlayers
-     * @param clock
+     *            --- the number of players
      */
     private void runServer(int numPlayers) {
 
@@ -90,10 +85,7 @@ public class ServerMain {
                 + serverSocket.getInetAddress().toString() + ", port: "
                 + serverSocket.getLocalPort());
 
-        /*
-         * TODO integrate the server into GUI.
-         * 
-         */
+        // A simple GUI to display server running.
         new Thread() {
             public void run() {
                 ServerGui.port = serverSocket.getLocalPort();
@@ -103,7 +95,6 @@ public class ServerMain {
         }.start();
 
         int count = 0;
-
         try {
             // Wait for a connection
             while (count != numPlayers) {
@@ -114,15 +105,15 @@ public class ServerMain {
                         + clientSocket.getInetAddress().toString() + ". uId is: " + uId
                         + ".");
 
-                Receptionist receptionist = new Receptionist(clientSocket, uId,
-                        DEFAULT_BROADCAST_CLK_PERIOD, game);
+                Receptionist receptionist = new Receptionist(clientSocket, uId, game);
                 // send the map to client
-                receptionist.sendMapAndID();
+                receptionist.sendMapID();
                 receptionists.put(uId, receptionist);
                 count++;
             }
 
-            System.out.println("All clients accepted, GAME ON!");
+            System.out.println(
+                    "All clients accepted, now entering lobby, wait till all players are ready");
 
             // start the initialisation process (enter the lobby)
             runGame();
@@ -131,32 +122,39 @@ public class ServerMain {
             System.err.println("I/O error: " + e.getMessage());
         } finally {
             /*
-             * XXX clean up actions, shut down clients pool, close server, etc. Perhaps
-             * this should be put in finally clause.
+             * XXX maybe need more clean up actions, close server, etc.
              */
-
-            // shut down the thread pool and server socket.
-            clientsPool.shutdown();
             try {
                 serverSocket.close();
             } catch (IOException e) {
                 System.err.println("I/O error: " + e.getMessage());
             }
-
         }
-
     }
 
+    /**
+     * Start the multi-player game.
+     */
     private void runGame() {
 
-        // 2. join the player in, tell the client his uid.
+        // join the player in, get the player's user name, avatar and id.
         for (Receptionist r : receptionists.values()) {
             r.receiveNameAvatar();
         }
 
+        // broadcast each client's virus type
+        for (Receptionist r : receptionists.values()) {
+            r.sendVirusType();
+        }
+
+        // broadcast every player's avatar
+        for (Receptionist r : receptionists.values()) {
+            r.sendAvatars();
+        }
+
         // Now get those workers busy
         for (Receptionist r : receptionists.values()) {
-            clientsPool.submit(r);
+            r.start();
         }
 
         // ======= Enter the lobby, waiting for everyone ready ========
@@ -181,7 +179,7 @@ public class ServerMain {
             r.setGameRunning();
         }
 
-        System.out.println("finished waiting for everybody ready. Game start");
+        System.out.println("Finished waiting for everybody ready. Game start");
 
         game.startTiming();
     }
@@ -190,7 +188,7 @@ public class ServerMain {
      * This method creates a server socket. If it is not successfully created, a GameError
      * is thrown.
      * 
-     * @return
+     * @return --- the server socket.
      */
     private ServerSocket createServerSocket() {
 
@@ -215,7 +213,7 @@ public class ServerMain {
     }
 
     /**
-     * Main function
+     * Main function, start the server.
      * 
      * @param args
      */
