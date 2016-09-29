@@ -19,21 +19,26 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.image.ImageView;
 import javafx.geometry.Pos;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.WindowEvent;
-import server.game.player.Direction;
-import server.game.player.Position;
+
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 
+import java.awt.Point;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import server.game.player.Direction;
+import server.game.player.Position;
+import antherrendering.AnotherRendering;
+import client.rendering.Images;
 import client.rendering.Rendering;
 
 /**
@@ -47,11 +52,6 @@ public class GUI extends Application {
 
     // GUI Style CSS
     private static final String STYLE_CSS = "/main.css";
-    // Constants Images
-    private static final String GAMEICON_IMAGE = "/game-icon.png";
-    private static final String INVENTORY_IMAGE = "/item-tray.png";
-    private static final String SLASH_SCREEN_IMAGE = "/spash-screen-background.png";
-    private static final String AVATAR_ONE_IMAGE = "/standingstillrear.png";
 
     // Constants Dimensions
     public static final int WIDTH_VALUE = 1000;
@@ -59,9 +59,14 @@ public class GUI extends Application {
     private static final int RIGHTPANE_WIDTH_VALUE = WIDTH_VALUE - 600;
     public static final int GAMEPANE_WIDTH_VALUE = WIDTH_VALUE - 400;
 
+    /**
+     * Minimap tile width
+     */
     private static final int MINIMAP_TILE_WIDTH = 10;
 
-    // mini map color table
+    /**
+     * mini map color table
+     */
     private static final Map<Character, Color> MINIMAP_COLOR_TABLE;
 
     static {
@@ -111,7 +116,9 @@ public class GUI extends Application {
     private Label textAreaLable;
     private TextField msg;
     private Button send;
-    private Group group = new Group();
+
+    // private Group group = new Group();
+    private Pane group = new Pane();
 
     // panes
     // right pane with vertical alligment
@@ -123,8 +130,12 @@ public class GUI extends Application {
     private BorderPane borderPane;
     private String chatText = "HARDD: Welcome Players";
     private StackPane gamePane;
+
+    // private Rendering render = new Rendering();
+
     private static ClientUI viewControler;
-    private static Rendering render;
+    // private static Rendering render;
+    private static AnotherRendering render;
 
     // Button Controls For Slash Screen
     private Button play;
@@ -140,6 +151,8 @@ public class GUI extends Application {
     private TextField portInput;
     private Group avatarGroup;
     private String selectedAvatar;
+    private Label zoomedItem;
+    private Label itemDetail;
 
     // waiting room Controls
     private FlowPane playersWaiting;
@@ -156,7 +169,15 @@ public class GUI extends Application {
     // for window resizing not really need else where
     private EventHandler<WindowEvent> windowEvent;
 
-    public GUI(ClientUI viewControler, Rendering rendering) {
+    private static int avatarIndex = 0;
+    private Map<Point, String> itemsDescription;
+
+    // public GUI(ClientUI viewControler, Rendering rendering) {
+    // this.viewControler = viewControler;
+    // this.render = rendering;
+    // }
+
+    public GUI(ClientUI viewControler, AnotherRendering rendering) {
         this.viewControler = viewControler;
         this.render = rendering;
     }
@@ -170,9 +191,9 @@ public class GUI extends Application {
      */
     @Override
     public void start(Stage mainWindow) throws Exception {
-        this.window = mainWindow;
+        window = mainWindow;
         window.setTitle("Plague Game");
-        window.getIcons().add(loadImage(GAMEICON_IMAGE));
+        window.getIcons().add(Images.GAMEICON_IMAGE);
         // this will disable and enable resizing so when we have a working
         // version we can just set this to false;
         // this starts the action listener
@@ -189,7 +210,7 @@ public class GUI extends Application {
 
     public void slashScreen() {
         Group slashGroup = new Group();
-        Image slashBackground = loadImage(SLASH_SCREEN_IMAGE);
+        Image slashBackground = Images.SLASH_SCREEN_IMAGE;
         ImageView slashBackgroundImage = new ImageView(slashBackground);
         slashBackgroundImage.setFitHeight(HEIGHT_VALUE + 18);
         slashBackgroundImage.setFitWidth(WIDTH_VALUE + 18);
@@ -226,15 +247,15 @@ public class GUI extends Application {
         keyEvent = viewControler.getKeyEventHander();
         mouseEvent = viewControler.getMouseEventHander();
         windowEvent = viewControler.getWindowEventHander();
-        VBox loginBox = new VBox(5);
+        VBox loginBox = new VBox(10);
         info = new Label();
         info.setText("Enter The IP,Port and UserName");
         loginBox.getChildren().add(info);
         BorderPane loginBorderPane = new BorderPane();
 
         VBox inputStore = new VBox(5);
-
         HBox userNameBox = new HBox(3);
+
         Label user = new Label("Enter UserName");
         userNameInput = new TextField();
         userNameBox.getChildren().addAll(user, userNameInput);
@@ -247,6 +268,8 @@ public class GUI extends Application {
         // loginBox.getChildren().add(ipBox);
 
         HBox portBox = new HBox(3);
+        portBox.alignmentProperty().set(Pos.CENTER);
+
         Label port = new Label("Enter Port");
         portInput = new TextField();
         portBox.getChildren().addAll(port, portInput);
@@ -255,12 +278,15 @@ public class GUI extends Application {
         loginBorderPane.setLeft(inputStore);
         loginBox.getChildren().add(loginBorderPane);
         avatarGroup = new Group();
-        Image avatarImg = loadImage(AVATAR_ONE_IMAGE);
+        Image avatarImg = Images.AVATAR_IMAGES[avatarIndex];
         ImageView avatarImage = new ImageView(avatarImg);
+        avatarImage.setFitHeight(80);
+        avatarImage.setFitWidth(80);
         avatarGroup.getChildren().add(avatarImage);
+        avatarGroup.setOnMousePressed(mouseEvent);
         loginBorderPane.setRight(avatarGroup);
-        // TODO: need to add some from of action listener here to change images
         FlowPane buttons = new FlowPane();
+        buttons.alignmentProperty().set(Pos.CENTER);
         buttons.setHgap(10);
         login = new Button("Login");
         login.setOnAction(actionEvent);
@@ -268,7 +294,7 @@ public class GUI extends Application {
         quitLogin.setOnAction(actionEvent);
         buttons.getChildren().addAll(login, quitLogin);
         loginBox.getChildren().add(buttons);
-        Scene slashScene = new Scene(loginBox, WIDTH_VALUE / 2, HEIGHT_VALUE / 2);
+        Scene slashScene = new Scene(loginBox, 350, 160);
         window.setScene(slashScene);
     }
 
@@ -276,7 +302,7 @@ public class GUI extends Application {
         VBox waitingRoomBox = new VBox(5);
         Label waitingMsg = new Label();
         waitingMsg.setText(
-                "Welome Players! This is the Waiting, You are seeing this room as this game reqires min of 2 players to play. Game Will Start as soon as there are 2 players or more players");
+                "Welome Players! When Your Ready To Start Click Ready. When The Minimum Number Of Player Have Connect The Game Will Start");
         waitingMsg.setWrapText(true);
         waitingRoomBox.getChildren().add(waitingMsg);
         playersWaiting = new FlowPane();
@@ -288,9 +314,10 @@ public class GUI extends Application {
         readyGame.setOnAction(actionEvent);
         quitWaitingRoom = new Button("Leave Game");
         quitWaitingRoom.setOnAction(actionEvent);
+        buttons.setAlignment(Pos.CENTER);
         buttons.getChildren().addAll(readyGame, quitWaitingRoom);
         waitingRoomBox.getChildren().add(buttons);
-        Scene slashScene = new Scene(waitingRoomBox, WIDTH_VALUE, HEIGHT_VALUE);
+        Scene slashScene = new Scene(waitingRoomBox, 400, 170);
         window.setScene(slashScene);
     }
 
@@ -299,32 +326,35 @@ public class GUI extends Application {
         rightPanel = new VBox(10);
         rightPanel.setPrefSize(RIGHTPANE_WIDTH_VALUE, HEIGHT_VALUE);
         rightPanel.getStyleClass().add("cotrolvbox");
-        borderPane = new BorderPane();
-        borderPane.setRight(rightPanel);
 
-        // creates a scene
+        borderPane = new BorderPane();
+
         setMenuBar();
         setWorldTime();
         setminiMap();
         setchat();
         setItems();
-
         group.prefWidth(GAMEPANE_WIDTH_VALUE);
         group.prefHeight(HEIGHT_VALUE);
-
         // Calls the rendering
-        render.render(group);
+        render.setGroup(group);
+        // render.renderNorth();
         group.setLayoutX(3);
         group.setLayoutY(35);
-        // only anchor sort of works
-        // AnchorPane temp = new AnchorPane();
-        borderPane.getChildren().add(group);
+        HBox hbox = new HBox(5);
+        hbox.getChildren().addAll(group, rightPanel);
 
+        borderPane.setCenter(hbox);
         Scene scene = new Scene(borderPane, WIDTH_VALUE, HEIGHT_VALUE);
         scene.getStylesheets()
                 .add(this.getClass().getResource(STYLE_CSS).toExternalForm());
         scene.setOnKeyPressed(keyEvent);
         window.setScene(scene);
+    }
+
+    private void setHealthBar() {
+        // TODO: creat the health bar with the avatar next to the alsoo add
+        // north, south, east and west
     }
 
     /**
@@ -426,14 +456,16 @@ public class GUI extends Application {
         titlePane.setText("Item Inventory");
         HBox hbox = new HBox(5);
         itemGrid = new GridPane();
-        hbox.setOnMousePressed(mouseEvent);
+        itemGrid.setOnMouseMoved(mouseEvent);
+        // hbox.setOnMousePressed(mouseEvent);
+        itemGrid.setOnMousePressed(mouseEvent);
         hbox.getStyleClass().add("itempane-background");
         itemGrid.setGridLinesVisible(true);
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 4; j++) {
                 Label item = new Label();
                 item.getStyleClass().add("item-grid");
-                Image img = loadImage(INVENTORY_IMAGE);
+                Image img = Images.INVENTORY_IMAGE;
                 ImageView image = new ImageView();
                 image.setFitWidth(60);
                 image.setFitHeight(60);
@@ -449,8 +481,8 @@ public class GUI extends Application {
         hbox.getChildren().add(itemGrid);
         iteminfo = new GridPane();
         iteminfo.setGridLinesVisible(true);
-        Label zoomedItem = new Label();
-        Image img = loadImage(INVENTORY_IMAGE);
+        zoomedItem = new Label();
+        Image img = Images.INVENTORY_IMAGE;
         ImageView image = new ImageView();
         image.setFitWidth(100);
         image.setFitHeight(100);
@@ -460,7 +492,7 @@ public class GUI extends Application {
         GridPane.setColumnIndex(zoomedItem, 0);
         iteminfo.getChildren().add(zoomedItem);
         // makes the extra box for the info of the item
-        Label itemDetail = new Label("No Item Currently Selected");
+        itemDetail = new Label("No Item Currently Selected");
         itemDetail.getStyleClass().add("item-lable");
         GridPane.setRowIndex(itemDetail, 1);
         GridPane.setColumnIndex(itemDetail, 0);
@@ -534,8 +566,7 @@ public class GUI extends Application {
      * @return
      */
     public int getAvatarIndex() {
-        // FIXME to be implemented. Note that it's 0-indexed.
-        return 0;
+        return avatarIndex;
     }
 
     /**
@@ -544,6 +575,7 @@ public class GUI extends Application {
      * @param worldTime
      */
     public void setTime(String time) {
+
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
@@ -552,72 +584,35 @@ public class GUI extends Application {
         });
     }
 
-    /**
-     * Update the inventory panel.
-     * 
-     * @param inventory
-     */
-    public void setInventory(List<String> inventory) {
-
-        /*
-         * all items are recorded as string, Say an item (type A, description B), its
-         * string representation will be "A|B", where A is a single character, B is the
-         * description.
-         * 
-         * For example, this player has an Antidote (description: foofoo), a Key
-         * (description: barbar), and a torch (description: magictorch).
-         * 
-         * The List<String> passed in will have 3 Strings: "A|foofoo", "K|barbar", and
-         * "T|magictorch"
-         * 
-         * You can refer to the constant map, ITEM_TABLE, in client.view.ClientUI class.
-         */
-
-        int index = 0;
-
-        for (String s : inventory) {
-
-            if (s.startsWith("A")) {
-                // then it's an antidote
-                String description = s.substring(2, s.length());
-                String imagePath = ClientUI.ITEM_TABLE.get('A');
-                Image image = loadImage(imagePath);
-
-                // TODO FX stuff
-
-                // 1. create a new Label with this image.
-
-                // 2. set the Tooltip text of this Label to description.
-
-            } else if (s.startsWith("K")) {
-                // then it's a key
-                String description = s.substring(2, s.length());
-                String imagePath = ClientUI.ITEM_TABLE.get('K');
-                Image image = loadImage(imagePath);
-
-                // TODO FX stuff
-
-                // 1. create a new Label with this image.
-
-                // 2. set the Tooltip text of this Label to description.
-
-            } else if (s.startsWith("T")) {
-                // then it's a torch
-                String description = s.substring(2, s.length());
-                String imagePath = ClientUI.ITEM_TABLE.get('T');
-                Image image = loadImage(imagePath);
-
-                // TODO FX stuff
-
-                // 1. create a new Label with this image.
-
-                // 2. set the Tooltip text of this Label to description.
-
-            }
-
-            index++;
+    public void changeAvatar() {
+        if (avatarIndex == 4) {
+            avatarIndex = 0;
+        } else {
+            avatarIndex++;
         }
+        avatarGroup.getChildren().clear();
+        Image avatarImg = Images.AVATAR_IMAGES[avatarIndex];
+        ImageView avatarImage = new ImageView(avatarImg);
+        avatarImage.setFitHeight(80);
+        avatarImage.setFitWidth(80);
+        avatarGroup.getChildren().add(avatarImage);
+    }
 
+    public void setWaitingRoomAvatar() {
+        Image avatarImg = Images.AVATAR_IMAGES[avatarIndex];
+        ImageView avatarImage = new ImageView(avatarImg);
+        avatarImage.setFitHeight(80);
+        avatarImage.setFitWidth(80);
+        playersWaiting.getChildren().add(avatarImage);
+    }
+
+    /**
+     * this method will return the window
+     *
+     * @return
+     */
+    public Stage getWindow() {
+        return window;
     }
 
     /**
@@ -695,24 +690,77 @@ public class GUI extends Application {
 
     }
 
-    /**
-     * this method will return the window
-     *
-     * @return
-     */
-    public Stage getWindow() {
-        return window;
+    public void setInventory(List<String> inventory) {
+        itemsDescription = new HashMap<Point, String>();
+        int row = 0;
+        int col = 0;
+
+        for (String s : inventory) {
+            Image image = null;
+            if (s.startsWith("A")) {
+                image = Images.ITEM_IMAGES.get('A');
+            } else if (s.startsWith("K")) {
+                image = Images.ITEM_IMAGES.get('K');
+            } else if (s.startsWith("T")) {
+                image = Images.ITEM_IMAGES.get('T');
+            }
+
+            ImageView imageView = new ImageView(image);
+            Label item = new Label();
+            item.getStyleClass().add("item-grid");
+            imageView.setFitWidth(60);
+            imageView.setFitHeight(60);
+            imageView.setImage(image);
+            item.setGraphic(imageView);
+            GridPane.setRowIndex(item, row);
+            GridPane.setColumnIndex(item, col);
+            itemGrid.getChildren().add(item);
+            itemsDescription.put(new Point(col, row), s);
+            col++;
+
+            if (col == 4) {
+                col = 0;
+                row++;
+            }
+        }
     }
 
-    /**
-     * A helper method used to load images
-     *
-     * @param name
-     * @return
-     */
-    public static Image loadImage(String name) {
-        Image image = new Image(GUI.class.getResourceAsStream(name));
-        return image;
+    public void setItemDescription(int x, int y) {
+        String item = null;
+        for (Point p : itemsDescription.keySet()) {
+            if (p.x == x && p.y == y) {
+                item = itemsDescription.get(p);
+                break;
+            }
+        }
+
+        // no items yet
+        if (item == null) {
+            return;
+        }
+
+        String description = item.substring(2, item.length());
+        Image img = null;
+
+        if (item.startsWith("A")) {
+            img = Images.ITEM_IMAGES.get('A');
+            itemDetail.setText(description);
+        } else if (item.startsWith("K")) {
+            img = Images.ITEM_IMAGES.get('K');
+            itemDetail.setText(description);
+        } else if (item.startsWith("T")) {
+            img = Images.ITEM_IMAGES.get('T');
+            itemDetail.setText(description);
+        } else {
+            img = Images.INVENTORY_IMAGE;
+            itemDetail.setText("No Item Currently Selected");
+        }
+
+        ImageView image = new ImageView();
+        image.setFitWidth(100);
+        image.setFitHeight(100);
+        image.setImage(img);
+        zoomedItem.setGraphic(image);
     }
 
     /**
@@ -729,5 +777,4 @@ public class GUI extends Application {
         });
         System.err.println(msg);
     }
-
 }
