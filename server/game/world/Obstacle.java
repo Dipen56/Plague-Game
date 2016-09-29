@@ -65,4 +65,5 @@ public class Obstacle implements MapElement {
     public String toString() {
         return charRep;
     }
+    
 }

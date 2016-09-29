@@ -400,12 +400,18 @@ public class Area {
     public String toString() {
         StringBuilder sb = new StringBuilder();
 
+        // areaId, width, height
+        sb.append(areaId);
+        sb.append(",");
+        sb.append(width);
+        sb.append(",");
+        sb.append(height);
+        sb.append("\n");
+
+        // chars
         for (MapElement[] row : map) {
             for (MapElement col : row) {
-                if (col != null)
-                    sb.append(col.toString());
-                else
-                    sb.append(" ");
+                sb.append(col.toString());
             }
             sb.append("\n");
         }

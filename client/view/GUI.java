@@ -14,6 +14,7 @@ import javafx.scene.Group;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.layout.StackPane;
 import javafx.scene.image.ImageView;
 import javafx.geometry.Pos;
@@ -24,14 +25,14 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.WindowEvent;
 
-import java.awt.Point;
-import java.nio.file.attribute.PosixFilePermission;
+import server.game.player.Direction;
+import server.game.player.Position;
+
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 
-import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,15 +40,15 @@ import java.util.Map;
 import client.rendering.Rendering;
 
 /**
- * This class represents the main GUI class this class bring together all the
- * different components of the GUI.
+ * This class represents the main GUI class this class bring together all the different
+ * components of the GUI.
  *
  * @author Dipen
  *
  */
 public class GUI extends Application {
-
-	// GUI Style CSS
+    
+    // GUI Style CSS
 	private static final String STYLE_CSS = "/main.css";
 	// Constants Images
 	private static final String GAMEICON_IMAGE = "/game-icon.png";
@@ -63,8 +64,51 @@ public class GUI extends Application {
 	private static final int RIGHTPANE_WIDTH_VALUE = WIDTH_VALUE - 600;
 	public static final int GAMEPANE_WIDTH_VALUE = WIDTH_VALUE - 400;
 
+    private static final int MINIMAP_TILE_WIDTH = 10;
+
+    // mini map color table
+    private static final Map<Character, Color> MINIMAP_COLOR_TABLE;
+
+    static {
+        MINIMAP_COLOR_TABLE = new HashMap<>();
+
+        // ========== obstacles: Grey, Rock, Barrel, Table ===========
+
+        // Rock
+        MINIMAP_COLOR_TABLE.put('R', Color.rgb(83, 86, 102, 1.0));
+        // Barrel
+        MINIMAP_COLOR_TABLE.put('B', Color.rgb(83, 86, 102, 1.0));
+        // Table
+        MINIMAP_COLOR_TABLE.put('A', Color.rgb(83, 86, 102, 1.0));
+
+        // ===== Containers: golden, chest, cupboard, scrap pile =====
+
+        // Chest
+        MINIMAP_COLOR_TABLE.put('C', Color.rgb(255, 170, 37, 1.0));
+        // Cupboard
+        MINIMAP_COLOR_TABLE.put('U', Color.rgb(255, 170, 37, 1.0));
+        // Scrap pile
+        MINIMAP_COLOR_TABLE.put('T', Color.rgb(255, 170, 37, 1.0));
+
+        // ============== Tree or ground: green ======================
+
+        // Tree, dark grenn
+        MINIMAP_COLOR_TABLE.put('T', Color.rgb(68, 170, 58, 1.0));
+        // Ground, light green
+        MINIMAP_COLOR_TABLE.put('G', Color.rgb(200, 236, 204, 1.0));
+        // Door space, this is just ground
+        MINIMAP_COLOR_TABLE.put('D', Color.rgb(200, 236, 204, 1.0));
+
+        // =========== Room obstacles: blue ====================
+
+        // Room obstacles
+        MINIMAP_COLOR_TABLE.put('E', Color.rgb(19, 137, 245, 1.0));
+
+    }
+    
 	// main window
 	private static Stage window;
+    
 	// controls
 	private MenuBar menuBar;
 	private Label timeLable;
@@ -72,13 +116,16 @@ public class GUI extends Application {
 	private Label textAreaLable;
 	private TextField msg;
 	private Button send;
+    
 	// private Group group = new Group();
 	private Pane group = new Pane();
+    
 	// panes
 	// right pane with vertical alligment
 	private VBox rightPanel;
 	private GridPane itemGrid;
 	private GridPane iteminfo;
+    
 	// standard layout
 	private BorderPane borderPane;
 	private String chatText = "HARDD: Welcome Players";
@@ -93,6 +140,7 @@ public class GUI extends Application {
 	private Button play;
 	private Button quit;
 	private Button help;
+    
 	// Controls for the login Screen
 	private Label info;
 	private Button login;
@@ -104,10 +152,12 @@ public class GUI extends Application {
 	private String selectedAvatar;
 	private Label zoomedItem;
 	private Label itemDetail;
+    
 	// waiting room Controls
 	private FlowPane playersWaiting;
 	private Button readyGame;
 	private Button quitWaitingRoom;
+    
 	// this is for event
 	// for action events
 	private EventHandler<ActionEvent> actionEvent;
@@ -632,6 +682,81 @@ public class GUI extends Application {
 
 	}
 
+        /**
+     * This method draws a minimap on the minimap panel.
+     * 
+     * @param uId
+     * @param positions
+     * @param areaMap
+     * @param visibility
+     */
+    public void updateMinimap(int uId, Map<Integer, Position> positions, char[][] areaMap,
+            int visibility) {
+
+        // player's coordinate on board, and direction.
+        Position selfPosition = positions.get(uId);
+        int selfAreaId = selfPosition.areaId;
+        int selfX = selfPosition.x;
+        int selfY = selfPosition.y;
+        Direction selDir = selfPosition.getDirection();
+
+        // the width of height of current map
+        int width = areaMap[0].length;
+        int height = areaMap.length;
+
+        // the top and left of the minimap
+        // FIXME this should be changed to make the minimap in the center
+        int left = 0;
+        int top = 0;
+
+        // draw the minimap
+        Color color = null;
+        for (int row = 0; row < areaMap.length; row++) {
+            for (int col = 0; col < areaMap.length; col++) {
+
+                color = MINIMAP_COLOR_TABLE.get(areaMap[row][col]);
+
+                if (color == null) {
+                    // ERROR, this is an unknown character/MapElement
+                    continue;
+                }
+
+                // 1. set colour
+
+                // 2. drawRect(left + col * MINIMAP_TILE_WIDTH, top + row *
+                // MINIMAP_TILE_WIDTH, MINIMAP_TILE_WIDTH, MINIMAP_TILE_WIDTH);
+
+            }
+        }
+
+        // TODO use four images to represents four directions.
+
+        // draw player arrow on map
+        for (Position p : positions.values()) {
+            // if this player is not in the same map, skip.
+            if (p.areaId != selfAreaId) {
+                continue;
+            }
+
+            // this player's x, y, and direction
+            int x = p.x;
+            int y = p.y;
+            Direction dir = p.getDirection();
+
+            // if this player isn't within visible distance, skip
+            if (Math.abs(x - selfX) > visibility || Math.abs(y - selfY) > visibility) {
+                continue;
+            }
+
+            // 1. draw an arrow on the above mini map.
+
+            // 2. drawIamge(left + x * MINIMAP_TILE_WIDTH, top + y *
+            // MINIMAP_TILE_WIDTH, MINIMAP_TILE_WIDTH, MINIMAP_TILE_WIDTH);
+
+        }
+
+    }
+    
 	public void setItemDescription(int x, int y) {
 		String item = "N|null";
 		for (Point p : itemsDescription.keySet()) {
@@ -694,5 +819,4 @@ public class GUI extends Application {
 		});
 		System.err.println(msg);
 	}
-
 }

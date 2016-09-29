@@ -97,7 +97,7 @@ public class ScrapPile extends Obstacle implements Container {
 
     @Override
     public String toString() {
-        return "S";
+        return "P";
     }
 
 }
