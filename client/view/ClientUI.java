@@ -235,7 +235,7 @@ public class ClientUI {
         // TODO: need to uses the other constructor
         render = new Rendering();
         // TODO: get the actual player direction
-        render.setDirection("up");
+     //   render.setDirection("up");
         gui = new GUI(this, render);
 
         GUI.launch(GUI.class);
