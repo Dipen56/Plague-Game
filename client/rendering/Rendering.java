@@ -1,6 +1,8 @@
 package client.rendering;
+import static client.rendering.Images.loadImage;
+
+import java.awt.Panel;
 import java.awt.Point;
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.swing.text.AbstractDocument.LeafElement;
@@ -16,25 +18,6 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 
-import javafx.application.*;
-import javafx.stage.Stage;
-import javafx.scene.Group;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.FlowPane;
-import javafx.scene.control.*;
-import javafx.scene.layout.VBox;
-import javafx.scene.layout.StackPane;
-import javafx.scene.image.ImageView;
-import javafx.geometry.Pos;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.GridPane;
-import javafx.event.*;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.input.KeyCode;
-import javafx.stage.WindowEvent;
-import javafx.scene.layout.*;
-
 /**
  * This class represents the main rendering class, this class will control the
  * rendering of the game board, character, and objects.
@@ -43,12 +26,13 @@ import javafx.scene.layout.*;
  *
  */
 public class Rendering {
+	
 	private static final String PLAYER_IMAGE = "/standingstillrear.png";
 	private static final String BACKGROUND_IMAGE = "/night.jpg";
 	private static final String GRASS_IMAGE = "/grass.png";
 	private static final String TREE_IMAGE = "/tree.png";
 	private static final String CHEST_IMAGE = "/chest.png";
-	private Pane group;
+	private Group group;
 	public double scaleY = 0.85; // lower number less scaling
 	private int gamePaneHeight = GUI.HEIGHT_VALUE - 35; // 35 y alignment of
 														// group
@@ -637,8 +621,8 @@ public class Rendering {
 	 * 
 	 * @param renderGroup
 	 */
-	public void setGroup(Pane renderGroup) {
-		this.group = renderGroup;
+	public void setGroup(Panel renderGroup) {
+		//this.group = renderGroup;
 	}
 
 	/**
@@ -656,5 +640,6 @@ public class Rendering {
 	public String toString() {
 		return "renderclass";
 	}
+
 
 }

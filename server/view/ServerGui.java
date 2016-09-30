@@ -1,27 +1,15 @@
 package server.view;
 
 import javafx.scene.Scene;
-import javafx.scene.image.Image;
-
-import javafx.application.*;
+import javafx.scene.control.Label;
 import javafx.stage.Stage;
-
 import javafx.scene.layout.BorderPane;
-import javafx.scene.control.*;
 
-import javafx.scene.layout.*;
-import javafx.scene.shape.*;
-import javafx.scene.paint.Color;
-import javafx.scene.layout.StackPane;
-import javafx.scene.image.ImageView;
-import javafx.geometry.Insets;
+import static client.rendering.Images.loadImage;
 
-import java.util.concurrent.CountDownLatch;
-
-import client.view.AlertBox;
 import javafx.animation.FadeTransition;
+import javafx.application.Application;
 import javafx.util.Duration;
-import server.ServerMain;
 
 /**
  * this class represents the Server GUI which is just basically used to display
@@ -82,21 +70,9 @@ public class ServerGui extends Application {
     }
 
     /**
-     * this is a helper method used to load images
-     *
-     * @param name
-     * @return
-     */
-    private Image loadImage(String name) {
-        Image image = new Image(this.getClass().getResourceAsStream(name));
-        return image;
-    }
-
-    /**
      * This main method is only here for testing the server Gui
      */
     public static void main(String[] args) {
         launch(args);
-
     }
 }

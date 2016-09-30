@@ -207,7 +207,7 @@ public class Client extends Thread {
                     stringToGame(incoming);
 
                     // ======= [TESTING] ==========
-                    printTestString(incoming);
+                    // printTestString(incoming);
                 }
 
                 try {
