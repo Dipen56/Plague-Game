@@ -29,7 +29,7 @@ public class Player {
      * The max health (time left) of player. This number is set to 10 minutes. After 10
      * minutes, the player will die.
      */
-    private static final int MAX_HEALTH = 10 * 60;
+    public static final int MAX_HEALTH = 10 * 60;
 
     /**
      * User Id to identify this player.
@@ -72,6 +72,11 @@ public class Player {
     private boolean isHoldingTorch;
 
     /**
+     * The torch in hand
+     */
+    private Torch torchInHand;
+
+    /**
      * All player's items as a list
      */
     private List<Item> inventory;
@@ -105,6 +110,7 @@ public class Player {
         health = MAX_HEALTH;
         isAlive = true;
         isHoldingTorch = false;
+        torchInHand = null;
         inventory = new ArrayList<>();
         this.virus = Virus.randomVirus();
 
@@ -214,6 +220,7 @@ public class Player {
         }
 
         isHoldingTorch = true;
+        torchInHand = torch;
     }
 
     /**
@@ -238,6 +245,7 @@ public class Player {
         }
 
         isHoldingTorch = false;
+        torchInHand = null;
     }
 
     /**
@@ -247,6 +255,16 @@ public class Player {
      */
     public boolean isHoldingTorch() {
         return isHoldingTorch;
+    }
+
+    /**
+     * Get the torch in hand. If the player isn't holding a torch, null is returned.
+     * 
+     * @return --- the torch in hand. If the player isn't holding a torch, null is
+     *         returned.
+     */
+    public Torch getTorchInHand() {
+        return torchInHand;
     }
 
     /**
@@ -682,6 +700,7 @@ public class Player {
         result = prime * result + (loading ? 1231 : 1237);
         result = prime * result + ((name == null) ? 0 : name.hashCode());
         result = prime * result + ((position == null) ? 0 : position.hashCode());
+        result = prime * result + ((torchInHand == null) ? 0 : torchInHand.hashCode());
         result = prime * result + uID;
         result = prime * result + ((virus == null) ? 0 : virus.hashCode());
         return result;
@@ -722,6 +741,11 @@ public class Player {
             if (other.position != null)
                 return false;
         } else if (!position.equals(other.position))
+            return false;
+        if (torchInHand == null) {
+            if (other.torchInHand != null)
+                return false;
+        } else if (!torchInHand.equals(other.torchInHand))
             return false;
         if (uID != other.uID)
             return false;

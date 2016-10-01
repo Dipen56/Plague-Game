@@ -446,6 +446,7 @@ public class ClientUI {
             @Override
             public void run() {
                 gui.startGame();
+
                 render.updatePlayer("5,5,0");
 
                 clockThread = new ClockThread(DEFAULT_CLK_PERIOD, ClientUI.this);
@@ -587,6 +588,7 @@ public class ClientUI {
                 // TODO: some how make it work with items
                 System.out.println("here");
                 if (event.toString().contains("Group")) {
+
                     gui.changeAvatar();
                 } else if (event.toString().contains("Grid")) {
                     // System.out.println(event.getX());
@@ -596,6 +598,7 @@ public class ClientUI {
                     // System.out.println(itemX + " " + itemY);
 
                 }
+
             }
         };
     }

@@ -24,7 +24,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.WindowEvent;
-
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -49,7 +48,7 @@ import client.rendering.Rendering;
  *
  */
 public class GUI extends Application {
-
+    
     // GUI Style CSS
     private static final String STYLE_CSS = "/main.css";
 
@@ -58,6 +57,7 @@ public class GUI extends Application {
     public static final int HEIGHT_VALUE = 700;
     private static final int RIGHTPANE_WIDTH_VALUE = WIDTH_VALUE - 600;
     public static final int GAMEPANE_WIDTH_VALUE = WIDTH_VALUE - 400;
+
 
     /**
      * Minimap tile width
@@ -777,4 +777,5 @@ public class GUI extends Application {
         });
         System.err.println(msg);
     }
+
 }
