@@ -2,6 +2,7 @@ package server.game;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -90,14 +91,14 @@ public class Game {
     private Map<Integer, Player> players;
 
     /**
-     * FIXME For testing. Will be removed.
+     * For testing. Will be removed.
      */
     private Player player;
 
     /**
-     * All torches in this world. It is used to track torch burning status in timer.
+     * All containers in the world. This is used for key re-distribution.
      */
-    private List<Torch> torches;
+    private List<Container> containers;
 
     /**
      * A timer for world clock. It starts when the Game object is constructed.
@@ -120,28 +121,36 @@ public class Game {
      *            --- A map from areaID's to areas.
      */
     public Game(Area world, Map<Integer, Area> areas) {
-
         players = new HashMap<>();
-        torches = new ArrayList<>();
+        containers = new ArrayList<>();
 
         this.world = world;
         this.areas = areas;
-        this.gameID = new Random().nextInt((5000 - 0) + 1);
+
+        // a temporary random generator
+        Random ran = new Random();
+
+        this.gameID = ran.nextInt((5000 - 0) + 1);
 
         // the world clock starts from a random time from 00:00:00 to 23:59:59
-        Random ran = new Random();
         int hour = ran.nextInt(24);
         int minute = ran.nextInt(60);
         int second = ran.nextInt(60);
         clock = LocalTime.of(hour, minute, second);
 
-        // TODO scan the world, so some initialisation job:
-        // 1. remember all containers (for key re-distribution, and for open/close status
-        // update for rendering)
-        // 2. remember all torches and put them into torches list (for torch track)
-
-        // these could be integrated into one method initialise();
-
+        // scan the world map by map, remember all containers and torches.
+        for (Area area : areas.values()) {
+            MapElement[][] map = area.getMap();
+            for (MapElement[] row : map) {
+                for (MapElement col : row) {
+                    // remember containers
+                    if (col instanceof Container) {
+                        Container container = (Container) col;
+                        containers.add(container);
+                    }
+                }
+            }
+        }
     }
 
     /**
@@ -165,11 +174,7 @@ public class Game {
         this.areas = areas;
         this.players = players;
         this.players = new HashMap<>();
-        if (torches == null) {
-            this.torches = new ArrayList<>();
-        } else {
-            this.torches = torches;
-        }
+
         for (Player p : players.values()) {
             joinPlayer(p);
         }
@@ -190,6 +195,13 @@ public class Game {
      *            --- the player to be joined in
      */
     public void joinPlayer(Player player) {
+
+        for (Player p : players.values()) {
+            if (p.getId() == player.getId()) {
+                // we cannot let another player joining in from same port
+                return;
+            }
+        }
 
         players.put(player.getId(), player);
 
@@ -228,12 +240,13 @@ public class Game {
                 // decrease every player's life
                 for (Player p : players.values()) {
                     p.increaseHealth(-1);
-                }
 
-                // decrease every torch's time left
-                for (Torch t : torches) {
-                    if (t.isFlaming()) {
-                        t.Burn();
+                    // if the player is holding a torch, decrease torch's life
+                    if (p.isHoldingTorch()) {
+                        Torch t = p.getTorchInHand();
+                        if (t != null && t.isFlaming()) {
+                            t.Burn();
+                        }
                     }
                 }
 
@@ -253,12 +266,14 @@ public class Game {
         // delete player from player list.
         Player player = players.remove(playerId);
 
-        // delete his torch from torch list.
-        List<Torch> hisTorches = player.getAllTorches();
-        torches.removeAll(hisTorches);
-
-        // TODO need to deal with keys in his inventory. Probably re-distribute them
+        // randomly re-distribute all keys in his inventory
         List<Key> hisKeys = player.getAllKeys();
+        if (!hisKeys.isEmpty()) {
+            for (Key k : hisKeys) {
+                Collections.shuffle(containers);
+                containers.get(0).getLoot().add(k);
+            }
+        }
 
     }
 
@@ -480,50 +495,6 @@ public class Game {
     }
 
     /**
-     * This method let the given player try to unlock a chest, room, or other lockable
-     * object in front.
-     *
-     * @param uid
-     *            --- the id number of the player
-     * @return --- true if the loackable is unlocked, or false if this action failed.
-     *         Failure can be caused by many reasons, for example it's not a lockable in
-     *         front, or the player doesn't have a right key to open it.
-     */
-    public boolean playerUnlockLockable(int uid) {
-        Player player = players.get(uid);
-        Position currentPosition = player.getPosition();
-        Area currentArea = areas.get(currentPosition.areaId);
-        MapElement currentMapElement = currentArea.getMapElementAt(currentPosition.x,
-                currentPosition.y);
-        MapElement frontMapElement = currentArea.getFrontMapElement(player);
-        Lockable lockable = null;
-
-        if (currentMapElement instanceof TransitionSpace) {
-            // is the player standing on a TransitionSpace?
-            TransitionSpace currentTransition = (TransitionSpace) currentMapElement;
-            Area destArea = areas.get(currentTransition.getDestination().areaId);
-
-            // is the player facing the room?
-            if (player.getDirection() == currentTransition.getFacingDirection()
-                    && destArea instanceof Room) {
-                lockable = (Room) destArea;
-            }
-        }
-
-        if (frontMapElement != null && frontMapElement instanceof Lockable) {
-            // is the player facing a lockable container?
-            lockable = (Lockable) frontMapElement;
-        }
-
-        // ok let's try to unlock it.
-        if (lockable != null) {
-            return player.tryUnlock(lockable);
-        } else {
-            return false;
-        }
-    }
-
-    /**
      * This method let the given player try to transit between areas (enter or exit a
      * room).
      *
@@ -566,6 +537,50 @@ public class Game {
         // OK, time for space travel
         player.setPosition(destPos);
         return true;
+    }
+
+    /**
+     * This method let the given player try to unlock a chest, room, or other lockable
+     * object in front.
+     *
+     * @param uid
+     *            --- the id number of the player
+     * @return --- true if the loackable is unlocked, or false if this action failed.
+     *         Failure can be caused by many reasons, for example it's not a lockable in
+     *         front, or the player doesn't have a right key to open it.
+     */
+    public boolean playerUnlockLockable(int uid) {
+        Player player = players.get(uid);
+        Position currentPosition = player.getPosition();
+        Area currentArea = areas.get(currentPosition.areaId);
+        MapElement currentMapElement = currentArea.getMapElementAt(currentPosition.x,
+                currentPosition.y);
+        MapElement frontMapElement = currentArea.getFrontMapElement(player);
+        Lockable lockable = null;
+
+        if (currentMapElement instanceof TransitionSpace) {
+            // is the player standing on a TransitionSpace?
+            TransitionSpace currentTransition = (TransitionSpace) currentMapElement;
+            Area destArea = areas.get(currentTransition.getDestination().areaId);
+
+            // is the player facing the room?
+            if (player.getDirection() == currentTransition.getFacingDirection()
+                    && destArea instanceof Room) {
+                lockable = (Room) destArea;
+            }
+        }
+
+        if (frontMapElement != null && frontMapElement instanceof Lockable) {
+            // is the player facing a lockable container?
+            lockable = (Lockable) frontMapElement;
+        }
+
+        // ok let's try to unlock it.
+        if (lockable != null) {
+            return player.tryUnlock(lockable);
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -644,7 +659,12 @@ public class Game {
             return true;
         } else if (item instanceof Torch) {
             // Torch
-            player.lightUpTorch((Torch) item);
+            Torch torch = (Torch) item;
+            if (torch.isFlaming()) {
+                player.extinguishTorch(torch);
+            } else {
+                player.lightUpTorch(torch);
+            }
             return true;
         } else if (item instanceof Key) {
             // Key is not to be used manually
@@ -736,15 +756,6 @@ public class Game {
      */
     public LocalTime getClock() {
         return clock;
-    }
-
-    /**
-     * Get all torches in this world.
-     * 
-     * @return --- all torches in this world as a list.
-     */
-    public List<Torch> getTorches() {
-        return this.torches;
     }
 
     /**
@@ -944,9 +955,10 @@ public class Game {
         int result = 1;
         result = prime * result + ((areas == null) ? 0 : areas.hashCode());
         result = prime * result + ((clock == null) ? 0 : clock.hashCode());
+        result = prime * result + ((containers == null) ? 0 : containers.hashCode());
+        result = prime * result + gameID;
         result = prime * result + ((player == null) ? 0 : player.hashCode());
         result = prime * result + ((players == null) ? 0 : players.hashCode());
-        result = prime * result + ((torches == null) ? 0 : torches.hashCode());
         result = prime * result + ((world == null) ? 0 : world.hashCode());
         return result;
     }
@@ -960,9 +972,7 @@ public class Game {
         if (getClass() != obj.getClass())
             return false;
         Game other = (Game) obj;
-
         if (areas == null) {
-
             if (other.areas != null)
                 return false;
         } else if (!areas.equals(other.areas))
@@ -971,6 +981,13 @@ public class Game {
             if (other.clock != null)
                 return false;
         } else if (!clock.equals(other.clock))
+            return false;
+        if (containers == null) {
+            if (other.containers != null)
+                return false;
+        } else if (!containers.equals(other.containers))
+            return false;
+        if (gameID != other.gameID)
             return false;
         if (player == null) {
             if (other.player != null)
@@ -981,11 +998,6 @@ public class Game {
             if (other.players != null)
                 return false;
         } else if (!players.equals(other.players))
-            return false;
-        if (torches == null) {
-            if (other.torches != null)
-                return false;
-        } else if (!torches.equals(other.torches))
             return false;
         if (world == null) {
             if (other.world != null)
