@@ -38,7 +38,7 @@ public class Rendering {
 	public double scaleY = 1.2; // lower number less scaling
 	public double scaleX = 1.2; // lower number less scaling
 	// 35 y alignment of group
-	private int gamePaneHeight = GUI.HEIGHT_VALUE - 200;
+	private int gamePaneHeight = GUI.HEIGHT_VALUE - 130;
 	// 3 x alignment of group
 	private int gamePanelWidth = GUI.GAMEPANE_WIDTH_VALUE - 3;
 	private int tileWidth = 45;
@@ -46,7 +46,6 @@ public class Rendering {
 	public double centerWidth = gamePanelWidth / 2;
 	public double centerHeight = gamePaneHeight;
 	private MapParser mapParser;
-	private Point playerLoc = new Point(4, 0);
 	private int squaresInFront = 0;
 	private int squaresToLeft = 0;
 	private int squaresToRight = 0;
@@ -94,18 +93,18 @@ public class Rendering {
 	 */
 	// public void render(Pane renderGroup, Map<Integer, Position> positions,
 	// char[][] worldMap, int visibility, int uid) {
-	public void render(Pane renderGroup, Position pos, char[][] worldMap, int visibility, int uid) {
+	public void render(Pane renderGroup, Position playerLoc, char[][] worldMap, int visibility, int uid) {
 		// player's coordinate on board, and direction.
 		// need to get position from param (uid)
 		// Position selfPosition = positions.get(uid);
 		// Position selfPosition = new Position(5, 10, 1, Direction.North);
-		int x = pos.x;
-		int y = pos.y;
-		Direction direction = pos.getDirection();
+		int x = playerLoc.x;
+		int y = playerLoc.y;
+		Direction direction = playerLoc.getDirection();
 		Image background = loadImage(BACKGROUND_IMAGE);
 		Image grass = loadImage(GRASS_IMAGE);
 		addImage(renderGroup, background, gamePanelWidth + 3, gamePaneHeight, 0, 0);
-		setNumSquares(worldMap.length, worldMap[0].length, direction);
+		setNumSquares(worldMap.length, worldMap[0].length, direction, playerLoc);
 		double xRightTop = centerWidth + tileWidth / 2;
 		double yTop = getTopOffset();
 		double xLeftTop = centerWidth - tileWidth / 2;
@@ -124,9 +123,8 @@ public class Rendering {
 			double yBottom = yTop + currentTileHeight * scaleY;
 			addTile(squareFront, xLeftTop, xRightTop, xLeftBottom + currentTileWidth, xLeftBottom, yBottom, yTop,
 					renderGroup);
-			addObject(xLeftTop, yBottom, xRightTop, row, playerLoc.x, "middle", worldMap,
-					renderGroup);
-			for (int col = 0; col < squaresToLeft; col++) {
+			addObject(xLeftTop, yBottom, xRightTop, row, playerLoc.x, "middle", worldMap, renderGroup, direction);
+			for (int col = squaresToLeft - 1; col >= 0; col--) {
 				Polygon squareLeft = new Polygon();
 				squareLeft.setLayoutY(10);
 				squareLeft.setFill(new ImagePattern(grass));
@@ -136,9 +134,9 @@ public class Rendering {
 				double tileXLeftBottom = xLeftBottom - currentTileWidth - (col * currentTileWidth);
 				addTile(squareLeft, tileXLeftTop, tileXRightTop, tileXRightBottom, tileXLeftBottom, yBottom, yTop,
 						renderGroup);
-				addObject(tileXLeftBottom, yBottom, tileXRightTop, row, col, "left", worldMap, renderGroup);
+				addObject(tileXLeftBottom, yBottom, tileXRightTop, row, col, "left", worldMap, renderGroup, direction);
 			}
-			for (int col = 0; col < squaresToRight; col++) {
+			for (int col = squaresToRight - 1; col >= 0; col--) {
 				Polygon squareRight = new Polygon();
 				squareRight.setFill(new ImagePattern(grass));
 				squareRight.setLayoutY(10);
@@ -148,7 +146,7 @@ public class Rendering {
 				double tileXLeftBottom = xLeftBottom + currentTileWidth + (col * currentTileWidth);
 				addTile(squareRight, tileXLeftTop, tileXRightTop, tileXRightBottom, tileXLeftBottom, yBottom, yTop,
 						renderGroup);
-				addObject(tileXLeftTop, yBottom, tileXRightBottom, row, col, "right", worldMap, renderGroup);
+				addObject(tileXLeftTop, yBottom, tileXRightBottom, row, col, "right", worldMap, renderGroup, direction);
 			}
 			xLeftTop = xLeftBottom;
 			xRightTop = xLeftBottom + currentTileWidth;
@@ -182,12 +180,12 @@ public class Rendering {
 		renderGroup.getChildren().add(p);
 	}
 
-	private void setNumSquares(int height, int width, Direction direction) {
+	private void setNumSquares(int height, int width, Direction direction, Position playerLoc) {
 		switch (direction) {
 		// needs to be switched over to integers , 0 = north, 1 = east, 2 =
 		// south, 3 = west
 		case North:
-			squaresInFront = height - playerLoc.y;
+			squaresInFront = height - playerLoc.y - 1;
 			squaresToLeft = playerLoc.x;
 			squaresToRight = width - playerLoc.x - 1;
 			break;
@@ -214,30 +212,46 @@ public class Rendering {
 	}
 
 	private void addObject(double tileXLeftBottom, double yBottom, double tileXRightBottom, int row, int col,
-			String side, char[][] worldMap, Pane renderGroup) {
-		switch (side) {
-		case "left":
-			col = squaresToLeft - col - 1;
-			break;
-		case "right":
-			col = squaresToLeft + col + 1;
-			break;
-		}
-		char object = worldMap[row][col];
+			String side, char[][] worldMap, Pane renderGroup, Direction direction) {
+		Point imageCoordinate = getImagePoint(direction, row, col, side, worldMap.length, worldMap[0].length);
+		char object = worldMap[imageCoordinate.y][imageCoordinate.x];
 		Image image = getImageFromChar(object);
 		if (image != null) {
 			double height = image.getHeight() * Math.pow(0.8, squaresInFront - row - 1);
 			double width = image.getWidth() * Math.pow(0.8, squaresInFront - row - 1);
-			double xPoint = getImageX(width,tileXLeftBottom,tileXRightBottom);
-			switch (side){
-			case "left":
-				addImage(renderGroup, image, width, height, xPoint, yBottom - height);
-				break;
-			case "right":
-				addImage(renderGroup, image, width, height, xPoint, yBottom - height);				
-				break;
+			double xPoint = getImageX(width, tileXLeftBottom, tileXRightBottom);
+			addImage(renderGroup, image, width, height, xPoint, yBottom - height);
+		}
+	}
+
+	private Point getImagePoint(Direction direction, int row, int col, String side, int boardHeight, int boardWidth) {
+		switch (direction) {
+		case North:
+			if (side.equals("left")) {
+				return new Point(squaresToLeft - col - 1, row);
+			} else if (side.equals("right")) {
+				return new Point(squaresToLeft + col + 1, row);
+			} else {
+				return new Point(col, row);
+			}
+		case South:
+			if (side.equals("left")) {
+				return new Point(squaresToLeft + col + 2, boardHeight - row - 1);
+			} else if (side.equals("right")) {
+				return new Point(squaresToLeft - col, boardHeight - row - 1);
+			} else {
+				return new Point(col, boardHeight - row - 1);
+			}
+		case East:
+			if (side.equals("left")) {
+				return new Point(squaresToLeft - col - 1, row);
+			} else if (side.equals("right")) {
+				return new Point(squaresToLeft + col + 1, row);
+			} else {
+				return new Point(col, row);
 			}
 		}
+		return null;
 	}
 
 	private Image getImageFromChar(char input) {

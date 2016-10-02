@@ -524,7 +524,7 @@ public class ClientUI {
 			public void run() {
 
 				gui.startGame();
-				Position pos = new Position(5, 5, 1, Direction.North);
+				Position pos = new Position(4, 3, 1, Direction.South);
 				char[][] world = {
 						{ 'C', 'T','T', 'G', 'G', 'G', 'C', 'T' },
 						// 2
@@ -536,11 +536,11 @@ public class ClientUI {
 						// 5
 						{ 'G', 'G', 'G', 'G', 'G', 'G', 'C', 'G' },
 						// 6
-						{ 'G', 'G', 'G', 'G', 'G', 'G', 'C', 'G' },
+						{ 'G', 'G', 'G', 'G', 'C', 'G', 'C', 'G' },
 						// 7
-						{ 'G', 'G', 'G', 'G', 'G', 'G', 'C', 'G' },
+						{ 'G', 'G', 'C', 'G', 'T', 'G', 'C', 'G' },
 						// 8
-						{ 'C', 'G', 'G', 'G', 'G', 'T', 'C', 'T' } };
+						{ 'C', 'T', 'G', 'G', 'G', 'T', 'C', 'T' } };
 				render.render(gui.group, pos, world, 1, uid);
 				List<String> items = new ArrayList<String>();
 				String anti = "A|antedote";
