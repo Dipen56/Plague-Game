@@ -123,7 +123,11 @@ public class Rendering {
 			double yBottom = yTop + currentTileHeight * scaleY;
 			addTile(squareFront, xLeftTop, xRightTop, xLeftBottom + currentTileWidth, xLeftBottom, yBottom, yTop,
 					renderGroup);
-			addObject(xLeftTop, yBottom, xRightTop, row, playerLoc.x, "middle", worldMap, renderGroup, direction);
+			if (direction.equals(Direction.North) || direction.equals(Direction.South)) {
+				addObject(xLeftTop, yBottom, xRightTop, row, playerLoc.x, "middle", worldMap, renderGroup, direction);
+			} else {
+				addObject(xLeftTop, yBottom, xRightTop, row, playerLoc.y, "middle", worldMap, renderGroup, direction);
+			}
 			for (int col = squaresToLeft - 1; col >= 0; col--) {
 				Polygon squareLeft = new Polygon();
 				squareLeft.setLayoutY(10);
@@ -191,7 +195,7 @@ public class Rendering {
 			break;
 		case East:
 			squaresInFront = width - playerLoc.x;
-			squaresToLeft = height - playerLoc.y - 1;
+			squaresToLeft = playerLoc.y;
 			squaresToRight = height - playerLoc.y - 1;
 			break;
 		case South:
@@ -202,7 +206,7 @@ public class Rendering {
 		case West:
 			squaresInFront = playerLoc.x + 1;
 			squaresToLeft = height - playerLoc.y - 1;
-			squaresToRight = height - playerLoc.y - 1;
+			squaresToRight = height - playerLoc.y - 2;
 			break;
 		}
 	}
@@ -244,11 +248,19 @@ public class Rendering {
 			}
 		case East:
 			if (side.equals("left")) {
-				return new Point(squaresToLeft - col - 1, row);
+				return new Point(boardWidth - row - 1, squaresToLeft - col - 1);
 			} else if (side.equals("right")) {
-				return new Point(squaresToLeft + col + 1, row);
+				return new Point(boardWidth - row - 1, squaresToLeft + col + 1);
 			} else {
-				return new Point(col, row);
+				return new Point(boardWidth - row - 1, col);
+			}
+		case West:
+			if (side.equals("left")) {
+				return new Point(row, col + squaresToLeft);
+			} else if (side.equals("right")) {
+				return new Point(row, squaresToRight - col - 1);
+			} else {
+				return new Point(row, col);
 			}
 		}
 		return null;
