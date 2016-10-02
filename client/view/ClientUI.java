@@ -522,16 +522,30 @@ public class ClientUI {
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
-				
+
 				gui.startGame();
 				Position pos = new Position(5, 5, 1, Direction.North);
-            	char[][]world ={{'G','G','G','G','T','G','G','G','T'},
-            			{'G','G','G','G','T','G','G','G','T'},
-            			{'C','G','G','G','T','G','C','G','T'},
-            			{'G','C','G','G','T','G','G','C','T'}};
-            	render.render(gui.group, pos,world, 1, uid);
-				
-            	List<String> items = new ArrayList<String>();
+				char[][] world = {
+						// 1 Front of the Board i.e where the player is standing ....
+						{ 'C', 'G','G', 'G', 'G', 'G', 'C', 'T' },
+						// 2
+						{ 'G', 'G', 'G', 'G', 'G', 'G', 'C', 'G' },
+						// 3
+						{ 'G', 'G', 'G', 'G', 'G', 'G', 'C', 'G' },
+						// 4
+						{ 'G', 'G', 'G', 'G', 'G', 'G', 'C', 'G' },
+						// 5
+						{ 'G', 'G', 'G', 'G', 'G', 'G', 'C', 'G' },
+						// 6
+						{ 'G', 'G', 'G', 'G', 'G', 'G', 'C', 'G' },
+						// 7
+						{ 'G', 'G', 'G', 'G', 'G', 'G', 'C', 'G' },
+						// 8
+						{ 'C', 'G', 'G', 'G', 'G', 'T', 'C', 'T' } };
+						//Back of the board
+				// method call is for items above....
+				render.render(gui.group, pos, world, 1, uid);
+				List<String> items = new ArrayList<String>();
 				String anti = "A|antedote";
 				String key = "K|key";
 				String torch = "T|torch";
@@ -560,66 +574,65 @@ public class ClientUI {
 	}
 
 	/**
-     * This method is used to set action event handlers. The actions for certain button or
-     * FX component events are defined here.
-     */
-    private void setActionEventHandler() {
-        actionEvent = new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                if (event.toString().contains("Send")) {
-                    /*
-                     * TODO: connect up this with the client and server so that others can
-                     * recive the msg. to get the msg typed in the text filed use
-                     * gui.getChatMsg()
-                     */
-                    // System.out.println(gui.getChatMsg());
+	 * This method is used to set action event handlers. The actions for certain
+	 * button or FX component events are defined here.
+	 */
+	private void setActionEventHandler() {
+		actionEvent = new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				if (event.toString().contains("Send")) {
+					/*
+					 * TODO: connect up this with the client and server so that
+					 * others can recive the msg. to get the msg typed in the
+					 * text filed use gui.getChatMsg()
+					 */
+					// System.out.println(gui.getChatMsg());
 
-                } else if (event.toString().contains("Play")) {
-                    // this is used to simply change the scene
-                    gui.loginScreen();
-                } else if (event.toString().contains("Run Away")) {
-                    // this is for the main screen of the game
-                    gui.getWindow().close();
-                } else if (event.toString().contains("Help")) {
-                    // TODO: need to make a help thing which tells the user how
-                    // to play the game
-                } else if (event.toString().contains("Login")) {
-                    // parse the port number to int
-                    int port = -1;
-                   try {
-                        port = Integer.valueOf(gui.getPortString());
-                    } catch (NumberFormatException e) {
-                        GUI.showWarningPane("Port number should be an integer");
-                        return;
-                    }
+				} else if (event.toString().contains("Play")) {
+					// this is used to simply change the scene
+					gui.loginScreen();
+				} else if (event.toString().contains("Run Away")) {
+					// this is for the main screen of the game
+					gui.getWindow().close();
+				} else if (event.toString().contains("Help")) {
+					// TODO: need to make a help thing which tells the user how
+					// to play the game
+				} else if (event.toString().contains("Login")) {
+					// parse the port number to int
+					int port = -1;
+					try {
+						port = Integer.valueOf(gui.getPortString());
+					} catch (NumberFormatException e) {
+						GUI.showWarningPane("Port number should be an integer");
+						return;
+					}
 
-                    loginPlayer(gui.getIpAddress(), port, gui.getUserName(),
-                            gui.getAvatarIndex());
+					loginPlayer(gui.getIpAddress(), port, gui.getUserName(), gui.getAvatarIndex());
 
-                    // in the waiting room
-                    gui.waitingRoom();
+					// in the waiting room
+					gui.waitingRoom();
 
-                } else if (event.toString().contains("Leave")) {
-                    // this is for the login screen
-                    gui.getWindow().close();
-                } else if (event.toString().contains("Ready")) {
-                	//Temporary placement for testing rendering
-                	
-                    /*
-                     * TODO set the ready button unavailable. tell the player it's waiting
-                     * for others.
-                     */
+				} else if (event.toString().contains("Leave")) {
+					// this is for the login screen
+					gui.getWindow().close();
+				} else if (event.toString().contains("Ready")) {
+					// Temporary placement for testing rendering
 
-                    client.setUserReady(true);
-                } else if (event.toString().contains("Leave Game")) {
-                    // this is for leaving the waiting room
-                    gui.getWindow().close();
-                }
+					/*
+					 * TODO set the ready button unavailable. tell the player
+					 * it's waiting for others.
+					 */
 
-            }
-        };
-    }
+					client.setUserReady(true);
+				} else if (event.toString().contains("Leave Game")) {
+					// this is for leaving the waiting room
+					gui.getWindow().close();
+				}
+
+			}
+		};
+	}
 
 	/**
 	 * This method is used to set Key event handlers. The actions for Key events

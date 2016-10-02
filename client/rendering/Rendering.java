@@ -35,19 +35,18 @@ public class Rendering {
 	private static final String GRASS_IMAGE = "/grass.png";
 	private static final String TREE_IMAGE = "/tree.png";
 	private static final String CHEST_IMAGE = "/chest.png";
-
 	public double scaleY = 1.2; // lower number less scaling
 	public double scaleX = 1.2; // lower number less scaling
-	private int gamePaneHeight = GUI.HEIGHT_VALUE - 120; // 35 y alignment of
-															// group
-	private int gamePanelWidth = GUI.GAMEPANE_WIDTH_VALUE - 3; // 3 x alignment
-																// of group
-	private int tileWidth = 35;
-	private int tileHeight = 10;
+	// 35 y alignment of group
+	private int gamePaneHeight = GUI.HEIGHT_VALUE - 200;
+	// 3 x alignment of group
+	private int gamePanelWidth = GUI.GAMEPANE_WIDTH_VALUE - 3;
+	private int tileWidth = 45;
+	private int tileHeight = 15;
 	public double centerWidth = gamePanelWidth / 2;
 	public double centerHeight = gamePaneHeight;
 	private MapParser mapParser;
-	private Point playerLoc = new Point(5, 1);
+	private Point playerLoc = new Point(4, 1);
 	private int squaresInFront = 0;
 	private int squaresToLeft = 0;
 	private int squaresToRight = 0;
@@ -56,8 +55,7 @@ public class Rendering {
 	private Map<Integer, Area> map;
 	private int avatarID;
 	private String direction;
-
-	// int boardSize = 10;
+	// private int boardSize = 10;
 
 	public Rendering() {
 		// will need to get board size passed in
@@ -106,7 +104,7 @@ public class Rendering {
 		Direction direction = pos.getDirection();
 		Image background = loadImage(BACKGROUND_IMAGE);
 		Image grass = loadImage(GRASS_IMAGE);
-		addImage(renderGroup, background, gamePanelWidth + 3, gamePaneHeight + 35, 0, 0);
+		addImage(renderGroup, background, gamePanelWidth + 3, gamePaneHeight, 0, 0);
 		setNumSquares(worldMap.length, worldMap[0].length, direction);
 		double xRightTop = centerWidth + tileWidth / 2;
 		double yTop = getTopOffset();
@@ -118,7 +116,7 @@ public class Rendering {
 		// Below this is point is the code for all the rendering for first
 		// person
 		// ====================================================================================================
-		for (int row = squaresInFront; row >= 0; row--) {
+		for (int row = 0; row < squaresInFront; row++) {
 			Polygon squareFront = new Polygon();
 			squareFront.setFill(new ImagePattern(grass));
 			squareFront.setLayoutY(10);
@@ -159,8 +157,6 @@ public class Rendering {
 			currentTileWidth = currentTileWidth * scaleX;
 			currentTileHeight = currentTileHeight * scaleY;
 		}
-		// renderObjects(renderGroup, worldMap, direction, x, y);
-		// charRender();
 	}
 
 	private double getTopOffset() {
@@ -221,24 +217,18 @@ public class Rendering {
 			String side, char[][] worldMap, Pane renderGroup) {
 		switch (side) {
 		case "left":
-			col = squaresToLeft - col + 1;
+			col = squaresToLeft - col - 1;
 			break;
 		case "right":
-			col = squaresToRight + 1 + col;
+			col = squaresToLeft + col + 1;
 			break;
 		}
 		char object = worldMap[row][col];
 		Image image = getImageFromChar(object);
 		if (image != null) {
-			// addImage(renderGroup, image, image.getWidth() * Math.pow(scaleX,
-			// row),
-			// image.getHeight() * Math.pow(scaleY, row),
-			// getImageX(image.getWidth() * Math.pow(scaleX, row),
-			// tileXLeftBottom, tileXRightBottom),
-			// yBottom - image.getHeight() * Math.pow(scaleY, row));
-			addImage(renderGroup, image, image.getWidth(), image.getHeight(),
-					getImageX(image.getWidth() * Math.pow(scaleX, row), tileXLeftBottom, tileXRightBottom),
-					image.getHeight() * Math.pow(scaleY, row));
+			double height = image.getHeight() * Math.pow(0.8, squaresInFront - row - 1);
+			double width = image.getWidth() * Math.pow(0.8, squaresInFront - row - 1);
+			addImage(renderGroup, image, width, height, tileXLeftBottom, yBottom - height);
 		}
 	}
 
