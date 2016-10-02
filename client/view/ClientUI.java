@@ -524,7 +524,7 @@ public class ClientUI {
 			public void run() {
 
 				gui.startGame();
-				Position pos = new Position(4, 3, 1, Direction.West);
+				Position pos = new Position(4, 0, 1, Direction.North);
 				char[][] world = {
 						{ 'C', 'T','T', 'G', 'G', 'G', 'C', 'T' },
 						// 2

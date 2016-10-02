@@ -189,7 +189,7 @@ public class Rendering {
 		// needs to be switched over to integers , 0 = north, 1 = east, 2 =
 		// south, 3 = west
 		case North:
-			squaresInFront = height - playerLoc.y - 1;
+			squaresInFront = height - playerLoc.y;
 			squaresToLeft = playerLoc.x;
 			squaresToRight = width - playerLoc.x - 1;
 			break;
