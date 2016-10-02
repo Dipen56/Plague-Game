@@ -46,7 +46,7 @@ public class Rendering {
 	public double centerWidth = gamePanelWidth / 2;
 	public double centerHeight = gamePaneHeight;
 	private MapParser mapParser;
-	private Point playerLoc = new Point(4, 1);
+	private Point playerLoc = new Point(4, 0);
 	private int squaresInFront = 0;
 	private int squaresToLeft = 0;
 	private int squaresToRight = 0;
@@ -124,7 +124,7 @@ public class Rendering {
 			double yBottom = yTop + currentTileHeight * scaleY;
 			addTile(squareFront, xLeftTop, xRightTop, xLeftBottom + currentTileWidth, xLeftBottom, yBottom, yTop,
 					renderGroup);
-			addObject(xLeftBottom, yBottom, xLeftBottom + currentTileWidth, row, playerLoc.x, "middle", worldMap,
+			addObject(xLeftTop, yBottom, xRightTop, row, playerLoc.x, "middle", worldMap,
 					renderGroup);
 			for (int col = 0; col < squaresToLeft; col++) {
 				Polygon squareLeft = new Polygon();
@@ -136,7 +136,7 @@ public class Rendering {
 				double tileXLeftBottom = xLeftBottom - currentTileWidth - (col * currentTileWidth);
 				addTile(squareLeft, tileXLeftTop, tileXRightTop, tileXRightBottom, tileXLeftBottom, yBottom, yTop,
 						renderGroup);
-				addObject(tileXLeftBottom, yBottom, tileXRightBottom, row, col, "left", worldMap, renderGroup);
+				addObject(tileXLeftBottom, yBottom, tileXRightTop, row, col, "left", worldMap, renderGroup);
 			}
 			for (int col = 0; col < squaresToRight; col++) {
 				Polygon squareRight = new Polygon();
@@ -148,7 +148,7 @@ public class Rendering {
 				double tileXLeftBottom = xLeftBottom + currentTileWidth + (col * currentTileWidth);
 				addTile(squareRight, tileXLeftTop, tileXRightTop, tileXRightBottom, tileXLeftBottom, yBottom, yTop,
 						renderGroup);
-				addObject(tileXLeftBottom, yBottom, tileXRightBottom, row, col, "right", worldMap, renderGroup);
+				addObject(tileXLeftTop, yBottom, tileXRightBottom, row, col, "right", worldMap, renderGroup);
 			}
 			xLeftTop = xLeftBottom;
 			xRightTop = xLeftBottom + currentTileWidth;
@@ -228,7 +228,15 @@ public class Rendering {
 		if (image != null) {
 			double height = image.getHeight() * Math.pow(0.8, squaresInFront - row - 1);
 			double width = image.getWidth() * Math.pow(0.8, squaresInFront - row - 1);
-			addImage(renderGroup, image, width, height, tileXLeftBottom, yBottom - height);
+			double xPoint = getImageX(width,tileXLeftBottom,tileXRightBottom);
+			switch (side){
+			case "left":
+				addImage(renderGroup, image, width, height, xPoint, yBottom - height);
+				break;
+			case "right":
+				addImage(renderGroup, image, width, height, xPoint, yBottom - height);				
+				break;
+			}
 		}
 	}
 

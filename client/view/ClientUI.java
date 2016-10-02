@@ -526,8 +526,7 @@ public class ClientUI {
 				gui.startGame();
 				Position pos = new Position(5, 5, 1, Direction.North);
 				char[][] world = {
-						// 1 Front of the Board i.e where the player is standing ....
-						{ 'C', 'G','G', 'G', 'G', 'G', 'C', 'T' },
+						{ 'C', 'T','T', 'G', 'G', 'G', 'C', 'T' },
 						// 2
 						{ 'G', 'G', 'G', 'G', 'G', 'G', 'C', 'G' },
 						// 3
@@ -542,8 +541,6 @@ public class ClientUI {
 						{ 'G', 'G', 'G', 'G', 'G', 'G', 'C', 'G' },
 						// 8
 						{ 'C', 'G', 'G', 'G', 'G', 'T', 'C', 'T' } };
-						//Back of the board
-				// method call is for items above....
 				render.render(gui.group, pos, world, 1, uid);
 				List<String> items = new ArrayList<String>();
 				String anti = "A|antedote";
