@@ -522,11 +522,11 @@ public class ClientUI {
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
-
+				
+				//For testing purposes//////////////////////////////////////
 				gui.startGame();
 				Position pos = new Position(4, 0, 1, Direction.North);
-				char[][] world = {
-						{ 'C', 'T','T', 'G', 'G', 'G', 'C', 'T' },
+				char[][] world = { { 'C', 'T', 'T', 'G', 'G', 'G', 'C', 'T' },
 						// 2
 						{ 'G', 'G', 'G', 'G', 'G', 'G', 'C', 'G' },
 						// 3
@@ -542,6 +542,8 @@ public class ClientUI {
 						// 8
 						{ 'C', 'T', 'G', 'G', 'G', 'T', 'C', 'T' } };
 				render.render(gui.group, pos, world, 1, uid);
+				////////////////////////////////////////////////////////////
+				
 				List<String> items = new ArrayList<String>();
 				String anti = "A|antedote";
 				String key = "K|key";

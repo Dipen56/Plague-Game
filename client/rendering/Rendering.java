@@ -186,27 +186,25 @@ public class Rendering {
 
 	private void setNumSquares(int height, int width, Direction direction, Position playerLoc) {
 		switch (direction) {
-		// needs to be switched over to integers , 0 = north, 1 = east, 2 =
-		// south, 3 = west
 		case North:
 			squaresInFront = height - playerLoc.y;
 			squaresToLeft = playerLoc.x;
-			squaresToRight = width - playerLoc.x - 1;
+			squaresToRight = width - playerLoc.x;
 			break;
 		case East:
 			squaresInFront = width - playerLoc.x;
-			squaresToLeft = playerLoc.y;
-			squaresToRight = height - playerLoc.y - 1;
+			squaresToLeft = height - playerLoc.y;
+			squaresToRight = playerLoc.y;
 			break;
 		case South:
-			squaresInFront = height - playerLoc.y;
-			squaresToLeft = width - playerLoc.x - 1;
-			squaresToRight = playerLoc.x;
+			squaresInFront = playerLoc.y + 1;
+			squaresToLeft = width - playerLoc.x;
+			squaresToRight = playerLoc.x + 1;
 			break;
 		case West:
 			squaresInFront = playerLoc.x + 1;
-			squaresToLeft = height - playerLoc.y - 1;
-			squaresToRight = height - playerLoc.y - 2;
+			squaresToLeft = playerLoc.y + 1;
+			squaresToRight = height - playerLoc.y;
 			break;
 		}
 	}
@@ -218,6 +216,8 @@ public class Rendering {
 	private void addObject(double tileXLeftBottom, double yBottom, double tileXRightBottom, int row, int col,
 			String side, char[][] worldMap, Pane renderGroup, Direction direction) {
 		Point imageCoordinate = getImagePoint(direction, row, col, side, worldMap.length, worldMap[0].length);
+		int pointY = imageCoordinate.y;
+		int pointX = imageCoordinate.x;
 		char object = worldMap[imageCoordinate.y][imageCoordinate.x];
 		Image image = getImageFromChar(object);
 		if (image != null) {
@@ -234,7 +234,7 @@ public class Rendering {
 			if (side.equals("left")) {
 				return new Point(squaresToLeft - col - 1, row);
 			} else if (side.equals("right")) {
-				return new Point(squaresToLeft + col + 1, row);
+				return new Point(squaresToRight, row);
 			} else {
 				return new Point(col, row);
 			}
