@@ -22,14 +22,14 @@ public class ScrapPileAdapter extends ObstacleAdapter{
 	 */
 	@XmlElement
 	private ItemAdapter[] loot;
-	
+
 	/**
 	 * Describes this object in the game client.
 	 */
 	@XmlElement
 	private String description;
-	
-	
+
+
 	public ScrapPileAdapter(ScrapPile sp){
 		 List<Item> spLoot = sp.getLoot();
 		this.loot = new ItemAdapter[spLoot.size()];
@@ -43,23 +43,20 @@ public class ScrapPileAdapter extends ObstacleAdapter{
 			else if(item instanceof Key){
 				this.loot[i] = new KeyAdapter((Key)item);
 			}
-			else if(item instanceof Torch){
-				this.loot[i] = new TorchAdapter((Torch)item);
-			}
 			else{
 				throw new RuntimeException("Loot item is not a recognised item type.");
 			}
 		}
 		this.description = sp.getDescription();
 	}
-	
+
 	/**
 	 * This constructor is only to be called by an XML parser.
 	 */
 	ScrapPileAdapter(){
-		
+
 	}
-	
+
 	/**
 	 * Returns a copy of the original version of the object which this was a copy of.
 	 * @return A ScrapPile object.
@@ -69,14 +66,13 @@ public class ScrapPileAdapter extends ObstacleAdapter{
 		ItemAdapter item = null;
 		for(int i = 0; i < this.loot.length; i++){
 				item = loot[i];
+				if(item == null)
+					throw new RuntimeException("Item should never be null");
 				if(item instanceof AntidoteAdapter){
 					newLoot.add(((AntidoteAdapter)item).getOriginal());
 				}
 				else if(item instanceof KeyAdapter){
 					newLoot.add(((KeyAdapter)item).getOriginal());
-				}
-				else if(item instanceof TorchAdapter){
-					newLoot.add(((TorchAdapter)item).getOriginal());
 				}
 				else{
 					throw new RuntimeException("Item is not of a recognised type.");
@@ -84,11 +80,11 @@ public class ScrapPileAdapter extends ObstacleAdapter{
 		}
 		return new ScrapPile(this.description, newLoot);
 	}
-	
+
 	/**
 	 * Returns a string representation of this object's fields.
 	 */
 	public String toString(){
 		return "SCRAPPILE: "+this.description + " ";
-	} 
+	}
 }

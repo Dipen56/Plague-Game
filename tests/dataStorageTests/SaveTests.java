@@ -4,6 +4,7 @@ import org.junit.runners.MethodSorters;
 import org.junit.FixMethodOrder;
 import static org.junit.Assert.*;
 
+import dataStorage.InitialGameLoader;
 import dataStorage.XmlFunctions;
 import dataStorage.adapters.GameAdapter;
 import server.game.Game;
@@ -17,10 +18,7 @@ public class SaveTests {
 	private static GameAdapter altGame;
 
 	static{
-		for(Area a: TestConst.areas.values())
-			a.registerPortals();
-		gameA = new Game(TestConst.world, TestConst.areas);
-
+		gameA = InitialGameLoader.makeGame();
 		altGame = new GameAdapter(gameA);
 	}
 

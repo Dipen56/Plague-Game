@@ -128,7 +128,6 @@ public class TestConst {
         // chest in room
         List<Item> lootInRoom = new ArrayList<>();
         lootInRoom.add(new Antidote("A potion of antidote.", Virus.G_Virus));
-        lootInRoom.add(new Torch("A Torch."));
         roomBoard[0][2] = new Chest("chest in room", 123, false, lootInRoom);
 
         // transition space

@@ -9,7 +9,7 @@ import server.game.player.Player;
 
 /**
  * This class represents a pile of scrap. A pile of scrap can contain loot.
- * 
+ *
  * @author Hector (Fang Zhao 300364061)
  *
  */
@@ -22,7 +22,7 @@ public class ScrapPile extends Obstacle implements Container {
 
     /**
      * Constructor
-     * 
+     *
      * @param description
      *            --- description
      * @param loot
@@ -31,10 +31,11 @@ public class ScrapPile extends Obstacle implements Container {
     public ScrapPile(String description, List<Item> loot) {
         super(description);
 
+        /*
         if (loot.size() > Container.OTHER_SIZE) {
             throw new GameError(
                     "Chest can only contain " + Container.OTHER_SIZE + " items.");
-        }
+        }*/
 
         this.loot = loot;
     }
