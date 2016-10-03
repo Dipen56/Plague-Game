@@ -2,6 +2,7 @@ package tests.dataStorageTests;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
+import dataStorage.InitialGameLoader;
 import dataStorage.XmlFunctions;
 import dataStorage.adapters.GameAdapter;
 import server.game.Game;
@@ -31,7 +32,7 @@ public class LoadContentTests {
 	static{
 		for(Area a: TestConst.areas.values())
 			a.registerPortals();
-		gameA = new Game(TestConst.world, TestConst.areas);
+		gameA = InitialGameLoader.makeGame();
 		altGame = new GameAdapter(gameA);
 		XmlFunctions.saveFile(altGame,"");
 		gameB = altGame.getOriginal();
@@ -44,9 +45,10 @@ public class LoadContentTests {
 		Map<Integer, Player> playersA = gameA.getPlayers();
 		Map<Integer, Player> playersB = gameB.getPlayers();
 		//Player lists must be the same size, and each keyset must match.
-		if(playersB == null
+		if((playersA != null && playersB == null)
 				|| playersA.size() != playersB.size()
-				|| playersA.keySet().equals(playersB.keySet())){
+				|| (!playersA.isEmpty() && !playersB.isEmpty() && playersA.keySet().equals(playersB.keySet()))
+				){
 			fail();
 			return;
 		}
@@ -86,7 +88,6 @@ public class LoadContentTests {
 			}
 		}
 	}
-
 
 	@Test
 	public void test3(){

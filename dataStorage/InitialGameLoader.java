@@ -72,6 +72,7 @@ public class InitialGameLoader {
     private static List<List<Item>> chestLoot;
 
     /**
+
      * A list of loot lists for cupboards.
      */
     private static List<List<Item>> cupboardLoot;
@@ -214,8 +215,11 @@ public class InitialGameLoader {
 
         // Creates Chests and adds antidotes to them.
         for (int i = 0; i < NUMBER_OF_CHESTS; i++) {
+        	List<Item> loot = chestLoot.get(i);
+        	if(loot == null)
+        		loot = new ArrayList<>();	//Uses empty list for empty chest.
             ch[i] = new Chest("A chest. Probably contains loot.", keys.get(i).getKeyID(),
-                    true, chestLoot.get(i));
+                    true, loot);
             spawnAntidotes(ch[i].getLoot(), ANTIDOTE_CHEST_MULT);// Random chance of
                                                                  // adding antidotes to
                                                                  // Chest loot list
@@ -223,15 +227,20 @@ public class InitialGameLoader {
 
         // Creates Cupboard and adds antidotes to them.
         for (int i = 0; i < NUMBER_OF_CUPBOARDS; i++) {
+        	List<Item> loot = cupboardLoot.get(i);
+        	if(loot == null)
+        		loot = new ArrayList<>();	//Uses empty list for empty chest.
             cp[i] = new Cupboard("A cupboard. It might contain some medicine.",
-                    keys.get(NUMBER_OF_CHESTS + i).getKeyID(), false,
-                    cupboardLoot.get(i));
+                    keys.get(NUMBER_OF_CHESTS + i).getKeyID(), false, loot);
 
         }
 
         // Creates ScrapPiles
         for (int i = 0; i < NUMBER_OF_S_PILES; i++) {
-            s[i] = new ScrapPile("A pile of useless scrap. Or is it?", scrapLoot.get(i));
+        	List<Item> loot = scrapLoot.get(i);
+        	if(loot == null)
+        		loot = new ArrayList<>();	//Uses empty list for empty chest.
+            s[i] = new ScrapPile("A pile of useless scrap. Or is it?", loot);
         }
 
         // Adds Room keys to random container

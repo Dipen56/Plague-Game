@@ -32,6 +32,7 @@ public class ScrapPile extends Obstacle implements Container {
         super(description);
 
         /*
+         * Loot size restriction was a feature that was not completed.
         if (loot.size() > Container.OTHER_SIZE) {
             throw new GameError(
                     "Chest can only contain " + Container.OTHER_SIZE + " items.");

@@ -31,7 +31,7 @@ public class ScrapPileAdapter extends ObstacleAdapter{
 
 
 	public ScrapPileAdapter(ScrapPile sp){
-		 List<Item> spLoot = sp.getLoot();
+		List<Item> spLoot = sp.getLoot();
 		this.loot = new ItemAdapter[spLoot.size()];
 		Item item = null;
 		//Copies each item in the loot as an adapter version of the original.
@@ -64,7 +64,8 @@ public class ScrapPileAdapter extends ObstacleAdapter{
 	public ScrapPile getOriginal(){
 		List<Item> newLoot = new ArrayList<>();
 		ItemAdapter item = null;
-		for(int i = 0; i < this.loot.length; i++){
+		if(loot != null){
+			for(int i = 0; i < this.loot.length; i++){
 				item = loot[i];
 				if(item == null)
 					throw new RuntimeException("Item should never be null");
@@ -77,6 +78,7 @@ public class ScrapPileAdapter extends ObstacleAdapter{
 				else{
 					throw new RuntimeException("Item is not of a recognised type.");
 				}
+			}
 		}
 		return new ScrapPile(this.description, newLoot);
 	}

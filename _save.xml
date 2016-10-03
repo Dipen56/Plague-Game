@@ -143,8 +143,12 @@
             </item>
             <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="chestAdapter">
                 <description>A chest. Probably contains loot.</description>
-                <keyID>428</keyID>
+                <keyID>320</keyID>
                 <isLocked>true</isLocked>
+                <loot xsi:type="keyAdapter">
+                    <keyID>226</keyID>
+                    <description>A key with number 226</description>
+                </loot>
             </item>
             <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
                 <description>R</description>
@@ -196,7 +200,138 @@
             </item>
             <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="chestAdapter">
                 <description>A chest. Probably contains loot.</description>
-                <keyID>260</keyID>
+                <keyID>6</keyID>
+                <isLocked>true</isLocked>
+                <loot xsi:type="keyAdapter">
+                    <keyID>487</keyID>
+                    <description>A key with number 487</description>
+                </loot>
+                <loot xsi:type="keyAdapter">
+                    <keyID>312</keyID>
+                    <description>A key with number 312</description>
+                </loot>
+            </item>
+            <item/>
+            <item/>
+            <item/>
+            <item/>
+            <item/>
+            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                <description>T</description>
+            </item>
+            <item/>
+            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                <description>T</description>
+            </item>
+            <item/>
+            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                <description>R</description>
+            </item>
+            <item/>
+            <item/>
+            <item/>
+            <item/>
+            <item/>
+            <item/>
+            <item/>
+            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                <description>R</description>
+            </item>
+            <item/>
+            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="chestAdapter">
+                <description>A chest. Probably contains loot.</description>
+                <keyID>581</keyID>
+                <isLocked>true</isLocked>
+            </item>
+            <item/>
+            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                <description>T</description>
+            </item>
+        </board>
+        <board>
+            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="scrapPileAdapter">
+                <description>A pile of useless scrap. Or is it?</description>
+            </item>
+            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                <description>T</description>
+            </item>
+            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                <description>E</description>
+            </item>
+            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                <description>E</description>
+            </item>
+            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                <description>E</description>
+            </item>
+            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                <description>E</description>
+            </item>
+            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                <description>T</description>
+            </item>
+            <item/>
+            <item/>
+            <item/>
+            <item/>
+            <item/>
+            <item/>
+            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                <description>T</description>
+            </item>
+            <item/>
+            <item/>
+            <item/>
+            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                <description>R</description>
+            </item>
+            <item/>
+            <item/>
+            <item/>
+            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                <description>T</description>
+            </item>
+            <item/>
+            <item/>
+            <item/>
+            <item/>
+            <item/>
+            <item/>
+            <item/>
+            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                <description>T</description>
+            </item>
+        </board>
+        <board>
+            <item/>
+            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                <description>T</description>
+            </item>
+            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                <description>E</description>
+            </item>
+            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                <description>E</description>
+            </item>
+            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                <description>E</description>
+            </item>
+            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                <description>E</description>
+            </item>
+            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                <description>T</description>
+            </item>
+            <item/>
+            <item/>
+            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                <description>T</description>
+            </item>
+            <item/>
+            <item/>
+            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="chestAdapter">
+                <description>A chest. Probably contains loot.</description>
+                <keyID>226</keyID>
                 <isLocked>true</isLocked>
                 <loot xsi:type="antidoteAdapter">
                     <virus>T_Virus</virus>
@@ -207,143 +342,8 @@
                     <description>A temporary antidote to T_Veronica</description>
                 </loot>
                 <loot xsi:type="keyAdapter">
-                    <keyID>527</keyID>
-                    <description>A key with number 527</description>
-                </loot>
-            </item>
-            <item/>
-            <item/>
-            <item/>
-            <item/>
-            <item/>
-            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                <description>T</description>
-            </item>
-            <item/>
-            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                <description>T</description>
-            </item>
-            <item/>
-            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                <description>R</description>
-            </item>
-            <item/>
-            <item/>
-            <item/>
-            <item/>
-            <item/>
-            <item/>
-            <item/>
-            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                <description>R</description>
-            </item>
-            <item/>
-            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="chestAdapter">
-                <description>A chest. Probably contains loot.</description>
-                <keyID>506</keyID>
-                <isLocked>true</isLocked>
-            </item>
-            <item/>
-            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                <description>T</description>
-            </item>
-        </board>
-        <board>
-            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="scrapPileAdapter">
-                <loot xsi:type="keyAdapter">
-                    <keyID>903</keyID>
-                    <description>A key with number 903</description>
-                </loot>
-                <loot xsi:type="keyAdapter">
-                    <keyID>884</keyID>
-                    <description>A key with number 884</description>
-                </loot>
-                <description>A pile of useless scrap. Or is it?</description>
-            </item>
-            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                <description>T</description>
-            </item>
-            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                <description>E</description>
-            </item>
-            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                <description>E</description>
-            </item>
-            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                <description>E</description>
-            </item>
-            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                <description>E</description>
-            </item>
-            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                <description>T</description>
-            </item>
-            <item/>
-            <item/>
-            <item/>
-            <item/>
-            <item/>
-            <item/>
-            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                <description>T</description>
-            </item>
-            <item/>
-            <item/>
-            <item/>
-            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                <description>R</description>
-            </item>
-            <item/>
-            <item/>
-            <item/>
-            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                <description>T</description>
-            </item>
-            <item/>
-            <item/>
-            <item/>
-            <item/>
-            <item/>
-            <item/>
-            <item/>
-            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                <description>T</description>
-            </item>
-        </board>
-        <board>
-            <item/>
-            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                <description>T</description>
-            </item>
-            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                <description>E</description>
-            </item>
-            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                <description>E</description>
-            </item>
-            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                <description>E</description>
-            </item>
-            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                <description>E</description>
-            </item>
-            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                <description>T</description>
-            </item>
-            <item/>
-            <item/>
-            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                <description>T</description>
-            </item>
-            <item/>
-            <item/>
-            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="chestAdapter">
-                <description>A chest. Probably contains loot.</description>
-                <keyID>176</keyID>
-                <isLocked>true</isLocked>
-                <loot xsi:type="keyAdapter">
-                    <keyID>209</keyID>
-                    <description>A key with number 209</description>
+                    <keyID>595</keyID>
+                    <description>A key with number 595</description>
                 </loot>
             </item>
             <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
@@ -385,7 +385,7 @@
                 <destPos>
                     <x>0</x>
                     <y>5</y>
-                    <areaId>29</areaId>
+                    <areaId>18</areaId>
                     <direction>North</direction>
                 </destPos>
             </item>
@@ -410,10 +410,6 @@
             <item/>
             <item/>
             <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="scrapPileAdapter">
-                <loot xsi:type="keyAdapter">
-                    <keyID>941</keyID>
-                    <description>A key with number 941</description>
-                </loot>
                 <description>A pile of useless scrap. Or is it?</description>
             </item>
             <item/>
@@ -504,12 +500,8 @@
             <item/>
             <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="scrapPileAdapter">
                 <loot xsi:type="keyAdapter">
-                    <keyID>813</keyID>
-                    <description>A key with number 813</description>
-                </loot>
-                <loot xsi:type="keyAdapter">
-                    <keyID>780</keyID>
-                    <description>A key with number 780</description>
+                    <keyID>105</keyID>
+                    <description>A key with number 105</description>
                 </loot>
                 <description>A pile of useless scrap. Or is it?</description>
             </item>
@@ -583,14 +575,6 @@
                 <description>R</description>
             </item>
             <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="scrapPileAdapter">
-                <loot xsi:type="keyAdapter">
-                    <keyID>428</keyID>
-                    <description>A key with number 428</description>
-                </loot>
-                <loot xsi:type="keyAdapter">
-                    <keyID>91</keyID>
-                    <description>A key with number 91</description>
-                </loot>
                 <description>A pile of useless scrap. Or is it?</description>
             </item>
             <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
@@ -602,31 +586,19 @@
             <item/>
             <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="chestAdapter">
                 <description>A chest. Probably contains loot.</description>
-                <keyID>34</keyID>
+                <keyID>595</keyID>
                 <isLocked>true</isLocked>
-                <loot xsi:type="antidoteAdapter">
-                    <virus>T_Veronica</virus>
-                    <description>A temporary antidote to T_Veronica</description>
-                </loot>
             </item>
             <item/>
         </board>
         <board>
             <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="chestAdapter">
                 <description>A chest. Probably contains loot.</description>
-                <keyID>823</keyID>
+                <keyID>909</keyID>
                 <isLocked>true</isLocked>
                 <loot xsi:type="antidoteAdapter">
-                    <virus>T_Veronica</virus>
-                    <description>A temporary antidote to T_Veronica</description>
-                </loot>
-                <loot xsi:type="antidoteAdapter">
-                    <virus>T_Veronica</virus>
-                    <description>A temporary antidote to T_Veronica</description>
-                </loot>
-                <loot xsi:type="antidoteAdapter">
-                    <virus>T_Veronica</virus>
-                    <description>A temporary antidote to T_Veronica</description>
+                    <virus>G_Virus</virus>
+                    <description>A temporary antidote to G_Virus</description>
                 </loot>
             </item>
             <item/>
@@ -651,115 +623,119 @@
             </item>
             <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="chestAdapter">
                 <description>A chest. Probably contains loot.</description>
-                <keyID>903</keyID>
-                <isLocked>true</isLocked>
-            </item>
-            <item/>
-            <item/>
-            <item/>
-            <item/>
-            <item/>
-            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                <description>T</description>
-            </item>
-            <item/>
-            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                <description>R</description>
-            </item>
-            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                <description>R</description>
-            </item>
-            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                <description>R</description>
-            </item>
-            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                <description>T</description>
-            </item>
-            <item/>
-            <item/>
-            <item/>
-        </board>
-        <board>
-            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                <description>T</description>
-            </item>
-            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                <description>T</description>
-            </item>
-            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                <description>T</description>
-            </item>
-            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                <description>R</description>
-            </item>
-            <item/>
-            <item/>
-            <item/>
-            <item/>
-            <item/>
-            <item/>
-            <item/>
-            <item/>
-            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                <description>T</description>
-            </item>
-            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                <description>T</description>
-            </item>
-            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                <description>T</description>
-            </item>
-            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                <description>T</description>
-            </item>
-            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                <description>T</description>
-            </item>
-            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                <description>T</description>
-            </item>
-            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                <description>T</description>
-            </item>
-            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                <description>T</description>
-            </item>
-            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                <description>T</description>
-            </item>
-            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                <description>T</description>
-            </item>
-            <item/>
-            <item/>
-            <item/>
-            <item/>
-            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                <description>T</description>
-            </item>
-            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                <description>T</description>
-            </item>
-            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                <description>T</description>
-            </item>
-            <item/>
-        </board>
-        <board>
-            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                <description>T</description>
-            </item>
-            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="chestAdapter">
-                <description>A chest. Probably contains loot.</description>
-                <keyID>69</keyID>
+                <keyID>181</keyID>
                 <isLocked>true</isLocked>
                 <loot xsi:type="keyAdapter">
-                    <keyID>171</keyID>
-                    <description>A key with number 171</description>
+                    <keyID>977</keyID>
+                    <description>A key with number 977</description>
                 </loot>
                 <loot xsi:type="keyAdapter">
-                    <keyID>557</keyID>
-                    <description>A key with number 557</description>
+                    <keyID>825</keyID>
+                    <description>A key with number 825</description>
+                </loot>
+            </item>
+            <item/>
+            <item/>
+            <item/>
+            <item/>
+            <item/>
+            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                <description>T</description>
+            </item>
+            <item/>
+            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                <description>R</description>
+            </item>
+            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                <description>R</description>
+            </item>
+            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                <description>R</description>
+            </item>
+            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                <description>T</description>
+            </item>
+            <item/>
+            <item/>
+            <item/>
+        </board>
+        <board>
+            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                <description>T</description>
+            </item>
+            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                <description>T</description>
+            </item>
+            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                <description>T</description>
+            </item>
+            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                <description>R</description>
+            </item>
+            <item/>
+            <item/>
+            <item/>
+            <item/>
+            <item/>
+            <item/>
+            <item/>
+            <item/>
+            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                <description>T</description>
+            </item>
+            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                <description>T</description>
+            </item>
+            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                <description>T</description>
+            </item>
+            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                <description>T</description>
+            </item>
+            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                <description>T</description>
+            </item>
+            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                <description>T</description>
+            </item>
+            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                <description>T</description>
+            </item>
+            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                <description>T</description>
+            </item>
+            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                <description>T</description>
+            </item>
+            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                <description>T</description>
+            </item>
+            <item/>
+            <item/>
+            <item/>
+            <item/>
+            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                <description>T</description>
+            </item>
+            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                <description>T</description>
+            </item>
+            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                <description>T</description>
+            </item>
+            <item/>
+        </board>
+        <board>
+            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                <description>T</description>
+            </item>
+            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="chestAdapter">
+                <description>A chest. Probably contains loot.</description>
+                <keyID>824</keyID>
+                <isLocked>true</isLocked>
+                <loot xsi:type="keyAdapter">
+                    <keyID>838</keyID>
+                    <description>A key with number 838</description>
                 </loot>
             </item>
             <item/>
@@ -798,174 +774,182 @@
             <item/>
             <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="chestAdapter">
                 <description>A chest. Probably contains loot.</description>
-                <keyID>601</keyID>
+                <keyID>490</keyID>
                 <isLocked>true</isLocked>
-            </item>
-            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                <description>T</description>
-            </item>
-            <item/>
-            <item/>
-            <item/>
-            <item/>
-            <item/>
-            <item/>
-            <item/>
-            <item/>
-        </board>
-        <board>
-            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                <description>T</description>
-            </item>
-            <item/>
-            <item/>
-            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                <description>R</description>
-            </item>
-            <item/>
-            <item/>
-            <item/>
-            <item/>
-            <item/>
-            <item/>
-            <item/>
-            <item/>
-            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                <description>T</description>
-            </item>
-            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                <description>E</description>
-            </item>
-            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                <description>E</description>
-            </item>
-            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                <description>E</description>
-            </item>
-            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                <description>E</description>
-            </item>
-            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                <description>T</description>
-            </item>
-            <item/>
-            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                <description>R</description>
-            </item>
-            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                <description>R</description>
-            </item>
-            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                <description>T</description>
-            </item>
-            <item/>
-            <item/>
-            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                <description>T</description>
-            </item>
-            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                <description>T</description>
-            </item>
-            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                <description>T</description>
-            </item>
-            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                <description>T</description>
-            </item>
-            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                <description>T</description>
-            </item>
-            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                <description>T</description>
-            </item>
-        </board>
-        <board>
-            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                <description>T</description>
-            </item>
-            <item/>
-            <item/>
-            <item/>
-            <item/>
-            <item/>
-            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                <description>R</description>
-            </item>
-            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                <description>R</description>
-            </item>
-            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                <description>R</description>
-            </item>
-            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                <description>R</description>
-            </item>
-            <item/>
-            <item/>
-            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                <description>T</description>
-            </item>
-            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                <description>E</description>
-            </item>
-            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                <description>E</description>
-            </item>
-            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                <description>E</description>
-            </item>
-            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                <description>E</description>
-            </item>
-            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                <description>T</description>
-            </item>
-            <item/>
-            <item/>
-            <item/>
-            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                <description>T</description>
-            </item>
-            <item/>
-            <item/>
-            <item/>
-            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                <description>E</description>
-            </item>
-            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                <description>E</description>
-            </item>
-            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                <description>E</description>
-            </item>
-            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                <description>E</description>
-            </item>
-            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                <description>T</description>
-            </item>
-        </board>
-        <board>
-            <item/>
-            <item/>
-            <item/>
-            <item/>
-            <item/>
-            <item/>
-            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                <description>R</description>
-            </item>
-            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="chestAdapter">
-                <description>A chest. Probably contains loot.</description>
-                <keyID>691</keyID>
-                <isLocked>true</isLocked>
+                <loot xsi:type="antidoteAdapter">
+                    <virus>G_Virus</virus>
+                    <description>A temporary antidote to G_Virus</description>
+                </loot>
                 <loot xsi:type="antidoteAdapter">
                     <virus>T_Veronica</virus>
                     <description>A temporary antidote to T_Veronica</description>
                 </loot>
                 <loot xsi:type="keyAdapter">
-                    <keyID>308</keyID>
-                    <description>A key with number 308</description>
+                    <keyID>281</keyID>
+                    <description>A key with number 281</description>
+                </loot>
+            </item>
+            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                <description>T</description>
+            </item>
+            <item/>
+            <item/>
+            <item/>
+            <item/>
+            <item/>
+            <item/>
+            <item/>
+            <item/>
+        </board>
+        <board>
+            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                <description>T</description>
+            </item>
+            <item/>
+            <item/>
+            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                <description>R</description>
+            </item>
+            <item/>
+            <item/>
+            <item/>
+            <item/>
+            <item/>
+            <item/>
+            <item/>
+            <item/>
+            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                <description>T</description>
+            </item>
+            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                <description>E</description>
+            </item>
+            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                <description>E</description>
+            </item>
+            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                <description>E</description>
+            </item>
+            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                <description>E</description>
+            </item>
+            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                <description>T</description>
+            </item>
+            <item/>
+            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                <description>R</description>
+            </item>
+            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                <description>R</description>
+            </item>
+            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                <description>T</description>
+            </item>
+            <item/>
+            <item/>
+            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                <description>T</description>
+            </item>
+            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                <description>T</description>
+            </item>
+            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                <description>T</description>
+            </item>
+            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                <description>T</description>
+            </item>
+            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                <description>T</description>
+            </item>
+            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                <description>T</description>
+            </item>
+        </board>
+        <board>
+            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                <description>T</description>
+            </item>
+            <item/>
+            <item/>
+            <item/>
+            <item/>
+            <item/>
+            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                <description>R</description>
+            </item>
+            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                <description>R</description>
+            </item>
+            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                <description>R</description>
+            </item>
+            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                <description>R</description>
+            </item>
+            <item/>
+            <item/>
+            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                <description>T</description>
+            </item>
+            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                <description>E</description>
+            </item>
+            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                <description>E</description>
+            </item>
+            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                <description>E</description>
+            </item>
+            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                <description>E</description>
+            </item>
+            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                <description>T</description>
+            </item>
+            <item/>
+            <item/>
+            <item/>
+            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                <description>T</description>
+            </item>
+            <item/>
+            <item/>
+            <item/>
+            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                <description>E</description>
+            </item>
+            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                <description>E</description>
+            </item>
+            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                <description>E</description>
+            </item>
+            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                <description>E</description>
+            </item>
+            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                <description>T</description>
+            </item>
+        </board>
+        <board>
+            <item/>
+            <item/>
+            <item/>
+            <item/>
+            <item/>
+            <item/>
+            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                <description>R</description>
+            </item>
+            <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="chestAdapter">
+                <description>A chest. Probably contains loot.</description>
+                <keyID>487</keyID>
+                <isLocked>true</isLocked>
+                <loot xsi:type="antidoteAdapter">
+                    <virus>G_Virus</virus>
+                    <description>A temporary antidote to G_Virus</description>
                 </loot>
             </item>
             <item/>
@@ -1053,7 +1037,7 @@
                 <destPos>
                     <x>0</x>
                     <y>4</y>
-                    <areaId>10</areaId>
+                    <areaId>20</areaId>
                     <direction>North</direction>
                 </destPos>
             </item>
@@ -1088,6 +1072,14 @@
         </board>
         <board>
             <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="scrapPileAdapter">
+                <loot xsi:type="keyAdapter">
+                    <keyID>708</keyID>
+                    <description>A key with number 708</description>
+                </loot>
+                <loot xsi:type="keyAdapter">
+                    <keyID>490</keyID>
+                    <description>A key with number 490</description>
+                </loot>
                 <description>A pile of useless scrap. Or is it?</description>
             </item>
             <item/>
@@ -1127,7 +1119,7 @@
                 <destPos>
                     <x>0</x>
                     <y>4</y>
-                    <areaId>18</areaId>
+                    <areaId>11</areaId>
                     <direction>East</direction>
                 </destPos>
             </item>
@@ -1172,11 +1164,15 @@
             <item/>
             <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="chestAdapter">
                 <description>A chest. Probably contains loot.</description>
-                <keyID>167</keyID>
+                <keyID>395</keyID>
                 <isLocked>true</isLocked>
                 <loot xsi:type="keyAdapter">
-                    <keyID>20</keyID>
-                    <description>A key with number 20</description>
+                    <keyID>0</keyID>
+                    <description>A key with number 0</description>
+                </loot>
+                <loot xsi:type="keyAdapter">
+                    <keyID>517</keyID>
+                    <description>A key with number 517</description>
                 </loot>
             </item>
             <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
@@ -1239,12 +1235,12 @@
             </item>
             <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="scrapPileAdapter">
                 <loot xsi:type="keyAdapter">
-                    <keyID>101</keyID>
-                    <description>A key with number 101</description>
+                    <keyID>660</keyID>
+                    <description>A key with number 660</description>
                 </loot>
                 <loot xsi:type="keyAdapter">
-                    <keyID>667</keyID>
-                    <description>A key with number 667</description>
+                    <keyID>88</keyID>
+                    <description>A key with number 88</description>
                 </loot>
                 <description>A pile of useless scrap. Or is it?</description>
             </item>
@@ -1262,16 +1258,12 @@
             <item/>
             <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="scrapPileAdapter">
                 <loot xsi:type="keyAdapter">
-                    <keyID>506</keyID>
-                    <description>A key with number 506</description>
+                    <keyID>6</keyID>
+                    <description>A key with number 6</description>
                 </loot>
                 <loot xsi:type="keyAdapter">
-                    <keyID>176</keyID>
-                    <description>A key with number 176</description>
-                </loot>
-                <loot xsi:type="keyAdapter">
-                    <keyID>721</keyID>
-                    <description>A key with number 721</description>
+                    <keyID>152</keyID>
+                    <description>A key with number 152</description>
                 </loot>
                 <description>A pile of useless scrap. Or is it?</description>
             </item>
@@ -1297,16 +1289,8 @@
             <item/>
             <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="scrapPileAdapter">
                 <loot xsi:type="keyAdapter">
-                    <keyID>33</keyID>
-                    <description>A key with number 33</description>
-                </loot>
-                <loot xsi:type="keyAdapter">
-                    <keyID>691</keyID>
-                    <description>A key with number 691</description>
-                </loot>
-                <loot xsi:type="keyAdapter">
-                    <keyID>935</keyID>
-                    <description>A key with number 935</description>
+                    <keyID>295</keyID>
+                    <description>A key with number 295</description>
                 </loot>
                 <description>A pile of useless scrap. Or is it?</description>
             </item>
@@ -1370,11 +1354,11 @@
             <item/>
             <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="chestAdapter">
                 <description>A chest. Probably contains loot.</description>
-                <keyID>884</keyID>
+                <keyID>193</keyID>
                 <isLocked>true</isLocked>
-                <loot xsi:type="keyAdapter">
-                    <keyID>187</keyID>
-                    <description>A key with number 187</description>
+                <loot xsi:type="antidoteAdapter">
+                    <virus>G_Virus</virus>
+                    <description>A temporary antidote to G_Virus</description>
                 </loot>
             </item>
             <item/>
@@ -1556,7 +1540,7 @@
                 <destPos>
                     <x>5</x>
                     <y>0</y>
-                    <areaId>2</areaId>
+                    <areaId>9</areaId>
                     <direction>South</direction>
                 </destPos>
             </item>
@@ -1575,8 +1559,8 @@
             <item/>
             <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="scrapPileAdapter">
                 <loot xsi:type="keyAdapter">
-                    <keyID>823</keyID>
-                    <description>A key with number 823</description>
+                    <keyID>193</keyID>
+                    <description>A key with number 193</description>
                 </loot>
                 <description>A pile of useless scrap. Or is it?</description>
             </item>
@@ -1591,11 +1575,15 @@
             <item/>
             <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="chestAdapter">
                 <description>A chest. Probably contains loot.</description>
-                <keyID>101</keyID>
+                <keyID>666</keyID>
                 <isLocked>true</isLocked>
                 <loot xsi:type="antidoteAdapter">
                     <virus>G_Virus</virus>
                     <description>A temporary antidote to G_Virus</description>
+                </loot>
+                <loot xsi:type="antidoteAdapter">
+                    <virus>T_Virus</virus>
+                    <description>A temporary antidote to T_Virus</description>
                 </loot>
             </item>
             <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
@@ -1611,15 +1599,19 @@
             </item>
             <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="chestAdapter">
                 <description>A chest. Probably contains loot.</description>
-                <keyID>667</keyID>
+                <keyID>16</keyID>
                 <isLocked>true</isLocked>
                 <loot xsi:type="antidoteAdapter">
                     <virus>T_Veronica</virus>
                     <description>A temporary antidote to T_Veronica</description>
                 </loot>
                 <loot xsi:type="keyAdapter">
-                    <keyID>339</keyID>
-                    <description>A key with number 339</description>
+                    <keyID>486</keyID>
+                    <description>A key with number 486</description>
+                </loot>
+                <loot xsi:type="keyAdapter">
+                    <keyID>941</keyID>
+                    <description>A key with number 941</description>
                 </loot>
             </item>
             <item/>
@@ -1805,11 +1797,11 @@
             <item/>
             <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="chestAdapter">
                 <description>A chest. Probably contains loot.</description>
-                <keyID>187</keyID>
+                <keyID>660</keyID>
                 <isLocked>true</isLocked>
-                <loot xsi:type="antidoteAdapter">
-                    <virus>G_Virus</virus>
-                    <description>A temporary antidote to G_Virus</description>
+                <loot xsi:type="keyAdapter">
+                    <keyID>490</keyID>
+                    <description>A key with number 490</description>
                 </loot>
             </item>
             <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
@@ -1892,11 +1884,11 @@
             </item>
             <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="chestAdapter">
                 <description>A chest. Probably contains loot.</description>
-                <keyID>91</keyID>
+                <keyID>152</keyID>
                 <isLocked>true</isLocked>
-                <loot xsi:type="antidoteAdapter">
-                    <virus>T_Veronica</virus>
-                    <description>A temporary antidote to T_Veronica</description>
+                <loot xsi:type="keyAdapter">
+                    <keyID>549</keyID>
+                    <description>A key with number 549</description>
                 </loot>
             </item>
             <item/>
@@ -4214,8 +4206,12 @@
                     </item>
                     <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="chestAdapter">
                         <description>A chest. Probably contains loot.</description>
-                        <keyID>428</keyID>
+                        <keyID>320</keyID>
                         <isLocked>true</isLocked>
+                        <loot xsi:type="keyAdapter">
+                            <keyID>226</keyID>
+                            <description>A key with number 226</description>
+                        </loot>
                     </item>
                     <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
                         <description>R</description>
@@ -4267,7 +4263,138 @@
                     </item>
                     <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="chestAdapter">
                         <description>A chest. Probably contains loot.</description>
-                        <keyID>260</keyID>
+                        <keyID>6</keyID>
+                        <isLocked>true</isLocked>
+                        <loot xsi:type="keyAdapter">
+                            <keyID>487</keyID>
+                            <description>A key with number 487</description>
+                        </loot>
+                        <loot xsi:type="keyAdapter">
+                            <keyID>312</keyID>
+                            <description>A key with number 312</description>
+                        </loot>
+                    </item>
+                    <item/>
+                    <item/>
+                    <item/>
+                    <item/>
+                    <item/>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                        <description>T</description>
+                    </item>
+                    <item/>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                        <description>T</description>
+                    </item>
+                    <item/>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                        <description>R</description>
+                    </item>
+                    <item/>
+                    <item/>
+                    <item/>
+                    <item/>
+                    <item/>
+                    <item/>
+                    <item/>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                        <description>R</description>
+                    </item>
+                    <item/>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="chestAdapter">
+                        <description>A chest. Probably contains loot.</description>
+                        <keyID>581</keyID>
+                        <isLocked>true</isLocked>
+                    </item>
+                    <item/>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                        <description>T</description>
+                    </item>
+                </board>
+                <board>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="scrapPileAdapter">
+                        <description>A pile of useless scrap. Or is it?</description>
+                    </item>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                        <description>T</description>
+                    </item>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                        <description>E</description>
+                    </item>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                        <description>E</description>
+                    </item>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                        <description>E</description>
+                    </item>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                        <description>E</description>
+                    </item>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                        <description>T</description>
+                    </item>
+                    <item/>
+                    <item/>
+                    <item/>
+                    <item/>
+                    <item/>
+                    <item/>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                        <description>T</description>
+                    </item>
+                    <item/>
+                    <item/>
+                    <item/>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                        <description>R</description>
+                    </item>
+                    <item/>
+                    <item/>
+                    <item/>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                        <description>T</description>
+                    </item>
+                    <item/>
+                    <item/>
+                    <item/>
+                    <item/>
+                    <item/>
+                    <item/>
+                    <item/>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                        <description>T</description>
+                    </item>
+                </board>
+                <board>
+                    <item/>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                        <description>T</description>
+                    </item>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                        <description>E</description>
+                    </item>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                        <description>E</description>
+                    </item>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                        <description>E</description>
+                    </item>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                        <description>E</description>
+                    </item>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                        <description>T</description>
+                    </item>
+                    <item/>
+                    <item/>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                        <description>T</description>
+                    </item>
+                    <item/>
+                    <item/>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="chestAdapter">
+                        <description>A chest. Probably contains loot.</description>
+                        <keyID>226</keyID>
                         <isLocked>true</isLocked>
                         <loot xsi:type="antidoteAdapter">
                             <virus>T_Virus</virus>
@@ -4278,143 +4405,8 @@
                             <description>A temporary antidote to T_Veronica</description>
                         </loot>
                         <loot xsi:type="keyAdapter">
-                            <keyID>527</keyID>
-                            <description>A key with number 527</description>
-                        </loot>
-                    </item>
-                    <item/>
-                    <item/>
-                    <item/>
-                    <item/>
-                    <item/>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                        <description>T</description>
-                    </item>
-                    <item/>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                        <description>T</description>
-                    </item>
-                    <item/>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                        <description>R</description>
-                    </item>
-                    <item/>
-                    <item/>
-                    <item/>
-                    <item/>
-                    <item/>
-                    <item/>
-                    <item/>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                        <description>R</description>
-                    </item>
-                    <item/>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="chestAdapter">
-                        <description>A chest. Probably contains loot.</description>
-                        <keyID>506</keyID>
-                        <isLocked>true</isLocked>
-                    </item>
-                    <item/>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                        <description>T</description>
-                    </item>
-                </board>
-                <board>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="scrapPileAdapter">
-                        <loot xsi:type="keyAdapter">
-                            <keyID>903</keyID>
-                            <description>A key with number 903</description>
-                        </loot>
-                        <loot xsi:type="keyAdapter">
-                            <keyID>884</keyID>
-                            <description>A key with number 884</description>
-                        </loot>
-                        <description>A pile of useless scrap. Or is it?</description>
-                    </item>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                        <description>T</description>
-                    </item>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                        <description>E</description>
-                    </item>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                        <description>E</description>
-                    </item>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                        <description>E</description>
-                    </item>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                        <description>E</description>
-                    </item>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                        <description>T</description>
-                    </item>
-                    <item/>
-                    <item/>
-                    <item/>
-                    <item/>
-                    <item/>
-                    <item/>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                        <description>T</description>
-                    </item>
-                    <item/>
-                    <item/>
-                    <item/>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                        <description>R</description>
-                    </item>
-                    <item/>
-                    <item/>
-                    <item/>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                        <description>T</description>
-                    </item>
-                    <item/>
-                    <item/>
-                    <item/>
-                    <item/>
-                    <item/>
-                    <item/>
-                    <item/>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                        <description>T</description>
-                    </item>
-                </board>
-                <board>
-                    <item/>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                        <description>T</description>
-                    </item>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                        <description>E</description>
-                    </item>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                        <description>E</description>
-                    </item>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                        <description>E</description>
-                    </item>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                        <description>E</description>
-                    </item>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                        <description>T</description>
-                    </item>
-                    <item/>
-                    <item/>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                        <description>T</description>
-                    </item>
-                    <item/>
-                    <item/>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="chestAdapter">
-                        <description>A chest. Probably contains loot.</description>
-                        <keyID>176</keyID>
-                        <isLocked>true</isLocked>
-                        <loot xsi:type="keyAdapter">
-                            <keyID>209</keyID>
-                            <description>A key with number 209</description>
+                            <keyID>595</keyID>
+                            <description>A key with number 595</description>
                         </loot>
                     </item>
                     <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
@@ -4456,7 +4448,7 @@
                         <destPos>
                             <x>0</x>
                             <y>5</y>
-                            <areaId>29</areaId>
+                            <areaId>18</areaId>
                             <direction>North</direction>
                         </destPos>
                     </item>
@@ -4481,10 +4473,6 @@
                     <item/>
                     <item/>
                     <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="scrapPileAdapter">
-                        <loot xsi:type="keyAdapter">
-                            <keyID>941</keyID>
-                            <description>A key with number 941</description>
-                        </loot>
                         <description>A pile of useless scrap. Or is it?</description>
                     </item>
                     <item/>
@@ -4575,12 +4563,8 @@
                     <item/>
                     <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="scrapPileAdapter">
                         <loot xsi:type="keyAdapter">
-                            <keyID>813</keyID>
-                            <description>A key with number 813</description>
-                        </loot>
-                        <loot xsi:type="keyAdapter">
-                            <keyID>780</keyID>
-                            <description>A key with number 780</description>
+                            <keyID>105</keyID>
+                            <description>A key with number 105</description>
                         </loot>
                         <description>A pile of useless scrap. Or is it?</description>
                     </item>
@@ -4654,14 +4638,6 @@
                         <description>R</description>
                     </item>
                     <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="scrapPileAdapter">
-                        <loot xsi:type="keyAdapter">
-                            <keyID>428</keyID>
-                            <description>A key with number 428</description>
-                        </loot>
-                        <loot xsi:type="keyAdapter">
-                            <keyID>91</keyID>
-                            <description>A key with number 91</description>
-                        </loot>
                         <description>A pile of useless scrap. Or is it?</description>
                     </item>
                     <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
@@ -4673,31 +4649,19 @@
                     <item/>
                     <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="chestAdapter">
                         <description>A chest. Probably contains loot.</description>
-                        <keyID>34</keyID>
+                        <keyID>595</keyID>
                         <isLocked>true</isLocked>
-                        <loot xsi:type="antidoteAdapter">
-                            <virus>T_Veronica</virus>
-                            <description>A temporary antidote to T_Veronica</description>
-                        </loot>
                     </item>
                     <item/>
                 </board>
                 <board>
                     <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="chestAdapter">
                         <description>A chest. Probably contains loot.</description>
-                        <keyID>823</keyID>
+                        <keyID>909</keyID>
                         <isLocked>true</isLocked>
                         <loot xsi:type="antidoteAdapter">
-                            <virus>T_Veronica</virus>
-                            <description>A temporary antidote to T_Veronica</description>
-                        </loot>
-                        <loot xsi:type="antidoteAdapter">
-                            <virus>T_Veronica</virus>
-                            <description>A temporary antidote to T_Veronica</description>
-                        </loot>
-                        <loot xsi:type="antidoteAdapter">
-                            <virus>T_Veronica</virus>
-                            <description>A temporary antidote to T_Veronica</description>
+                            <virus>G_Virus</virus>
+                            <description>A temporary antidote to G_Virus</description>
                         </loot>
                     </item>
                     <item/>
@@ -4722,115 +4686,119 @@
                     </item>
                     <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="chestAdapter">
                         <description>A chest. Probably contains loot.</description>
-                        <keyID>903</keyID>
-                        <isLocked>true</isLocked>
-                    </item>
-                    <item/>
-                    <item/>
-                    <item/>
-                    <item/>
-                    <item/>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                        <description>T</description>
-                    </item>
-                    <item/>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                        <description>R</description>
-                    </item>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                        <description>R</description>
-                    </item>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                        <description>R</description>
-                    </item>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                        <description>T</description>
-                    </item>
-                    <item/>
-                    <item/>
-                    <item/>
-                </board>
-                <board>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                        <description>T</description>
-                    </item>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                        <description>T</description>
-                    </item>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                        <description>T</description>
-                    </item>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                        <description>R</description>
-                    </item>
-                    <item/>
-                    <item/>
-                    <item/>
-                    <item/>
-                    <item/>
-                    <item/>
-                    <item/>
-                    <item/>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                        <description>T</description>
-                    </item>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                        <description>T</description>
-                    </item>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                        <description>T</description>
-                    </item>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                        <description>T</description>
-                    </item>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                        <description>T</description>
-                    </item>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                        <description>T</description>
-                    </item>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                        <description>T</description>
-                    </item>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                        <description>T</description>
-                    </item>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                        <description>T</description>
-                    </item>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                        <description>T</description>
-                    </item>
-                    <item/>
-                    <item/>
-                    <item/>
-                    <item/>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                        <description>T</description>
-                    </item>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                        <description>T</description>
-                    </item>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                        <description>T</description>
-                    </item>
-                    <item/>
-                </board>
-                <board>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                        <description>T</description>
-                    </item>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="chestAdapter">
-                        <description>A chest. Probably contains loot.</description>
-                        <keyID>69</keyID>
+                        <keyID>181</keyID>
                         <isLocked>true</isLocked>
                         <loot xsi:type="keyAdapter">
-                            <keyID>171</keyID>
-                            <description>A key with number 171</description>
+                            <keyID>977</keyID>
+                            <description>A key with number 977</description>
                         </loot>
                         <loot xsi:type="keyAdapter">
-                            <keyID>557</keyID>
-                            <description>A key with number 557</description>
+                            <keyID>825</keyID>
+                            <description>A key with number 825</description>
+                        </loot>
+                    </item>
+                    <item/>
+                    <item/>
+                    <item/>
+                    <item/>
+                    <item/>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                        <description>T</description>
+                    </item>
+                    <item/>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                        <description>R</description>
+                    </item>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                        <description>R</description>
+                    </item>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                        <description>R</description>
+                    </item>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                        <description>T</description>
+                    </item>
+                    <item/>
+                    <item/>
+                    <item/>
+                </board>
+                <board>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                        <description>T</description>
+                    </item>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                        <description>T</description>
+                    </item>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                        <description>T</description>
+                    </item>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                        <description>R</description>
+                    </item>
+                    <item/>
+                    <item/>
+                    <item/>
+                    <item/>
+                    <item/>
+                    <item/>
+                    <item/>
+                    <item/>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                        <description>T</description>
+                    </item>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                        <description>T</description>
+                    </item>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                        <description>T</description>
+                    </item>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                        <description>T</description>
+                    </item>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                        <description>T</description>
+                    </item>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                        <description>T</description>
+                    </item>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                        <description>T</description>
+                    </item>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                        <description>T</description>
+                    </item>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                        <description>T</description>
+                    </item>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                        <description>T</description>
+                    </item>
+                    <item/>
+                    <item/>
+                    <item/>
+                    <item/>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                        <description>T</description>
+                    </item>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                        <description>T</description>
+                    </item>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                        <description>T</description>
+                    </item>
+                    <item/>
+                </board>
+                <board>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                        <description>T</description>
+                    </item>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="chestAdapter">
+                        <description>A chest. Probably contains loot.</description>
+                        <keyID>824</keyID>
+                        <isLocked>true</isLocked>
+                        <loot xsi:type="keyAdapter">
+                            <keyID>838</keyID>
+                            <description>A key with number 838</description>
                         </loot>
                     </item>
                     <item/>
@@ -4869,174 +4837,182 @@
                     <item/>
                     <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="chestAdapter">
                         <description>A chest. Probably contains loot.</description>
-                        <keyID>601</keyID>
+                        <keyID>490</keyID>
                         <isLocked>true</isLocked>
-                    </item>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                        <description>T</description>
-                    </item>
-                    <item/>
-                    <item/>
-                    <item/>
-                    <item/>
-                    <item/>
-                    <item/>
-                    <item/>
-                    <item/>
-                </board>
-                <board>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                        <description>T</description>
-                    </item>
-                    <item/>
-                    <item/>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                        <description>R</description>
-                    </item>
-                    <item/>
-                    <item/>
-                    <item/>
-                    <item/>
-                    <item/>
-                    <item/>
-                    <item/>
-                    <item/>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                        <description>T</description>
-                    </item>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                        <description>E</description>
-                    </item>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                        <description>E</description>
-                    </item>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                        <description>E</description>
-                    </item>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                        <description>E</description>
-                    </item>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                        <description>T</description>
-                    </item>
-                    <item/>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                        <description>R</description>
-                    </item>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                        <description>R</description>
-                    </item>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                        <description>T</description>
-                    </item>
-                    <item/>
-                    <item/>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                        <description>T</description>
-                    </item>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                        <description>T</description>
-                    </item>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                        <description>T</description>
-                    </item>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                        <description>T</description>
-                    </item>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                        <description>T</description>
-                    </item>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                        <description>T</description>
-                    </item>
-                </board>
-                <board>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                        <description>T</description>
-                    </item>
-                    <item/>
-                    <item/>
-                    <item/>
-                    <item/>
-                    <item/>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                        <description>R</description>
-                    </item>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                        <description>R</description>
-                    </item>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                        <description>R</description>
-                    </item>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                        <description>R</description>
-                    </item>
-                    <item/>
-                    <item/>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                        <description>T</description>
-                    </item>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                        <description>E</description>
-                    </item>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                        <description>E</description>
-                    </item>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                        <description>E</description>
-                    </item>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                        <description>E</description>
-                    </item>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                        <description>T</description>
-                    </item>
-                    <item/>
-                    <item/>
-                    <item/>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                        <description>T</description>
-                    </item>
-                    <item/>
-                    <item/>
-                    <item/>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                        <description>E</description>
-                    </item>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                        <description>E</description>
-                    </item>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                        <description>E</description>
-                    </item>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                        <description>E</description>
-                    </item>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                        <description>T</description>
-                    </item>
-                </board>
-                <board>
-                    <item/>
-                    <item/>
-                    <item/>
-                    <item/>
-                    <item/>
-                    <item/>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                        <description>R</description>
-                    </item>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="chestAdapter">
-                        <description>A chest. Probably contains loot.</description>
-                        <keyID>691</keyID>
-                        <isLocked>true</isLocked>
+                        <loot xsi:type="antidoteAdapter">
+                            <virus>G_Virus</virus>
+                            <description>A temporary antidote to G_Virus</description>
+                        </loot>
                         <loot xsi:type="antidoteAdapter">
                             <virus>T_Veronica</virus>
                             <description>A temporary antidote to T_Veronica</description>
                         </loot>
                         <loot xsi:type="keyAdapter">
-                            <keyID>308</keyID>
-                            <description>A key with number 308</description>
+                            <keyID>281</keyID>
+                            <description>A key with number 281</description>
+                        </loot>
+                    </item>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                        <description>T</description>
+                    </item>
+                    <item/>
+                    <item/>
+                    <item/>
+                    <item/>
+                    <item/>
+                    <item/>
+                    <item/>
+                    <item/>
+                </board>
+                <board>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                        <description>T</description>
+                    </item>
+                    <item/>
+                    <item/>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                        <description>R</description>
+                    </item>
+                    <item/>
+                    <item/>
+                    <item/>
+                    <item/>
+                    <item/>
+                    <item/>
+                    <item/>
+                    <item/>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                        <description>T</description>
+                    </item>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                        <description>E</description>
+                    </item>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                        <description>E</description>
+                    </item>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                        <description>E</description>
+                    </item>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                        <description>E</description>
+                    </item>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                        <description>T</description>
+                    </item>
+                    <item/>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                        <description>R</description>
+                    </item>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                        <description>R</description>
+                    </item>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                        <description>T</description>
+                    </item>
+                    <item/>
+                    <item/>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                        <description>T</description>
+                    </item>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                        <description>T</description>
+                    </item>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                        <description>T</description>
+                    </item>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                        <description>T</description>
+                    </item>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                        <description>T</description>
+                    </item>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                        <description>T</description>
+                    </item>
+                </board>
+                <board>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                        <description>T</description>
+                    </item>
+                    <item/>
+                    <item/>
+                    <item/>
+                    <item/>
+                    <item/>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                        <description>R</description>
+                    </item>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                        <description>R</description>
+                    </item>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                        <description>R</description>
+                    </item>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                        <description>R</description>
+                    </item>
+                    <item/>
+                    <item/>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                        <description>T</description>
+                    </item>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                        <description>E</description>
+                    </item>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                        <description>E</description>
+                    </item>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                        <description>E</description>
+                    </item>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                        <description>E</description>
+                    </item>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                        <description>T</description>
+                    </item>
+                    <item/>
+                    <item/>
+                    <item/>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                        <description>T</description>
+                    </item>
+                    <item/>
+                    <item/>
+                    <item/>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                        <description>E</description>
+                    </item>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                        <description>E</description>
+                    </item>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                        <description>E</description>
+                    </item>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                        <description>E</description>
+                    </item>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                        <description>T</description>
+                    </item>
+                </board>
+                <board>
+                    <item/>
+                    <item/>
+                    <item/>
+                    <item/>
+                    <item/>
+                    <item/>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                        <description>R</description>
+                    </item>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="chestAdapter">
+                        <description>A chest. Probably contains loot.</description>
+                        <keyID>487</keyID>
+                        <isLocked>true</isLocked>
+                        <loot xsi:type="antidoteAdapter">
+                            <virus>G_Virus</virus>
+                            <description>A temporary antidote to G_Virus</description>
                         </loot>
                     </item>
                     <item/>
@@ -5124,7 +5100,7 @@
                         <destPos>
                             <x>0</x>
                             <y>4</y>
-                            <areaId>10</areaId>
+                            <areaId>20</areaId>
                             <direction>North</direction>
                         </destPos>
                     </item>
@@ -5159,6 +5135,14 @@
                 </board>
                 <board>
                     <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="scrapPileAdapter">
+                        <loot xsi:type="keyAdapter">
+                            <keyID>708</keyID>
+                            <description>A key with number 708</description>
+                        </loot>
+                        <loot xsi:type="keyAdapter">
+                            <keyID>490</keyID>
+                            <description>A key with number 490</description>
+                        </loot>
                         <description>A pile of useless scrap. Or is it?</description>
                     </item>
                     <item/>
@@ -5198,7 +5182,7 @@
                         <destPos>
                             <x>0</x>
                             <y>4</y>
-                            <areaId>18</areaId>
+                            <areaId>11</areaId>
                             <direction>East</direction>
                         </destPos>
                     </item>
@@ -5243,11 +5227,15 @@
                     <item/>
                     <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="chestAdapter">
                         <description>A chest. Probably contains loot.</description>
-                        <keyID>167</keyID>
+                        <keyID>395</keyID>
                         <isLocked>true</isLocked>
                         <loot xsi:type="keyAdapter">
-                            <keyID>20</keyID>
-                            <description>A key with number 20</description>
+                            <keyID>0</keyID>
+                            <description>A key with number 0</description>
+                        </loot>
+                        <loot xsi:type="keyAdapter">
+                            <keyID>517</keyID>
+                            <description>A key with number 517</description>
                         </loot>
                     </item>
                     <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
@@ -5310,12 +5298,12 @@
                     </item>
                     <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="scrapPileAdapter">
                         <loot xsi:type="keyAdapter">
-                            <keyID>101</keyID>
-                            <description>A key with number 101</description>
+                            <keyID>660</keyID>
+                            <description>A key with number 660</description>
                         </loot>
                         <loot xsi:type="keyAdapter">
-                            <keyID>667</keyID>
-                            <description>A key with number 667</description>
+                            <keyID>88</keyID>
+                            <description>A key with number 88</description>
                         </loot>
                         <description>A pile of useless scrap. Or is it?</description>
                     </item>
@@ -5333,16 +5321,12 @@
                     <item/>
                     <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="scrapPileAdapter">
                         <loot xsi:type="keyAdapter">
-                            <keyID>506</keyID>
-                            <description>A key with number 506</description>
+                            <keyID>6</keyID>
+                            <description>A key with number 6</description>
                         </loot>
                         <loot xsi:type="keyAdapter">
-                            <keyID>176</keyID>
-                            <description>A key with number 176</description>
-                        </loot>
-                        <loot xsi:type="keyAdapter">
-                            <keyID>721</keyID>
-                            <description>A key with number 721</description>
+                            <keyID>152</keyID>
+                            <description>A key with number 152</description>
                         </loot>
                         <description>A pile of useless scrap. Or is it?</description>
                     </item>
@@ -5368,16 +5352,8 @@
                     <item/>
                     <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="scrapPileAdapter">
                         <loot xsi:type="keyAdapter">
-                            <keyID>33</keyID>
-                            <description>A key with number 33</description>
-                        </loot>
-                        <loot xsi:type="keyAdapter">
-                            <keyID>691</keyID>
-                            <description>A key with number 691</description>
-                        </loot>
-                        <loot xsi:type="keyAdapter">
-                            <keyID>935</keyID>
-                            <description>A key with number 935</description>
+                            <keyID>295</keyID>
+                            <description>A key with number 295</description>
                         </loot>
                         <description>A pile of useless scrap. Or is it?</description>
                     </item>
@@ -5441,11 +5417,11 @@
                     <item/>
                     <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="chestAdapter">
                         <description>A chest. Probably contains loot.</description>
-                        <keyID>884</keyID>
+                        <keyID>193</keyID>
                         <isLocked>true</isLocked>
-                        <loot xsi:type="keyAdapter">
-                            <keyID>187</keyID>
-                            <description>A key with number 187</description>
+                        <loot xsi:type="antidoteAdapter">
+                            <virus>G_Virus</virus>
+                            <description>A temporary antidote to G_Virus</description>
                         </loot>
                     </item>
                     <item/>
@@ -5627,7 +5603,7 @@
                         <destPos>
                             <x>5</x>
                             <y>0</y>
-                            <areaId>2</areaId>
+                            <areaId>9</areaId>
                             <direction>South</direction>
                         </destPos>
                     </item>
@@ -5646,8 +5622,8 @@
                     <item/>
                     <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="scrapPileAdapter">
                         <loot xsi:type="keyAdapter">
-                            <keyID>823</keyID>
-                            <description>A key with number 823</description>
+                            <keyID>193</keyID>
+                            <description>A key with number 193</description>
                         </loot>
                         <description>A pile of useless scrap. Or is it?</description>
                     </item>
@@ -5662,11 +5638,15 @@
                     <item/>
                     <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="chestAdapter">
                         <description>A chest. Probably contains loot.</description>
-                        <keyID>101</keyID>
+                        <keyID>666</keyID>
                         <isLocked>true</isLocked>
                         <loot xsi:type="antidoteAdapter">
                             <virus>G_Virus</virus>
                             <description>A temporary antidote to G_Virus</description>
+                        </loot>
+                        <loot xsi:type="antidoteAdapter">
+                            <virus>T_Virus</virus>
+                            <description>A temporary antidote to T_Virus</description>
                         </loot>
                     </item>
                     <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
@@ -5682,15 +5662,19 @@
                     </item>
                     <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="chestAdapter">
                         <description>A chest. Probably contains loot.</description>
-                        <keyID>667</keyID>
+                        <keyID>16</keyID>
                         <isLocked>true</isLocked>
                         <loot xsi:type="antidoteAdapter">
                             <virus>T_Veronica</virus>
                             <description>A temporary antidote to T_Veronica</description>
                         </loot>
                         <loot xsi:type="keyAdapter">
-                            <keyID>339</keyID>
-                            <description>A key with number 339</description>
+                            <keyID>486</keyID>
+                            <description>A key with number 486</description>
+                        </loot>
+                        <loot xsi:type="keyAdapter">
+                            <keyID>941</keyID>
+                            <description>A key with number 941</description>
                         </loot>
                     </item>
                     <item/>
@@ -5876,11 +5860,11 @@
                     <item/>
                     <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="chestAdapter">
                         <description>A chest. Probably contains loot.</description>
-                        <keyID>187</keyID>
+                        <keyID>660</keyID>
                         <isLocked>true</isLocked>
-                        <loot xsi:type="antidoteAdapter">
-                            <virus>G_Virus</virus>
-                            <description>A temporary antidote to G_Virus</description>
+                        <loot xsi:type="keyAdapter">
+                            <keyID>490</keyID>
+                            <description>A key with number 490</description>
                         </loot>
                     </item>
                     <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
@@ -5963,11 +5947,11 @@
                     </item>
                     <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="chestAdapter">
                         <description>A chest. Probably contains loot.</description>
-                        <keyID>91</keyID>
+                        <keyID>152</keyID>
                         <isLocked>true</isLocked>
-                        <loot xsi:type="antidoteAdapter">
-                            <virus>T_Veronica</virus>
-                            <description>A temporary antidote to T_Veronica</description>
+                        <loot xsi:type="keyAdapter">
+                            <keyID>549</keyID>
+                            <description>A key with number 549</description>
                         </loot>
                     </item>
                     <item/>
@@ -8159,37 +8143,221 @@
             <key>18</key>
             <value>
                 <board>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="chestAdapter">
-                        <description>A chest. Probably contains loot.</description>
-                        <keyID>664</keyID>
-                        <isLocked>true</isLocked>
-                        <loot xsi:type="keyAdapter">
-                            <keyID>506</keyID>
-                            <description>A key with number 506</description>
-                        </loot>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                        <description>B</description>
+                    </item>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                        <description>B</description>
                     </item>
                     <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
                         <description>B</description>
                     </item>
                     <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="cupboardAdapter">
                         <description>A cupboard. It might contain some medicine.</description>
-                        <keyID>557</keyID>
+                        <keyID>825</keyID>
                         <isLocked>false</isLocked>
+                    </item>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                        <description>B</description>
+                    </item>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                        <description>A</description>
+                    </item>
+                </board>
+                <board>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                        <description>B</description>
+                    </item>
+                    <item/>
+                    <item/>
+                    <item/>
+                    <item/>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                        <description>H</description>
+                    </item>
+                </board>
+                <board>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                        <description>B</description>
+                    </item>
+                    <item/>
+                    <item/>
+                    <item/>
+                    <item/>
+                    <item/>
+                </board>
+                <board>
+                    <item/>
+                    <item/>
+                    <item/>
+                    <item/>
+                    <item/>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                        <description>B</description>
+                    </item>
+                </board>
+                <board>
+                    <item/>
+                    <item/>
+                    <item/>
+                    <item/>
+                    <item/>
+                    <item/>
+                </board>
+                <board>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="transitionSpaceAdapter">
+                        <position>
+                            <x>0</x>
+                            <y>5</y>
+                            <areaId>18</areaId>
+                            <direction>South</direction>
+                        </position>
+                        <destPos>
+                            <x>2</x>
+                            <y>5</y>
+                            <areaId>0</areaId>
+                            <direction>South</direction>
+                        </destPos>
+                    </item>
+                    <item/>
+                    <item/>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="scrapPileAdapter">
+                        <loot xsi:type="keyAdapter">
+                            <keyID>320</keyID>
+                            <description>A key with number 320</description>
+                        </loot>
+                        <loot xsi:type="keyAdapter">
+                            <keyID>909</keyID>
+                            <description>A key with number 909</description>
+                        </loot>
+                        <description>A pile of useless scrap. Or is it?</description>
+                    </item>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="scrapPileAdapter">
+                        <description>A pile of useless scrap. Or is it?</description>
+                    </item>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                        <description>H</description>
+                    </item>
+                </board>
+                <areaId>18</areaId>
+                <subtype>room</subtype>
+                <keyID>838</keyID>
+                <isLocked>true</isLocked>
+                <playerPortals>
+                    <item>1</item>
+                    <item>1</item>
+                </playerPortals>
+                <playerPortals>
+                    <item>2</item>
+                    <item>1</item>
+                </playerPortals>
+                <playerPortals>
+                    <item>3</item>
+                    <item>1</item>
+                </playerPortals>
+                <playerPortals>
+                    <item>4</item>
+                    <item>1</item>
+                </playerPortals>
+                <playerPortals>
+                    <item>1</item>
+                    <item>2</item>
+                </playerPortals>
+                <playerPortals>
+                    <item>2</item>
+                    <item>2</item>
+                </playerPortals>
+                <playerPortals>
+                    <item>3</item>
+                    <item>2</item>
+                </playerPortals>
+                <playerPortals>
+                    <item>4</item>
+                    <item>2</item>
+                </playerPortals>
+                <playerPortals>
+                    <item>5</item>
+                    <item>2</item>
+                </playerPortals>
+                <playerPortals>
+                    <item>0</item>
+                    <item>3</item>
+                </playerPortals>
+                <playerPortals>
+                    <item>1</item>
+                    <item>3</item>
+                </playerPortals>
+                <playerPortals>
+                    <item>2</item>
+                    <item>3</item>
+                </playerPortals>
+                <playerPortals>
+                    <item>3</item>
+                    <item>3</item>
+                </playerPortals>
+                <playerPortals>
+                    <item>4</item>
+                    <item>3</item>
+                </playerPortals>
+                <playerPortals>
+                    <item>0</item>
+                    <item>4</item>
+                </playerPortals>
+                <playerPortals>
+                    <item>1</item>
+                    <item>4</item>
+                </playerPortals>
+                <playerPortals>
+                    <item>2</item>
+                    <item>4</item>
+                </playerPortals>
+                <playerPortals>
+                    <item>3</item>
+                    <item>4</item>
+                </playerPortals>
+                <playerPortals>
+                    <item>4</item>
+                    <item>4</item>
+                </playerPortals>
+                <playerPortals>
+                    <item>5</item>
+                    <item>4</item>
+                </playerPortals>
+                <playerPortals>
+                    <item>0</item>
+                    <item>5</item>
+                </playerPortals>
+                <playerPortals>
+                    <item>1</item>
+                    <item>5</item>
+                </playerPortals>
+                <playerPortals>
+                    <item>2</item>
+                    <item>5</item>
+                </playerPortals>
+            </value>
+        </entry>
+        <entry>
+            <key>20</key>
+            <value>
+                <board>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                        <description>B</description>
+                    </item>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                        <description>B</description>
+                    </item>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                        <description>A</description>
+                    </item>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                        <description>A</description>
                     </item>
                     <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="cupboardAdapter">
                         <description>A cupboard. It might contain some medicine.</description>
-                        <keyID>172</keyID>
+                        <keyID>251</keyID>
                         <isLocked>false</isLocked>
                     </item>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="chestAdapter">
-                        <description>A chest. Probably contains loot.</description>
-                        <keyID>935</keyID>
-                        <isLocked>true</isLocked>
-                        <loot xsi:type="keyAdapter">
-                            <keyID>664</keyID>
-                            <description>A key with number 664</description>
-                        </loot>
-                    </item>
                 </board>
                 <board>
                     <item/>
@@ -8199,12 +8367,10 @@
                     <item/>
                 </board>
                 <board>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="chestAdapter">
-                        <description>A chest. Probably contains loot.</description>
-                        <keyID>240</keyID>
-                        <isLocked>true</isLocked>
-                    </item>
                     <item/>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                        <description>B</description>
+                    </item>
                     <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
                         <description>H</description>
                     </item>
@@ -8213,15 +8379,15 @@
                     </item>
                     <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="chestAdapter">
                         <description>A chest. Probably contains loot.</description>
-                        <keyID>308</keyID>
+                        <keyID>486</keyID>
                         <isLocked>true</isLocked>
                         <loot xsi:type="antidoteAdapter">
-                            <virus>G_Virus</virus>
-                            <description>A temporary antidote to G_Virus</description>
+                            <virus>T_Virus</virus>
+                            <description>A temporary antidote to T_Virus</description>
                         </loot>
                         <loot xsi:type="keyAdapter">
-                            <keyID>260</keyID>
-                            <description>A key with number 260</description>
+                            <keyID>320</keyID>
+                            <description>A key with number 320</description>
                         </loot>
                     </item>
                 </board>
@@ -8237,40 +8403,34 @@
                         <position>
                             <x>0</x>
                             <y>4</y>
-                            <areaId>18</areaId>
-                            <direction>West</direction>
+                            <areaId>20</areaId>
+                            <direction>South</direction>
                         </position>
                         <destPos>
-                            <x>24</x>
-                            <y>16</y>
+                            <x>13</x>
+                            <y>15</y>
                             <areaId>0</areaId>
-                            <direction>West</direction>
+                            <direction>South</direction>
                         </destPos>
                     </item>
-                    <item/>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="scrapPileAdapter">
-                        <description>A pile of useless scrap. Or is it?</description>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                        <description>H</description>
                     </item>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="scrapPileAdapter">
-                        <description>A pile of useless scrap. Or is it?</description>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                        <description>B</description>
                     </item>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="chestAdapter">
-                        <description>A chest. Probably contains loot.</description>
-                        <keyID>527</keyID>
-                        <isLocked>true</isLocked>
-                        <loot xsi:type="antidoteAdapter">
-                            <virus>T_Virus</virus>
-                            <description>A temporary antidote to T_Virus</description>
-                        </loot>
-                        <loot xsi:type="keyAdapter">
-                            <keyID>167</keyID>
-                            <description>A key with number 167</description>
-                        </loot>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
+                        <description>B</description>
+                    </item>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="cupboardAdapter">
+                        <description>A cupboard. It might contain some medicine.</description>
+                        <keyID>312</keyID>
+                        <isLocked>false</isLocked>
                     </item>
                 </board>
-                <areaId>18</areaId>
+                <areaId>20</areaId>
                 <subtype>room</subtype>
-                <keyID>209</keyID>
+                <keyID>0</keyID>
                 <isLocked>true</isLocked>
                 <playerPortals>
                     <item>0</item>
@@ -8293,7 +8453,7 @@
                     <item>1</item>
                 </playerPortals>
                 <playerPortals>
-                    <item>1</item>
+                    <item>0</item>
                     <item>2</item>
                 </playerPortals>
                 <playerPortals>
@@ -8318,26 +8478,18 @@
                 </playerPortals>
                 <playerPortals>
                     <item>0</item>
-                    <item>4</item>
-                </playerPortals>
-                <playerPortals>
-                    <item>1</item>
                     <item>4</item>
                 </playerPortals>
             </value>
         </entry>
         <entry>
-            <key>2</key>
+            <key>9</key>
             <value>
                 <board>
                     <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="scrapPileAdapter">
                         <loot xsi:type="keyAdapter">
-                            <keyID>69</keyID>
-                            <description>A key with number 69</description>
-                        </loot>
-                        <loot xsi:type="keyAdapter">
-                            <keyID>353</keyID>
-                            <description>A key with number 353</description>
+                            <keyID>395</keyID>
+                            <description>A key with number 395</description>
                         </loot>
                         <description>A pile of useless scrap. Or is it?</description>
                     </item>
@@ -8351,7 +8503,7 @@
                         <position>
                             <x>5</x>
                             <y>0</y>
-                            <areaId>2</areaId>
+                            <areaId>9</areaId>
                             <direction>North</direction>
                         </position>
                         <destPos>
@@ -8396,8 +8548,8 @@
                     <item/>
                     <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="scrapPileAdapter">
                         <loot xsi:type="keyAdapter">
-                            <keyID>34</keyID>
-                            <description>A key with number 34</description>
+                            <keyID>251</keyID>
+                            <description>A key with number 251</description>
                         </loot>
                         <description>A pile of useless scrap. Or is it?</description>
                     </item>
@@ -8413,29 +8565,29 @@
                 <board>
                     <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="scrapPileAdapter">
                         <loot xsi:type="keyAdapter">
-                            <keyID>167</keyID>
-                            <description>A key with number 167</description>
+                            <keyID>181</keyID>
+                            <description>A key with number 181</description>
+                        </loot>
+                        <loot xsi:type="keyAdapter">
+                            <keyID>628</keyID>
+                            <description>A key with number 628</description>
                         </loot>
                         <description>A pile of useless scrap. Or is it?</description>
                     </item>
                     <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="scrapPileAdapter">
                         <loot xsi:type="keyAdapter">
-                            <keyID>260</keyID>
-                            <description>A key with number 260</description>
+                            <keyID>581</keyID>
+                            <description>A key with number 581</description>
                         </loot>
                         <loot xsi:type="keyAdapter">
-                            <keyID>601</keyID>
-                            <description>A key with number 601</description>
-                        </loot>
-                        <loot xsi:type="keyAdapter">
-                            <keyID>172</keyID>
-                            <description>A key with number 172</description>
+                            <keyID>16</keyID>
+                            <description>A key with number 16</description>
                         </loot>
                         <description>A pile of useless scrap. Or is it?</description>
                     </item>
                     <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="cupboardAdapter">
                         <description>A cupboard. It might contain some medicine.</description>
-                        <keyID>780</keyID>
+                        <keyID>295</keyID>
                         <isLocked>false</isLocked>
                     </item>
                     <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
@@ -8446,21 +8598,17 @@
                     </item>
                     <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="chestAdapter">
                         <description>A chest. Probably contains loot.</description>
-                        <keyID>941</keyID>
+                        <keyID>281</keyID>
                         <isLocked>true</isLocked>
                         <loot xsi:type="antidoteAdapter">
                             <virus>T_Virus</virus>
                             <description>A temporary antidote to T_Virus</description>
                         </loot>
-                        <loot xsi:type="keyAdapter">
-                            <keyID>176</keyID>
-                            <description>A key with number 176</description>
-                        </loot>
                     </item>
                 </board>
-                <areaId>2</areaId>
+                <areaId>9</areaId>
                 <subtype>room</subtype>
-                <keyID>171</keyID>
+                <keyID>708</keyID>
                 <isLocked>true</isLocked>
                 <playerPortals>
                     <item>1</item>
@@ -8553,39 +8701,55 @@
             </value>
         </entry>
         <entry>
-            <key>10</key>
+            <key>11</key>
             <value>
                 <board>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                        <description>B</description>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="chestAdapter">
+                        <description>A chest. Probably contains loot.</description>
+                        <keyID>941</keyID>
+                        <isLocked>true</isLocked>
                     </item>
                     <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
                         <description>B</description>
-                    </item>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                        <description>A</description>
-                    </item>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                        <description>A</description>
                     </item>
                     <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="cupboardAdapter">
                         <description>A cupboard. It might contain some medicine.</description>
-                        <keyID>721</keyID>
+                        <keyID>628</keyID>
                         <isLocked>false</isLocked>
                     </item>
-                </board>
-                <board>
-                    <item/>
-                    <item/>
-                    <item/>
-                    <item/>
-                    <item/>
-                </board>
-                <board>
-                    <item/>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                        <description>B</description>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="cupboardAdapter">
+                        <description>A cupboard. It might contain some medicine.</description>
+                        <keyID>105</keyID>
+                        <isLocked>false</isLocked>
                     </item>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="chestAdapter">
+                        <description>A chest. Probably contains loot.</description>
+                        <keyID>453</keyID>
+                        <isLocked>true</isLocked>
+                        <loot xsi:type="keyAdapter">
+                            <keyID>395</keyID>
+                            <description>A key with number 395</description>
+                        </loot>
+                    </item>
+                </board>
+                <board>
+                    <item/>
+                    <item/>
+                    <item/>
+                    <item/>
+                    <item/>
+                </board>
+                <board>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="chestAdapter">
+                        <description>A chest. Probably contains loot.</description>
+                        <keyID>517</keyID>
+                        <isLocked>true</isLocked>
+                        <loot xsi:type="antidoteAdapter">
+                            <virus>T_Veronica</virus>
+                            <description>A temporary antidote to T_Veronica</description>
+                        </loot>
+                    </item>
+                    <item/>
                     <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
                         <description>H</description>
                     </item>
@@ -8594,15 +8758,11 @@
                     </item>
                     <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="chestAdapter">
                         <description>A chest. Probably contains loot.</description>
-                        <keyID>813</keyID>
+                        <keyID>549</keyID>
                         <isLocked>true</isLocked>
-                        <loot xsi:type="antidoteAdapter">
-                            <virus>G_Virus</virus>
-                            <description>A temporary antidote to G_Virus</description>
-                        </loot>
-                        <loot xsi:type="antidoteAdapter">
-                            <virus>T_Veronica</virus>
-                            <description>A temporary antidote to T_Veronica</description>
+                        <loot xsi:type="keyAdapter">
+                            <keyID>193</keyID>
+                            <description>A key with number 193</description>
                         </loot>
                     </item>
                 </board>
@@ -8618,34 +8778,48 @@
                         <position>
                             <x>0</x>
                             <y>4</y>
-                            <areaId>10</areaId>
-                            <direction>South</direction>
+                            <areaId>11</areaId>
+                            <direction>West</direction>
                         </position>
                         <destPos>
-                            <x>13</x>
-                            <y>15</y>
+                            <x>24</x>
+                            <y>16</y>
                             <areaId>0</areaId>
-                            <direction>South</direction>
+                            <direction>West</direction>
                         </destPos>
                     </item>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                        <description>H</description>
+                    <item/>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="scrapPileAdapter">
+                        <loot xsi:type="keyAdapter">
+                            <keyID>453</keyID>
+                            <description>A key with number 453</description>
+                        </loot>
+                        <description>A pile of useless scrap. Or is it?</description>
                     </item>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                        <description>B</description>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="scrapPileAdapter">
+                        <loot xsi:type="keyAdapter">
+                            <keyID>824</keyID>
+                            <description>A key with number 824</description>
+                        </loot>
+                        <loot xsi:type="keyAdapter">
+                            <keyID>666</keyID>
+                            <description>A key with number 666</description>
+                        </loot>
+                        <description>A pile of useless scrap. Or is it?</description>
                     </item>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                        <description>B</description>
-                    </item>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="cupboardAdapter">
-                        <description>A cupboard. It might contain some medicine.</description>
-                        <keyID>20</keyID>
-                        <isLocked>false</isLocked>
+                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="chestAdapter">
+                        <description>A chest. Probably contains loot.</description>
+                        <keyID>88</keyID>
+                        <isLocked>true</isLocked>
+                        <loot xsi:type="antidoteAdapter">
+                            <virus>T_Virus</virus>
+                            <description>A temporary antidote to T_Virus</description>
+                        </loot>
                     </item>
                 </board>
-                <areaId>10</areaId>
+                <areaId>11</areaId>
                 <subtype>room</subtype>
-                <keyID>339</keyID>
+                <keyID>977</keyID>
                 <isLocked>true</isLocked>
                 <playerPortals>
                     <item>0</item>
@@ -8668,173 +8842,7 @@
                     <item>1</item>
                 </playerPortals>
                 <playerPortals>
-                    <item>0</item>
-                    <item>2</item>
-                </playerPortals>
-                <playerPortals>
-                    <item>0</item>
-                    <item>3</item>
-                </playerPortals>
-                <playerPortals>
                     <item>1</item>
-                    <item>3</item>
-                </playerPortals>
-                <playerPortals>
-                    <item>2</item>
-                    <item>3</item>
-                </playerPortals>
-                <playerPortals>
-                    <item>3</item>
-                    <item>3</item>
-                </playerPortals>
-                <playerPortals>
-                    <item>4</item>
-                    <item>3</item>
-                </playerPortals>
-                <playerPortals>
-                    <item>0</item>
-                    <item>4</item>
-                </playerPortals>
-            </value>
-        </entry>
-        <entry>
-            <key>29</key>
-            <value>
-                <board>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                        <description>B</description>
-                    </item>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                        <description>B</description>
-                    </item>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                        <description>B</description>
-                    </item>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="cupboardAdapter">
-                        <description>A cupboard. It might contain some medicine.</description>
-                        <keyID>353</keyID>
-                        <isLocked>false</isLocked>
-                    </item>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                        <description>B</description>
-                    </item>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                        <description>A</description>
-                    </item>
-                </board>
-                <board>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                        <description>B</description>
-                    </item>
-                    <item/>
-                    <item/>
-                    <item/>
-                    <item/>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                        <description>H</description>
-                    </item>
-                </board>
-                <board>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                        <description>B</description>
-                    </item>
-                    <item/>
-                    <item/>
-                    <item/>
-                    <item/>
-                    <item/>
-                </board>
-                <board>
-                    <item/>
-                    <item/>
-                    <item/>
-                    <item/>
-                    <item/>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                        <description>B</description>
-                    </item>
-                </board>
-                <board>
-                    <item/>
-                    <item/>
-                    <item/>
-                    <item/>
-                    <item/>
-                    <item/>
-                </board>
-                <board>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="transitionSpaceAdapter">
-                        <position>
-                            <x>0</x>
-                            <y>5</y>
-                            <areaId>29</areaId>
-                            <direction>South</direction>
-                        </position>
-                        <destPos>
-                            <x>2</x>
-                            <y>5</y>
-                            <areaId>0</areaId>
-                            <direction>South</direction>
-                        </destPos>
-                    </item>
-                    <item/>
-                    <item/>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="scrapPileAdapter">
-                        <loot xsi:type="keyAdapter">
-                            <keyID>664</keyID>
-                            <description>A key with number 664</description>
-                        </loot>
-                        <loot xsi:type="keyAdapter">
-                            <keyID>240</keyID>
-                            <description>A key with number 240</description>
-                        </loot>
-                        <description>A pile of useless scrap. Or is it?</description>
-                    </item>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="scrapPileAdapter">
-                        <description>A pile of useless scrap. Or is it?</description>
-                    </item>
-                    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="obstacleAdapter">
-                        <description>H</description>
-                    </item>
-                </board>
-                <areaId>29</areaId>
-                <subtype>room</subtype>
-                <keyID>33</keyID>
-                <isLocked>true</isLocked>
-                <playerPortals>
-                    <item>1</item>
-                    <item>1</item>
-                </playerPortals>
-                <playerPortals>
-                    <item>2</item>
-                    <item>1</item>
-                </playerPortals>
-                <playerPortals>
-                    <item>3</item>
-                    <item>1</item>
-                </playerPortals>
-                <playerPortals>
-                    <item>4</item>
-                    <item>1</item>
-                </playerPortals>
-                <playerPortals>
-                    <item>1</item>
-                    <item>2</item>
-                </playerPortals>
-                <playerPortals>
-                    <item>2</item>
-                    <item>2</item>
-                </playerPortals>
-                <playerPortals>
-                    <item>3</item>
-                    <item>2</item>
-                </playerPortals>
-                <playerPortals>
-                    <item>4</item>
-                    <item>2</item>
-                </playerPortals>
-                <playerPortals>
-                    <item>5</item>
                     <item>2</item>
                 </playerPortals>
                 <playerPortals>
@@ -8864,38 +8872,10 @@
                 <playerPortals>
                     <item>1</item>
                     <item>4</item>
-                </playerPortals>
-                <playerPortals>
-                    <item>2</item>
-                    <item>4</item>
-                </playerPortals>
-                <playerPortals>
-                    <item>3</item>
-                    <item>4</item>
-                </playerPortals>
-                <playerPortals>
-                    <item>4</item>
-                    <item>4</item>
-                </playerPortals>
-                <playerPortals>
-                    <item>5</item>
-                    <item>4</item>
-                </playerPortals>
-                <playerPortals>
-                    <item>0</item>
-                    <item>5</item>
-                </playerPortals>
-                <playerPortals>
-                    <item>1</item>
-                    <item>5</item>
-                </playerPortals>
-                <playerPortals>
-                    <item>2</item>
-                    <item>5</item>
                 </playerPortals>
             </value>
         </entry>
     </areas>
     <players/>
-    <gameID>2358</gameID>
+    <gameID>1214</gameID>
 </gameAdapter>

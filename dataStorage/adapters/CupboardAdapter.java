@@ -79,16 +79,18 @@ public class CupboardAdapter extends ObstacleAdapter{
 	public Cupboard getOriginal(){
 		List<Item> newLoot = new ArrayList<>();
 		ItemAdapter item = null;
-		for(int i = 0; i < loot.length; i++){
-			item = loot[i];
-			if(item instanceof AntidoteAdapter){
-				newLoot.add(((AntidoteAdapter)item).getOriginal());
-			}
-			else if(item instanceof KeyAdapter){
-				newLoot.add(((KeyAdapter)item).getOriginal());
-			}
-			else{
-				throw new RuntimeException("Item is not of a recognised type.");
+		if(loot != null){
+			for(int i = 0; i < loot.length; i++){
+				item = loot[i];
+				if(item instanceof AntidoteAdapter){
+					newLoot.add(((AntidoteAdapter)item).getOriginal());
+				}
+				else if(item instanceof KeyAdapter){
+					newLoot.add(((KeyAdapter)item).getOriginal());
+				}
+				else{
+					throw new RuntimeException("Item is not of a recognised type.");
+				}
 			}
 		}
 

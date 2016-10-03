@@ -1,5 +1,6 @@
 package server.game.world;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -34,7 +35,7 @@ public class Chest extends Obstacle implements Container, Lockable {
 
     /**
      * Constructor
-     * 
+     *
      * @param description
      *            --- description
      * @param keyID
@@ -53,8 +54,10 @@ public class Chest extends Obstacle implements Container, Lockable {
             throw new GameError(
                     "Chest can only contain " + Container.CHEST_SIZE + " items.");
         }
-
-        this.loot = loot;
+        if(loot == null)
+        	this.loot = new ArrayList<>();
+        else
+        	this.loot = loot;
     }
 
     @Override
