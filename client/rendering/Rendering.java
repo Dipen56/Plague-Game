@@ -35,14 +35,12 @@ public class Rendering {
 	private static final String GRASS_IMAGE = "/grass.png";
 	private static final String TREE_IMAGE = "/tree.png";
 	private static final String CHEST_IMAGE = "/chest.png";
-	public double scaleY = 1.2; // lower number less scaling
-	public double scaleX = 1.2; // lower number less scaling
 	// 35 y alignment of group
 	private int gamePaneHeight = GUI.HEIGHT_VALUE - 130;
 	// 3 x alignment of group
 	private int gamePanelWidth = GUI.GAMEPANE_WIDTH_VALUE - 3;
-	private int tileWidth = 45;
-	private int tileHeight = 15;
+	private int tileWidth = 100;
+	private int tileHeight = 40;
 	public double centerWidth = gamePanelWidth / 2;
 	public double centerHeight = gamePaneHeight;
 	private MapParser mapParser;
@@ -107,10 +105,8 @@ public class Rendering {
 		setNumSquares(worldMap.length, worldMap[0].length, direction, playerLoc);
 		double xRightTop = centerWidth + tileWidth / 2;
 		double yTop = getTopOffset();
-		double xLeftTop = centerWidth - tileWidth / 2;
-		double currentTileWidth = tileWidth * scaleX;
-		double previousTileWidth = Math.abs(xRightTop - xLeftTop);
-		double currentTileHeight = tileHeight;
+		double previousTileWidth = tileWidth * Math.pow(0.8, squaresInFront);
+		double xLeftTop = centerWidth - previousTileWidth / 2;
 		// ===================================================================================================
 		// Below this is point is the code for all the rendering for first
 		// person
@@ -119,8 +115,10 @@ public class Rendering {
 			Polygon squareFront = new Polygon();
 			squareFront.setFill(new ImagePattern(grass));
 			squareFront.setLayoutY(10);
+			double currentTileWidth = tileWidth * Math.pow(0.8, squaresInFront - row - 1);
+			double currentTileHeight = tileHeight * Math.pow(0.8, squaresInFront - row - 1);
 			double xLeftBottom = centerWidth - currentTileWidth / 2;
-			double yBottom = yTop + currentTileHeight * scaleY;
+			double yBottom = yTop + currentTileHeight;
 			addTile(squareFront, xLeftTop, xRightTop, xLeftBottom + currentTileWidth, xLeftBottom, yBottom, yTop,
 					renderGroup);
 			if (direction.equals(Direction.North) || direction.equals(Direction.South)) {
@@ -156,15 +154,13 @@ public class Rendering {
 			xRightTop = xLeftBottom + currentTileWidth;
 			yTop = yBottom;
 			previousTileWidth = currentTileWidth;
-			currentTileWidth = currentTileWidth * scaleX;
-			currentTileHeight = currentTileHeight * scaleY;
 		}
 	}
 
 	private double getTopOffset() {
 		double count = 0;
 		for (int i = 0; i < squaresInFront; i++) {
-			count += tileHeight * Math.pow(scaleY, i);
+			count += tileHeight * Math.pow(0.8, squaresInFront - i - 1);
 		}
 		return centerHeight - count;
 	}
@@ -186,10 +182,8 @@ public class Rendering {
 
 	private void setNumSquares(int height, int width, Direction direction, Position playerLoc) {
 		switch (direction) {
-		// needs to be switched over to integers , 0 = north, 1 = east, 2 =
-		// south, 3 = west
 		case North:
-			squaresInFront = height - playerLoc.y;
+			squaresInFront = playerLoc.y + 1;
 			squaresToLeft = playerLoc.x;
 			squaresToRight = width - playerLoc.x - 1;
 			break;
