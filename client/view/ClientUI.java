@@ -524,23 +524,25 @@ public class ClientUI {
 			public void run() {
 
 				gui.startGame();
-				Position pos = new Position(4, 7, 1, Direction.North);
+				Position pos = new Position(4, 0, 1, Direction.South);
 				char[][] world = {
-						{ 'C', 'T','T', 'G', 'G', 'G', 'C', 'T' },
+						// NORTH
+						{ 'C', 'T', 'T', 'G', 'G', 'T', 'C', 'T' },
 						// 2
-						{ 'G', 'G', 'G', 'G', 'G', 'G', 'C', 'G' },
+						{ 'G', 'G', 'G', 'G', 'G', 'G', 'C', 'C' },
 						// 3
-						{ 'G', 'G', 'G', 'G', 'G', 'G', 'C', 'G' },
+						{ 'G', 'G', 'G', 'G', 'G', 'G', 'C', 'T' },
 						// 4
 						{ 'T', 'C', 'G', 'G', 'G', 'C', 'T', 'C' },
 						// 5
-						{ 'G', 'G', 'G', 'G', 'G', 'G', 'C', 'G' },
+						{ 'G', 'G', 'G', 'G', 'G', 'G', 'C', 'T' },
 						// 6
-						{ 'G', 'G', 'G', 'G', 'C', 'G', 'C', 'G' },
+						{ 'G', 'G', 'G', 'G', 'C', 'G', 'C', 'C' },
 						// 7
 						{ 'G', 'G', 'C', 'G', 'T', 'G', 'C', 'G' },
 						// 8
 						{ 'C', 'T', 'G', 'G', 'G', 'T', 'C', 'T' } };
+				// SOUTH
 				render.render(gui.group, pos, world, 1, uid);
 				List<String> items = new ArrayList<String>();
 				String anti = "A|antedote";

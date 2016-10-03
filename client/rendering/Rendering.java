@@ -39,8 +39,8 @@ public class Rendering {
 	private int gamePaneHeight = GUI.HEIGHT_VALUE - 130;
 	// 3 x alignment of group
 	private int gamePanelWidth = GUI.GAMEPANE_WIDTH_VALUE - 3;
-	private int tileWidth = 100;
-	private int tileHeight = 40;
+	private int tileWidth = 130;
+	private int tileHeight = 50;
 	public double centerWidth = gamePanelWidth / 2;
 	public double centerHeight = gamePaneHeight;
 	private MapParser mapParser;
@@ -234,7 +234,7 @@ public class Rendering {
 			}
 		case South:
 			if (side.equals("left")) {
-				return new Point(squaresToLeft + col + 2, boardHeight - row - 1);
+				return new Point(col + 1, boardHeight - row - 1);
 			} else if (side.equals("right")) {
 				return new Point(squaresToLeft - col, boardHeight - row - 1);
 			} else {
