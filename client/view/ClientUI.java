@@ -13,7 +13,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.WindowEvent;
-
 import client.Client;
 import client.ParserUtilities;
 import client.rendering.Rendering;
@@ -34,136 +33,50 @@ import server.game.player.Virus;
  *
  */
 public class ClientUI {
-
 	/**
 	 * The period between every update
 	 */
 	public static final int DEFAULT_CLK_PERIOD = 100;
-
-	/**
-	 * This is designed as a table for renderer to index char board to render
-	 * objects.
-	 */
-	public static final Map<Character, String> MAP_OBJECTS_TABLE;
-
-	// ITEM_TABLE is not a good idea. leave it aside for now.
-	public static final Map<Character, String> ITEM_TABLE;
-
-	/*
-	 * Initialise the table for Renderer. Each table contains a map which maps a
-	 * char to the corresponding object, so the Renderer knows what to render by
-	 * knowing what char was sent by server.
-	 */
-	static {
-		MAP_OBJECTS_TABLE = new HashMap<>();
-		ITEM_TABLE = new HashMap<>();
-
-		/*
-		 * TODO This is probably not appropriate, some map objects may need more
-		 * than one png path, e.g. a room has four sides of views, each of them
-		 * should be different.
-		 * 
-		 * But the idea is, we initialise this map for renderer so that renderer
-		 * knows what map object to render by looking into this map.
-		 */
-
-		// ============= map objects ====================
-
-		/*
-		 * E: Room Obstacle
-		 * 
-		 * G: Ground Space
-		 * 
-		 * T: Tree
-		 * 
-		 * R: Rock
-		 * 
-		 * B: Barrel
-		 * 
-		 * A: Table
-		 * 
-		 * C: Chest
-		 * 
-		 * U: Cupboard
-		 * 
-		 * P: Scrap Pile
-		 * 
-		 * H: chair
-		 * 
-		 * D: a door. This should be rendered as ground, but it indicates which
-		 * direction the room should be facing.
-		 * 
-		 */
-		MAP_OBJECTS_TABLE.put('T', "/Resourse/Tree.png");
-		MAP_OBJECTS_TABLE.put('R', "/Resourse/Rock.png");
-		MAP_OBJECTS_TABLE.put('C', "/Resourse/Chest.png");
-		MAP_OBJECTS_TABLE.put('G', "/Resourse/Ground.png");
-		MAP_OBJECTS_TABLE.put('B', "/Resourse/Barrel.png");
-		MAP_OBJECTS_TABLE.put('A', "/Resourse/Table.png");
-		MAP_OBJECTS_TABLE.put('U', "/Resourse/Cupboard.png");
-		MAP_OBJECTS_TABLE.put('P', "/Resourse/ScrapPile.png");
-		// this is the TransitionSpace, which is actually a normal ground for
-		// renderer.
-		MAP_OBJECTS_TABLE.put('D', "/Resourse/Ground.png");
-
-		// ============= inventory objects ====================
-
-		ITEM_TABLE.put('A', "/Resourse/Antidote.png");
-		ITEM_TABLE.put('K', "/Resourse/Key.png");
-		ITEM_TABLE.put('T', "/Resourse/Torch.png");
-
-	}
-
 	// ============ info fields =================
-
 	/**
 	 * User id of this connection.
 	 */
 	private int uid;
-
 	/**
 	 * User name of this connection.
 	 */
 	private String userName;
-
 	/**
 	 * Avatar type of this connection.
 	 */
 	private Avatar avatar;
-
 	/**
 	 * Virus type of the player at this connection
 	 */
 	private Virus virus;
-
 	/**
 	 * The health left. This is updated by server broadcast.
 	 */
 	private int health;
-
 	/**
 	 * The visibility. This is updated by server broadcast.
 	 */
 	private int visibility;
-
 	/**
 	 * This map keeps track of all player's avatars. Renderer can look for which
 	 * avatar to render from here.
 	 */
 	private Map<Integer, Avatar> avatars;
-
 	/**
 	 * This map keeps track of all player's Positions. Renderer can look for
 	 * where to render different players from here.
 	 */
 	private Map<Integer, Position> positions;
-
 	/**
 	 * This map keeps track of the status for all players that whether he is
 	 * holding a torch.
 	 */
 	private Map<Integer, Boolean> torchStatus;
-
 	/**
 	 * This list keeps track of this player's inventory. Each item is
 	 * represented as a String whose format is: Character|Description. <br>
@@ -174,53 +87,42 @@ public class ClientUI {
 	 * description is used to pop up a hover tootip for this item.
 	 */
 	private List<String> inventory;
-
 	/**
 	 * This is a mirror of the field, Map<Integer, Area> areas, in Game class,
 	 * except the area is represented as a char[][]. Renderer can look for what
 	 * map object to render from here.
 	 */
 	private Map<Integer, char[][]> areas;
-
 	// ============ Model and Views =============
-
 	/**
 	 * The Gui
 	 */
 	private GUI gui;
-
 	/**
 	 * The renderer
 	 */
 	private Rendering render;
-
 	/**
 	 * The client side socket connection maintainer
 	 */
 	private Client client;
-
 	/**
 	 * A clock thread for generating constant pulse to update rendering and GUI.
 	 */
 	private ClockThread clockThread;
-
 	// ============ Event Handlers ==============
-
 	/**
 	 * Event Handler for buttons
 	 */
 	private EventHandler<ActionEvent> actionEvent;
-
 	/**
 	 * Event Handler for key events
 	 */
 	private EventHandler<KeyEvent> keyEvent;
-
 	/**
 	 * Event Handler for mouse events
 	 */
 	private EventHandler<MouseEvent> mouseEvent;
-
 	/**
 	 * Event Handler for window events
 	 */
@@ -234,13 +136,11 @@ public class ClientUI {
 		avatars = new HashMap<>();
 		positions = new HashMap<>();
 		torchStatus = new HashMap<>();
-
 		// TODO: need to uses the other constructor
+		// render = new Rendering();
 		render = new Rendering();
 		// TODO: get the actual player direction
-		render.setDirection("up");
 		gui = new GUI(this, render);
-
 		GUI.launch(GUI.class);
 	}
 
@@ -259,13 +159,11 @@ public class ClientUI {
 	 * @return
 	 */
 	public boolean loginPlayer(String ip, int port, String userName, int avatarIndex) {
-
 		// ip address format check
 		if (!ip.matches("\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}")) {
 			GUI.showWarningPane("It's not a proper ip address.");
 			return false;
 		}
-
 		// create a socket
 		Socket s = null;
 		try {
@@ -274,7 +172,6 @@ public class ClientUI {
 			GUI.showWarningPane("Failed to connect to server, I/O exceptions, " + e.toString());
 			return false;
 		}
-
 		client = new Client(s, this);
 		this.userName = userName;
 		this.avatar = Avatar.get(avatarIndex);
@@ -311,7 +208,6 @@ public class ClientUI {
 	 * 
 	 * ===============================
 	 */
-
 	/**
 	 * When the client receives the user ID from the server, this method will
 	 * update the local user ID.
@@ -401,7 +297,6 @@ public class ClientUI {
 	 */
 	public void parseVisibility(int visibility) {
 		this.visibility = visibility;
-
 	}
 
 	/**
@@ -453,28 +348,26 @@ public class ClientUI {
 	 * 
 	 * ===============================
 	 */
-
 	/**
 	 * This method is called by ClockThread periodically to update the renderer
 	 * and GUI.
 	 */
 	public void updateRenderAndGui() {
-
 		// 1. update GUI
-
 		// a. update minimap
-
 		// b. update the inventory
-
+		gui.setInventory(inventory);
 		// c. update the health bar if it is in right panel in GUI.
-
 		// 2. update Renderer
-
 		// a. call update renderer method.
-
 		// ====================
-		// These method should be somewhere for rendering
 
+		Position playerLoc = positions.get(uid);
+		int areaId = playerLoc.areaId;
+		char[][] worldMap = areas.get(areaId);
+		render.render(playerLoc, worldMap, visibility, uid);
+
+		// These method should be somewhere for rendering
 		// /**
 		// * Redraw the rendering panel
 		// */
@@ -512,7 +405,6 @@ public class ClientUI {
 		// // TODO redraw the rendering panel
 		//
 		// }
-
 	}
 
 	/**
@@ -522,50 +414,27 @@ public class ClientUI {
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
-
 				gui.startGame();
-				Position pos = new Position(4, 0, 1, Direction.South);
-				char[][] world = {
-						// NORTH
-						{ 'C', 'T', 'T', 'G', 'G', 'T', 'C', 'T' },
-						// 2
-						{ 'G', 'G', 'G', 'G', 'G', 'G', 'C', 'C' },
-						// 3
-						{ 'G', 'G', 'G', 'G', 'G', 'G', 'C', 'T' },
-						// 4
-						{ 'T', 'C', 'G', 'G', 'G', 'C', 'T', 'C' },
-						// 5
-						{ 'G', 'G', 'G', 'G', 'G', 'G', 'C', 'T' },
-						// 6
-						{ 'G', 'G', 'G', 'G', 'C', 'G', 'C', 'C' },
-						// 7
-						{ 'G', 'G', 'C', 'G', 'T', 'G', 'C', 'G' },
-						// 8
-						{ 'C', 'T', 'G', 'G', 'G', 'T', 'C', 'T' } };
-				// SOUTH
-				render.render(gui.group, pos, world, 1, uid);
-				List<String> items = new ArrayList<String>();
-				String anti = "A|antedote";
-				String key = "K|key";
-				String torch = "T|torch";
-				String anti2 = "A|antedote";
-				String key2 = "K|key";
-				String torch2 = "T|torch";
-				String anti3 = "A|antedote";
-				String key3 = "K|key";
-				String torch3 = "T|torch";
-				items.add(anti);
-				items.add(key);
-				items.add(torch);
-				items.add(anti2);
-				items.add(key2);
-				items.add(torch2);
-				items.add(anti2);
-				items.add(key2);
-				items.add(torch2);
-
-				gui.setInventory(items);
-
+				// Position pos = new Position(4, 0, 1, Direction.South);
+				// char[][] world = {
+				// // NORTH
+				// { 'C', 'T', 'T', 'G', 'G', 'T', 'C', 'T' },
+				// // 2
+				// { 'G', 'G', 'G', 'G', 'G', 'G', 'C', 'C' },
+				// // 3
+				// { 'G', 'G', 'G', 'G', 'G', 'G', 'C', 'T' },
+				// // 4
+				// { 'T', 'C', 'G', 'G', 'G', 'C', 'T', 'C' },
+				// // 5
+				// { 'G', 'G', 'G', 'G', 'G', 'G', 'C', 'T' },
+				// // 6
+				// { 'G', 'G', 'G', 'G', 'C', 'G', 'C', 'C' },
+				// // 7
+				// { 'G', 'G', 'C', 'G', 'T', 'G', 'C', 'G' },
+				// // 8
+				// { 'C', 'T', 'G', 'G', 'G', 'T', 'C', 'T' } };
+				// // SOUTH
+				// render.render(pos, world, 1, uid);
 				clockThread = new ClockThread(DEFAULT_CLK_PERIOD, ClientUI.this);
 				clockThread.start();
 			}
@@ -587,7 +456,6 @@ public class ClientUI {
 					 * text filed use gui.getChatMsg()
 					 */
 					// System.out.println(gui.getChatMsg());
-
 				} else if (event.toString().contains("Play")) {
 					// this is used to simply change the scene
 					gui.loginScreen();
@@ -606,29 +474,22 @@ public class ClientUI {
 						GUI.showWarningPane("Port number should be an integer");
 						return;
 					}
-
 					loginPlayer(gui.getIpAddress(), port, gui.getUserName(), gui.getAvatarIndex());
-
 					// in the waiting room
 					gui.waitingRoom();
-
 				} else if (event.toString().contains("Leave")) {
 					// this is for the login screen
 					gui.getWindow().close();
 				} else if (event.toString().contains("Ready")) {
-					// Temporary placement for testing rendering
-
 					/*
 					 * TODO set the ready button unavailable. tell the player
 					 * it's waiting for others.
 					 */
-
 					client.setUserReady(true);
 				} else if (event.toString().contains("Leave Game")) {
 					// this is for leaving the waiting room
 					gui.getWindow().close();
 				}
-
 			}
 		};
 	}
@@ -639,7 +500,6 @@ public class ClientUI {
 	 */
 	private void setKeyEventHander() {
 		keyEvent = new EventHandler<KeyEvent>() {
-
 			@Override
 			public void handle(KeyEvent event) {
 				KeyCode keyCode = event.getCode();
@@ -679,7 +539,6 @@ public class ClientUI {
 				} else if (keyCode == KeyCode.DIGIT8) {
 					client.sendWithIndex(Packet.UseItem, 7);
 				}
-
 				/*
 				 * TODO need more keys
 				 * 
@@ -687,7 +546,6 @@ public class ClientUI {
 				 * 
 				 * 
 				 */
-
 			}
 		};
 	}
@@ -698,7 +556,6 @@ public class ClientUI {
 	 */
 	private void setMouseEventHander() {
 		mouseEvent = new EventHandler<MouseEvent>() {
-
 			@Override
 			public void handle(MouseEvent event) {
 				// Currently this listen to clicks on the items
@@ -712,7 +569,6 @@ public class ClientUI {
 					int itemY = (int) (event.getY() / 60);
 					gui.setItemDescription(itemX, itemY);
 					// System.out.println(itemX + " " + itemY);
-
 				}
 			}
 		};
@@ -762,5 +618,4 @@ public class ClientUI {
 	public static void main(String[] args) {
 		new ClientUI();
 	}
-
 }

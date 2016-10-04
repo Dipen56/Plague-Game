@@ -43,7 +43,6 @@ public class Rendering {
 	private int tileHeight = 50;
 	public double centerWidth = gamePanelWidth / 2;
 	public double centerHeight = gamePaneHeight;
-	private MapParser mapParser;
 	private int squaresInFront = 0;
 	private int squaresToLeft = 0;
 	private int squaresToRight = 0;
@@ -53,6 +52,7 @@ public class Rendering {
 	private int avatarID;
 	private String direction;
 	// private int boardSize = 10;
+	private Pane renderGroup;
 
 	public Rendering() {
 		// will need to get board size passed in
@@ -91,7 +91,7 @@ public class Rendering {
 	 */
 	// public void render(Pane renderGroup, Map<Integer, Position> positions,
 	// char[][] worldMap, int visibility, int uid) {
-	public void render(Pane renderGroup, Position playerLoc, char[][] worldMap, int visibility, int uid) {
+	public void render(Position playerLoc, char[][] worldMap, int visibility, int uid) {
 		// player's coordinate on board, and direction.
 		// need to get position from param (uid)
 		// Position selfPosition = positions.get(uid);
@@ -99,8 +99,8 @@ public class Rendering {
 		int x = playerLoc.x;
 		int y = playerLoc.y;
 		Direction direction = playerLoc.getDirection();
-		Image background = loadImage(BACKGROUND_IMAGE);
-		Image grass = loadImage(GRASS_IMAGE);
+		Image background = Images.BACKGROUND_IMAGE;
+		Image grass = Images.GRASS_IMAGE;
 		addImage(renderGroup, background, gamePanelWidth + 3, gamePaneHeight, 0, 0);
 		setNumSquares(worldMap.length, worldMap[0].length, direction, playerLoc);
 		double xRightTop = centerWidth + tileWidth / 2;
@@ -261,17 +261,7 @@ public class Rendering {
 	}
 
 	private Image getImageFromChar(char input) {
-		Image image = null;
-		switch (input) {
-		// Unsure if its trees or T
-		case 'T':
-			image = loadImage(TREE_IMAGE);
-			break;
-		case 'C':
-			image = loadImage(CHEST_IMAGE);
-			break;
-		}
-		return image;
+		return Images.MAP_OBJECT_IMAGES.get(input);
 	}
 
 	// Get points of each image on the board, based on the rows and cols of the
@@ -296,13 +286,12 @@ public class Rendering {
 		renderGroup.getChildren().add(imageView);
 	}
 
-	private Image loadImage(String name) {
-		Image image = new Image(this.getClass().getResourceAsStream(name));
-		return image;
-	}
-
 	public void setDirection(String dir) {
 		this.direction = dir;
+	}
+
+	public void setGroup(Pane renderGroup) {
+		this.renderGroup = renderGroup;
 	}
 
 	/**

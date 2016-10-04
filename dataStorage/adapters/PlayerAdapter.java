@@ -49,13 +49,13 @@ public class PlayerAdapter {
 	 */
 	@XmlElement
 	private int health;
-	
+
 	/**
 	 * True if the player is still alive.
 	 */
 	@XmlElement
 	private boolean isAlive;
-	
+
 	/**
      * If the player is holding a lighted torch or not.
      */
@@ -120,9 +120,6 @@ public class PlayerAdapter {
 			else if(item instanceof Key){
 				inventory[i] = new KeyAdapter((Key)item);
 			}
-			else if(item instanceof Torch){
-				inventory[i] = new TorchAdapter((Torch)item);
-			}
 			else{
 				continue;
 			}
@@ -131,7 +128,7 @@ public class PlayerAdapter {
 		avatar = player.getAvatar();
 		position = new PositionAdapter(player.getPosition());
 		direction = player.getDirection();
-		
+
 	}
 
 	/**
@@ -151,19 +148,16 @@ public class PlayerAdapter {
 				else if(item instanceof KeyAdapter){
 					newInventory.add(((KeyAdapter)item).getOriginal());
 				}
-				else if(item instanceof TorchAdapter){
-					newInventory.add(((TorchAdapter)item).getOriginal());
-				}
 				else{
 					continue;
 				}
 			}
 		}
-		
+
 		Position newPosition = position.getOriginal();
 		Direction direction = this.direction;
-		
-		
+
+
 		//Restores player from this adapter object.
 		Player p = new Player(avatar, health);
 		p.setPosition(newPosition);	//set position
@@ -173,10 +167,10 @@ public class PlayerAdapter {
 		p.setId(uID);
 		p.setName(name);
 		p.setInventory(newInventory);
-		
+
 		return p;
 	}
-	
+
 
 
 }
