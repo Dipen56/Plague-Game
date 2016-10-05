@@ -78,16 +78,16 @@ public class Images {
          * the room should be facing.
          * 
          */
-        // MAP_OBJECT_IMAGES.put('T', loadImage("/tree.png"));
-        // MAP_OBJECT_IMAGES.put('R', loadImage("/rock.png"));
-        // MAP_OBJECT_IMAGES.put('C', loadImage("/chest.png"));
-        // MAP_OBJECT_IMAGES.put('G', loadImage("/Ground.png"));
-        // MAP_OBJECT_IMAGES.put('B', loadImage("/Barrel.png"));
-        // MAP_OBJECT_IMAGES.put('A', loadImage("/Table.png"));
-        // MAP_OBJECT_IMAGES.put('U', loadImage("/Cupboard.png"));
-        // MAP_OBJECT_IMAGES.put('P', loadImage("/ScrapPile.png"));
-        // this is the TransitionSpace, which is actually a normal ground for renderer.
-        // MAP_OBJECT_IMAGES.put('D', loadImage("/Ground.png"));
+         MAP_OBJECT_IMAGES.put('T', loadImage("/tree.png"));
+         MAP_OBJECT_IMAGES.put('R', loadImage("/boulder.png"));
+         MAP_OBJECT_IMAGES.put('C', loadImage("/chest.png"));
+         MAP_OBJECT_IMAGES.put('G', loadImage("/grass.png"));
+         MAP_OBJECT_IMAGES.put('B', loadImage("/barrel.png"));
+         MAP_OBJECT_IMAGES.put('A', loadImage("/table.png"));
+         MAP_OBJECT_IMAGES.put('U', loadImage("/Cupboard.png"));
+         //MAP_OBJECT_IMAGES.put('P', loadImage("/ScrapPile.png"));
+//         this is the TransitionSpace, which is actually a normal ground for renderer.
+         MAP_OBJECT_IMAGES.put('D', loadImage("/grass.png"));
 
         // ============= inventory objects ====================
 

@@ -121,10 +121,15 @@ public class Torch extends Item implements Destroyable, Tradable {
 
     @Override
     public String toString() {
-        int minutesLeft = timeLimit / 60;
-        String minutesLeftString = minutesLeft >= 1 ? String.valueOf(minutesLeft)
-                : "less than 1";
-        return super.toString() + " I reckon it has about " + minutesLeftString
-                + " minutes left to burn.";
+
+        // for easy testing
+        return super.toString() + " I reckon it has about " + timeLimit
+                + " seconds left to burn.";
+
+        // int minutesLeft = timeLimit / 60;
+        // String minutesLeftString = minutesLeft >= 1 ? String.valueOf(minutesLeft)
+        // : "less than 1";
+        // return super.toString() + " I reckon it has about " + minutesLeftString
+        // + " minutes left to burn.";
     }
 }

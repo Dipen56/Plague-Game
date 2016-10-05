@@ -57,9 +57,6 @@ public class ChestAdapter extends ObstacleAdapter{
 			else if(item instanceof Key){
 				loot[i] = (new KeyAdapter((Key)item));
 			}
-			else if(item instanceof Torch){
-				loot[i] = (new TorchAdapter((Torch)item));
-			}
 			else{
 				continue;
 			}
@@ -80,19 +77,18 @@ public class ChestAdapter extends ObstacleAdapter{
 	public Chest getOriginal(){
 		List<Item> newLoot = new ArrayList<>();
 		ItemAdapter item = null;
-		for(int i = 0; i < loot.length; i++){
-			item = loot[i];
-			if(item instanceof AntidoteAdapter){
-				newLoot.add(((AntidoteAdapter)item).getOriginal());
-			}
-			else if(item instanceof KeyAdapter){
-				newLoot.add(((KeyAdapter)item).getOriginal());
-			}
-			else if(item instanceof TorchAdapter){
-				newLoot.add(((TorchAdapter)item).getOriginal());
-			}
-			else{
-				throw new RuntimeException("Item is not of a recognised type.");
+		if(loot != null){
+			for(int i = 0; i < loot.length; i++){
+				item = loot[i];
+				if(item instanceof AntidoteAdapter){
+					newLoot.add(((AntidoteAdapter)item).getOriginal());
+				}
+				else if(item instanceof KeyAdapter){
+					newLoot.add(((KeyAdapter)item).getOriginal());
+				}
+				else{
+					throw new RuntimeException("Item is not of a recognised type.");
+				}
 			}
 		}
 
@@ -107,7 +103,7 @@ public class ChestAdapter extends ObstacleAdapter{
 		b.append("CHEST: ");
 		b.append(keyID + " ");
 		b.append(isLocked + " ");
-		
+
 		for(int i = 0; i < loot.length; i ++){
 			b.append(loot[i] + " ");
 		}

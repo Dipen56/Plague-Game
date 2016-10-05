@@ -33,6 +33,7 @@ public class Rendering {
 	private static final String PLAYER_IMAGE = "/standingstillrear.png";
 	// private static final String BACKGROUND_IMAGE = "/background.gif";
 	private static final String BACKGROUND_IMAGE = "/roomBackGround.png";
+
 	private static final String GRASS_IMAGE = "/grass.png";
 	private static final String BRICK_IMAGE = "/brickWall.png";
 	private static final String FLOORTILE_IMAGE = "/roomTile.png";
@@ -40,15 +41,16 @@ public class Rendering {
 	private static final String CHEST_IMAGE = "/chest.png";
 	public double scaleY = 1.2; // lower number less scaling
 	public double scaleX = 1.2; // lower number less scaling
+
 	// 35 y alignment of group
 	private int gamePaneHeight = GUI.HEIGHT_VALUE - 130;
 	// 3 x alignment of group
 	private int gamePanelWidth = GUI.GAMEPANE_WIDTH_VALUE - 3;
-	private int tileWidth = 45;
-	private int tileHeight = 15;
+
+	private int tileWidth = 130;
+	private int tileHeight = 50;
 	public double centerWidth = gamePanelWidth / 2;
 	public double centerHeight = gamePaneHeight;
-	private MapParser mapParser;
 	private int squaresInFront = 0;
 	private int squaresToLeft = 0;
 	private int squaresToRight = 0;
@@ -57,11 +59,14 @@ public class Rendering {
 	private Map<Integer, Area> map;
 	private int avatarID;
 	private String direction;
+
 	private HashMap<Integer, Point[]> leftSidePoints = new HashMap<>();
 	private  ArrayList<Point> frontLeftPoints = new ArrayList<>();
 	private  ArrayList<Point> frontRightPoints = new ArrayList<>();
 	private HashMap<Integer, Point[]> rightSidePoints = new HashMap<>();
 	private Polygon wallPolygon = new Polygon();
+	// private int boardSize = 10;
+	private Pane renderGroup;
 
 
 	public Rendering() {
@@ -69,19 +74,7 @@ public class Rendering {
 		// mapParser = new MapParser(10, 10);
 	}
 
-	/**
-	 * this constructor is to be used for integration and will be passed in a
-	 * Player and a map, and also all the other player on the map and also the
-	 * avatar id atm.
-	 *
-	 * @param player
-	 */
-	public Rendering(Player player, Map<Integer, Player> playersOnMap, Map<Integer, Area> map, int avatarID) {
-		this.player = player;
-		this.playersOnMap = playersOnMap;
-		this.map = map;
-		this.avatarID = avatarID;
-	}
+
 
 	/**
 	 * Redraw the rendering panel.
@@ -273,11 +266,9 @@ public class Rendering {
 		Point xbottomRight = (rightSidePoints.get(0))[1];
 		Point xTopLeft= (rightSidePoints.get(0))[2];
 		double currentTileHeight = tileHeight * scaleY;
-		double xTopLeft_Wall; 
 		double xTopRight = (rightSidePoints.get(0))[0].getX();
 		double  yTopRight_Wall = leftTopY_Wall -((tileHeight  ) * Math.pow(1.25, 0));
-		double tempTop = leftTopY_Wall; //so that the previous bottom Y will be the top Y of the next wall
-
+		double tempTop = leftTopY_Wall; //so that the previous bottom Y will be the top Y of the next wall;
 
 		addWall(wallPolygon,xTopRight,xTopRight, xbottomRight.getX() , xbottomRight.getX(), yTopRight_Wall,tempTop , xbottomRight.getY(), xTopLeft.getY(), renderGroup);	
 
@@ -287,7 +278,6 @@ public class Rendering {
 			xTopLeft = (rightSidePoints.get(row))[2];
 			 xbottomRight = (rightSidePoints.get(row))[1];
 			 xTopRight = (rightSidePoints.get(row))[0].getX();
-			 xTopLeft_Wall =  (xTopRight + (row * Math.abs(xTopLeft.getX() + xTopRight) ));
 			 double xBottomRight_Wall = xbottomRight.getX() + 0 * currentTileHeight;
 			 yTopRight_Wall =yTopRight_Wall  -((tileHeight  ) * Math.pow(1.25, row)) ;
 			 //TODO: ONCE ANGELO FIXED HIS RENDERING ISSUES. HAVE A BOUNDS CHECK HERE
@@ -401,6 +391,110 @@ public class Rendering {
 		}
 	}
 
+	/**
+	 * this constructor is to be used for integration and will be passed in a
+	 * Player and a map, and also all the other player on the map and also the
+	 * avatar id atm.
+	 *
+	 * @param player
+	 */
+	public Rendering(Player player, Map<Integer, Player> playersOnMap, Map<Integer, Area> map, int avatarID) {
+		this.player = player;
+		this.playersOnMap = playersOnMap;
+		this.map = map;
+		this.avatarID = avatarID;
+	}
+
+	/**
+	 * Redraw the rendering panel.
+	 *
+	 * @param positions
+	 *            --- the position of all player.
+	 * @param areaMap
+	 *            --- the area map represented as a char[][]
+	 * @param visibility
+	 *            --- current visibility.
+	 */
+
+	/**
+	 * this method is used to render the game
+	 *
+	 * @param renderGroup
+	 */
+	// public void render(Pane renderGroup, Map<Integer, Position> positions,
+	// char[][] worldMap, int visibility, int uid) {
+	public void render(Position playerLoc, char[][] worldMap, int visibility, int uid) {
+		// player's coordinate on board, and direction.
+		// need to get position from param (uid)
+		// Position selfPosition = positions.get(uid);
+		// Position selfPosition = new Position(5, 10, 1, Direction.North);
+		int x = playerLoc.x;
+		int y = playerLoc.y;
+		Direction direction = playerLoc.getDirection();
+		Image background = Images.BACKGROUND_IMAGE;
+		Image grass = Images.GRASS_IMAGE;
+		addImage(renderGroup, background, gamePanelWidth + 3, gamePaneHeight, 0, 0);
+		setNumSquares(worldMap.length, worldMap[0].length, direction, playerLoc);
+		double xRightTop = centerWidth + tileWidth / 2;
+		double yTop = getTopOffset();
+		double previousTileWidth = tileWidth * Math.pow(0.8, squaresInFront);
+		double xLeftTop = centerWidth - previousTileWidth / 2;
+		// ===================================================================================================
+		// Below this is point is the code for all the rendering for first
+		// person
+		// ====================================================================================================
+		for (int row = 0; row < squaresInFront; row++) {
+			Polygon squareFront = new Polygon();
+			squareFront.setFill(new ImagePattern(grass));
+			squareFront.setLayoutY(10);
+			double currentTileWidth = tileWidth * Math.pow(0.8, squaresInFront - row - 1);
+			double currentTileHeight = tileHeight * Math.pow(0.8, squaresInFront - row - 1);
+			double xLeftBottom = centerWidth - currentTileWidth / 2;
+			double yBottom = yTop + currentTileHeight;
+			addTile(squareFront, xLeftTop, xRightTop, xLeftBottom + currentTileWidth, xLeftBottom, yBottom, yTop,
+					renderGroup);
+			if (direction.equals(Direction.North) || direction.equals(Direction.South)) {
+				addObject(xLeftTop, yBottom, xRightTop, row, playerLoc.x, "middle", worldMap, renderGroup, direction);
+			} else {
+				addObject(xLeftTop, yBottom, xRightTop, row, playerLoc.y, "middle", worldMap, renderGroup, direction);
+			}
+			for (int col = squaresToLeft - 1; col >= 0; col--) {
+				Polygon squareLeft = new Polygon();
+				squareLeft.setLayoutY(10);
+				squareLeft.setFill(new ImagePattern(grass));
+				double tileXLeftTop = xLeftTop - previousTileWidth - (col * previousTileWidth);
+				double tileXRightTop = xLeftTop - (col * previousTileWidth);
+				double tileXRightBottom = xLeftBottom - col * currentTileWidth;
+				double tileXLeftBottom = xLeftBottom - currentTileWidth - (col * currentTileWidth);
+				addTile(squareLeft, tileXLeftTop, tileXRightTop, tileXRightBottom, tileXLeftBottom, yBottom, yTop,
+						renderGroup);
+				addObject(tileXLeftBottom, yBottom, tileXRightTop, row, col, "left", worldMap, renderGroup, direction);
+			}
+			for (int col = squaresToRight - 1; col >= 0; col--) {
+				Polygon squareRight = new Polygon();
+				squareRight.setFill(new ImagePattern(grass));
+				squareRight.setLayoutY(10);
+				double tileXLeftTop = xLeftTop + previousTileWidth + (col * previousTileWidth);
+				double tileXRightTop = xLeftTop + (previousTileWidth * 2) + (col * previousTileWidth);
+				double tileXRightBottom = xLeftBottom + (currentTileWidth * 2) + (col * currentTileWidth);
+				double tileXLeftBottom = xLeftBottom + currentTileWidth + (col * currentTileWidth);
+				addTile(squareRight, tileXLeftTop, tileXRightTop, tileXRightBottom, tileXLeftBottom, yBottom, yTop,
+						renderGroup);
+				addObject(tileXLeftTop, yBottom, tileXRightBottom, row, col, "right", worldMap, renderGroup, direction);
+			}
+			xLeftTop = xLeftBottom;
+			xRightTop = xLeftBottom + currentTileWidth;
+			yTop = yBottom;
+			previousTileWidth = currentTileWidth;
+		}
+	}
+
+
+	
+
+
+
+
 	private Point getImagePoint(Direction direction, int row, int col, String side, int boardHeight, int boardWidth) {
 		switch (direction) {
 		case North:
@@ -413,7 +507,9 @@ public class Rendering {
 			}
 		case South:
 			if (side.equals("left")) {
-				return new Point(squaresToLeft + col + 2, boardHeight - row - 1);
+
+				return new Point(col + 1, boardHeight - row - 1);
+
 			} else if (side.equals("right")) {
 				return new Point(squaresToLeft - col, boardHeight - row - 1);
 			} else {
@@ -439,18 +535,10 @@ public class Rendering {
 		return null;
 	}
 
+
+
 	private Image getImageFromChar(char input) {
-		Image image = null;
-		switch (input) {
-		// Unsure if its trees or T
-		case 'T':
-			image = loadImage(TREE_IMAGE);
-			break;
-		case 'C':
-			image = loadImage(CHEST_IMAGE);
-			break;
-		}
-		return image;
+		return Images.MAP_OBJECT_IMAGES.get(input);
 	}
 
 	// Get points of each image on the board, based on the rows and cols of the
@@ -475,13 +563,12 @@ public class Rendering {
 		renderGroup.getChildren().add(imageView);
 	}
 
-	private Image loadImage(String name) {
-		Image image = new Image(this.getClass().getResourceAsStream(name));
-		return image;
-	}
-
 	public void setDirection(String dir) {
 		this.direction = dir;
+	}
+
+	public void setGroup(Pane renderGroup) {
+		this.renderGroup = renderGroup;
 	}
 
 	/**
@@ -506,6 +593,10 @@ public class Rendering {
 	@Override
 	public String toString() {
 		return "renderclass";
+	}
+	private Image loadImage(String name) {
+		Image image = new Image(this.getClass().getResourceAsStream(name));
+		return image;
 	}
 
 }
