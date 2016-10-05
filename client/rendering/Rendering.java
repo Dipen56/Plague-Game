@@ -53,6 +53,7 @@ public class Rendering {
 	private String direction;
 	// private int boardSize = 10;
 	private Pane renderGroup;
+	private int imageBound = 10;
 
 	public Rendering() {
 		// will need to get board size passed in
@@ -124,36 +125,46 @@ public class Rendering {
 			currentTileHeight = tileHeight * Math.pow(0.8, squaresInFront - row - 1);
 			xLeftBottom = centerWidth - currentTileWidth / 2;
 			yBottom = yTop + currentTileHeight;
-			addTile(squareFront, xLeftTop, xRightTop, xLeftBottom + currentTileWidth, xLeftBottom, yBottom, yTop,
-					renderGroup);
-			if (direction.equals(Direction.North) || direction.equals(Direction.South)) {
-				addObject(xLeftTop, yBottom, xRightTop, row, playerLoc.x, "middle", worldMap, renderGroup, direction);
-			} else {
-				addObject(xLeftTop, yBottom, xRightTop, row, playerLoc.y, "middle", worldMap, renderGroup, direction);
-			}
-			for (int col = squaresToLeft - 1; col >= 0; col--) {
-				squareLeft = new Polygon();
-				squareLeft.setLayoutY(10);
-				squareLeft.setFill(new ImagePattern(grass));
-				tileXLeftTop = xLeftTop - previousTileWidth - (col * previousTileWidth);
-				tileXRightTop = xLeftTop - (col * previousTileWidth);
-				tileXRightBottom = xLeftBottom - col * currentTileWidth;
-				tileXLeftBottom = xLeftBottom - currentTileWidth - (col * currentTileWidth);
-				addTile(squareLeft, tileXLeftTop, tileXRightTop, tileXRightBottom, tileXLeftBottom, yBottom, yTop,
+			if (squaresInFront - row <= imageBound) {
+				addTile(squareFront, xLeftTop, xRightTop, xLeftBottom + currentTileWidth, xLeftBottom, yBottom, yTop,
 						renderGroup);
-				addObject(tileXLeftBottom, yBottom, tileXRightTop, row, col, "left", worldMap, renderGroup, direction);
-			}
-			for (int col = squaresToRight - 1; col >= 0; col--) {
-				squareRight = new Polygon();
-				squareRight.setFill(new ImagePattern(grass));
-				squareRight.setLayoutY(10);
-				tileXLeftTop = xLeftTop + previousTileWidth + (col * previousTileWidth);
-				tileXRightTop = xLeftTop + (previousTileWidth * 2) + (col * previousTileWidth);
-				tileXRightBottom = xLeftBottom + (currentTileWidth * 2) + (col * currentTileWidth);
-				tileXLeftBottom = xLeftBottom + currentTileWidth + (col * currentTileWidth);
-				addTile(squareRight, tileXLeftTop, tileXRightTop, tileXRightBottom, tileXLeftBottom, yBottom, yTop,
-						renderGroup);
-				addObject(tileXLeftTop, yBottom, tileXRightBottom, row, col, "right", worldMap, renderGroup, direction);
+				if (direction.equals(Direction.North) || direction.equals(Direction.South)) {
+					addObject(xLeftTop, yBottom, xRightTop, row, playerLoc.x, "middle", worldMap, renderGroup,
+							direction);
+				} else {
+					addObject(xLeftTop, yBottom, xRightTop, row, playerLoc.y, "middle", worldMap, renderGroup,
+							direction);
+				}
+				for (int col = squaresToLeft - 1; col >= 0; col--) {
+					squareLeft = new Polygon();
+					squareLeft.setLayoutY(10);
+					squareLeft.setFill(new ImagePattern(grass));
+					tileXLeftTop = xLeftTop - previousTileWidth - (col * previousTileWidth);
+					tileXRightTop = xLeftTop - (col * previousTileWidth);
+					tileXRightBottom = xLeftBottom - col * currentTileWidth;
+					tileXLeftBottom = xLeftBottom - currentTileWidth - (col * currentTileWidth);
+					if (tileXRightTop >= 0) {
+						addTile(squareLeft, tileXLeftTop, tileXRightTop, tileXRightBottom, tileXLeftBottom, yBottom,
+								yTop, renderGroup);
+						addObject(tileXLeftBottom, yBottom, tileXRightTop, row, col, "left", worldMap, renderGroup,
+								direction);
+					}
+				}
+				for (int col = squaresToRight - 1; col >= 0; col--) {
+					squareRight = new Polygon();
+					squareRight.setFill(new ImagePattern(grass));
+					squareRight.setLayoutY(10);
+					tileXLeftTop = xLeftTop + previousTileWidth + (col * previousTileWidth);
+					tileXRightTop = xLeftTop + (previousTileWidth * 2) + (col * previousTileWidth);
+					tileXRightBottom = xLeftBottom + (currentTileWidth * 2) + (col * currentTileWidth);
+					tileXLeftBottom = xLeftBottom + currentTileWidth + (col * currentTileWidth);
+					if (tileXLeftTop >= 0) {
+						addTile(squareRight, tileXLeftTop, tileXRightTop, tileXRightBottom, tileXLeftBottom, yBottom,
+								yTop, renderGroup);
+						addObject(tileXLeftTop, yBottom, tileXRightBottom, row, col, "right", worldMap, renderGroup,
+								direction);
+					}
+				}
 			}
 			xLeftTop = xLeftBottom;
 			xRightTop = xLeftBottom + currentTileWidth;
