@@ -733,7 +733,6 @@ public class GUI extends Application {
                 break;
             }
         }
-
         // no items yet
         if (item == null) {
             return;

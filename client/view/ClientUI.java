@@ -529,6 +529,7 @@ public class ClientUI {
                 KeyCode keyCode = event.getCode();
                 // getSorce will give the control which caused the event
                 if (keyCode == KeyCode.LEFT || keyCode == KeyCode.A) {
+                	System.out.println("LEFT");
                     client.send(Packet.Left);
                 } else if (keyCode == KeyCode.RIGHT || keyCode == KeyCode.R) {
                     client.send(Packet.Right);
