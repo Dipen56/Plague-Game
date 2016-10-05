@@ -96,29 +96,34 @@ public class Rendering {
 		// need to get position from param (uid)
 		// Position selfPosition = positions.get(uid);
 		// Position selfPosition = new Position(5, 10, 1, Direction.North);
+		// Attempting to make the vision boundary... Eg: player can only see 20
+		// squares to the front, and across.
 		int x = playerLoc.x;
 		int y = playerLoc.y;
 		Direction direction = playerLoc.getDirection();
 		Image background = Images.BACKGROUND_IMAGE;
 		Image grass = Images.GRASS_IMAGE;
 		addImage(renderGroup, background, gamePanelWidth + 3, gamePaneHeight, 0, 0);
-		setNumSquares(worldMap.length, worldMap[0].length, direction, playerLoc);
+		setNumSquares(worldMap.length, worldMap[0].length, direction, playerLoc, worldMap);
 		double xRightTop = centerWidth + tileWidth / 2;
 		double yTop = getTopOffset();
 		double previousTileWidth = tileWidth * Math.pow(0.8, squaresInFront);
 		double xLeftTop = centerWidth - previousTileWidth / 2;
+		double currentTileWidth = 0, currentTileHeight = 0, xLeftBottom = 0, yBottom = 0, tileXLeftTop = 0,
+				tileXRightTop = 0, tileXRightBottom = 0, tileXLeftBottom = 0;
+		Polygon squareFront = null, squareLeft = null, squareRight = null;
 		// ===================================================================================================
 		// Below this is point is the code for all the rendering for first
 		// person
 		// ====================================================================================================
 		for (int row = 0; row < squaresInFront; row++) {
-			Polygon squareFront = new Polygon();
+			squareFront = new Polygon();
 			squareFront.setFill(new ImagePattern(grass));
 			squareFront.setLayoutY(10);
-			double currentTileWidth = tileWidth * Math.pow(0.8, squaresInFront - row - 1);
-			double currentTileHeight = tileHeight * Math.pow(0.8, squaresInFront - row - 1);
-			double xLeftBottom = centerWidth - currentTileWidth / 2;
-			double yBottom = yTop + currentTileHeight;
+			currentTileWidth = tileWidth * Math.pow(0.8, squaresInFront - row - 1);
+			currentTileHeight = tileHeight * Math.pow(0.8, squaresInFront - row - 1);
+			xLeftBottom = centerWidth - currentTileWidth / 2;
+			yBottom = yTop + currentTileHeight;
 			addTile(squareFront, xLeftTop, xRightTop, xLeftBottom + currentTileWidth, xLeftBottom, yBottom, yTop,
 					renderGroup);
 			if (direction.equals(Direction.North) || direction.equals(Direction.South)) {
@@ -127,25 +132,25 @@ public class Rendering {
 				addObject(xLeftTop, yBottom, xRightTop, row, playerLoc.y, "middle", worldMap, renderGroup, direction);
 			}
 			for (int col = squaresToLeft - 1; col >= 0; col--) {
-				Polygon squareLeft = new Polygon();
+				squareLeft = new Polygon();
 				squareLeft.setLayoutY(10);
 				squareLeft.setFill(new ImagePattern(grass));
-				double tileXLeftTop = xLeftTop - previousTileWidth - (col * previousTileWidth);
-				double tileXRightTop = xLeftTop - (col * previousTileWidth);
-				double tileXRightBottom = xLeftBottom - col * currentTileWidth;
-				double tileXLeftBottom = xLeftBottom - currentTileWidth - (col * currentTileWidth);
+				tileXLeftTop = xLeftTop - previousTileWidth - (col * previousTileWidth);
+				tileXRightTop = xLeftTop - (col * previousTileWidth);
+				tileXRightBottom = xLeftBottom - col * currentTileWidth;
+				tileXLeftBottom = xLeftBottom - currentTileWidth - (col * currentTileWidth);
 				addTile(squareLeft, tileXLeftTop, tileXRightTop, tileXRightBottom, tileXLeftBottom, yBottom, yTop,
 						renderGroup);
 				addObject(tileXLeftBottom, yBottom, tileXRightTop, row, col, "left", worldMap, renderGroup, direction);
 			}
 			for (int col = squaresToRight - 1; col >= 0; col--) {
-				Polygon squareRight = new Polygon();
+				squareRight = new Polygon();
 				squareRight.setFill(new ImagePattern(grass));
 				squareRight.setLayoutY(10);
-				double tileXLeftTop = xLeftTop + previousTileWidth + (col * previousTileWidth);
-				double tileXRightTop = xLeftTop + (previousTileWidth * 2) + (col * previousTileWidth);
-				double tileXRightBottom = xLeftBottom + (currentTileWidth * 2) + (col * currentTileWidth);
-				double tileXLeftBottom = xLeftBottom + currentTileWidth + (col * currentTileWidth);
+				tileXLeftTop = xLeftTop + previousTileWidth + (col * previousTileWidth);
+				tileXRightTop = xLeftTop + (previousTileWidth * 2) + (col * previousTileWidth);
+				tileXRightBottom = xLeftBottom + (currentTileWidth * 2) + (col * currentTileWidth);
+				tileXLeftBottom = xLeftBottom + currentTileWidth + (col * currentTileWidth);
 				addTile(squareRight, tileXLeftTop, tileXRightTop, tileXRightBottom, tileXLeftBottom, yBottom, yTop,
 						renderGroup);
 				addObject(tileXLeftTop, yBottom, tileXRightBottom, row, col, "right", worldMap, renderGroup, direction);
@@ -180,7 +185,7 @@ public class Rendering {
 		renderGroup.getChildren().add(p);
 	}
 
-	private void setNumSquares(int height, int width, Direction direction, Position playerLoc) {
+	private void setNumSquares(int height, int width, Direction direction, Position playerLoc, char[][] map) {
 		switch (direction) {
 		case North:
 			squaresInFront = playerLoc.y + 1;
@@ -223,6 +228,10 @@ public class Rendering {
 	}
 
 	private Point getImagePoint(Direction direction, int row, int col, String side, int boardHeight, int boardWidth) {
+		// if (row < 0 || row >= boardHeight)
+		// throw new IllegalArgumentException("row is out of bounds.");
+		// if (col < 0 || col >= boardWidth)
+		// throw new IllegalArgumentException(" is out of bounds.");
 		switch (direction) {
 		case North:
 			if (side.equals("left")) {
