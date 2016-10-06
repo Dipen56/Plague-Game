@@ -89,20 +89,11 @@ public class Rendering {
 	// public void render(Pane renderGroup, Map<Integer, Position> positions,
 	// char[][] worldMap, int visibility, int uid) {
 	public void render(Pane renderGroup, Position playerLoc, char[][] worldMap, int visibility, int uid) {
-		// player's coordinate on board, and direction.
-		// need to get position from param (uid)
-		// Position selfPosition = positions.get(uid);
-		// Position selfPosition = new Position(5, 10, 1, Direction.North);
-		
-		System.out.println(squaresInFront);
-		System.out.println(squaresToLeft);
-		System.out.println(squaresToRight);
-
 		int x = playerLoc.x;
 		int y = playerLoc.y;
 		Direction direction = playerLoc.getDirection();
 		Image background = loadImage(BACKGROUND_IMAGE);
-		Image grass = loadImage(FLOORTILE_IMAGE);
+		Image grass = loadImage(GRASS_IMAGE);
 		addImage(renderGroup, background, gamePanelWidth + 3, gamePaneHeight, 0, 0);
 		setNumSquares(worldMap.length, worldMap[0].length, direction, playerLoc);
 		double xRightTop = centerWidth + tileWidth / 2;
@@ -125,9 +116,9 @@ public class Rendering {
 					renderGroup);
 
 			if (direction.equals(Direction.North) || direction.equals(Direction.South)) {
-				//addObject(xLeftTop, yBottom, xRightTop, row, playerLoc.x, "middle", worldMap, renderGroup, direction);
+			//	addObject(xLeftTop, yBottom, xRightTop, row, playerLoc.x, "middle", worldMap, renderGroup, direction);
 			} else {
-				//addObject(xLeftTop, yBottom, xRightTop, row, playerLoc.y, "middle", worldMap, renderGroup, direction);
+			//	addObject(xLeftTop, yBottom, xRightTop, row, playerLoc.y, "middle", worldMap, renderGroup, direction);
 			}
 
 			for (int col = squaresToLeft - 1; col >= 0; col--) {
@@ -145,7 +136,7 @@ public class Rendering {
 						(int) yTop,"left");
 				addFrontPoints(row,(int) tileXLeftTop, (int)tileXRightTop,(int) yTop,"left");
 
-			//	addObject(tileXLeftBottom, yBottom, tileXRightTop, row, col, "left", worldMap, renderGroup, direction);
+			//addObject(tileXLeftBottom, yBottom, tileXRightTop, row, col, "left", worldMap, renderGroup, direction);
 			}
 
 			for (int col = squaresToRight - 1; col >= 0; col--) {
@@ -161,7 +152,7 @@ public class Rendering {
 				addPointsToList(row, col, (int) tileXLeftTop, (int) tileXRightBottom, (int) tileXRightTop, (int) yBottom,
 						(int) yTop,"right");
 					addFrontPoints(row,(int) tileXLeftTop, (int)tileXRightTop,(int) yTop,"right");
-				//addObject(tileXLeftTop, yBottom, tileXRightBottom, row, col, "right", worldMap, renderGroup, direction);
+			//	addObject(tileXLeftTop, yBottom, tileXRightBottom, row, col, "right", worldMap, renderGroup, direction);
 			}
 			xLeftTop = xLeftBottom;
 			xRightTop = xLeftBottom + currentTileWidth;
@@ -171,7 +162,7 @@ public class Rendering {
 			currentTileHeight = currentTileHeight * scaleY;
 		}
 
-		renderRoom(renderGroup);
+		//renderRoom(renderGroup);
 		
 		
 
