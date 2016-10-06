@@ -81,7 +81,6 @@ public class Images {
          MAP_OBJECT_IMAGES.put('T', loadImage("/tree.png"));
          MAP_OBJECT_IMAGES.put('R', loadImage("/boulder.png"));
          MAP_OBJECT_IMAGES.put('C', loadImage("/chest.png"));
-         MAP_OBJECT_IMAGES.put('G', loadImage("/grass.png"));
          MAP_OBJECT_IMAGES.put('B', loadImage("/barrel.png"));
          MAP_OBJECT_IMAGES.put('A', loadImage("/table.png"));
          MAP_OBJECT_IMAGES.put('U', loadImage("/Cupboard.png"));
