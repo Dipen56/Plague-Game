@@ -36,7 +36,11 @@ public class ClientUI {
 	/**
 	 * The period between every update
 	 */
-	public static final int DEFAULT_CLK_PERIOD = 100;
+	//This is the default clock thread
+	//public static final int DEFAULT_CLK_PERIOD = 100;
+	
+	//Testing clock thread
+	public static final int DEFAULT_CLK_PERIOD = 500;
 	// ============ info fields =================
 	/**
 	 * User id of this connection.
