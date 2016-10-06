@@ -21,6 +21,7 @@ import server.game.player.Avatar;
 import server.game.player.Direction;
 import server.game.player.Position;
 import server.game.player.Virus;
+import tests.gameLogicTests.WorldLogicTest;
 
 /**
  * This class is the client side UI, which is where the user start the game
@@ -367,8 +368,21 @@ public class ClientUI {
 		// ====================
 
 		Position playerLoc = positions.get(uid);
+		//Position playerLoc = new Position(1, 1, 4, Direction.North);
+
 		int areaId = playerLoc.areaId;
+		//int areaId = 4;
 		char[][] worldMap = areas.get(areaId);
+/*		for(int i = 0; i < worldMap.length; i++){
+			for(int j = 0 ; j  < worldMap[0].length; j++){
+				System.out.println(worldMap[i][j]);
+			}
+			System.out.println(" ");
+
+		}
+		*/
+		
+		//System.out.println(worldMap.toString());
 		render.render(playerLoc, worldMap, visibility, uid);
 
 		// These method should be somewhere for rendering

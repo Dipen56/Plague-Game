@@ -1,10 +1,15 @@
 package client.rendering;
 
 import java.awt.Point;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.swing.ImageIcon;
+
+import client.view.ClientUI;
 import client.view.GUI;
+
+import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
@@ -26,20 +31,13 @@ import javafx.scene.paint.ImagePattern;
 public class Rendering {
 	private static final String PLAYER_IMAGE = "/standingstillrear.png";
 	// private static final String BACKGROUND_IMAGE = "/background.gif";
-	private static final String BACKGROUND_IMAGE = "/roomBackGround.png";
-
+	private static final String BACKGROUND_IMAGE = "/night.jpg";
 	private static final String GRASS_IMAGE = "/grass.png";
-	private static final String BRICK_IMAGE = "/brickWall.png";
-	private static final String FLOORTILE_IMAGE = "/roomTile.png";
 	private static final String TREE_IMAGE = "/tree.png";
 	private static final String CHEST_IMAGE = "/chest.png";
-	public double scaleY = 1.2; // lower number less scaling
-	public double scaleX = 1.2; // lower number less scaling
-
 	// 35 y alignment of group
 	private int gamePaneHeight = GUI.HEIGHT_VALUE - 130;
 	// 3 x alignment of group
-
 	private int gamePanelWidth = GUI.GAMEPANE_WIDTH_VALUE;
 	private int tileWidth = 130;
 	private int tileHeight = 50;
@@ -54,16 +52,9 @@ public class Rendering {
 	private Map<Integer, Area> map;
 	private int avatarID;
 	private String direction;
-
-	private HashMap<Integer, Point[]> leftSidePoints = new HashMap<>();
-	private  ArrayList<Point> frontLeftPoints = new ArrayList<>();
-	private  ArrayList<Point> frontRightPoints = new ArrayList<>();
-	private HashMap<Integer, Point[]> rightSidePoints = new HashMap<>();
-	private Polygon wallPolygon = new Polygon();
 	// private int boardSize = 10;
 	private Pane renderGroup;
 	private int imageBound = 10;
-
 
 	public Rendering() {
 		// will need to get board size passed in
@@ -83,10 +74,6 @@ public class Rendering {
 		this.map = map;
 		this.avatarID = avatarID;
 	}
-
-
-	
-
 
 	/**
 	 * Redraw the rendering panel.
@@ -113,6 +100,7 @@ public class Rendering {
 		// Position selfPosition = new Position(5, 10, 1, Direction.North);
 		// Attempting to make the vision boundary... Eg: player can only see 20
 		// squares to the front, and across.
+		renderGroup.getChildren().clear();
 		int x = playerLoc.x;
 		int y = playerLoc.y;
 		Direction direction = playerLoc.getDirection();
@@ -121,7 +109,6 @@ public class Rendering {
 		addImage(renderGroup, background, gamePanelWidth, gamePaneHeight, 0, 0);
 		setNumSquares(worldMap.length, worldMap[0].length, direction, playerLoc);
 		double yTop = getTopOffset();
-
 		double previousTileWidth = tileWidth * Math.pow(scale, squaresInFront);
 		double xRightTop = centerWidth + previousTileWidth / 2;
 		double xLeftTop = centerWidth - previousTileWidth / 2;
@@ -133,7 +120,6 @@ public class Rendering {
 			Polygon squareFront = new Polygon();
 			squareFront.setFill(new ImagePattern(grass));
 			squareFront.setLayoutY(10);
-
 			double currentTileWidth = tileWidth * Math.pow(scale, squaresInFront - row - 1);
 			double currentTileHeight = tileHeight * Math.pow(scale, squaresInFront - row - 1);
 			double xLeftBottom = centerWidth - currentTileWidth / 2;
@@ -161,9 +147,6 @@ public class Rendering {
 								yTop, renderGroup);
 						addObject(tileXLeftTop, yBottom, tileXRightBottom, row, col, "left", worldMap, renderGroup,
 								direction, yTop);
-						addPointsToList(row, col, (int) tileXLeftTop, (int) tileXLeftBottom, (int) tileXRightTop, (int) yBottom,
-								(int) yTop,"left");
-						addFrontPoints(row,(int) tileXLeftTop, (int)tileXRightTop,(int) yTop,"left");
 					}
 				}
 				for (int col = squaresToRight - 1; col >= 0; col--) {
@@ -179,9 +162,6 @@ public class Rendering {
 								yTop, renderGroup);
 						addObject(tileXLeftBottom, yBottom, tileXRightTop, row, col, "right", worldMap, renderGroup,
 								direction, yTop);
-						addPointsToList(row, col, (int) tileXLeftTop, (int) tileXRightBottom, (int) tileXRightTop, (int) yBottom,
-								(int) yTop,"right");
-							addFrontPoints(row,(int) tileXLeftTop, (int)tileXRightTop,(int) yTop,"right");
 					}
 				}
 			}
@@ -189,149 +169,17 @@ public class Rendering {
 			xRightTop = xLeftBottom + currentTileWidth;
 			yTop = yBottom;
 			previousTileWidth = currentTileWidth;
-			currentTileWidth = currentTileWidth * scaleX;
-			currentTileHeight = currentTileHeight * scaleY;
 		}
-
-		//renderRoom(renderGroup);
-		
-		
-
 	}
 
 	private double getTopOffset() {
 		double count = 0;
 		for (int i = 0; i < squaresInFront; i++) {
-
 			count += tileHeight * Math.pow(scale, squaresInFront - i - 1);
 		}
 		return gamePaneHeight - count;
 	}
-	private void addPointsToList(int row, int col, int xLeftTop_Tile, int tileXLeftBottom, int xRightTop_Tile,
-			int yBottom, int yTop, String side) {
-		if (col == squaresToLeft - 1 && side.equals("left")) {
-			Point[] points = new Point[3];
-			points[0] = new Point(xRightTop_Tile, yTop); // this is to find the												// width
-			points[1] = new Point(tileXLeftBottom, yBottom);
-			points[2] = new Point(xLeftTop_Tile, yTop);
-			leftSidePoints.put(row, points);
-		}
-		
-		else if (col == squaresToRight -1 && side.equals("right")){
-			Point[] points = new Point[3];
-			points[0] = new Point(xRightTop_Tile, yTop); // this is to find the												// width
-			points[1] = new Point(tileXLeftBottom, yBottom);
-			points[2] = new Point(xLeftTop_Tile, yTop);
-			rightSidePoints.put(row, points);
-		}
-		
-	}
 
-	private void addFrontPoints(int row, int xLeftTop, int xTopRight, int yTop,String side){
-		if(row == 0 && side.equals("left")) {
-			Point leftPoint = new  Point(xLeftTop, yTop);
-			frontLeftPoints.add(leftPoint);
-			Point rightPoint = new Point(xTopRight, yTop); 
-			frontLeftPoints.add(rightPoint);// width
-			return;
-		}
-		else if(row == 0 && side.equals("right")){
-		Point leftPoint = new  Point(xLeftTop, yTop);
-		frontRightPoints.add(leftPoint);
-		Point rightPoint = new Point(xTopRight, yTop); 
-		frontRightPoints.add(rightPoint);
-		}
-	}
-	private void renderRoom(Pane renderGroup) {
-		renderLeftWall(renderGroup);
-		renderFrontWall(renderGroup);
-		renderRightWall(renderGroup);
-	}
-
-	private void renderLeftWall(Pane renderGroup) {
-		double currentTileHeight = tileHeight * scaleY;
-		Point xTopRight = (leftSidePoints.get(0))[0];
-		Point xBottomLeft = (leftSidePoints.get(0))[1];
-		double xTopLeft = (leftSidePoints.get(0))[2].getX();
-		double xTopLeft_Wall =  (xTopLeft - (0 * Math.abs(xTopRight.getX() - xTopLeft) )); //xLeftTop-previousWidth
-		double xBottomRight_Wall = xBottomLeft.getX() - 0 * currentTileHeight; 
-		double	yTopLeft_Wall = (xTopRight.getX() -((tileHeight - (50) ) * Math.pow(0.25, 0)));
-		double  yTopRight_Wall = (xTopRight.getX() -((tileHeight -(10)) * Math.pow(0.1, 0)));
-		double tempTop = yTopLeft_Wall-20; //so that the previous bottom Y will be the top Y of the next wall
-		System.out.println("temp top " + tempTop);
-		addWall(wallPolygon, xTopLeft_Wall, xTopLeft_Wall, xBottomRight_Wall, xBottomRight_Wall, yTopRight_Wall, tempTop, xBottomLeft.getY(), xTopRight.getY(), renderGroup);
-		for (int row =1; row != squaresInFront ; row++) {
-			wallPolygon = new Polygon();
-			tempTop = yTopRight_Wall;
-			xTopRight = (leftSidePoints.get(row))[0];
-			 xBottomLeft = (leftSidePoints.get(row))[1];
-			 xTopLeft = (leftSidePoints.get(row))[2].getX();
-			 xTopLeft_Wall =  (xTopLeft - (0 * Math.abs(xTopRight.getX() - xTopLeft) ));
-			 xBottomRight_Wall = xBottomLeft.getX() - 0 * currentTileHeight;
-			 yTopLeft_Wall = (xTopRight.getX() -((tileHeight - (50) ) * Math.pow(0.25, 0)));
-			 yTopRight_Wall = (xTopRight.getX() -((tileHeight -(10)) * Math.pow(0.1, 0)));
-			currentTileHeight = currentTileHeight * scaleY;
-			addWall(wallPolygon, xTopLeft_Wall, xTopLeft_Wall, xBottomRight_Wall, xBottomRight_Wall, yTopRight_Wall, tempTop, xBottomLeft.getY(), xTopRight.getY(), renderGroup);
-		}
-	}
-	
-	
-	public void renderRightWall(Pane renderGroup){
-		wallPolygon = new Polygon();
-		Point previousPoint = (leftSidePoints.get(0))[0];
-		double	leftTopY_Wall = (previousPoint.getX() -((tileHeight - (50) ) * Math.pow(0.25, 0))) -20;
-		Point xbottomRight = (rightSidePoints.get(0))[1];
-		Point xTopLeft= (rightSidePoints.get(0))[2];
-		double currentTileHeight = tileHeight * scaleY;
-		double xTopRight = (rightSidePoints.get(0))[0].getX();
-		double  yTopRight_Wall = leftTopY_Wall -((tileHeight  ) * Math.pow(1.25, 0));
-		double tempTop = leftTopY_Wall; //so that the previous bottom Y will be the top Y of the next wall;
-
-		addWall(wallPolygon,xTopRight,xTopRight, xbottomRight.getX() , xbottomRight.getX(), yTopRight_Wall,tempTop , xbottomRight.getY(), xTopLeft.getY(), renderGroup);	
-
-		for (int row =1; row != squaresInFront ; row++) {
-			tempTop = yTopRight_Wall;
-			wallPolygon = new Polygon();
-			xTopLeft = (rightSidePoints.get(row))[2];
-			 xbottomRight = (rightSidePoints.get(row))[1];
-			 xTopRight = (rightSidePoints.get(row))[0].getX();
-			 double xBottomRight_Wall = xbottomRight.getX() + 0 * currentTileHeight;
-			 yTopRight_Wall =yTopRight_Wall  -((tileHeight  ) * Math.pow(1.25, row)) ;
-			 //TODO: ONCE ANGELO FIXED HIS RENDERING ISSUES. HAVE A BOUNDS CHECK HERE
-			 //SO THE WALL HEIGHT IS NOT GREATER THAN THE GUI PANE HEIGHT
-			 if(Math.abs(yTopRight_Wall) > (gamePaneHeight * 0.65)){return;}
-			currentTileHeight = currentTileHeight * scaleY;
-		addWall(wallPolygon, xTopRight, xTopRight, xBottomRight_Wall, xBottomRight_Wall, yTopRight_Wall, tempTop, xbottomRight.getY(), xTopLeft.getY(), renderGroup);
-
-		}	
-		
-	}
-	public void renderFrontWall(Pane renderGroup){
-		wallPolygon = new Polygon();
-		Point xTopRight = (leftSidePoints.get(0))[0];
-		double	leftTopY_Wall = (xTopRight.getX() -((tileHeight - (50) ) * Math.pow(0.25, 0))) -20;
-		double xRightTop = centerWidth + tileWidth / 2;
-		double yTop = getTopOffset();
-		System.out.println(yTop + "\n\n\n");
-
-		double xLeftTop = centerWidth - tileWidth / 2;	
-		addWall(wallPolygon, xLeftTop, xLeftTop, xRightTop, xRightTop, leftTopY_Wall, leftTopY_Wall, yTop, yTop, renderGroup);
-		for(int squaresInLeft = 0 ; squaresInLeft<frontLeftPoints.size()-1; squaresInLeft++){
-			wallPolygon = new Polygon();	
-			Point topLeft = (frontLeftPoints.get(squaresInLeft));
-			Point topRight = (frontLeftPoints.get(squaresInLeft+1));
-			addWall(wallPolygon, topLeft.getX(), topLeft.getX(), topRight.getX(), topRight.getX(), yTop, yTop, leftTopY_Wall, leftTopY_Wall, renderGroup);			
-		}	
-		for(int squaresInRight = frontRightPoints.size()-1 ; squaresInRight>0; squaresInRight--){
-			wallPolygon = new Polygon();	
-			Point topLeft = (frontRightPoints.get(squaresInRight));
-			Point topRight = (frontRightPoints.get(squaresInRight-1));
-			System.out.println("top right x" + topRight.getX());
-			addWall(wallPolygon, topLeft.getX(), topLeft.getX(), topRight.getX(), topRight.getX(), yTop, yTop, leftTopY_Wall, leftTopY_Wall, renderGroup);			
-		}
-	}
-
-	
 	private void addTile(Polygon p, double xLeftTop, double xRightTop, double xRightBottom, double xLeftBottom,
 			double yBottom, double yTop, Pane renderGroup) {
 		p.getPoints().add(xLeftTop);
@@ -347,30 +195,10 @@ public class Rendering {
 		renderGroup.getChildren().add(p);
 	}
 
-	private void addWall(Polygon p, double xLeftTop, double xRightTop, double xRightBottom, double xLeftBottom,
-			double yLeftBottom, double yLeftTop, double yRightBottom, double yRightTop, Pane renderGroup) {
-		Image grass = loadImage(BRICK_IMAGE);
-		p.setLayoutY(10);
-		p.setFill(new ImagePattern(grass));
-		p.getPoints().add(xLeftTop);
-		p.getPoints().add(yLeftTop);
-		p.getPoints().add(xRightTop);
-		p.getPoints().add(yRightTop);
-		p.getPoints().add(xRightBottom);
-		p.getPoints().add(yRightBottom);
-		p.getPoints().add(xLeftBottom);
-		 p.getPoints().add(yLeftBottom);
-		 p.setStroke(javafx.scene.paint.Color.ANTIQUEWHITE);
-			p.setStrokeWidth(1);
-		renderGroup.getChildren().add(p);
-	}
-
 	private void setNumSquares(int height, int width, Direction direction, Position playerLoc) {
 		switch (direction) {
-		// needs to be switched over to integers , 0 = north, 1 = east, 2 =
-		// south, 3 = west
 		case North:
-			squaresInFront = height - playerLoc.y;
+			squaresInFront = playerLoc.y + 1;
 			squaresToLeft = playerLoc.x;
 			squaresToRight = width - playerLoc.x - 1;
 			break;
@@ -387,10 +215,11 @@ public class Rendering {
 		case West:
 			squaresInFront = playerLoc.x + 1;
 			squaresToLeft = height - playerLoc.y - 1;
-			squaresToRight = height - playerLoc.y - 2;
+			squaresToRight = (height - squaresToLeft) - 1;
 			break;
 		}
 	}
+
 	public void charRender() {
 
 	}
@@ -418,7 +247,6 @@ public class Rendering {
 		}
 	}
 
-
 	private Point getImagePoint(Direction direction, int row, int col, String side, int boardHeight, int boardWidth) {
 		// if (row < 0 || row >= boardHeight)
 		// throw new IllegalArgumentException("row is out of bounds.");
@@ -426,44 +254,36 @@ public class Rendering {
 		// throw new IllegalArgumentException(" is out of bounds.");
 		switch (direction) {
 		case North:
-			if (side.equals("left")) {
+			if (side.equals("left"))
 				return new Point(squaresToLeft - col - 1, row);
-			} else if (side.equals("right")) {
+			else if (side.equals("right"))
 				return new Point(squaresToLeft + col + 1, row);
-			} else {
+			else
 				return new Point(col, row);
-			}
 		case South:
-			if (side.equals("left")) {
-
-				return new Point(col + 1, boardHeight - row - 1);
-
-			} else if (side.equals("right")) {
-				return new Point(squaresToLeft - col, boardHeight - row - 1);
-			} else {
+			if (side.equals("left"))
+				return new Point(boardWidth - (squaresToLeft - col) + 1, boardHeight - row - 1);
+			else if (side.equals("right"))
+				return new Point((squaresToRight - col) - 1, boardHeight - row - 1);
+			else
 				return new Point(col, boardHeight - row - 1);
-			}
 		case East:
-			if (side.equals("left")) {
-				return new Point(boardWidth - row - 1, squaresToLeft - col - 1);
-			} else if (side.equals("right")) {
-				return new Point(boardWidth - row - 1, squaresToLeft + col + 1);
-			} else {
-				return new Point(boardWidth - row - 1, col);
-			}
+			if (side.equals("left"))
+				return new Point(boardWidth - row, squaresToLeft - col - 1);
+			else if (side.equals("right"))
+				return new Point(boardWidth - row, squaresToLeft + col + 1);
+			else
+				return new Point(boardWidth - row, col);
 		case West:
-			if (side.equals("left")) {
-				return new Point(row, col + squaresToLeft);
-			} else if (side.equals("right")) {
+			if (side.equals("left"))
+				return new Point(row, col + 1);
+			else if (side.equals("right"))
 				return new Point(row, squaresToRight - col - 1);
-			} else {
+			else
 				return new Point(row, col);
-			}
 		}
 		return null;
 	}
-
-
 
 	private Image getImageFromChar(char input) {
 		return Images.MAP_OBJECT_IMAGES.get(input);
@@ -486,7 +306,6 @@ public class Rendering {
 		double heightOffset = tileHeight / 2;
 		return tileBottom - heightOffset - imageHeight;
 	}
-
 
 	private void addImage(Pane renderGroup, Image image, double width, double height, double setX, double setY) {
 		ImageView imageView = new ImageView();
@@ -528,10 +347,6 @@ public class Rendering {
 	@Override
 	public String toString() {
 		return "renderclass";
-	}
-	private Image loadImage(String name) {
-		Image image = new Image(this.getClass().getResourceAsStream(name));
-		return image;
 	}
 
 }

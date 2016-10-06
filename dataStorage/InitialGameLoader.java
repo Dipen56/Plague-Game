@@ -162,11 +162,14 @@ public class InitialGameLoader {
          */
         areaIDs.add(0);
         Integer id = 0;
-        for (int i = 0; i < NUMBER_OF_ROOMS; i++) {
-            do {
-                id = (int) (Math.random() * 29) + 1;
+        for (int i = 1; i <= NUMBER_OF_ROOMS; i++) {
+          /*  do {
+               id = (int) (Math.random() * 29) + 1;
+            
             } while (areaIDs.contains(id));
-            areaIDs.add(id);
+            */
+        	
+            areaIDs.add(i);
         }
 
         // Sets up all transition spaces.
