@@ -100,6 +100,7 @@ public class Rendering {
 		// Position selfPosition = new Position(5, 10, 1, Direction.North);
 		// Attempting to make the vision boundary... Eg: player can only see 20
 		// squares to the front, and across.
+		renderGroup.getChildren().clear();
 		int x = playerLoc.x;
 		int y = playerLoc.y;
 		Direction direction = playerLoc.getDirection();
@@ -178,7 +179,7 @@ public class Rendering {
 		}
 		return gamePaneHeight - count;
 	}
-	
+
 	private void addTile(Polygon p, double xLeftTop, double xRightTop, double xRightBottom, double xLeftBottom,
 			double yBottom, double yTop, Pane renderGroup) {
 		p.getPoints().add(xLeftTop);
@@ -214,10 +215,11 @@ public class Rendering {
 		case West:
 			squaresInFront = playerLoc.x + 1;
 			squaresToLeft = height - playerLoc.y - 1;
-			squaresToRight = height - playerLoc.y - 2;
+			squaresToRight = (height - squaresToLeft) - 1;
 			break;
 		}
 	}
+
 	public void charRender() {
 
 	}
@@ -252,37 +254,33 @@ public class Rendering {
 		// throw new IllegalArgumentException(" is out of bounds.");
 		switch (direction) {
 		case North:
-			if (side.equals("left")) {
+			if (side.equals("left"))
 				return new Point(squaresToLeft - col - 1, row);
-			} else if (side.equals("right")) {
+			else if (side.equals("right"))
 				return new Point(squaresToLeft + col + 1, row);
-			} else {
+			else
 				return new Point(col, row);
-			}
 		case South:
-			if (side.equals("left")) {
-				return new Point(col + 1, boardHeight - row - 1);
-			} else if (side.equals("right")) {
-				return new Point(squaresToLeft - col, boardHeight - row - 1);
-			} else {
+			if (side.equals("left"))
+				return new Point(boardWidth - (squaresToLeft - col) + 1, boardHeight - row - 1);
+			else if (side.equals("right"))
+				return new Point((squaresToRight - col) - 1, boardHeight - row - 1);
+			else
 				return new Point(col, boardHeight - row - 1);
-			}
 		case East:
-			if (side.equals("left")) {
-				return new Point(boardWidth - row - 1, squaresToLeft - col - 1);
-			} else if (side.equals("right")) {
-				return new Point(boardWidth - row - 1, squaresToLeft + col + 1);
-			} else {
-				return new Point(boardWidth - row - 1, col);
-			}
+			if (side.equals("left"))
+				return new Point(boardWidth - row, squaresToLeft - col - 1);
+			else if (side.equals("right"))
+				return new Point(boardWidth - row, squaresToLeft + col + 1);
+			else
+				return new Point(boardWidth - row, col);
 		case West:
-			if (side.equals("left")) {
-				return new Point(row, col + squaresToLeft);
-			} else if (side.equals("right")) {
+			if (side.equals("left"))
+				return new Point(row, col + 1);
+			else if (side.equals("right"))
 				return new Point(row, squaresToRight - col - 1);
-			} else {
+			else
 				return new Point(row, col);
-			}
 		}
 		return null;
 	}
@@ -308,7 +306,6 @@ public class Rendering {
 		double heightOffset = tileHeight / 2;
 		return tileBottom - heightOffset - imageHeight;
 	}
-
 
 	private void addImage(Pane renderGroup, Image image, double width, double height, double setX, double setY) {
 		ImageView imageView = new ImageView();
