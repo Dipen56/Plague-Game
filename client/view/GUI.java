@@ -316,15 +316,25 @@ public class GUI extends Application {
         Menu file = new Menu("File");
         // creates the menu items
         MenuItem itmLoad = new MenuItem("Load");
+        itmLoad.setId("LoadMenu");
+		itmLoad.setOnAction(actionEvent);
         MenuItem itmSave = new MenuItem("Save");
+        itmSave.setId("SaveMenu");
+        itmSave.setOnAction(actionEvent);
         MenuItem itmClose = new MenuItem("Close");
+        itmClose.setId("CloseMenu");
+        itmClose.setOnAction(actionEvent);
         // add the items to menu
         file.getItems().addAll(itmLoad, itmSave, itmClose);
         // creates the menu
         Menu help = new Menu("Help");
         // creates the menu items
         MenuItem itmInfo = new MenuItem("Plague Info");
+        itmInfo.setId("InfoMenu");
+        itmInfo.setOnAction(actionEvent);
         MenuItem itmAbout = new MenuItem("About Game");
+        itmAbout.setId("AboutMenu");
+        itmAbout.setOnAction(actionEvent);
         // add the items to menu
         help.getItems().addAll(itmInfo, itmAbout);
         // adds menus to menu Bar

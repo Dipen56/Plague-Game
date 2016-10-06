@@ -14,8 +14,8 @@ public class Images {
     public static final Image SLASH_SCREEN_IMAGE = loadImage(
             "/spash-screen-background.png");
 
-    public static final Image BACKGROUND_IMAGE = loadImage("/night.png");
-
+    //public static final Image BACKGROUND_IMAGE = loadImage("/night.png");
+    public static final Image BACKGROUND_IMAGE = loadImage("/background3.gif");
     public static final Image GRASS_IMAGE = loadImage("/grass.png");
 
     public static final Image TREE_IMAGE = loadImage("/tree.png");
