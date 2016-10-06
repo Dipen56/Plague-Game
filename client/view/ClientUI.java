@@ -40,7 +40,7 @@ public class ClientUI {
 	//public static final int DEFAULT_CLK_PERIOD = 100;
 	
 	//Testing clock thread
-	public static final int DEFAULT_CLK_PERIOD = 1000;
+	public static final int DEFAULT_CLK_PERIOD = 50;
 	// ============ info fields =================
 	/**
 	 * User id of this connection.
