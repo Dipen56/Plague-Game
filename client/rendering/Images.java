@@ -78,14 +78,14 @@ public class Images {
          * the room should be facing.
          * 
          */
-         MAP_OBJECT_IMAGES.put('T', loadImage("/tree.png"));
+         MAP_OBJECT_IMAGES.put('T', loadImage("/treeresized.png"));
          MAP_OBJECT_IMAGES.put('R', loadImage("/boulder.png"));
          MAP_OBJECT_IMAGES.put('C', loadImage("/chest.png"));
          MAP_OBJECT_IMAGES.put('B', loadImage("/barrel.png"));
          MAP_OBJECT_IMAGES.put('A', loadImage("/table.png"));
          MAP_OBJECT_IMAGES.put('U', loadImage("/Cupboard.png"));
-         MAP_OBJECT_IMAGES.put('P', loadImage("/scrap pile.png"));
-         MAP_OBJECT_IMAGES.put('D', loadImage("/door.png"));
+         MAP_OBJECT_IMAGES.put('P', loadImage("/ScrapPile1.png"));
+         MAP_OBJECT_IMAGES.put('D', loadImage("/door1.png"));
 
         // ============= inventory objects ====================
 
