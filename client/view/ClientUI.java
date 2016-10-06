@@ -41,7 +41,7 @@ public class ClientUI {
 	//public static final int DEFAULT_CLK_PERIOD = 100;
 	
 	//Testing clock thread
-	public static final int DEFAULT_CLK_PERIOD = 500;
+	public static final int DEFAULT_CLK_PERIOD = 1000;
 	// ============ info fields =================
 	/**
 	 * User id of this connection.
@@ -367,11 +367,12 @@ public class ClientUI {
 		// a. call update renderer method.
 		// ====================
 
-		//Position playerLoc = positions.get(uid);
-		Position playerLoc = new Position(1, 1, 4, Direction.North);
+		Position playerLoc = positions.get(uid);
+//		Position playerLoc = new Position(1, 1, 4, Direction.North);
+		int areaId = playerLoc.areaId;
 
-		//int areaId = playerLoc.areaId;
-		int areaId = 4;
+		//int areaId = 4;
+		System.out.println("X:" +playerLoc.x+" Y: "+playerLoc.y);
 		char[][] worldMap = areas.get(areaId);
 		/*
 		for(int i = 0; i < worldMap.length; i++){
@@ -526,7 +527,7 @@ public class ClientUI {
 				// getSorce will give the control which caused the event
 				if (keyCode == KeyCode.LEFT || keyCode == KeyCode.A) {
 					client.send(Packet.Left);
-				} else if (keyCode == KeyCode.RIGHT || keyCode == KeyCode.R) {
+				} else if (keyCode == KeyCode.RIGHT || keyCode == KeyCode.D) {
 					client.send(Packet.Right);
 				} else if (keyCode == KeyCode.UP || keyCode == KeyCode.W) {
 					client.send(Packet.Forward);

@@ -30,9 +30,9 @@ public class Rendering {
 	private static final String TREE_IMAGE = "/tree.png";
 	private static final String CHEST_IMAGE = "/chest.png";
 	// 35 y alignment of group
-	private int gamePaneHeight = GUI.HEIGHT_VALUE - 25;
+	int gamePaneHeight = GUI.HEIGHT_VALUE - 35;
 	// 3 x alignment of group
-	private int gamePanelWidth = GUI.GAMEPANE_WIDTH_VALUE;
+	private int gamePanelWidth = GUI.GAMEPANE_WIDTH_VALUE-1;
 	private int tileWidth = 130;
 	private int tileHeight = 50;
 	private double imageOffset = 15;
@@ -101,7 +101,7 @@ public class Rendering {
 		Image background = Images.BACKGROUND_IMAGE;
 		Image grass = Images.GRASS_IMAGE;
 		addImage(renderGroup, background, gamePanelWidth, gamePaneHeight, 0, 0);
-		setNumSquares(worldMap.length, worldMap[0].length, direction, playerLoc);
+		setNumSquares(worldMap.length, worldMap[0].length, direction, playerLoc, worldMap);
 		double yTop = getTopOffset();
 		double previousTileWidth = tileWidth * Math.pow(scale, squaresInFront);
 		double xRightTop = centerWidth + previousTileWidth / 2;
@@ -189,29 +189,35 @@ public class Rendering {
 		renderGroup.getChildren().add(p);
 	}
 
-	private void setNumSquares(int height, int width, Direction direction, Position playerLoc) {
+	private void setNumSquares(int height, int width, Direction direction, Position playerLoc, char[][] map) {
 		switch (direction) {
 		case North:
+			System.out.println("North");
 			squaresInFront = playerLoc.y + 1;
 			squaresToLeft = playerLoc.x;
 			squaresToRight = width - playerLoc.x - 1;
 			break;
 		case East:
+			System.out.println("East");
 			squaresInFront = width - playerLoc.x;
 			squaresToLeft = playerLoc.y;
 			squaresToRight = height - playerLoc.y - 1;
 			break;
 		case South:
+			System.out.println("South");
 			squaresInFront = height - playerLoc.y;
 			squaresToLeft = width - playerLoc.x - 1;
 			squaresToRight = playerLoc.x;
 			break;
 		case West:
+			System.out.println("West");
 			squaresInFront = playerLoc.x + 1;
 			squaresToLeft = height - playerLoc.y - 1;
 			squaresToRight = (height - squaresToLeft) - 1;
 			break;
 		}
+		if (squaresInFront < 0 || squaresInFront > map.length)
+			throw new RuntimeException("squaresInFront is out of bounds");
 	}
 
 	public void charRender() {
@@ -220,7 +226,9 @@ public class Rendering {
 
 	private void addObject(double tileXLeftBottom, double yBottom, double tileXRightBottom, int row, int col,
 			String side, char[][] worldMap, Pane renderGroup, Direction direction, double yTop) {
+		System.out.println(direction.toString());
 		Point imageCoordinate = getImagePoint(direction, row, col, side, worldMap.length, worldMap[0].length);
+		// System.out.println(direction.toString());
 		char object = worldMap[imageCoordinate.y][imageCoordinate.x];
 		Image image = getImageFromChar(object);
 		// if (image != null) {
@@ -246,35 +254,67 @@ public class Rendering {
 		// throw new IllegalArgumentException("row is out of bounds.");
 		// if (col < 0 || col >= boardWidth)
 		// throw new IllegalArgumentException(" is out of bounds.");
+
 		switch (direction) {
 		case North:
-			if (side.equals("left"))
-				return new Point(squaresToLeft - col - 1, row);
-			else if (side.equals("right"))
-				return new Point(squaresToLeft + col + 1, row);
-			else
-				return new Point(col, row);
+			if (side.equals("left")) {
+				Point temp = new Point(squaresToLeft - col - 1, row);
+				System.out.println(temp.x + " rightttttttttttt" + temp.y);
+				return temp;
+			} else if (side.equals("right")) {
+				Point temp = new Point(squaresToLeft + col + 1, row);
+				System.out.println(temp.x + " rightttttttttttt" + temp.y);
+				return temp;
+			} else {
+				Point temp = new Point(col, row);
+				System.out.println(temp.x + " rightttttttttttt" + temp.y);
+				return temp;
+			}
 		case South:
-			if (side.equals("left"))
-				return new Point(boardWidth - (squaresToLeft - col) , boardHeight - row - 1);
-			else if (side.equals("right"))
-				return new Point((squaresToRight - col) - 1, boardHeight - row - 1);
-			else
-				return new Point(col, boardHeight - row - 1);
+
+			if (side.equals("left")) {
+				Point temp = new Point(boardWidth - (squaresToLeft - col), boardHeight - row - 1);
+				// System.out.println(temp.x+"lefttttttttttttt "+temp.y);
+				return temp;
+			} else if (side.equals("right")) {
+				Point temp = new Point((squaresToRight - col) - 1, boardHeight - row - 1);
+				// System.out.println(temp.x+" rightttttttttttt"+temp.y);
+				return temp;
+			} else {
+				Point temp = new Point(col, boardHeight - row - 1);
+				// System.out.println(temp.x+"centerttttttttttttttttttt
+				// "+temp.y);
+				return temp;
+			}
 		case East:
-			if (side.equals("left"))
-				return new Point(boardWidth - row, squaresToLeft - col - 1);
-			else if (side.equals("right"))
-				return new Point(boardWidth - row, squaresToLeft + col + 1);
-			else
-				return new Point(boardWidth - row, col);
+			if (side.equals("left")) {
+				Point temp = new Point(boardWidth - 1 - row, squaresToLeft - col - 1);
+				System.out.println(temp.x + "lefttttttttttttt " + temp.y);
+				return temp;
+			} else if (side.equals("right")) {
+				Point temp = new Point(boardWidth - 1 - row, squaresToLeft + col + 1);
+				System.out.println(temp.x + " rightttttttttttt" + temp.y);
+				return temp;
+			} else {
+				Point temp = new Point(boardWidth - 1 - row, col);
+				System.out.println(temp.x + "centerttttttttttttttttttt " + temp.y);
+				System.out.println(boardHeight + " " + boardWidth);
+				return temp;
+			}
 		case West:
-			if (side.equals("left"))
-				return new Point(row, col + 1);
-			else if (side.equals("right"))
-				return new Point(row, squaresToRight - col - 1);
-			else
-				return new Point(row, col);
+			if (side.equals("left")) {
+				Point temp = new Point(row, col + 1);
+				System.out.println(temp.x + "lefttttttttttttt " + temp.y);
+				return temp;
+			} else if (side.equals("right")) {
+				Point temp = new Point(row, squaresToRight - col - 1);
+				System.out.println(temp.x + "lefttttttttttttt " + temp.y);
+				return temp;
+			} else {
+				Point temp = new Point(row, col);
+				System.out.println(temp.x + "lefttttttttttttt " + temp.y);
+				return temp;
+			}
 		}
 		return null;
 	}
