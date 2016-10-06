@@ -84,9 +84,8 @@ public class Images {
          MAP_OBJECT_IMAGES.put('B', loadImage("/barrel.png"));
          MAP_OBJECT_IMAGES.put('A', loadImage("/table.png"));
          MAP_OBJECT_IMAGES.put('U', loadImage("/Cupboard.png"));
-         //MAP_OBJECT_IMAGES.put('P', loadImage("/ScrapPile.png"));
-//         this is the TransitionSpace, which is actually a normal ground for renderer.
-         MAP_OBJECT_IMAGES.put('D', loadImage("/grass.png"));
+         MAP_OBJECT_IMAGES.put('P', loadImage("/scrap pile.png"));
+         MAP_OBJECT_IMAGES.put('D', loadImage("/door.png"));
 
         // ============= inventory objects ====================
 

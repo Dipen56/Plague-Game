@@ -36,10 +36,10 @@ public class ClientUI {
 	/**
 	 * The period between every update
 	 */
-	//This is the default clock thread
-	//public static final int DEFAULT_CLK_PERIOD = 100;
-	
-	//Testing clock thread
+	// This is the default clock thread
+	// public static final int DEFAULT_CLK_PERIOD = 100;
+
+	// Testing clock thread
 	public static final int DEFAULT_CLK_PERIOD = 50;
 	// ============ info fields =================
 	/**
@@ -366,10 +366,10 @@ public class ClientUI {
 		// a. call update renderer method.
 		// ====================
 		Position playerLoc = positions.get(uid);
-		System.out.println("X:" +playerLoc.x+" Y: "+playerLoc.y);
+		System.out.println("X:" + playerLoc.x + " Y: " + playerLoc.y);
 		int areaId = playerLoc.areaId;
 		char[][] worldMap = areas.get(areaId);
-		render.render(playerLoc, worldMap, visibility, uid);
+		render.render(playerLoc, worldMap, visibility, uid, avatars, positions);
 
 		// These method should be somewhere for rendering
 		// /**
