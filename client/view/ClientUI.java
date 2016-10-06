@@ -367,13 +367,14 @@ public class ClientUI {
 		// a. call update renderer method.
 		// ====================
 
-		Position playerLoc = positions.get(uid);
-		//Position playerLoc = new Position(1, 1, 4, Direction.North);
+		//Position playerLoc = positions.get(uid);
+		Position playerLoc = new Position(1, 1, 4, Direction.North);
 
-		int areaId = playerLoc.areaId;
-		//int areaId = 4;
+		//int areaId = playerLoc.areaId;
+		int areaId = 4;
 		char[][] worldMap = areas.get(areaId);
-/*		for(int i = 0; i < worldMap.length; i++){
+		/*
+		for(int i = 0; i < worldMap.length; i++){
 			for(int j = 0 ; j  < worldMap[0].length; j++){
 				System.out.println(worldMap[i][j]);
 			}
@@ -381,6 +382,7 @@ public class ClientUI {
 
 		}
 		*/
+		
 		
 		//System.out.println(worldMap.toString());
 		render.render(playerLoc, worldMap, visibility, uid);

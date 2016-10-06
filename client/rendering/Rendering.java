@@ -3,13 +3,7 @@ package client.rendering;
 import java.awt.Point;
 import java.util.HashMap;
 import java.util.Map;
-
-import javax.swing.ImageIcon;
-
-import client.view.ClientUI;
 import client.view.GUI;
-
-import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
@@ -36,7 +30,7 @@ public class Rendering {
 	private static final String TREE_IMAGE = "/tree.png";
 	private static final String CHEST_IMAGE = "/chest.png";
 	// 35 y alignment of group
-	private int gamePaneHeight = GUI.HEIGHT_VALUE - 130;
+	private int gamePaneHeight = GUI.HEIGHT_VALUE - 25;
 	// 3 x alignment of group
 	private int gamePanelWidth = GUI.GAMEPANE_WIDTH_VALUE;
 	private int tileWidth = 130;
@@ -262,7 +256,7 @@ public class Rendering {
 				return new Point(col, row);
 		case South:
 			if (side.equals("left"))
-				return new Point(boardWidth - (squaresToLeft - col) + 1, boardHeight - row - 1);
+				return new Point(boardWidth - (squaresToLeft - col) , boardHeight - row - 1);
 			else if (side.equals("right"))
 				return new Point((squaresToRight - col) - 1, boardHeight - row - 1);
 			else
