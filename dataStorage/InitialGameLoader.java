@@ -274,14 +274,15 @@ public class InitialGameLoader {
                 { s[16], s[17], cp[5], b, b, ch[22] } };
 
         // Puts the rooms together.
+        //TODO: change back to true 
         Room room1 = new Room(room1Map, areaIDs.get(1),
-                keys.get(keys.size() - 4).getKeyID(), true);
+                keys.get(keys.size() - 4).getKeyID(), false);
         Room room2 = new Room(room2Map, areaIDs.get(2),
-                keys.get(keys.size() - 3).getKeyID(), true);
+                keys.get(keys.size() - 3).getKeyID(), false);
         Room room3 = new Room(room3Map, areaIDs.get(3),
-                keys.get(keys.size() - 2).getKeyID(), true);
+                keys.get(keys.size() - 2).getKeyID(), false);
         Room room4 = new Room(room4Map, areaIDs.get(4),
-                keys.get(keys.size() - 1).getKeyID(), true);
+                keys.get(keys.size() - 1).getKeyID(), false);
 
         MapElement[][] worldMap = {
                 { t, t, t, t, t, t, t, t, t, g, t, t, t, t, t, t, t, t, t, t, t, t, t, t,
