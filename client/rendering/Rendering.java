@@ -249,7 +249,7 @@ public class Rendering {
 	 */
 	private void addObject(double tileXLeftBottom, double yBottom, double tileXRightBottom, int row, int col,
 			String side, char[][] worldMap, Pane renderGroup, Direction direction, double yTop) {
-		System.out.println(direction.toString());
+		//System.out.println(direction.toString());
 		Point imageCoordinate = getImagePoint(direction, row, col, side, worldMap.length, worldMap[0].length);
 		// System.out.println(direction.toString());
 		char object = worldMap[imageCoordinate.y][imageCoordinate.x];
@@ -318,11 +318,11 @@ public class Rendering {
 				Point temp = new Point(boardWidth - 1 - row, col);
 				// System.out.println(temp.x + "centerttttttttttttttttttt " +
 				// temp.y);
-				System.out.println(boardHeight + " " + boardWidth);
+				//System.out.println(boardHeight + " " + boardWidth);
 				return temp;
 			}
 		case West:
-			System.out.println(col + " " + row);
+			//System.out.println(col + " " + row);
 			if (side.equals("left")) {
 				// this loop is broken
 				Point temp = new Point(row, boardHeight - (squaresToLeft - col));
