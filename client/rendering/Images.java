@@ -25,6 +25,16 @@ public class Images {
     public static final Image CHEST_IMAGE = loadImage("/chest.png");
 
     /**
+     * Four green arrow images used for rendering mini-map
+     */
+    public static final Map<Direction, Image> GREEN_ARROW;
+
+    /**
+     * Four red arrow images used for rendering mini-map
+     */
+    public static final Map<Direction, Image> RED_ARROW;
+
+    /**
      * This is designed as a table for renderer to retrieve the avatar images.
      */
     public static final Map<Avatar, Map<Side, Image>> AVATAR_IMAGES;
@@ -48,6 +58,8 @@ public class Images {
         MAP_OBJECT_IMAGES = new HashMap<>();
         ITEM_IMAGES = new HashMap<>();
         AVATAR_IMAGES = new HashMap<>();
+        GREEN_ARROW = new HashMap<>();
+        RED_ARROW = new HashMap<>();
         /*
          * TODO This is probably not appropriate, some map objects may need more than one
          * png path, e.g. a room has four sides of views, each of them should be
@@ -103,37 +115,44 @@ public class Images {
         // ============= Avatar images ====================
 
         Map<Side, Image> avatarImg_1 = new HashMap<>();
-        // avatarImg_1.put(Side.Front, loadImage("/north_image_for_avatar_1"));
-        // avatarImg_1.put(Side.Back, loadImage("/east_image_for_avatar_1"));
-        // avatarImg_1.put(Side.Left, loadImage("/south_image_for_avatar_1"));
-        // avatarImg_1.put(Side.Right, loadImage("/west_image_for_avatar_1"));
+        avatarImg_1.put(Side.Front, loadImage("/Char_1_front_stand.png"));
+        avatarImg_1.put(Side.Back, loadImage("/Char_1_rear_stand.png"));
+        avatarImg_1.put(Side.Left, loadImage("/Char_1_left_stand.png"));
+        avatarImg_1.put(Side.Right, loadImage("/Char_1_left_right_foot.png"));
         AVATAR_IMAGES.put(Avatar.Avatar_1, avatarImg_1);
 
         Map<Side, Image> avatarImg_2 = new HashMap<>();
-        // avatarImg_2.put(Side.Front, loadImage("/north_image_for_avatar_2"));
-        // avatarImg_2.put(Side.Back, loadImage("/east_image_for_avatar_2"));
-        // avatarImg_2.put(Side.Left, loadImage("/south_image_for_avatar_2"));
-        // avatarImg_2.put(Side.Right, loadImage("/west_image_for_avatar_2"));
+        avatarImg_2.put(Side.Front, loadImage("/Char_2_front_stand.png"));
+        avatarImg_2.put(Side.Back, loadImage("/Char_2_rear_stand.png"));
+        avatarImg_2.put(Side.Left, loadImage("/Char_2_left_right_foot.png"));
+        avatarImg_2.put(Side.Right, loadImage("/Char_2_right_left_foot.png"));
         AVATAR_IMAGES.put(Avatar.Avatar_2, avatarImg_2);
 
         Map<Side, Image> avatarImg_3 = new HashMap<>();
-        // avatarImg_3.put(Side.Front, loadImage("/north_image_for_avatar_3"));
-        // avatarImg_3.put(Side.Back, loadImage("/east_image_for_avatar_3"));
-        // avatarImg_3.put(Side.Left, loadImage("/south_image_for_avatar_3"));
-        // avatarImg_3.put(Side.Right, loadImage("/west_image_for_avatar_3"));
+        avatarImg_3.put(Side.Front, loadImage("/Char_3_front_stand.png"));
+        avatarImg_3.put(Side.Back, loadImage("/Char_3_rear_stand.png"));
+        avatarImg_3.put(Side.Left, loadImage("/Char_3_left_left_foot.png"));
+        avatarImg_3.put(Side.Right, loadImage("/Char_3_right_right_foot.png"));
         AVATAR_IMAGES.put(Avatar.Avatar_3, avatarImg_3);
 
         Map<Side, Image> avatarImg_4 = new HashMap<>();
-        // avatarImg_4.put(Side.Front, loadImage("/north_image_for_avatar_4"));
-        // avatarImg_4.put(Side.Back, loadImage("/east_image_for_avatar_4"));
-        // avatarImg_4.put(Side.Left, loadImage("/south_image_for_avatar_4"));
-        // avatarImg_4.put(Side.Right, loadImage("/west_image_for_avatar_4"));
+        avatarImg_4.put(Side.Front, loadImage("/Char_4_front_stand.png"));
+        avatarImg_4.put(Side.Back, loadImage("/Char_4_rear_stand.png"));
+        avatarImg_4.put(Side.Left, loadImage("/Char_4_left_left_foot.png"));
+        avatarImg_4.put(Side.Right, loadImage("/Char_4_right_left_foot.png"));
         AVATAR_IMAGES.put(Avatar.Avatar_4, avatarImg_4);
 
-        // public static final Image[] AVATAR_IMAGES = { loadImage("/front_stand_1.png"),
-        // loadImage("/front_stand_2.png"), loadImage("/front_stand_3.png"),
-        // loadImage("/front_stand_4.png"), loadImage("/front_stand_5.png") };
+        // =================== arrows ==========================
 
+        GREEN_ARROW.put(Direction.North, loadImage("/Green_North.png"));
+        GREEN_ARROW.put(Direction.East, loadImage("/Green_East.png"));
+        GREEN_ARROW.put(Direction.South, loadImage("/Green_South.png"));
+        GREEN_ARROW.put(Direction.West, loadImage("/Green_West.png"));
+
+        RED_ARROW.put(Direction.North, loadImage("/Red_North.png"));
+        RED_ARROW.put(Direction.East, loadImage("/Red_East.png"));
+        RED_ARROW.put(Direction.South, loadImage("/Red_South.png"));
+        RED_ARROW.put(Direction.West, loadImage("/Red_West.png"));
     }
 
     /**
@@ -176,4 +195,5 @@ public class Images {
     public static Image loadImage(String name) {
         return new Image(Images.class.getResourceAsStream(name));
     }
+
 }

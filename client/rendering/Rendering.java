@@ -22,18 +22,16 @@ import javafx.scene.paint.ImagePattern;
  * This class represents the main rendering class, this class will control the rendering
  * of the game board, character, and objects.
  *
- * @author Angelo & Dipen
+ * @author Angelo
  *
  */
 
 public class Rendering {
-    private static final String PLAYER_IMAGE = "/standingstillrear.png";
+
     // private static final String BACKGROUND_IMAGE = "/background.gif";
     private static final String BACKGROUND_IMAGE = "/night.jpg";
-
     private int gamePaneHeight = GUI.HEIGHT_VALUE - 35;
     private int gamePanelWidth = GUI.GAMEPANE_WIDTH_VALUE - 1;
-
     private int tileWidth = 130;
     private int tileHeight = 50;
     private double imageOffset = 15;
@@ -42,7 +40,6 @@ public class Rendering {
     private int squaresInFront = 0;
     private int squaresToLeft = 0;
     private int squaresToRight = 0;
-
     private Pane renderGroup;
     private int imageBound = 10;
 
@@ -167,6 +164,7 @@ public class Rendering {
      * 
      * @return
      */
+
     private double getTopOffset() {
         double count = 0;
         for (int i = 0; i < squaresInFront; i++) {
@@ -187,6 +185,7 @@ public class Rendering {
      * @param yTop
      * @param renderGroup
      */
+
     private void addTile(Polygon p, double xLeftTop, double xRightTop,
             double xRightBottom, double xLeftBottom, double yBottom, double yTop,
             Pane renderGroup) {
@@ -399,6 +398,7 @@ public class Rendering {
      * @param input
      * @return
      */
+
     private Image getImageFromChar(char input) {
         return Images.MAP_OBJECT_IMAGES.get(input);
     }
@@ -412,6 +412,7 @@ public class Rendering {
      * @param tileXRight
      * @return
      */
+
     private double getImageX(double imageWidth, double tileXLeft, double tileXRight) {
         double tileWidth = tileXRight - tileXLeft;
         double widthOffset = Math.abs(tileWidth - imageWidth) / 2;
@@ -434,6 +435,7 @@ public class Rendering {
      * 
      * @return
      */
+
     private double getImageY(double imageHeight, double tileBottom, double tileTop) {
         double tileHeight = tileBottom - tileTop;
         double heightOffset = tileHeight / 2;
@@ -451,6 +453,7 @@ public class Rendering {
      * @param setX
      * @param setY
      */
+
     private void addImage(Pane renderGroup, Image image, double width, double height,
             double setX, double setY) {
         ImageView imageView = new ImageView();
@@ -467,6 +470,7 @@ public class Rendering {
      * 
      * @param renderGroup
      */
+
     public void setGroup(Pane renderGroup) {
         this.renderGroup = renderGroup;
     }
@@ -474,9 +478,9 @@ public class Rendering {
     /**
      * Generic toString method.
      */
+
     @Override
     public String toString() {
         return "renderclass";
     }
-
 }

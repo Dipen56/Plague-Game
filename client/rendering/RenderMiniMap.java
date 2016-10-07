@@ -2,11 +2,13 @@ package client.rendering;
 
 import java.util.Map;
 
+import server.game.player.Direction;
 import server.game.player.Player;
 import server.game.player.Position;
 import server.game.world.Area;
 
 import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
 
 /**
  * This class is used to render the mini map to the gui.
@@ -35,10 +37,6 @@ public class RenderMiniMap {
 
     public static void renderMiniMap(Position playerLoc, char[][] worldMap,
             int visibility, int uid) {
-        
-        
-        
-        
 
     }
 
