@@ -248,7 +248,7 @@ public class GUI extends Application {
 		info.setText("Welcome Players");
 		info.getStyleClass().add("login-info");
 		loginPane.getChildren().add(info);
-		info.setLayoutX((WIDTH_VALUE / 2) - 230);
+		info.setLayoutX(390);
 
 		FlowPane avatar = new FlowPane();
 		avatar.setPrefWidth(WIDTH_VALUE);
@@ -281,45 +281,51 @@ public class GUI extends Application {
 
 		loginPane.getChildren().add(avatar);
 
-		avatar.setLayoutX((WIDTH_VALUE / 2) - 300);
+		avatar.setLayoutX(280);
 		avatar.setLayoutY(100);
 
 		VBox inputStore = new VBox(5);
 		HBox userNameBox = new HBox(3);
 		Label user = new Label("Enter UserName");
+		user.getStyleClass().add("input-login");
 		userNameInput = new TextField();
 		userNameInput = new TextField();
 		userNameBox.getChildren().addAll(user, userNameInput);
 
 		HBox ipBox = new HBox(3);
 		Label ip = new Label("Enter IP Address");
+		ip.getStyleClass().add("input-login");
 		ipInput = new TextField();
 		ipBox.getChildren().addAll(ip, ipInput);
 
 		HBox portBox = new HBox(3);
 		portBox.alignmentProperty().set(Pos.CENTER);
 		Label port = new Label("Enter Port");
+		port.getStyleClass().add("input-login");
 		portInput = new TextField();
 		portBox.getChildren().addAll(port, portInput);
-
 		inputStore.getChildren().addAll(userNameBox, ipBox, portBox);
 
 		loginPane.getChildren().add(inputStore);
+		inputStore.setLayoutX(350);
 		inputStore.setLayoutY(450);
-		inputStore.setLayoutX(400);
+		
 
 		FlowPane buttons = new FlowPane();
 		buttons.alignmentProperty().set(Pos.CENTER);
 		buttons.setHgap(10);
 		login = new Button("Login");
+		login.getStyleClass().add("button-login");
 		login.setOnAction(actionEvent);
 		quitLogin = new Button("Leave");
+		quitLogin.getStyleClass().add("button-login");
 		quitLogin.setOnAction(actionEvent);
 		buttons.getChildren().addAll(login, quitLogin);
 
 		loginPane.getChildren().add(buttons);
+		buttons.setLayoutX(300);
 		buttons.setLayoutY(580);
-		buttons.setLayoutX(400);
+		
 
 		Scene loginScene = new Scene(loginPane, WIDTH_VALUE, HEIGHT_VALUE);
 		loginScene.getStylesheets().add(this.getClass().getResource(STYLE_CSS).toExternalForm());
