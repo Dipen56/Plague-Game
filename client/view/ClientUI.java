@@ -103,6 +103,10 @@ public class ClientUI {
 	 */
 	private GUI gui;
 	/**
+	 * mac health
+	 */
+	double maxHealth = 600;
+	/**
 	 * The renderer
 	 */
 	private Rendering render;
@@ -361,15 +365,21 @@ public class ClientUI {
 		// a. update minimap
 		// b. update the inventory
 		gui.setInventory(inventory);
+		//System.out.println(inventory.size());
 		// c. update the health bar if it is in right panel in GUI.
 		// 2. update Renderer
 		// a. call update renderer method.
 		// ====================
 		Position playerLoc = positions.get(uid);
-		//System.out.println("X:" + playerLoc.x + " Y: " + playerLoc.y);
+		// System.out.println("X:" + playerLoc.x + " Y: " + playerLoc.y);
 		int areaId = playerLoc.areaId;
 		char[][] worldMap = areas.get(areaId);
 		render.render(playerLoc, worldMap, visibility, uid);
+		// gui.setHealthBar((double)((double)health/600), virus);
+		gui.updateHealth((double) ((double) health / 600));
+
+		// gui.setHealthBar(health, virus);
+		// System.out.println(health);
 
 		// These method should be somewhere for rendering
 		// /**
@@ -443,6 +453,7 @@ public class ClientUI {
 				clockThread.start();
 			}
 		});
+		gui.setHealthBar(health, virus);
 	}
 
 	/**
@@ -586,6 +597,16 @@ public class ClientUI {
 					gui.setItemDescription(itemX, itemY);
 					// System.out.println(itemX + " " + itemY);
 				}
+			}
+		};
+	}
+
+	private void setWindowEventHander() {
+		windowEvent = new EventHandler<WindowEvent>() {
+
+			@Override
+			public void handle(WindowEvent event) {
+				//System.out.println("here");
 			}
 		};
 	}
