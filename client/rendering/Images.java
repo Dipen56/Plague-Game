@@ -24,6 +24,15 @@ public class Images {
 	public static final Image CHEST_IMAGE = loadImage("/chest.png");
 
 	/**
+	 * Four green arrow images used for rendering mini-map
+	 */
+	public static final Map<Direction, Image> GREEN_ARROW;
+	/**
+	 * Four red arrow images used for rendering mini-map
+	 */
+	public static final Map<Direction, Image> RED_ARROW;
+
+	/**
 	 * This is designed as a table for renderer to retrieve the avatar images.
 	 */
 	public static final Map<Avatar, Map<Side, Image>> AVATAR_IMAGES;
@@ -48,6 +57,9 @@ public class Images {
 		MAP_OBJECT_IMAGES = new HashMap<>();
 		ITEM_IMAGES = new HashMap<>();
 		AVATAR_IMAGES = new HashMap<>();
+		GREEN_ARROW = new HashMap<>();
+		RED_ARROW = new HashMap<>();
+
 		/*
 		 * TODO This is probably not appropriate, some map objects may need more
 		 * than one png path, e.g. a room has four sides of views, each of them
@@ -130,10 +142,16 @@ public class Images {
 		avatarImg_4.put(Side.Right, loadImage("/Char_4_right_left_foot.png"));
 		AVATAR_IMAGES.put(Avatar.Avatar_4, avatarImg_4);
 
-		// public static final Image[] AVATAR_IMAGES = {
-		// loadImage("/front_stand_1.png"),
-		// loadImage("/front_stand_2.png"), loadImage("/front_stand_3.png"),
-		// loadImage("/front_stand_4.png"), loadImage("/front_stand_5.png") };
+		// =================== arrows ==========================
+
+		GREEN_ARROW.put(Direction.North, loadImage("/Green_North.png"));
+		GREEN_ARROW.put(Direction.East, loadImage("/Green_East.png"));
+		GREEN_ARROW.put(Direction.South, loadImage("/Green_South.png"));
+		GREEN_ARROW.put(Direction.West, loadImage("/Green_West.png"));
+		RED_ARROW.put(Direction.North, loadImage("/Red_North.png"));
+		RED_ARROW.put(Direction.East, loadImage("/Red_East.png"));
+		RED_ARROW.put(Direction.South, loadImage("/Red_South.png"));
+		RED_ARROW.put(Direction.West, loadImage("/Red_West.png"));
 	}
 
 	/**
