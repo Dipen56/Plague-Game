@@ -90,14 +90,13 @@ public class Rendering {
 				if (direction.equals(Direction.North) || direction.equals(Direction.South)) {
 					addObject(xLeftTop, yBottom, xRightTop, row, playerLoc.x, "middle", worldMap, renderGroup,
 							direction, yTop);
-
 					addAvatar(xLeftTop, yBottom, xRightTop, row, playerLoc.x, "middle", worldMap, renderGroup,
-							direction, yTop, avatars, positions);
+							direction, yTop, avatars, positions,uid);
 				} else {
 					addObject(xLeftTop, yBottom, xRightTop, row, playerLoc.y, "middle", worldMap, renderGroup,
 							direction, yTop);
 					addAvatar(xLeftTop, yBottom, xRightTop, row, playerLoc.y, "middle", worldMap, renderGroup,
-							direction, yTop, avatars, positions);
+							direction, yTop, avatars, positions,uid);
 				}
 				for (int col = squaresToLeft - 1; col >= 0; col--) {
 					Polygon squareLeft = new Polygon();
@@ -114,8 +113,7 @@ public class Rendering {
 								direction, yTop);
 
 						addAvatar(tileXLeftTop, yBottom, tileXRightBottom, row, col, "left", worldMap, renderGroup,
-								direction, yTop, avatars, positions);
-
+								direction, yTop, avatars, positions,uid);
 					}
 				}
 				for (int col = squaresToRight - 1; col >= 0; col--) {
@@ -133,8 +131,7 @@ public class Rendering {
 								direction, yTop);
 
 						addAvatar(tileXLeftBottom, yBottom, tileXRightTop, row, col, "right", worldMap, renderGroup,
-								direction, yTop, avatars, positions);
-
+								direction, yTop, avatars, positions,uid);
 					}
 				}
 			}
@@ -182,8 +179,10 @@ public class Rendering {
 		p.getPoints().add(yBottom);
 		p.getPoints().add(xLeftBottom);
 		p.getPoints().add(yBottom);
+		//This forms the grid of squares
 		p.setStroke(javafx.scene.paint.Color.AQUA);
 		p.setStrokeWidth(1);
+		//////////////////////////////////////////////
 		renderGroup.getChildren().add(p);
 	}
 
@@ -207,28 +206,24 @@ public class Rendering {
 			squaresToRight = width - playerLoc.x - 1;
 			break;
 		case East:
-
 			// System.out.println("East");
 			squaresInFront = width - playerLoc.x;
 			squaresToLeft = playerLoc.y;
 			squaresToRight = height - playerLoc.y - 1;
 			break;
 		case South:
-
 			// System.out.println("South");
 			squaresInFront = height - playerLoc.y;
 			squaresToLeft = width - playerLoc.x - 1;
 			squaresToRight = playerLoc.x;
 			break;
 		case West:
-
 			// System.out.println("West");
 			squaresInFront = playerLoc.x + 1;
 			squaresToLeft = height - playerLoc.y - 1;
 			squaresToRight = (height - squaresToLeft) - 1;
 			break;
 		}
-
 	}
 
 	/**
@@ -246,12 +241,14 @@ public class Rendering {
 	 * @param yTop
 	 * @param avatars
 	 * @param positions
+	 * @param uid 
 	 */
 
 	public void addAvatar(double xLeftTop, double yBottom, double xRightTop, int row, int x, String string,
 			char[][] worldMap, Pane renderGroup2, Direction direction2, double yTop, Map<Integer, Avatar> avatars,
-			Map<Integer, Position> positions) {
-
+			Map<Integer, Position> positions, int uid) {
+		//Image playerImg = Images.getAvatarImageBySide(avatars.get(uid), Side.Back);
+		//Image another = Images.getAvatarImageByDirection(Avatar.get(22), Direction.East, Direction.West);
 	}
 
 	/**
@@ -278,7 +275,6 @@ public class Rendering {
 		// System.out.println(direction.toString());
 		char object = worldMap[imageCoordinate.y][imageCoordinate.x];
 		Image image = getImageFromChar(object);
-
 		if (image != null) {
 			double height = image.getHeight() * Math.pow(scale, squaresInFront - row - 1);
 			double width = image.getWidth() * Math.pow(scale, squaresInFront - row - 1);
@@ -302,7 +298,6 @@ public class Rendering {
 	 */
 
 	private Point getImagePoint(Direction direction, int row, int col, String side, int boardHeight, int boardWidth) {
-
 		switch (direction) {
 		case North:
 			if (side.equals("left")) {
@@ -316,12 +311,10 @@ public class Rendering {
 			} else {
 				Point temp = new Point(col, row);
 				// System.out.println(temp.x + " rightttttttttttt" + temp.y);
-
 				return temp;
 			}
 		case South:
 			if (side.equals("left")) {
-
 				Point temp = new Point(boardWidth - (squaresToLeft - col), boardHeight - row - 1);
 				// System.out.println(temp.x+"lefttttttttttttt "+temp.y);
 				return temp;
@@ -338,7 +331,6 @@ public class Rendering {
 		case East:
 			if (side.equals("left")) {
 				Point temp = new Point(boardWidth - 1 - row, squaresToLeft - col - 1);
-
 				// System.out.println(temp.x + "lefttttttttttttt " + temp.y);
 				return temp;
 			} else if (side.equals("right")) {
