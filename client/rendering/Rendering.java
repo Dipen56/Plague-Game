@@ -28,6 +28,7 @@ import javafx.scene.control.ProgressBar;
  */
 
 public class Rendering {
+
 	// private static final String BACKGROUND_IMAGE = "/background.gif";
 	private static final String BACKGROUND_IMAGE = "/night.jpg";
 	private int gamePaneHeight = GUI.HEIGHT_VALUE - 35;
@@ -420,4 +421,5 @@ public class Rendering {
 	public String toString() {
 		return "renderclass";
 	}
+
 }

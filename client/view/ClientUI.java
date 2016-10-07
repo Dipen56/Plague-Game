@@ -335,58 +335,30 @@ public class ClientUI {
      * This method is called by ClockThread periodically to update the renderer and GUI.
      */
     public void updateRenderAndGui() {
-        // 1. update GUI
-        // a. update minimap
-        // b. update the inventory
-        gui.setInventory(inventory);
-        // c. update the health bar if it is in right panel in GUI.
-        // 2. update Renderer
-        // a. call update renderer method.
-        // ====================
+
+        // 0. necessary variables
         Position playerLoc = positions.get(uid);
-        // System.out.println("X:" +playerLoc.x+" Y: "+playerLoc.y);
         int areaId = playerLoc.areaId;
         char[][] worldMap = areas.get(areaId);
+
+        // 1. update GUI
+
+        // a. update minimap
+        gui.updateMinimap(playerLoc, uid, worldMap, visibility, positions);
+
+        // b. update the inventory
+        gui.setInventory(inventory);
+
+        // c. update the health bar if it is in right panel in GUI.
+
+        // 2. update Renderer
+
+        // a. call update renderer method.
+
         render.render(playerLoc, worldMap, visibility, uid, avatars, positions);
+
         gui.updateHealth((double) ((double) health / 600));
-        // These method should be somewhere for rendering
-        // /**
-        // * Redraw the rendering panel
-        // */
-        // public void redraw() {
-        // Map<Integer, Position> positions = controller.getPositions();
-        // Position selfPosition = positions.get(controller.getUid());
-        // int areaId = selfPosition.areaId;
-        // char[][] map = controller.getCharMapByAreaId(areaId);
-        // int visibility = controller.getVisibility();
-        //
-        // redraw(positions, map, visibility);
-        // }
-        //
-        // /**
-        // * Redraw the rendering panel.
-        // *
-        // * @param positions
-        // * --- the position of all player.
-        // * @param areaMap
-        // * --- the area map represented as a char[][]
-        // * @param visibility
-        // * --- current visibility.
-        // */
-        // private void redraw(Map<Integer, Position> positions, char[][]
-        // areaMap,
-        // int visibility) {
-        //
-        // // player's coordinate on board, and direction.
-        // Position selfPosition = positions.get(controller.getUid());
-        //
-        // int x = selfPosition.x;
-        // int y = selfPosition.y;
-        // Direction direction = selfPosition.getDirection();
-        //
-        // // TODO redraw the rendering panel
-        //
-        // }
+        
     }
     /**
      * Alert the Renderer and GUI to start the game.

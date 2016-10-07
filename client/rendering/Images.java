@@ -9,7 +9,6 @@ import server.game.player.Direction;
 
 public class Images {
 
-
 	public static final Image GAMEICON_IMAGE = loadImage("/game-icon.png");
 
 	public static final Image INVENTORY_IMAGE = loadImage("/item-tray.png");
@@ -175,6 +174,5 @@ public class Images {
 	public static Image loadImage(String name) {
 		return new Image(Images.class.getResourceAsStream(name));
 	}
-
 
 }

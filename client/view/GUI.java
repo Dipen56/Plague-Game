@@ -1,6 +1,8 @@
 package client.view;
 
 import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
@@ -16,6 +18,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.layout.StackPane;
 import javafx.scene.image.ImageView;
 import javafx.geometry.Pos;
@@ -63,14 +66,17 @@ public class GUI extends Application {
     public static final int HEIGHT_VALUE = 700;
     private static final int RIGHTPANE_WIDTH_VALUE = WIDTH_VALUE - 600;
     public static final int GAMEPANE_WIDTH_VALUE = WIDTH_VALUE - 400;
+
     /**
      * Minimap tile width
      */
-    private static final int MINIMAP_TILE_WIDTH = 10;
+    private static final int MINIMAP_TILE_WIDTH = 20;
+
     /**
      * mini map color table
      */
     private static final Map<Character, Color> MINIMAP_COLOR_TABLE;
+
     static {
         MINIMAP_COLOR_TABLE = new HashMap<>();
         // ========== obstacles: Grey, Rock, Barrel, Table ===========
@@ -80,13 +86,15 @@ public class GUI extends Application {
         MINIMAP_COLOR_TABLE.put('B', Color.rgb(83, 86, 102, 1.0));
         // Table
         MINIMAP_COLOR_TABLE.put('A', Color.rgb(83, 86, 102, 1.0));
+        // Chair
+        MINIMAP_COLOR_TABLE.put('H', Color.rgb(83, 86, 102, 1.0));
         // ===== Containers: golden, chest, cupboard, scrap pile =====
         // Chest
         MINIMAP_COLOR_TABLE.put('C', Color.rgb(255, 170, 37, 1.0));
         // Cupboard
         MINIMAP_COLOR_TABLE.put('U', Color.rgb(255, 170, 37, 1.0));
         // Scrap pile
-        MINIMAP_COLOR_TABLE.put('T', Color.rgb(255, 170, 37, 1.0));
+        MINIMAP_COLOR_TABLE.put('P', Color.rgb(255, 170, 37, 1.0));
         // ============== Tree or ground: green ======================
         // Tree, dark grenn
         MINIMAP_COLOR_TABLE.put('T', Color.rgb(68, 170, 58, 1.0));
@@ -98,12 +106,17 @@ public class GUI extends Application {
         // Room obstacles
         MINIMAP_COLOR_TABLE.put('E', Color.rgb(19, 137, 245, 1.0));
     }
+
     // main window
     private static Stage window;
+
     // controls
     private MenuBar menuBar;
     private Label timeLable;
-    private Label miniMapLable;
+
+    // private Label miniMapLable;
+    private Canvas miniMapCanvas;
+
     private Label textAreaLable;
     private TextField msg;
     private Button send;
@@ -411,11 +424,16 @@ public class GUI extends Application {
     public void setminiMap() {
         TitledPane titlePane = new TitledPane();
         titlePane.setText("Mini Map");
-        miniMapLable = new Label();
-        titlePane.setContent(miniMapLable);
-        miniMapLable.setPrefWidth(400);
-        miniMapLable.setPrefHeight(370);
-        miniMapLable.getStyleClass().add("minimap-lable");
+
+        // miniMapLable = new Label();
+        // titlePane.setContent(miniMapLable);
+        // miniMapLable.setPrefWidth(400);
+        // miniMapLable.setPrefHeight(370);
+
+        miniMapCanvas = new Canvas(400, 370);
+        titlePane.setContent(miniMapCanvas);
+
+        miniMapCanvas.getStyleClass().add("minimap-lable");
         rightPanel.getChildren().add(titlePane);
     }
     /**
@@ -618,58 +636,102 @@ public class GUI extends Application {
     /**
      * This method draws a minimap on the minimap panel.
      * 
+     * @param playerLoc
+     *            --- player's location
      * @param uId
-     * @param positions
+     *            --- user id.
      * @param areaMap
+     *            --- the current area map as a char[][]
      * @param visibility
+     *            --- the visibility
+     * @param positions
+     *            --- a collection of every player's location.
      */
-    public void updateMinimap(int uId, Map<Integer, Position> positions, char[][] areaMap,
-            int visibility) {
+    public void updateMinimap(Position playerLoc, int uId, char[][] areaMap,
+            int visibility, Map<Integer, Position> positions) {
+
         // player's coordinate on board, and direction.
         Position selfPosition = positions.get(uId);
         int selfAreaId = selfPosition.areaId;
         int selfX = selfPosition.x;
         int selfY = selfPosition.y;
         Direction selDir = selfPosition.getDirection();
+
         // the width of height of current map
         int width = areaMap[0].length;
         int height = areaMap.length;
-        // the top and left of the minimap
-        // FIXME this should be changed to make the minimap in the center
-        int left = 0;
-        int top = 0;
+
+        // the padding size on top and left of the minimap pane
+        // FIXME this should be changed to make the minimap drawing in the center
+        int padding_left = 0;
+        int padding_top = 0;
+
+        // set up the canvas
+        GraphicsContext gc = miniMapCanvas.getGraphicsContext2D();
+        gc.setStroke(Color.BLACK);
+        gc.setLineWidth(1);
+
+        // clear the old drawing
+        gc.clearRect(0, 0, 1000, 1000);
+
+        // calculate the four boundaries
+        int bound_top = selfY - visibility < 0 ? 0 : selfY - visibility;
+        int bound_bottom = selfY + visibility + 1 > height ? height
+                : selfY + visibility + 1;
+        int bound_left = selfX - visibility < 0 ? 0 : selfX - visibility;
+        int bound_right = selfX + visibility + 1 > width ? width : selfX + visibility + 1;
+
         // draw the minimap
         Color color = null;
-        for (int row = 0; row < areaMap.length; row++) {
-            for (int col = 0; col < areaMap.length; col++) {
+        for (int row = bound_top; row < bound_bottom; row++) {
+            for (int col = bound_left; col < bound_right; col++) {
                 color = MINIMAP_COLOR_TABLE.get(areaMap[row][col]);
                 if (color == null) {
                     // ERROR, this is an unknown character/MapElement
-                    continue;
+                    color = Color.BLACK;
                 }
-                // 1. set colour
-                // 2. drawRect(left + col * MINIMAP_TILE_WIDTH, top + row *
-                // MINIMAP_TILE_WIDTH, MINIMAP_TILE_WIDTH, MINIMAP_TILE_WIDTH);
+
+                gc.setFill(color);
+
+                // draw the map elements
+                gc.fillRect(padding_left + (col - bound_left) * MINIMAP_TILE_WIDTH,
+                        padding_top + (row - bound_top) * MINIMAP_TILE_WIDTH,
+                        MINIMAP_TILE_WIDTH, MINIMAP_TILE_WIDTH);
+                gc.strokeRect(padding_left + (col - bound_left) * MINIMAP_TILE_WIDTH,
+                        padding_top + (row - bound_top) * MINIMAP_TILE_WIDTH,
+                        MINIMAP_TILE_WIDTH, MINIMAP_TILE_WIDTH);
             }
         }
-        // TODO use four images to represents four directions.
+
         // draw player arrow on map
         for (Position p : positions.values()) {
-            // if this player is not in the same map, skip.
+            // if this player is not in the same map,skip.
             if (p.areaId != selfAreaId) {
                 continue;
             }
+
             // this player's x, y, and direction
             int x = p.x;
             int y = p.y;
             Direction dir = p.getDirection();
+
             // if this player isn't within visible distance, skip
             if (Math.abs(x - selfX) > visibility || Math.abs(y - selfY) > visibility) {
                 continue;
             }
-            // 1. draw an arrow on the above mini map.
-            // 2. drawIamge(left + x * MINIMAP_TILE_WIDTH, top + y *
-            // MINIMAP_TILE_WIDTH, MINIMAP_TILE_WIDTH, MINIMAP_TILE_WIDTH);
+
+            Image img;
+            if (x == selfX && y == selfY) {
+                // it's yourself
+                img = Images.GREEN_ARROW.get(selDir);
+            } else {
+                // it's your enemy
+                img = Images.RED_ARROW.get(dir);
+            }
+
+            // draw arrows for different players
+            gc.drawImage(img, padding_left + (x - bound_left) * MINIMAP_TILE_WIDTH,
+                    padding_top + (y - bound_top) * MINIMAP_TILE_WIDTH);
         }
     }
     public void setInventory(List<String> inventory) {

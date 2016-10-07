@@ -45,13 +45,13 @@ public class Game {
      * The visibility in daytime. This number indicates that everything within this
      * distance on world grid is visible.
      */
-    public static final int DAY_VISIBLIITY = 8;
+    public static final int DAY_VISIBLIITY = 7;
 
     /**
      * The visibility in night time. This number indicates that everything within this
      * distance on world grid is visible.
      */
-    public static final int NIGHT_VISIBILITY = 2;
+    public static final int NIGHT_VISIBILITY = 3;
 
     /**
      * The visibility if the player is holding a torch in night time. This number
