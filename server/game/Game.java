@@ -165,7 +165,8 @@ public class Game {
      * @param gameID
      *            --- A unique hash number for each game instance.
      */
-    public Game(Area world, Map<Integer, Area> areas, Map<Integer, Player> players, int gameID) {
+    public Game(Area world, Map<Integer, Area> areas, Map<Integer, Player> players,
+            int gameID) {
 
         this.world = world;
         this.areas = areas;

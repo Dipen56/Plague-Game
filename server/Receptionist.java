@@ -278,10 +278,10 @@ public class Receptionist extends Thread {
                         game.playerUnlockLockable(uid);
                         break;
                     case Save:
-                        XmlFunctions.saveFile(game, game.getPlayerById(uid).getName());
+                        server.save(uid);
                         break;
                     case Load:
-                        load();
+                        server.load(uid);
                         break;
                     case Chat:
                         String message = "[" + userName + "] " + input.readUTF();
@@ -318,22 +318,6 @@ public class Receptionist extends Thread {
                         "I/O error. But who cares, Clients disconnected anyway. ");
             }
         }
-    }
-
-    /**
-     * This method is used to check the existence of save file, and if it exists, load it.
-     * 
-     * @return
-     */
-    private boolean load() {
-        String userName = game.getPlayerById(uid).getName();
-        boolean isExisting = XmlFunctions.saveExists(userName);
-
-        if (isExisting) {
-            game = XmlFunctions.loadFile(userName);
-        }
-
-        return isExisting;
     }
 
     /**
@@ -410,6 +394,17 @@ public class Receptionist extends Thread {
          */
 
         return gameString.toString();
+    }
+
+    /**
+     * This method is used when the server loads game back, the game instance gets
+     * re-referenced.
+     * 
+     * @param game
+     *            --- the new game instance
+     */
+    public void setGame(Game game) {
+        this.game = game;
     }
 
 }

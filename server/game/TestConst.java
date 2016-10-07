@@ -73,20 +73,20 @@ public class TestConst {
 
         // chest 1
         List<Item> loot1 = new ArrayList<>();
-        loot1.add(new Antidote("A potion of antidote.", Virus.T_Virus));
+        loot1.add(new Antidote("A potion of antidote.", Virus.Black_Death));
         loot1.add(new Key("A key.", 456));
         worldBoard[0][2] = new Chest("chest 1", 123, false, loot1);
 
         // chest2
         List<Item> loot2 = new ArrayList<>();
-        loot2.add(new Antidote("A potion of antidote.", Virus.T_Virus));
+        loot2.add(new Antidote("A potion of antidote.", Virus.Black_Death));
         loot2.add(new Key("A key.", 11111));
         loot2.add(new Key("A key.", 789));
         worldBoard[3][5] = new Chest("chest 2", 456, true, loot2);
 
         // chest3
         List<Item> loot3 = new ArrayList<>();
-        loot3.add(new Antidote("A potion of antidote.", Virus.G_Virus));
+        loot3.add(new Antidote("A potion of antidote.", Virus.Spanish_Flu));
         worldBoard[6][0] = new Chest("chest 3", 789, true, loot3);
 
         // transition space
@@ -121,13 +121,13 @@ public class TestConst {
 
         // cupboard
         List<Item> loot5 = new ArrayList<>();
-        loot5.add(new Antidote("A potion of antidote.", Virus.G_Virus));
-        loot5.add(new Antidote("A potion of antidote.", Virus.G_Virus));
+        loot5.add(new Antidote("A potion of antidote.", Virus.Spanish_Flu));
+        loot5.add(new Antidote("A potion of antidote.", Virus.Spanish_Flu));
         roomBoard[1][2] = new Cupboard("A cupboard", 999, true, loot5);
 
         // chest in room
         List<Item> lootInRoom = new ArrayList<>();
-        lootInRoom.add(new Antidote("A potion of antidote.", Virus.G_Virus));
+        lootInRoom.add(new Antidote("A potion of antidote.", Virus.Spanish_Flu));
         roomBoard[0][2] = new Chest("chest in room", 123, false, lootInRoom);
 
         // transition space

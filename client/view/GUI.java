@@ -36,10 +36,12 @@ import java.util.Map;
 import java.util.Queue;
 
 import server.game.player.Avatar;
+
 import server.game.player.Direction;
 import server.game.player.Position;
 import client.rendering.Images;
 import client.rendering.Rendering;
+
 import client.rendering.Side;
 
 /**
@@ -66,7 +68,6 @@ public class GUI extends Application {
      * mini map color table
      */
     private static final Map<Character, Color> MINIMAP_COLOR_TABLE;
-
     static {
         MINIMAP_COLOR_TABLE = new HashMap<>();
         // ========== obstacles: Grey, Rock, Barrel, Table ===========
@@ -514,6 +515,7 @@ public class GUI extends Application {
      */
     public String getChatMsg() {
         String msgToSend = msg.getText();
+        msg.clear();
         return msgToSend;
     }
 

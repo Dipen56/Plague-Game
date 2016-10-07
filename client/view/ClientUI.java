@@ -33,6 +33,7 @@ import server.game.player.Virus;
  *
  */
 public class ClientUI {
+
     /**
      * The period between every update
      */
@@ -365,7 +366,7 @@ public class ClientUI {
         // System.out.println("X:" +playerLoc.x+" Y: "+playerLoc.y);
         int areaId = playerLoc.areaId;
         char[][] worldMap = areas.get(areaId);
-        render.render(playerLoc, worldMap, visibility, uid);
+        render.render(playerLoc, worldMap, visibility, uid, avatars, positions);
 
         // These method should be somewhere for rendering
         // /**
@@ -487,9 +488,9 @@ public class ClientUI {
                     // this is for leaving the waiting room
                     gui.getWindow().close();
                 } else if (event.toString().contains("LoadMenu")) {
-                    System.out.println("LOAD");
+                    client.send(Packet.Load);
                 } else if (event.toString().contains("SaveMenu")) {
-                    System.out.println("SAVE");
+                    client.send(Packet.Save);
                 } else if (event.toString().contains("CloseMenu")) {
                     gui.getWindow().close();
                 } else if (event.toString().contains("InfoMenu")) {
@@ -569,7 +570,7 @@ public class ClientUI {
             public void handle(MouseEvent event) {
                 // Currently this listen to clicks on the items
                 // TODO: some how make it work with items
-                System.out.println("here" + event.toString());
+                // System.out.println("here" + event.toString());
                 if (event.toString().contains("Group")) {
                     gui.changeAvatar();
                 } else if (event.toString().contains("Grid")) {
@@ -627,4 +628,5 @@ public class ClientUI {
     public static void main(String[] args) {
         new ClientUI();
     }
+
 }
