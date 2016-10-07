@@ -237,6 +237,7 @@ public class Game {
             public void run() {
                 // decrease every player's life
                 for (Player p : players.values()) {
+                	//TODO: this was -1 before
                     p.increaseHealth(-1);
 
                     // if the player is holding a torch, decrease torch's life

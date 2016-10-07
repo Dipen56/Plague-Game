@@ -29,17 +29,15 @@ import server.game.player.Virus;
  * interpreting mouse and keyboard events from the user, and updates the
  * renderer/GUI according to the received information from server.
  * 
- * @author Dipen
+ * @author Dipen & Hector
  *
  */
 public class ClientUI {
-
     /**
      * The period between every update
      */
     // This is the default clock thread
     // public static final int DEFAULT_CLK_PERIOD = 100;
-
     // Testing clock thread
     public static final int DEFAULT_CLK_PERIOD = 50;
     // ============ info fields =================
@@ -132,7 +130,6 @@ public class ClientUI {
      * Event Handler for window events
      */
     private EventHandler<WindowEvent> windowEvent;
-
     /**
      * Constructor
      */
@@ -148,7 +145,6 @@ public class ClientUI {
         gui = new GUI(this, render);
         GUI.launch(GUI.class);
     }
-
     /**
      * This method is used to connect the players to the client which then connects them
      * to the server
@@ -184,7 +180,6 @@ public class ClientUI {
         client.start();
         return true;
     }
-
     /**
      * This method is used to start the listeners
      */
@@ -194,7 +189,6 @@ public class ClientUI {
         setKeyEventHander();
         setMouseEventHander();
     }
-
     /*
      * ===============================
      * 
@@ -212,7 +206,6 @@ public class ClientUI {
     public void parseUID(int uid) {
         this.uid = uid;
     }
-
     /**
      * When the client receives the user's virus type from the server, this method will
      * update the local record
@@ -223,7 +216,6 @@ public class ClientUI {
     public void parseVirus(int virusIndex) {
         this.virus = Virus.get(virusIndex);
     }
-
     /**
      * When the client receives a map string from the server, this method will update the
      * local table which records every area's map (in a plain char matrix).
@@ -234,7 +226,6 @@ public class ClientUI {
     public void parseMap(String mapStr) {
         ParserUtilities.parseMap(areas, mapStr);
     }
-
     /**
      * When the client receives the string recording all players positions from the
      * server, this method will update the local table which records every player's
@@ -246,7 +237,6 @@ public class ClientUI {
     public void parsePosition(String posStr) {
         ParserUtilities.parsePosition(positions, posStr);
     }
-
     /**
      * When the client receives the string recording all players avatars from the server,
      * this method will update the local table which records every player's avatar.
@@ -257,7 +247,6 @@ public class ClientUI {
     public void parseAvatars(String avatarsStr) {
         ParserUtilities.parseAvatar(avatars, avatarsStr);
     }
-
     /**
      * When the client receives a time string from the server, this method will update the
      * local time.
@@ -268,7 +257,6 @@ public class ClientUI {
     public void parseTime(String timeStr) {
         gui.setTime(timeStr);
     }
-
     /**
      * When the client receives a health update from the server, this method will update
      * the local health.
@@ -279,7 +267,6 @@ public class ClientUI {
     public void parseHealth(int health) {
         this.health = health;
     }
-
     /**
      * When the client receives a health update from the server, this method will update
      * the local health.
@@ -290,7 +277,6 @@ public class ClientUI {
     public void parseVisibility(int visibility) {
         this.visibility = visibility;
     }
-
     /**
      * When the client receives a inventory update from the server, this method will
      * update the local inventory.
@@ -301,7 +287,6 @@ public class ClientUI {
     public void parseInventory(String invenStr) {
         inventory = ParserUtilities.parseInventory(invenStr);
     }
-
     /**
      * When the client receives the string recording the status of player holding torch
      * from the server, this method will update the local table which records every
@@ -313,7 +298,6 @@ public class ClientUI {
     public void parseTorchStatus(String torchStatusStr) {
         ParserUtilities.parseTorchStatus(torchStatus, torchStatusStr);
     }
-
     /**
      * When the client receives the string of chat message from the server, this method
      * will update the chat text area.
@@ -324,7 +308,6 @@ public class ClientUI {
     public void parseChatMessage(String chat) {
         gui.setChatText(chat);
     }
-
     /**
      * Get the user name
      * 
@@ -333,7 +316,6 @@ public class ClientUI {
     public String getUserName() {
         return userName;
     }
-
     /**
      * Get the avatar.
      * 
@@ -342,7 +324,6 @@ public class ClientUI {
     public Avatar getAvatar() {
         return avatar;
     }
-
     /*
      * ===============================
      * 
@@ -367,7 +348,7 @@ public class ClientUI {
         int areaId = playerLoc.areaId;
         char[][] worldMap = areas.get(areaId);
         render.render(playerLoc, worldMap, visibility, uid, avatars, positions);
-
+        gui.updateHealth((double) ((double) health / 600));
         // These method should be somewhere for rendering
         // /**
         // * Redraw the rendering panel
@@ -407,7 +388,6 @@ public class ClientUI {
         //
         // }
     }
-
     /**
      * Alert the Renderer and GUI to start the game.
      */
@@ -440,8 +420,8 @@ public class ClientUI {
                 clockThread.start();
             }
         });
+        gui.setHealthBar(health, virus);
     }
-
     /**
      * This method is used to set action event handlers. The actions for certain button or
      * FX component events are defined here.
@@ -498,12 +478,10 @@ public class ClientUI {
                     System.out.println("INFO");
                 } else if (event.toString().contains("AboutMenu")) {
                     System.out.println("ABOUT");
-
                 }
             }
         };
     }
-
     /**
      * This method is used to set Key event handlers. The actions for Key events are
      * defined here.
@@ -559,7 +537,6 @@ public class ClientUI {
             }
         };
     }
-
     /**
      * This method is used to set mouse event handlers. The actions for mouse events are
      * defined here.
@@ -583,7 +560,6 @@ public class ClientUI {
             }
         };
     }
-
     /**
      * This method will return the action listeners
      * 
@@ -592,7 +568,6 @@ public class ClientUI {
     public EventHandler<ActionEvent> getActionEventHandler() {
         return actionEvent;
     }
-
     /**
      * This method will return the key listeners
      * 
@@ -601,7 +576,6 @@ public class ClientUI {
     public EventHandler<KeyEvent> getKeyEventHander() {
         return keyEvent;
     }
-
     /**
      * This method will return the mouse listener
      * 
@@ -610,7 +584,6 @@ public class ClientUI {
     public EventHandler<MouseEvent> getMouseEventHander() {
         return mouseEvent;
     }
-
     /**
      * This method will return the window listener
      * 
@@ -619,7 +592,6 @@ public class ClientUI {
     public EventHandler<WindowEvent> getWindowEventHander() {
         return windowEvent;
     }
-
     /**
      * Main function.
      * 
@@ -628,5 +600,4 @@ public class ClientUI {
     public static void main(String[] args) {
         new ClientUI();
     }
-
 }

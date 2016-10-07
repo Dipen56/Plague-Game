@@ -6,6 +6,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
 import javafx.scene.image.Image;
@@ -39,20 +40,22 @@ import server.game.player.Avatar;
 
 import server.game.player.Direction;
 import server.game.player.Position;
+import server.game.player.Virus;
 import client.rendering.Images;
 import client.rendering.Rendering;
 
+
 import client.rendering.Side;
 
+
 /**
- * This class represents the main GUI class this class bring together all the different
- * components of the GUI.
+ * This class represents the main GUI class this class bring together all the
+ * different components of the GUI.
  *
  * @author Dipen
  *
  */
 public class GUI extends Application {
-
     // GUI Style CSS
     private static final String STYLE_CSS = "/main.css";
     // Constants Dimensions
@@ -113,10 +116,7 @@ public class GUI extends Application {
     private GridPane iteminfo;
     // standard layout
     private BorderPane borderPane;
-
     private StringBuffer chatText;
-
-
     private StackPane gamePane;
     // private Rendering render = new Rendering();
     private static ClientUI viewControler;
@@ -137,6 +137,9 @@ public class GUI extends Application {
     private String selectedAvatar;
     private Label zoomedItem;
     private Label itemDetail;
+	private ProgressBar bar;
+	private Label virus;
+	private FlowPane healthPane;
     // waiting room Controls
     private FlowPane playersWaiting;
     private Button readyGame;
@@ -313,12 +316,45 @@ public class GUI extends Application {
         scene.getStylesheets()
                 .add(this.getClass().getResource(STYLE_CSS).toExternalForm());
         scene.setOnKeyPressed(keyEvent);
+        window.setOnCloseRequest(windowEvent);
         window.setScene(scene);
     }
-    private void setHealthBar() {
-        // TODO: creat the health bar with the avatar next to the alsoo add
-        // north, south, east and west
-    }
+    /**
+	 * this method creats the health bar and adds it to the pane.
+	 * 
+	 * @param health
+	 * @param virusName
+	 */
+	public void setHealthBar(double health, Virus virusName) {
+		healthPane = new FlowPane();
+		healthPane.setHgap(2);
+		healthPane.setPrefHeight(50);
+		healthPane.setPrefWidth(150);
+		healthPane.setLayoutX(10);
+		healthPane.setLayoutY(10);
+		// TODO link it to the avatar image using avatar index upto
+		Image avatar = Images.SLASH_SCREEN_IMAGE;
+		ImageView avatarImage = new ImageView(avatar);
+		avatarImage.setFitHeight(60);
+		avatarImage.setFitWidth(50);
+		healthPane.getChildren().add(avatarImage);
+		VBox healthBox = new VBox(2);
+		bar = new ProgressBar(health);
+		bar.setPrefWidth(98);
+		virus = new Label();
+		virus.setText("Virus Type: " + virusName.toString());
+		virus.setWrapText(true);
+		virus.setPrefWidth(98);
+		virus.getStyleClass().add("virus-label");
+		healthBox.getChildren().add(bar);
+		healthBox.getChildren().add(virus);
+		healthPane.getChildren().add(healthBox);
+		group.getChildren().add(healthPane);
+	}
+	public void updateHealth(double health){
+		bar.progressProperty().set(health);
+		group.getChildren().add(healthPane);
+	}
     /**
      * this methods will set up the menu bar with all it items
      */
@@ -474,17 +510,14 @@ public class GUI extends Application {
      * @param text
      */
     public void setChatText(String text) {
-
         // don't keep the message too long.
         int length = chatText.length();
         if (length > 8000) {
             chatText.delete(0, length - 3000);
         }
-
         // append the new chat
         chatText.append(text);
         chatText.append('\n');
-
         // set the new text
         Platform.runLater(new Runnable() {
             @Override
