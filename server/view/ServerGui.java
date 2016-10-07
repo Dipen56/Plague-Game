@@ -9,6 +9,7 @@ import static client.rendering.Images.loadImage;
 
 import javafx.animation.FadeTransition;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.util.Duration;
 
 /**
@@ -58,6 +59,9 @@ public class ServerGui extends Application {
                 .add(this.getClass().getResource("/main.css").toExternalForm());
 
         window.show();
+
+		window.setOnCloseRequest(e -> Platform.exit());
+		window.setOnCloseRequest(e-> System.exit(0));
         // setText("10.1.1","5000");
 
     }

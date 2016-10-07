@@ -31,6 +31,7 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import java.awt.Point;
+import java.lang.management.PlatformLoggingMXBean;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -194,6 +195,9 @@ public class GUI extends Application {
 		slashScreen();
 		// loginScreen() ;
 		window.show();
+
+		window.setOnCloseRequest(e -> Platform.exit());
+		window.setOnCloseRequest(e-> System.exit(0));
 	}
 
 	public void slashScreen() {
@@ -225,6 +229,8 @@ public class GUI extends Application {
 		Scene slashScene = new Scene(slashBorderPane, WIDTH_VALUE, HEIGHT_VALUE);
 		slashScene.getStylesheets().add(this.getClass().getResource(STYLE_CSS).toExternalForm());
 		window.setScene(slashScene);
+		window.setOnCloseRequest(e -> Platform.exit());
+		window.setOnCloseRequest(e-> System.exit(0));
 	}
 
 	public void loginScreen() {
@@ -330,6 +336,8 @@ public class GUI extends Application {
 		Scene loginScene = new Scene(loginPane, WIDTH_VALUE, HEIGHT_VALUE);
 		loginScene.getStylesheets().add(this.getClass().getResource(STYLE_CSS).toExternalForm());
 		window.setScene(loginScene);
+		window.setOnCloseRequest(e -> Platform.exit());
+		window.setOnCloseRequest(e-> System.exit(0));
 	}
 
 	public void changeAvatarImage(int change) {
@@ -363,6 +371,8 @@ public class GUI extends Application {
 		waitingRoomBox.getChildren().add(buttons);
 		Scene slashScene = new Scene(waitingRoomBox, 400, 170);
 		window.setScene(slashScene);
+		window.setOnCloseRequest(e -> Platform.exit());
+		window.setOnCloseRequest(e-> System.exit(0));
 	}
 
 	public void startGame() {
@@ -391,6 +401,8 @@ public class GUI extends Application {
 		scene.setOnKeyPressed(keyEvent);
 		window.setOnCloseRequest(windowEvent);
 		window.setScene(scene);
+		window.setOnCloseRequest(e -> Platform.exit());
+		window.setOnCloseRequest(e-> System.exit(0));
 	}
 
 	/**
