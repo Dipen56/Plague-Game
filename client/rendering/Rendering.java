@@ -19,14 +19,15 @@ import server.game.world.Area;
 import javafx.scene.paint.ImagePattern;
 
 /**
- * This class represents the main rendering class, this class will control the
- * rendering of the game board, character, and objects.
+ * This class represents the main rendering class, this class will control the rendering
+ * of the game board, character, and objects.
  *
  * @author Angelo
  *
  */
 
 public class Rendering {
+
 	// private static final String BACKGROUND_IMAGE = "/background.gif";
 	private static final String BACKGROUND_IMAGE = "/night.jpg";
 	private int gamePaneHeight = GUI.HEIGHT_VALUE - 35;
@@ -463,5 +464,4 @@ public class Rendering {
 	public String toString() {
 		return "renderclass";
 	}
-
 }

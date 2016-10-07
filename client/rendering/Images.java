@@ -174,4 +174,5 @@ public class Images {
 	public static Image loadImage(String name) {
 		return new Image(Images.class.getResourceAsStream(name));
 	}
+
 }

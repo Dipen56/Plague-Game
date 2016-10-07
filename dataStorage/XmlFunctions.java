@@ -20,6 +20,9 @@ public class XmlFunctions {
 	 * @param An object to save to the file.
 	 */
 	public static void saveFile(Object obj, String prefix){
+	    if(obj instanceof Game){
+	        obj = new GameAdapter((Game)obj);
+	    }
 		saveProcess(obj, new File(prefix+"_save.xml"));
 	}
 

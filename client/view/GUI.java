@@ -501,6 +501,7 @@ public class GUI extends Application {
      */
     public String getChatMsg() {
         String msgToSend = msg.getText();
+        msg.clear();
         return msgToSend;
     }
     /**

@@ -47,6 +47,11 @@ public class ServerMain {
     private Game game;
 
     /**
+     * The number of players.
+     */
+    private int numPlayers;
+
+    /**
      * A buffer for messages that client send for chatting.
      */
     private Queue<String> messages;
@@ -66,7 +71,7 @@ public class ServerMain {
 
         // how many players?
         System.out.println("How many players (between 2 and 4):");
-        int numPlayers = ParserUtilities.parseInt(2, 4);
+        numPlayers = ParserUtilities.parseInt(2, 4);
 
         // create the game world with test version tiny world.
         // game = new Game(TestConst.world, TestConst.areas);
@@ -231,7 +236,9 @@ public class ServerMain {
      *            --- the message
      */
     public void addMessage(String message) {
-        messages.offer(message);
+        for (int i = 0; i < numPlayers; i++) {
+            messages.offer(message);
+        }
     }
 
     /**
@@ -250,6 +257,40 @@ public class ServerMain {
      */
     public static void main(String args[]) {
         new ServerMain();
+    }
+
+    /**
+     * Load game
+     * 
+     * @param uid
+     *            --- the uid of the client who requested to load game.
+     * @return --- true/false for success/failure
+     */
+    public boolean load(int uid) {
+        // check save file existence
+        String userName = game.getPlayerById(uid).getName();
+        boolean isExisting = XmlFunctions.saveExists(userName);
+
+        if (isExisting) {
+            // load game
+            game = XmlFunctions.loadFile(userName);
+
+            // make sure every client get access to the new game instance
+            for (Receptionist r : receptionists.values()) {
+                r.setGame(game);
+            }
+        }
+        return isExisting;
+    }
+
+    /**
+     * Save game
+     * 
+     * @param uid
+     *            --- the uid of the client who requested to save game.
+     */
+    public void save(int uid) {
+        XmlFunctions.saveFile(game, game.getPlayerById(uid).getName());
     }
 
 }
