@@ -1,4 +1,5 @@
 package client.view;
+
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -28,13 +29,21 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import java.awt.Point;
+import java.util.ArrayDeque;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
+
+import server.game.player.Avatar;
+
 import server.game.player.Direction;
 import server.game.player.Position;
 import client.rendering.Images;
 import client.rendering.Rendering;
+
+import client.rendering.Side;
+
 /**
  * This class represents the main GUI class this class bring together all the different
  * components of the GUI.
@@ -43,7 +52,7 @@ import client.rendering.Rendering;
  *
  */
 public class GUI extends Application {
-    
+
     // GUI Style CSS
     private static final String STYLE_CSS = "/main.css";
     // Constants Dimensions
@@ -104,7 +113,10 @@ public class GUI extends Application {
     private GridPane iteminfo;
     // standard layout
     private BorderPane borderPane;
-    private String chatText = "HARDD: Welcome Players";
+
+    private StringBuffer chatText;
+
+
     private StackPane gamePane;
     // private Rendering render = new Rendering();
     private static ClientUI viewControler;
@@ -147,6 +159,7 @@ public class GUI extends Application {
     public GUI(ClientUI viewControler, Rendering rendering) {
         this.viewControler = viewControler;
         this.render = rendering;
+        chatText = new StringBuffer();
     }
     public GUI() {
         // leave this constructor in here need to run the gui.
@@ -234,7 +247,7 @@ public class GUI extends Application {
         loginBorderPane.setLeft(inputStore);
         loginBox.getChildren().add(loginBorderPane);
         avatarGroup = new Group();
-        Image avatarImg = Images.AVATAR_IMAGES[avatarIndex];
+        Image avatarImg = Images.getAvatarImageBySide(Avatar.Avatar_1, Side.Front);
         ImageView avatarImage = new ImageView(avatarImg);
         avatarImage.setFitHeight(80);
         avatarImage.setFitWidth(80);
@@ -316,15 +329,25 @@ public class GUI extends Application {
         Menu file = new Menu("File");
         // creates the menu items
         MenuItem itmLoad = new MenuItem("Load");
+        itmLoad.setId("LoadMenu");
+        itmLoad.setOnAction(actionEvent);
         MenuItem itmSave = new MenuItem("Save");
+        itmSave.setId("SaveMenu");
+        itmSave.setOnAction(actionEvent);
         MenuItem itmClose = new MenuItem("Close");
+        itmClose.setId("CloseMenu");
+        itmClose.setOnAction(actionEvent);
         // add the items to menu
         file.getItems().addAll(itmLoad, itmSave, itmClose);
         // creates the menu
         Menu help = new Menu("Help");
         // creates the menu items
         MenuItem itmInfo = new MenuItem("Plague Info");
+        itmInfo.setId("InfoMenu");
+        itmInfo.setOnAction(actionEvent);
         MenuItem itmAbout = new MenuItem("About Game");
+        itmAbout.setId("AboutMenu");
+        itmAbout.setOnAction(actionEvent);
         // add the items to menu
         help.getItems().addAll(itmInfo, itmAbout);
         // adds menus to menu Bar
@@ -371,7 +394,7 @@ public class GUI extends Application {
         chatControls.getStyleClass().add("chatarea-background");
         textAreaLable = new Label();
         textAreaLable.setAlignment(Pos.TOP_LEFT);
-        textAreaLable.setText(chatText);
+        textAreaLable.setText(chatText.toString());
         textAreaLable.setPrefWidth(400);
         textAreaLable.setPrefHeight(150);
         textAreaLable.getStyleClass().add("chat-display");
@@ -449,12 +472,26 @@ public class GUI extends Application {
      * this method is used to set the chat message the text area in the gui
      *
      * @param text
-     * @param user
      */
-    public void setChatText(String text, String user) {
-        chatText = chatText + "\n";
-        chatText = chatText + user + ": " + text;
-        textAreaLable.setText(chatText);
+    public void setChatText(String text) {
+
+        // don't keep the message too long.
+        int length = chatText.length();
+        if (length > 8000) {
+            chatText.delete(0, length - 3000);
+        }
+
+        // append the new chat
+        chatText.append(text);
+        chatText.append('\n');
+
+        // set the new text
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                textAreaLable.setText(chatText.toString());
+            }
+        });
     }
     /**
      * this method will return the massage typed in the chat box upon clicking the send
@@ -521,14 +558,16 @@ public class GUI extends Application {
             avatarIndex++;
         }
         avatarGroup.getChildren().clear();
-        Image avatarImg = Images.AVATAR_IMAGES[avatarIndex];
+        Image avatarImg = Images.getAvatarImageBySide(Avatar.values()[avatarIndex],
+                Side.Front);
         ImageView avatarImage = new ImageView(avatarImg);
         avatarImage.setFitHeight(80);
         avatarImage.setFitWidth(80);
         avatarGroup.getChildren().add(avatarImage);
     }
     public void setWaitingRoomAvatar() {
-        Image avatarImg = Images.AVATAR_IMAGES[avatarIndex];
+        Image avatarImg = Images.getAvatarImageBySide(Avatar.values()[avatarIndex],
+                Side.Front);
         ImageView avatarImage = new ImageView(avatarImg);
         avatarImage.setFitHeight(80);
         avatarImage.setFitWidth(80);

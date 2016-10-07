@@ -29,8 +29,10 @@ public class Rendering {
 	private static final String PLAYER_IMAGE = "/standingstillrear.png";
 	// private static final String BACKGROUND_IMAGE = "/background.gif";
 	private static final String BACKGROUND_IMAGE = "/night.jpg";
+
 	private int gamePaneHeight = GUI.HEIGHT_VALUE - 35;
 	private int gamePanelWidth = GUI.GAMEPANE_WIDTH_VALUE - 1;
+
 	private int tileWidth = 130;
 	private int tileHeight = 50;
 	private double imageOffset = 15;
@@ -39,10 +41,12 @@ public class Rendering {
 	private int squaresInFront = 0;
 	private int squaresToLeft = 0;
 	private int squaresToRight = 0;
+
 	private Pane renderGroup;
 	private int imageBound = 10;
 
 	public Rendering() {
+
 	}
 
 	/**
@@ -58,6 +62,7 @@ public class Rendering {
 
 	public void render(Position playerLoc, char[][] worldMap, int visibility, int uid, Map<Integer, Avatar> avatars,
 			Map<Integer, Position> positions) {
+
 		renderGroup.getChildren().clear();
 		int x = playerLoc.x;
 		int y = playerLoc.y;
@@ -88,6 +93,7 @@ public class Rendering {
 				if (direction.equals(Direction.North) || direction.equals(Direction.South)) {
 					addObject(xLeftTop, yBottom, xRightTop, row, playerLoc.x, "middle", worldMap, renderGroup,
 							direction, yTop);
+
 					addAvatar(xLeftTop, yBottom, xRightTop, row, playerLoc.x, "middle", worldMap, renderGroup,
 							direction, yTop, avatars, positions);
 				} else {
@@ -109,8 +115,10 @@ public class Rendering {
 								yTop, renderGroup);
 						addObject(tileXLeftTop, yBottom, tileXRightBottom, row, col, "left", worldMap, renderGroup,
 								direction, yTop);
+
 						addAvatar(tileXLeftTop, yBottom, tileXRightBottom, row, col, "left", worldMap, renderGroup,
 								direction, yTop, avatars, positions);
+
 					}
 				}
 				for (int col = squaresToRight - 1; col >= 0; col--) {
@@ -126,8 +134,10 @@ public class Rendering {
 								yTop, renderGroup);
 						addObject(tileXLeftBottom, yBottom, tileXRightTop, row, col, "right", worldMap, renderGroup,
 								direction, yTop);
+
 						addAvatar(tileXLeftBottom, yBottom, tileXRightTop, row, col, "right", worldMap, renderGroup,
 								direction, yTop, avatars, positions);
+
 					}
 				}
 			}
@@ -143,7 +153,6 @@ public class Rendering {
 	 * 
 	 * @return
 	 */
-
 	private double getTopOffset() {
 		double count = 0;
 		for (int i = 0; i < squaresInFront; i++) {
@@ -164,7 +173,6 @@ public class Rendering {
 	 * @param yTop
 	 * @param renderGroup
 	 */
-
 	private void addTile(Polygon p, double xLeftTop, double xRightTop, double xRightBottom, double xLeftBottom,
 			double yBottom, double yTop, Pane renderGroup) {
 		p.getPoints().add(xLeftTop);
@@ -200,18 +208,21 @@ public class Rendering {
 			squaresToRight = width - playerLoc.x - 1;
 			break;
 		case East:
+
 			// System.out.println("East");
 			squaresInFront = width - playerLoc.x;
 			squaresToLeft = playerLoc.y;
 			squaresToRight = height - playerLoc.y - 1;
 			break;
 		case South:
+
 			// System.out.println("South");
 			squaresInFront = height - playerLoc.y;
 			squaresToLeft = width - playerLoc.x - 1;
 			squaresToRight = playerLoc.x;
 			break;
 		case West:
+
 			// System.out.println("West");
 			squaresInFront = playerLoc.x + 1;
 			squaresToLeft = height - playerLoc.y - 1;
@@ -268,6 +279,7 @@ public class Rendering {
 		// System.out.println(direction.toString());
 		char object = worldMap[imageCoordinate.y][imageCoordinate.x];
 		Image image = getImageFromChar(object);
+
 		if (image != null) {
 			double height = image.getHeight() * Math.pow(scale, squaresInFront - row - 1);
 			double width = image.getWidth() * Math.pow(scale, squaresInFront - row - 1);
@@ -291,6 +303,7 @@ public class Rendering {
 	 */
 
 	private Point getImagePoint(Direction direction, int row, int col, String side, int boardHeight, int boardWidth) {
+
 		switch (direction) {
 		case North:
 			if (side.equals("left")) {
@@ -304,6 +317,7 @@ public class Rendering {
 			} else {
 				Point temp = new Point(col, row);
 				// System.out.println(temp.x + " rightttttttttttt" + temp.y);
+
 				return temp;
 			}
 		case South:
@@ -325,6 +339,7 @@ public class Rendering {
 		case East:
 			if (side.equals("left")) {
 				Point temp = new Point(boardWidth - 1 - row, squaresToLeft - col - 1);
+
 				// System.out.println(temp.x + "lefttttttttttttt " + temp.y);
 				return temp;
 			} else if (side.equals("right")) {
@@ -358,6 +373,7 @@ public class Rendering {
 		return null;
 	}
 
+
 	/**
 	 * Provided the given character, match an image to it, and return the image
 	 * object
@@ -365,7 +381,6 @@ public class Rendering {
 	 * @param input
 	 * @return
 	 */
-
 	private Image getImageFromChar(char input) {
 		return Images.MAP_OBJECT_IMAGES.get(input);
 	}
@@ -379,7 +394,6 @@ public class Rendering {
 	 * @param tileXRight
 	 * @return
 	 */
-
 	private double getImageX(double imageWidth, double tileXLeft, double tileXRight) {
 		double tileWidth = tileXRight - tileXLeft;
 		double widthOffset = Math.abs(tileWidth - imageWidth) / 2;
@@ -402,7 +416,6 @@ public class Rendering {
 	 * 
 	 * @return
 	 */
-
 	private double getImageY(double imageHeight, double tileBottom, double tileTop) {
 		double tileHeight = tileBottom - tileTop;
 		double heightOffset = tileHeight / 2;
@@ -420,7 +433,6 @@ public class Rendering {
 	 * @param setX
 	 * @param setY
 	 */
-
 	private void addImage(Pane renderGroup, Image image, double width, double height, double setX, double setY) {
 		ImageView imageView = new ImageView();
 		imageView.setImage(image);
@@ -436,7 +448,6 @@ public class Rendering {
 	 * 
 	 * @param renderGroup
 	 */
-
 	public void setGroup(Pane renderGroup) {
 		this.renderGroup = renderGroup;
 	}
@@ -444,7 +455,6 @@ public class Rendering {
 	/**
 	 * Generic toString method.
 	 */
-
 	@Override
 	public String toString() {
 		return "renderclass";

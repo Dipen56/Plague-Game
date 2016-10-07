@@ -4,7 +4,12 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import client.ParserUtilities;
 import dataStorage.InitialGameLoader;
@@ -42,6 +47,11 @@ public class ServerMain {
     private Game game;
 
     /**
+     * A buffer for messages that client send for chatting.
+     */
+    private Queue<String> messages;
+
+    /**
      * This map keeps track of every Receptionist for every connected client. The key is
      * the unique id of each client
      */
@@ -52,6 +62,7 @@ public class ServerMain {
      */
     public ServerMain() {
         receptionists = new HashMap<>();
+        messages = new ConcurrentLinkedQueue<>();
 
         // how many players?
         System.out.println("How many players (between 2 and 4):");
@@ -105,7 +116,8 @@ public class ServerMain {
                         + clientSocket.getInetAddress().toString() + ". uId is: " + uId
                         + ".");
 
-                Receptionist receptionist = new Receptionist(clientSocket, uId, game);
+                Receptionist receptionist = new Receptionist(this, clientSocket, uId,
+                        game);
                 // send the map to client
                 receptionist.sendMapID();
                 receptionists.put(uId, receptionist);
@@ -210,6 +222,25 @@ public class ServerMain {
             throw new GameError(
                     "Cannot create server socket, all predefined ports are used");
         }
+    }
+
+    /**
+     * Add a message into the queue, ready for the server to broadcast.
+     * 
+     * @param message
+     *            --- the message
+     */
+    public void addMessage(String message) {
+        messages.offer(message);
+    }
+
+    /**
+     * retrieve a message from the queue, and let the socket send it out.
+     * 
+     * @return --- the next message at the head of queue, or null if the queue is empty.
+     */
+    public String retrieveMessage() {
+        return messages.poll();
     }
 
     /**

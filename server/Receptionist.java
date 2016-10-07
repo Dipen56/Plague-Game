@@ -6,8 +6,10 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.List;
 import java.util.Map;
 
+import dataStorage.XmlFunctions;
 import server.game.Game;
 import server.game.player.Avatar;
 import server.game.player.Player;
@@ -24,14 +26,24 @@ import server.game.world.Area;
 public class Receptionist extends Thread {
 
     /**
+     * The server
+     */
+    private ServerMain server;
+
+    /**
      * The game instance running on server side.
      */
-    private final Game game;
+    private Game game;
 
     /**
      * User (client) id of this connection.
      */
     private final int uid;
+
+    /**
+     * User (client) specified name of this connection.
+     */
+    private String userName;
 
     /**
      * The communicating socket.
@@ -62,16 +74,17 @@ public class Receptionist extends Thread {
     /**
      * Constructor. It also initialises the socket input and output.
      * 
+     * @param server
+     *            --- the server
      * @param socket
      *            --- the socket used to connect to client
      * @param uid
      *            --- the unique id of this client
-     * @param broadcastClock
-     *            --- the broadcast loop cycle
      * @param game
      *            --- the game instance
      */
-    public Receptionist(Socket socket, int uid, Game game) {
+    public Receptionist(ServerMain server, Socket socket, int uid, Game game) {
+        this.server = server;
         this.game = game;
         this.socket = socket;
         this.uid = uid;
@@ -118,6 +131,7 @@ public class Receptionist extends Thread {
         try {
             byte avatarIndex = input.readByte();
             String name = input.readUTF();
+            this.userName = name;
             game.joinPlayer(new Player(uid, Avatar.get(avatarIndex), name));
 
             System.out.println("player uid: " + uid + ". avatar " + avatarIndex);
@@ -263,6 +277,16 @@ public class Receptionist extends Thread {
                     case Unlock:
                         game.playerUnlockLockable(uid);
                         break;
+                    case Save:
+                        XmlFunctions.saveFile(game, game.getPlayerById(uid).getName());
+                        break;
+                    case Load:
+                        load();
+                        break;
+                    case Chat:
+                        String message = "[" + userName + "] " + input.readUTF();
+                        server.addMessage(message);
+                        break;
                     case Disconnect:
                         // TODO handle disconnection. or we can handle it in catch clause.
                         input.close();
@@ -297,6 +321,22 @@ public class Receptionist extends Thread {
     }
 
     /**
+     * This method is used to check the existence of save file, and if it exists, load it.
+     * 
+     * @return
+     */
+    private boolean load() {
+        String userName = game.getPlayerById(uid).getName();
+        boolean isExisting = XmlFunctions.saveExists(userName);
+
+        if (isExisting) {
+            game = XmlFunctions.loadFile(userName);
+        }
+
+        return isExisting;
+    }
+
+    /**
      * This method generates a String representation of the game status. The format of it
      * is:
      * 
@@ -307,6 +347,7 @@ public class Receptionist extends Thread {
      * <li>Positions of all players
      * <li>The inventory of the player in this client
      * <li>The status of player holding torch or not.
+     * <li>Chat message if there is any.
      * 
      * <p>
      * Each one of them is separated by a new line character '\n'. The format of each part
@@ -353,10 +394,17 @@ public class Receptionist extends Thread {
         gameString.append(torchStatus);
         gameString.append('\n');
 
+        // 7. chat message
+        String message = server.retrieveMessage();
+        if (message != null) {
+            gameString.append(message);
+            gameString.append('\n');
+        }
+
         /*
-         * TODO 7. user-specified content
+         * TODO 8. user-specified content
          * 
-         * is holding torch?
+         * 
          * 
          * chat message
          */
