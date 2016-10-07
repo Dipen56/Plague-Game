@@ -72,6 +72,7 @@ public class InitialGameLoader {
     private static List<List<Item>> chestLoot;
 
     /**
+
      * A list of loot lists for cupboards.
      */
     private static List<List<Item>> cupboardLoot;
@@ -214,8 +215,11 @@ public class InitialGameLoader {
 
         // Creates Chests and adds antidotes to them.
         for (int i = 0; i < NUMBER_OF_CHESTS; i++) {
+        	List<Item> loot = chestLoot.get(i);
+        	if(loot == null)
+        		loot = new ArrayList<>();	//Uses empty list for empty chest.
             ch[i] = new Chest("A chest. Probably contains loot.", keys.get(i).getKeyID(),
-                    true, chestLoot.get(i));
+                    true, loot);
             spawnAntidotes(ch[i].getLoot(), ANTIDOTE_CHEST_MULT);// Random chance of
                                                                  // adding antidotes to
                                                                  // Chest loot list
@@ -223,15 +227,20 @@ public class InitialGameLoader {
 
         // Creates Cupboard and adds antidotes to them.
         for (int i = 0; i < NUMBER_OF_CUPBOARDS; i++) {
+        	List<Item> loot = cupboardLoot.get(i);
+        	if(loot == null)
+        		loot = new ArrayList<>();	//Uses empty list for empty chest.
             cp[i] = new Cupboard("A cupboard. It might contain some medicine.",
-                    keys.get(NUMBER_OF_CHESTS + i).getKeyID(), false,
-                    cupboardLoot.get(i));
+                    keys.get(NUMBER_OF_CHESTS + i).getKeyID(), false, loot);
 
         }
 
         // Creates ScrapPiles
         for (int i = 0; i < NUMBER_OF_S_PILES; i++) {
-            s[i] = new ScrapPile("A pile of useless scrap. Or is it?", scrapLoot.get(i));
+        	List<Item> loot = scrapLoot.get(i);
+        	if(loot == null)
+        		loot = new ArrayList<>();	//Uses empty list for empty chest.
+            s[i] = new ScrapPile("A pile of useless scrap. Or is it?", loot);
         }
 
         // Adds Room keys to random container
@@ -265,14 +274,15 @@ public class InitialGameLoader {
                 { s[16], s[17], cp[5], b, b, ch[22] } };
 
         // Puts the rooms together.
+        //TODO: change back to true 
         Room room1 = new Room(room1Map, areaIDs.get(1),
-                keys.get(keys.size() - 4).getKeyID(), true);
+                keys.get(keys.size() - 4).getKeyID(), false);
         Room room2 = new Room(room2Map, areaIDs.get(2),
-                keys.get(keys.size() - 3).getKeyID(), true);
+                keys.get(keys.size() - 3).getKeyID(), false);
         Room room3 = new Room(room3Map, areaIDs.get(3),
-                keys.get(keys.size() - 2).getKeyID(), true);
+                keys.get(keys.size() - 2).getKeyID(), false);
         Room room4 = new Room(room4Map, areaIDs.get(4),
-                keys.get(keys.size() - 1).getKeyID(), true);
+                keys.get(keys.size() - 1).getKeyID(), false);
 
         MapElement[][] worldMap = {
                 { t, t, t, t, t, t, t, t, t, g, t, t, t, t, t, t, t, t, t, t, t, t, t, t,
@@ -285,7 +295,7 @@ public class InitialGameLoader {
                         g, g, g, g, g, g, t },
                 { g, t, e, e, e, e, t, g, g, t, g, g, ch[3], t, g, g, g, g, g, g, g, t, g,
                         r, g, g, g, g, g, t },
-                { g, g, ts1, g, g, g, g, g, g, t, r, r, r, g, g, s[2], g, g, r, r, r, r,
+                { g, g, ts1, t, t, t, g, g, g, t, r, r, r, g, g, s[2], g, g, r, r, r, r,
                         g, g, g, g, r, r, g, g },
                 { t, g, g, g, g, g, g, g, g, t, g, g, g, g, g, g, g, g, r, g, g, t, g, t,
                         t, t, t, t, g, g },
@@ -302,11 +312,11 @@ public class InitialGameLoader {
                 { t, g, g, r, g, g, g, g, g, g, g, g, t, e, e, e, e, t, g, r, r, t, g, g,
                         t, t, t, t, t, t },
                 { t, g, g, g, g, g, r, r, r, r, g, g, t, e, e, e, e, t, g, g, g, t, g, g,
-                        g, e, e, e, e, t },
+                        t, e, e, e, e, t },
                 { g, g, g, g, g, g, r, ch[9], g, g, g, r, t, e, e, e, e, t, g, g, g, t, g,
-                        g, g, e, e, e, e, t },
-                { t, t, t, g, r, r, g, g, g, g, g, r, g, ts2, g, g, g, g, g, g, g, t, g,
-                        g, g, e, e, e, e, t },
+                        g, t, e, e, e, e, t },
+                { t, t, t, g, r, r, g, g, g, g, g, r, g, ts2, t, t, t, g, g, g, g, t, g,
+                        g, t, e, e, e, e, t },
                 { s[5], g, g, g, g, g, g, g, g, g, r, g, g, g, g, g, g, g, g, g, g, t, g,
                         g, ts3, e, e, e, e, t },
                 { t, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, ch[10], t,
@@ -323,7 +333,7 @@ public class InitialGameLoader {
                         g, g, g, g, t, t },
                 { t, g, g, g, t, g, g, g, g, t, t, g, g, g, t, r, g, g, g, r, r, r, g, r,
                         r, r, r, g, g, g },
-                { t, g, r, g, t, g, g, g, ts4, t, g, g, g, g, g, g, g, g, g, g, s[9], t,
+                { t, g, r, g, t, t, t, t, ts4, t, g, g, g, g, g, g, g, g, g, g, s[9], t,
                         g, r, g, g, ch[12], r, g, g },
                 { g, r, ch[13], g, t, e, e, e, e, t, g, g, g, g, g, g, g, g, g, g, g, t,
                         g, r, g, g, g, r, g, g },

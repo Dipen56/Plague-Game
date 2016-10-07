@@ -121,6 +121,26 @@ public class Client extends Thread {
     }
 
     /**
+     * This method will send a packet to server, with an String followed. This string is
+     * usually used as extra message for special commands.
+     * 
+     * @param packet
+     *            --- the packet need to send
+     * @param str
+     *            --- extra message
+     */
+    public void sendWithString(Packet packet, String str) {
+        try {
+            output.writeByte(packet.toByte());
+            output.writeUTF(str);
+            output.flush();
+        } catch (IOException e) {
+            GUI.showWarningPane("I/O exceptions, " + e.toString());
+            e.printStackTrace();
+        }
+    }
+
+    /**
      * Set ready to enter the game.
      * 
      * @param isUserReady
@@ -244,6 +264,7 @@ public class Client extends Thread {
      * <li>Positions of all players
      * <li>The inventory of the player in this client
      * <li>The status of player holding torch or not.
+     * <li>Chat message if there is any.
      * 
      * <p>
      * Each one of them is separated by a new line character '\n'. The format of each part
@@ -336,6 +357,12 @@ public class Client extends Thread {
             // Data is incomplete, ignore.
             s.close();
             return;
+        }
+
+        // 7. chat message
+        if (s.hasNextLine()) {
+            line = s.nextLine();
+            controller.parseChatMessage(line);
         }
 
         // close the scanner

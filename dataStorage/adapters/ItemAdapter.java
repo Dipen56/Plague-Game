@@ -18,8 +18,6 @@ public class ItemAdapter {
 			return ((AntidoteAdapter)this).toString();
 		if(this instanceof KeyAdapter)
 			return ((KeyAdapter)this).toString();
-		if(this instanceof TorchAdapter)
-			return ((TorchAdapter)this).toString();
 		return null;
 	}
 }

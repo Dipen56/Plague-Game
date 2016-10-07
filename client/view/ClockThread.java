@@ -1,5 +1,7 @@
 package client.view;
 
+import javafx.application.Platform;
+
 /**
  * This class is used for periodically updating GUI and Renderer.
  * 
@@ -37,7 +39,16 @@ public class ClockThread extends Thread {
                 Thread.sleep(delay);
 
                 // update Renderer and GUI.
-                controller.updateRenderAndGui();
+                
+                
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                    	controller.updateRenderAndGui();
+                    }
+                });
+                
+                
 
             } catch (InterruptedException e) {
                 // should never happen

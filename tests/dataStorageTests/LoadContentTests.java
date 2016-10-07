@@ -2,6 +2,7 @@ package tests.dataStorageTests;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
+import dataStorage.InitialGameLoader;
 import dataStorage.XmlFunctions;
 import dataStorage.adapters.GameAdapter;
 import server.game.Game;
@@ -31,19 +32,12 @@ public class LoadContentTests {
 	static{
 		for(Area a: TestConst.areas.values())
 			a.registerPortals();
-		gameA = new Game(TestConst.world, TestConst.areas);
+		gameA = InitialGameLoader.makeGame();
 		altGame = new GameAdapter(gameA);
 		XmlFunctions.saveFile(altGame,"");
 		gameB = altGame.getOriginal();
 	}
 
-
-
-	@Test
-	public void test1(){
-		//Game torches
-		assertTrue(gameA.getTorches().equals(gameB.getTorches()));	
-	}
 
 	@Test
 	public void test2(){
@@ -51,12 +45,13 @@ public class LoadContentTests {
 		Map<Integer, Player> playersA = gameA.getPlayers();
 		Map<Integer, Player> playersB = gameB.getPlayers();
 		//Player lists must be the same size, and each keyset must match.
-		if(playersB == null 
+		if((playersA != null && playersB == null)
 				|| playersA.size() != playersB.size()
-				|| playersA.keySet().equals(playersB.keySet())){
+				|| (!playersA.isEmpty() && !playersB.isEmpty() && playersA.keySet().equals(playersB.keySet()))
+				){
 			fail();
 			return;
-		}	
+		}
 	}
 
 	@Test
@@ -64,7 +59,7 @@ public class LoadContentTests {
 		//Game players: values. Note that player isAlive is not checked, as player could die immediately after loading.
 		Map<Integer, Player> playersA = gameA.getPlayers();
 		Map<Integer, Player> playersB = gameB.getPlayers();
-		if(playersB == null 
+		if(playersB == null
 				|| playersA.size() != playersB.size()){
 			fail();
 			return;
@@ -78,7 +73,7 @@ public class LoadContentTests {
 
 			if(a == null
 					|| b == null
-					|| a.getClass() != b.getClass() 
+					|| a.getClass() != b.getClass()
 					|| a.getAvatar() != b.getAvatar()
 					|| a.getHealthFromSave() != b.getHealthFromSave()	//The health at the time of saving is compared rather than the dynamic "health" field.
 					|| a.getVirus() != b.getVirus()
@@ -93,7 +88,6 @@ public class LoadContentTests {
 			}
 		}
 	}
-
 
 	@Test
 	public void test3(){
@@ -111,7 +105,7 @@ public class LoadContentTests {
 		MapElement a = null, b = null;
 
 		//Neither map should ever be null,as checked in test 3.
-		for(int i = 0; i < mapA.length; i++){ 
+		for(int i = 0; i < mapA.length; i++){
 			for(int j = 0; j < mapA[0].length; j++){
 				a = mapA[i][j];
 				b = mapB[i][j];
@@ -140,7 +134,7 @@ public class LoadContentTests {
 
 	@Test
 	public void test4b(){
-		/*Game areas: values: 
+		/*Game areas: values:
 		.equals is not appropriate as player portal list can have the same pairs in the same indeces, but fail an equals check.
 		We are not interested in a perfect equals check.
 		 */
@@ -167,11 +161,11 @@ public class LoadContentTests {
 					return;
 				}
 				Room rB = (Room)b;
-				if(rA.getKeyID() != rB.getKeyID() 
+				if(rA.getKeyID() != rB.getKeyID()
 						|| rA.isLocked() != rB.isLocked()){
 					fail();
 					return;
-				}	
+				}
 			}
 			//Checks portals pairs are the same.
 			assert(portalChecker(gameA.getWorld().getPlayerPortals(), gameB.getWorld().getPlayerPortals()));
@@ -193,7 +187,7 @@ public class LoadContentTests {
 	 */
 	public boolean portalChecker(List<int[]> portalsA, List<int[]> portalsB){
 		int[] a = null, b = null;
-		for(int i = 0; i < portalsA.size(); i++){ 
+		for(int i = 0; i < portalsA.size(); i++){
 			a = portalsA.get(i);
 			b = portalsB.get(i);
 			if(a[0] != b[0] || a[1] != b[1])

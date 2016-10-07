@@ -9,7 +9,7 @@ package server.game.player;
 public enum Virus {
 
     // Form BioHazzard. Or we could use other names. Ideas welcomed.
-    T_Virus, G_Virus, T_Veronica;
+    Spanish_Flu, Black_Death, Ebola;
 
     /**
      * Get the virus at given index. If the index is illegal, an
@@ -35,14 +35,19 @@ public enum Virus {
         int i = (int) (Math.random() * 3);
         switch (i) {
         case 0:
-            return T_Virus;
+            return Spanish_Flu;
         case 1:
-            return G_Virus;
+            return Black_Death;
         case 2:
-            return T_Veronica;
+            return Ebola;
         default:
             return null; // dead code
         }
+    }
+
+    @Override
+    public String toString() {
+        return super.toString().replace('_', ' ');
     }
 
 }

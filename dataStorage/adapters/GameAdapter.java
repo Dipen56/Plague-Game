@@ -42,8 +42,6 @@ public class GameAdapter{
 	@XmlElement
 	private KeyAdapter KeyTypeProtector = new KeyAdapter();
 	@XmlElement
-	private TorchAdapter TorchTypeProtector = new TorchAdapter();
-	@XmlElement
 	private CupboardAdapter CupboardTypeProtector = new CupboardAdapter();
 	@XmlElement
 	private ScrapPileAdapter ScrapPileTypeProtector = new ScrapPileAdapter();
@@ -72,11 +70,6 @@ public class GameAdapter{
 	@XmlElement
 	private Map<Integer, PlayerAdapter> players;
 
-	/**
-	 * All torches in this world. It is used to track torch burning status in timer.
-	 */
-	@XmlElement
-	private TorchAdapter[] torches;
 
 	/**
 	 * An ID number to identify a loaded game against a running game.
@@ -130,16 +123,6 @@ public class GameAdapter{
 			this.players.put(myInt, new PlayerAdapter(p));
 		}
 
-		List<Torch> gameTorches = game.getTorches();
-		this.torches = new TorchAdapter[gameTorches.size()];
-		//If there are no torches in list, none are saved into array.
-
-		if(!gameTorches.isEmpty()){
-			// Copies all torches to the torches array. Field cannot be list due to xml complications.
-			for(int i = 0; i < gameTorches.size();i++){
-				this.torches[i] = new TorchAdapter(gameTorches.get(i));
-			}
-		}
 		gameID = game.getGameID();
 	}
 
@@ -163,14 +146,8 @@ public class GameAdapter{
 			Player p = ((PlayerAdapter)m.getValue()).getOriginal();
 			players.put(m.getKey(), p);
 		}
-		//Restores Torches
-		List<Torch>torches = new ArrayList<>();
-		if(this.torches != null){
-			for(int i = 0; i < this.torches.length;i++){
-				torches.add(this.torches[i].getOriginal());
-			}
-		}
-		Game game =  new Game(world, areas, players, torches, gameID);
+
+		Game game =  new Game(world, areas, players, gameID);
 
 		return game;
 	}

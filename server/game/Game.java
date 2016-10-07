@@ -71,7 +71,7 @@ public class Game {
 
     /**
      * World map.
-     * 
+     *
      * <p>
      * This field is actually redundant, because the world map is contained in
      * <i>areas</i> field as well. I keep it here just for not bringing major changes to
@@ -155,20 +155,17 @@ public class Game {
 
     /**
      * Constructor used for data storage.
-     * 
+     *
      * @param world
      *            --- The main game world.
      * @param areas
      *            --- A map from areaID's to areas.
      * @param players
      *            --- A map from playerID's to players.
-     * @param torches
-     *            --- A list of torches. This can be null.
      * @param gameID
      *            --- A unique hash number for each game instance.
      */
-    public Game(Area world, Map<Integer, Area> areas, Map<Integer, Player> players,
-            List<Torch> torches, int gameID) {
+    public Game(Area world, Map<Integer, Area> areas, Map<Integer, Player> players, int gameID) {
 
         this.world = world;
         this.areas = areas;
@@ -258,7 +255,7 @@ public class Game {
 
     /**
      * Disconnect the player, and re-distribute all his keys to locked containers.
-     * 
+     *
      * @param playerId
      *            --- the id number of the disconnected player
      */
@@ -732,7 +729,7 @@ public class Game {
 
     /**
      * Get the world map
-     * 
+     *
      * @return --- the world map
      */
     public Area getWorld() {
@@ -741,7 +738,7 @@ public class Game {
 
     /**
      * Get the table of areas
-     * 
+     *
      * @return --- the table of areas as a Map where the key is areaId, and the value is
      *         area.
      */
@@ -760,7 +757,7 @@ public class Game {
 
     /**
      * For testing, will be deleted.
-     * 
+     *
      * @return
      */
     public Player getPlayer() {
@@ -769,7 +766,7 @@ public class Game {
 
     /**
      * Get all players currently logged in game.
-     * 
+     *
      * @return --- all players as a map, where the key is player id, and the value is the
      *         player.
      */
@@ -779,7 +776,7 @@ public class Game {
 
     /**
      * Get the player by the player id.
-     * 
+     *
      * @param uid
      *            --- the id number of the player
      * @return --- the corresponding player.
@@ -819,7 +816,7 @@ public class Game {
 
     /**
      * Get the unique game instance id.
-     * 
+     *
      * @return --- the unique game instance id
      */
     public int getGameID() {
@@ -829,13 +826,13 @@ public class Game {
     /**
      * This method is used to generate the string for broadcasting world time to clients.
      * The String has the following format:
-     * 
+     *
      * <p>
      * Say current time is hh:mm:ss <i>10:20:30</i>:
-     * 
+     *
      * <p>
      * The string will be <i>"10:20:30"</i>
-     * 
+     *
      * @return --- a string representation of the world time. This is used for network
      *         transmission.
      */
@@ -850,7 +847,7 @@ public class Game {
      * Generate a String of all players' avatars so the client who get this string will
      * know other player's avatar. The String has the following format:
      * <i>"uId_1,avatar_index_1|uId_2,avatar_index_2"</i>
-     * 
+     *
      * <p>
      * Say 2 players currently in game:
      * <li>player 1, id 111, avatar index 0
@@ -858,7 +855,7 @@ public class Game {
      * <br>
      * <p>
      * The string representation will be <i>"111,0|222,1"</i>
-     * 
+     *
      * @return --- a string representation of all players and their chosen avatars. This
      *         is used for network transmission.
      */
@@ -878,7 +875,7 @@ public class Game {
      * (lighted) torch or not. This is used for the renderer at client side. The String
      * has the following format: <i>"uId_1,true/false|uId_2,true/false"</i>, where true or
      * false is represented as 1 or 0.
-     * 
+     *
      * <p>
      * Say 2 players currently in game:
      * <li>player 1, id 111, is holding torch
@@ -886,7 +883,7 @@ public class Game {
      * <br>
      * <p>
      * The string representation will be <i>"111,1|222,0"</i>
-     * 
+     *
      * @return --- a string representation of the status of all players' torch. This is
      *         used for network transmission.
      */

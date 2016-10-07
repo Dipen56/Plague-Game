@@ -27,9 +27,9 @@ import server.game.world.Area;
 public class InitialGameAdapter{
 
 	/**
-	 * Whatever you do don't delete either this altObstTypeProtector or altChestTypeProtector. 
+	 * Whatever you do don't delete either this altObstTypeProtector or altChestTypeProtector.
 	 * I don't know why but them being here allows the parser to put objects of their types into the xml file.
-	 * Without it, the parser does not recognise these types of object, and they will not be written to the game save. 
+	 * Without it, the parser does not recognise these types of object, and they will not be written to the game save.
 	 */
 	@XmlElement
 	private ObstacleAdapter ObstTypeProtector = new ObstacleAdapter();
@@ -39,8 +39,6 @@ public class InitialGameAdapter{
 	private AntidoteAdapter AntidoteTypeProtector = new AntidoteAdapter();
 	@XmlElement
 	private KeyAdapter KeyTypeProtector = new KeyAdapter();
-	@XmlElement
-	private TorchAdapter TorchTypeProtector = new TorchAdapter();
 	@XmlElement
 	private CupboardAdapter CupboardTypeProtector = new CupboardAdapter();
 	@XmlElement
@@ -64,17 +62,11 @@ public class InitialGameAdapter{
 	private Map<Integer, AreaAdapter> areas;
 
 	/**
-	 * All torches in this world. It is used to track torch burning status in timer.
-	 */
-	@XmlElement
-	private TorchAdapter[] torches;
-
-	/**
 	 * An ID number to identify a loaded game against a running game.
 	 */
 	@XmlElement
 	private int gameID;
-	
+
 	/**
 	 * Only to be called by XML marshaller.
 	 **/
@@ -109,17 +101,6 @@ public class InitialGameAdapter{
 			altArea = null;
 		}
 
-		List<Torch> gameTorches = game.getTorches();
-		this.torches = new TorchAdapter[gameTorches.size()];
-		//If there are no torches in list, none are saved into array.
-
-		if(!gameTorches.isEmpty()){
-			// Copies all torches to the torches array. Field cannot be list due to xml complications.
-			for(int i = 0; i < gameTorches.size();i++){
-				this.torches[i] = new TorchAdapter(gameTorches.get(i));
-			}
-		}
-		
 		gameID = game.getGameID();
 	}
 
@@ -137,14 +118,7 @@ public class InitialGameAdapter{
 			areas.put(m.getKey(), area);
 		}
 
-		//Restores Torches
-		List<Torch>torches = new ArrayList<>();
-		if(this.torches != null){
-			for(int i = 0; i < this.torches.length;i++){
-				torches.add(this.torches[i].getOriginal());
-			}
-		}
-		Game game =  new Game(world, areas, new HashMap<Integer, Player>(), torches, gameID);	
+		Game game =  new Game(world, areas, new HashMap<Integer, Player>(), gameID);
 
 		return game;
 	}
