@@ -27,13 +27,10 @@ import javafx.scene.paint.ImagePattern;
  */
 
 public class Rendering {
-	private static final String PLAYER_IMAGE = "/standingstillrear.png";
 	// private static final String BACKGROUND_IMAGE = "/background.gif";
 	private static final String BACKGROUND_IMAGE = "/night.jpg";
-
 	private int gamePaneHeight = GUI.HEIGHT_VALUE - 35;
 	private int gamePanelWidth = GUI.GAMEPANE_WIDTH_VALUE - 1;
-
 	private int tileWidth = 130;
 	private int tileHeight = 50;
 	private double imageOffset = 15;
@@ -42,7 +39,6 @@ public class Rendering {
 	private int squaresInFront = 0;
 	private int squaresToLeft = 0;
 	private int squaresToRight = 0;
-
 	private Pane renderGroup;
 	private int imageBound = 10;
 
