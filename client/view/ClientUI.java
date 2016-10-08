@@ -18,6 +18,7 @@ import client.ParserUtilities;
 import client.rendering.Rendering;
 import server.Packet;
 import server.game.player.Avatar;
+import server.game.player.Player;
 import server.game.player.Position;
 import server.game.player.Virus;
 
@@ -100,57 +101,58 @@ public class ClientUI {
 	 * description is used to pop up a hover tootip for this item.
 	 */
 	private List<String> inventory;
-	
+
 	/**
 	 * This is a mirror of the field, Map<Integer, Area> areas, in Game class,
 	 * except the area is represented as a char[][]. Renderer can look for what
 	 * map object to render from here.
 	 */
 	private Map<Integer, char[][]> areas;
-	
+
 	// ============ Model and Views =============
 	/**
 	 * The Gui
 	 */
 	private GUI gui;
-	
+
 	/**
 	 * The renderer
 	 */
 	private Rendering render;
-	
+
 	/**
 	 * The client side socket connection maintainer
 	 */
 	private Client client;
-	
+
 	/**
 	 * A clock thread for generating constant pulse to update rendering and GUI.
 	 */
 	private ClockThread clockThread;
-	
+
 	// ============ Event Handlers ==============
 	/**
 	 * Event Handler for buttons
 	 */
 	private EventHandler<ActionEvent> actionEvent;
-	
+
 	/**
 	 * Event Handler for key events
 	 */
 	private EventHandler<KeyEvent> keyEvent;
-	
+
 	/**
 	 * Event Handler for mouse events
 	 */
 	private EventHandler<MouseEvent> mouseEvent;
-	
+
 	/**
 	 * Event Handler for window events
 	 */
 	private EventHandler<WindowEvent> windowEvent;
-	
+
 	private int avatarIndex = 0;
+
 	/**
 	 * Constructor
 	 */
@@ -373,7 +375,9 @@ public class ClientUI {
 		// 2. update Renderer
 		// a. call update renderer method.
 		render.render(playerLoc, worldMap, visibility, uid, avatars, positions);
-		gui.updateHealth((double) ((double) health / 600));
+
+		gui.updateHealth(health);
+
 	}
 	/**
 	 * Alert the Renderer and GUI to start the game.
@@ -438,9 +442,12 @@ public class ClientUI {
 						GUI.showWarningPane("Port number should be an integer");
 						return;
 					}
-					loginPlayer(gui.getIpAddress(), port, gui.getUserName(), gui.getAvatarIndex());
-					// in the waiting room
-					gui.waitingRoom();
+
+					if (loginPlayer(gui.getIpAddress(), port, gui.getUserName(), gui.getAvatarIndex())) {
+						// in the waiting room
+						gui.waitingRoom();
+
+					}
 				} else if (event.toString().contains("Leave")) {
 					// this is for the login screen
 					gui.getWindow().close();
@@ -450,6 +457,8 @@ public class ClientUI {
 					 * it's waiting for others.
 					 */
 					client.setUserReady(true);
+					gui.disableReadyButton();
+
 				} else if (event.toString().contains("Leave Game")) {
 					// this is for leaving the waiting room
 					gui.getWindow().close();
@@ -464,7 +473,7 @@ public class ClientUI {
 					System.out.println("INFO");
 				} else if (event.toString().contains("AboutMenu")) {
 					System.out.println("ABOUT");
-				}else if (event.toString().contains("PrevAvatar")) {
+				} else if (event.toString().contains("PrevAvatar")) {
 					avatarIndex--;
 					if (avatarIndex < 0) {
 						avatarIndex = 3;

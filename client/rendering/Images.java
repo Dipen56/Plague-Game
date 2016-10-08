@@ -25,6 +25,8 @@ public class Images {
 	
 	public static final Image LOGIN_SCREEN_IMAGE=loadImage("/login-background.png");
 
+	public static final Image LOGIN_SCREEN_IMAGE = loadImage("/login-background.png");
+
 	public static final Image BACKGROUND_IMAGE = loadImage("/night.png");
 
 	public static final Image GRASS_IMAGE = loadImage("/grass.png");
@@ -122,6 +124,7 @@ public class Images {
 		ITEM_IMAGES.put('A', loadImage("/antidote.png"));
 		ITEM_IMAGES.put('K', loadImage("/key.png"));
 		ITEM_IMAGES.put('T', loadImage("/torch.png"));
+		ITEM_IMAGES.put('B', loadImage("/bag.png"));
 
 		// ============= Avatar images ====================
 
