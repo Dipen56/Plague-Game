@@ -109,6 +109,12 @@ public class ClientUI {
 	 */
 	private Map<Integer, char[][]> areas;
 
+	/**
+	 * This is a table for retrieving descriptions for rooms. Renderer can look
+	 * for what description for specific rooms to render.
+	 */
+	private Map<Integer, String> descriptions;
+
 	// ============ Model and Views =============
 	/**
 	 * The Gui
@@ -158,6 +164,7 @@ public class ClientUI {
 	 */
 	public ClientUI() {
 		areas = new HashMap<>();
+		descriptions = new HashMap<>();
 		avatars = new HashMap<>();
 		positions = new HashMap<>();
 		torchStatus = new HashMap<>();
@@ -247,7 +254,7 @@ public class ClientUI {
 	 *            --- a string representation of all maps in game.
 	 */
 	public void parseMap(String mapStr) {
-		ParserUtilities.parseMap(areas, mapStr);
+		ParserUtilities.parseMap(areas, descriptions, mapStr);
 	}
 	/**
 	 * When the client receives the string recording all players positions from
