@@ -146,7 +146,7 @@ public class Chest extends Obstacle implements Container, Lockable {
 
 	@Override
 	public String toString() {
-		return "C";
+		return super.toString();
 	}
 
 }
