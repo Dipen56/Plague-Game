@@ -20,8 +20,8 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.control.ProgressBar;
 
 /**
- * This class represents the main rendering class, this class will control the rendering
- * of the game board, character, and objects.
+ * This class represents the main rendering class, this class will control the
+ * rendering of the game board, character, and objects.
  *
  * @author Angelo
  *
@@ -29,8 +29,6 @@ import javafx.scene.control.ProgressBar;
 
 public class Rendering {
 
-	// private static final String BACKGROUND_IMAGE = "/background.gif";
-	private static final String BACKGROUND_IMAGE = "/night.jpg";
 	private int gamePaneHeight = GUI.HEIGHT_VALUE - 35;
 	private int gamePanelWidth = GUI.GAMEPANE_WIDTH_VALUE - 1;
 	private int tileWidth = 130;
@@ -43,8 +41,10 @@ public class Rendering {
 	private int squaresToRight = 0;
 	private Pane renderGroup;
 	private int imageBound = 10;
+
 	public Rendering() {
 	}
+
 	/**
 	 * Renders the entire game, method gets called from the CLient UI class
 	 * 
@@ -136,6 +136,7 @@ public class Rendering {
 			previousTileWidth = currentTileWidth;
 		}
 	}
+
 	/**
 	 * Calculates the offset
 	 * 
@@ -148,6 +149,7 @@ public class Rendering {
 		}
 		return gamePaneHeight - count;
 	}
+
 	/**
 	 * Creates the tiles / grass on the board via the provided parameters.
 	 * 
@@ -174,6 +176,7 @@ public class Rendering {
 		p.setStrokeWidth(1);
 		renderGroup.getChildren().add(p);
 	}
+
 	/**
 	 * Calculates the number of squares to the front, left and right of the
 	 * character
@@ -212,6 +215,7 @@ public class Rendering {
 			break;
 		}
 	}
+
 	/**
 	 * Renders the current character, and all other characters onto the board
 	 * 
@@ -232,6 +236,7 @@ public class Rendering {
 			char[][] worldMap, Pane renderGroup2, Direction direction2, double yTop, Map<Integer, Avatar> avatars,
 			Map<Integer, Position> positions) {
 	}
+
 	/**
 	 * Given the provided arguments, Find a point in which to access the array,
 	 * if it contains a image char, then pass that char into getImageFromChar
@@ -263,6 +268,7 @@ public class Rendering {
 			addImage(renderGroup, image, width, height, xPoint, yPoint + imageOffset);
 		}
 	}
+
 	/**
 	 * Calculates the front, left, and right coordinates for finding char
 	 * objects, creates a point and then return the newly created point
@@ -341,6 +347,7 @@ public class Rendering {
 		}
 		return null;
 	}
+
 	/**
 	 * Provided the given character, match an image to it, and return the image
 	 * object
@@ -351,6 +358,7 @@ public class Rendering {
 	private Image getImageFromChar(char input) {
 		return Images.MAP_OBJECT_IMAGES.get(input);
 	}
+
 	/**
 	 * Get the X point of each image on the board, based on the rows and cols of
 	 * the image location, and being relative to the players position
@@ -369,6 +377,7 @@ public class Rendering {
 			return tileXLeft - widthOffset;
 		}
 	}
+
 	/*
 	 * Get the Y point of each image on the board, based on the rows and cols of
 	 * the image location, and being relative to the players position
@@ -386,6 +395,7 @@ public class Rendering {
 		double heightOffset = tileHeight / 2;
 		return tileBottom - heightOffset - imageHeight;
 	}
+
 	/**
 	 * Given the provided arguments, add an image into the renderGroup for it to
 	 * be redrawn
@@ -406,6 +416,7 @@ public class Rendering {
 		imageView.setY(setY);
 		renderGroup.getChildren().add(imageView);
 	}
+
 	/**
 	 * Sets the pane to be renderGroup
 	 * 
@@ -414,6 +425,7 @@ public class Rendering {
 	public void setGroup(Pane renderGroup) {
 		this.renderGroup = renderGroup;
 	}
+
 	/**
 	 * Generic toString method.
 	 */
