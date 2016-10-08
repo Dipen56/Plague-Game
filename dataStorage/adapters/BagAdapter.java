@@ -8,6 +8,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 
 import server.game.items.Antidote;
+import server.game.items.Bag;
 import server.game.items.Item;
 
 
