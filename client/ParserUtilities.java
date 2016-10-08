@@ -379,7 +379,7 @@ public class ParserUtilities {
 
         scanner.close();
         return list;
-    }
+    } 
 
     /**
      * This helper method parse user's input as integer, and limits the maximum and

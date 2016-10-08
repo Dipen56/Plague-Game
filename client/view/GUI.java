@@ -149,6 +149,7 @@ public class GUI extends Application {
 	private Label virus;
 	private FlowPane healthPane;
 	private Label avatarLable;
+	private GridPane detail;
 	// waiting room Controls
 	private FlowPane playersWaiting;
 	private Button readyGame;
@@ -165,6 +166,7 @@ public class GUI extends Application {
 	private static int avatarIndex = 0;
 	private Map<Point, String> itemsDescription;
 	private List<Avatar> avatarList = new ArrayList<Avatar>();
+
 	// public GUI(ClientUI viewControler, Rendering rendering) {
 	// this.viewControler = viewControler;
 	// this.render = rendering;
@@ -174,9 +176,11 @@ public class GUI extends Application {
 		this.render = rendering;
 		chatText = new StringBuffer();
 	}
+
 	public GUI() {
 		// leave this constructor in here need to run the gui.
 	}
+
 	/**
 	 * this method will get passed in a stage which is the main window and will
 	 * start it
@@ -199,8 +203,9 @@ public class GUI extends Application {
 		// loginScreen() ;
 		window.show();
 		window.setOnCloseRequest(e -> Platform.exit());
-		window.setOnCloseRequest(e-> System.exit(0));
+		window.setOnCloseRequest(e -> System.exit(0));
 	}
+
 	public void slashScreen() {
 		Group slashGroup = new Group();
 		Image slashBackground = Images.SLASH_SCREEN_IMAGE;
@@ -231,8 +236,9 @@ public class GUI extends Application {
 		slashScene.getStylesheets().add(this.getClass().getResource(STYLE_CSS).toExternalForm());
 		window.setScene(slashScene);
 		window.setOnCloseRequest(e -> Platform.exit());
-		window.setOnCloseRequest(e-> System.exit(0));
+		window.setOnCloseRequest(e -> System.exit(0));
 	}
+
 	public void loginScreen() {
 		avatarList.add(Avatar.Avatar_1);
 		avatarList.add(Avatar.Avatar_2);
@@ -303,7 +309,7 @@ public class GUI extends Application {
 		loginPane.getChildren().add(inputStore);
 		inputStore.setLayoutX(350);
 		inputStore.setLayoutY(450);
-		
+
 		FlowPane buttons = new FlowPane();
 		buttons.alignmentProperty().set(Pos.CENTER);
 		buttons.setHgap(10);
@@ -317,13 +323,14 @@ public class GUI extends Application {
 		loginPane.getChildren().add(buttons);
 		buttons.setLayoutX(300);
 		buttons.setLayoutY(580);
-		
+
 		Scene loginScene = new Scene(loginPane, WIDTH_VALUE, HEIGHT_VALUE);
 		loginScene.getStylesheets().add(this.getClass().getResource(STYLE_CSS).toExternalForm());
 		window.setScene(loginScene);
 		window.setOnCloseRequest(e -> Platform.exit());
-		window.setOnCloseRequest(e-> System.exit(0));
+		window.setOnCloseRequest(e -> System.exit(0));
 	}
+
 	public void changeAvatarImage(int change) {
 		avatarIndex = change;
 		Image avatarImg = Images.getAvatarImageBySide(avatarList.get(change), Side.Front);
@@ -332,6 +339,7 @@ public class GUI extends Application {
 		avatarImage.setFitWidth(300);
 		avatarLable.setGraphic(avatarImage);
 	}
+
 	public void waitingRoom() {
 		VBox waitingRoomBox = new VBox(5);
 		Label waitingMsg = new Label();
@@ -354,8 +362,9 @@ public class GUI extends Application {
 		Scene slashScene = new Scene(waitingRoomBox, 400, 170);
 		window.setScene(slashScene);
 		window.setOnCloseRequest(e -> Platform.exit());
-		window.setOnCloseRequest(e-> System.exit(0));
+		window.setOnCloseRequest(e -> System.exit(0));
 	}
+
 	public void startGame() {
 		// Create a VBox which is just layout manger and adds gap of 10
 		rightPanel = new VBox(10);
@@ -383,8 +392,9 @@ public class GUI extends Application {
 		window.setOnCloseRequest(windowEvent);
 		window.setScene(scene);
 		window.setOnCloseRequest(e -> Platform.exit());
-		window.setOnCloseRequest(e-> System.exit(0));
+		window.setOnCloseRequest(e -> System.exit(0));
 	}
+
 	/**
 	 * this method creats the health bar and adds it to the pane.
 	 * 
@@ -417,10 +427,12 @@ public class GUI extends Application {
 		healthPane.getChildren().add(healthBox);
 		group.getChildren().add(healthPane);
 	}
+
 	public void updateHealth(double health) {
 		bar.progressProperty().set(health);
 		group.getChildren().add(healthPane);
 	}
+
 	/**
 	 * this methods will set up the menu bar with all it items
 	 */
@@ -457,6 +469,7 @@ public class GUI extends Application {
 		// add the layout to the borderPane Layout
 		borderPane.setTop(menuBar);
 	}
+
 	/**
 	 * this method sets up the world clock controls
 	 */
@@ -471,6 +484,7 @@ public class GUI extends Application {
 		// timeLable.setText(clockTime);
 		rightPanel.getChildren().add(titlePane);
 	}
+
 	/**
 	 * this method will set up the controls for the mini map of the game
 	 */
@@ -483,9 +497,11 @@ public class GUI extends Application {
 		// miniMapLable.setPrefHeight(370);
 		miniMapCanvas = new Canvas(400, 370);
 		titlePane.setContent(miniMapCanvas);
+
 		miniMapCanvas.getStyleClass().add("minimap-lable");
 		rightPanel.getChildren().add(titlePane);
 	}
+
 	/**
 	 * this method will setup the chat controls
 	 */
@@ -518,20 +534,22 @@ public class GUI extends Application {
 		titlePane.setContent(chatControls);
 		rightPanel.getChildren().add(titlePane);
 	}
+
 	/**
 	 * this method will setup the items control
 	 */
 	public void setItems() {
 		TitledPane titlePane = new TitledPane();
 		titlePane.setText("Item Inventory");
+		VBox itemContainer = new VBox();
 		HBox hbox = new HBox(5);
 		itemGrid = new GridPane();
 		itemGrid.setOnMouseMoved(mouseEvent);
 		// hbox.setOnMousePressed(mouseEvent);
 		itemGrid.setOnMousePressed(mouseEvent);
-		hbox.getStyleClass().add("itempane-background");
+		itemContainer.getStyleClass().add("itempane-background");
 		itemGrid.setGridLinesVisible(true);
-		for (int i = 0; i < 3; i++) {
+		for (int i = 0; i < 2; i++) {
 			for (int j = 0; j < 4; j++) {
 				Label item = new Label();
 				item.getStyleClass().add("item-grid");
@@ -553,25 +571,35 @@ public class GUI extends Application {
 		zoomedItem = new Label();
 		Image img = Images.INVENTORY_IMAGE;
 		ImageView image = new ImageView();
-		image.setFitWidth(100);
-		image.setFitHeight(100);
+		image.setFitWidth(120);
+		image.setFitHeight(120);
 		image.setImage(img);
 		zoomedItem.setGraphic(image);
 		GridPane.setRowIndex(zoomedItem, 0);
 		GridPane.setColumnIndex(zoomedItem, 0);
 		iteminfo.getChildren().add(zoomedItem);
+		hbox.getChildren().add(iteminfo);
 		// makes the extra box for the info of the item
+
+		// info stuff
+		detail = new GridPane();
+		detail.setGridLinesVisible(true);
 		itemDetail = new Label("No Item Currently Selected");
 		itemDetail.getStyleClass().add("item-lable");
-		GridPane.setRowIndex(itemDetail, 1);
+		GridPane.setRowIndex(itemDetail, 0);
 		GridPane.setColumnIndex(itemDetail, 0);
 		itemDetail.setWrapText(true);
-		itemDetail.setPrefHeight(80);
-		iteminfo.getChildren().add(itemDetail);
-		hbox.getChildren().add(iteminfo);
-		titlePane.setContent(hbox);
+		itemDetail.setPrefHeight(50);
+		itemDetail.setPrefWidth(375);
+		detail.getChildren().add(itemDetail);
+		// hbox.getChildren().add(detail);
+		itemContainer.getChildren().add(hbox);
+		itemContainer.getChildren().add(detail);
+
+		titlePane.setContent(itemContainer);
 		rightPanel.getChildren().add(titlePane);
 	}
+
 	/**
 	 * this method is used to set the chat message the text area in the gui
 	 *
@@ -594,6 +622,7 @@ public class GUI extends Application {
 			}
 		});
 	}
+
 	/**
 	 * this method will return the massage typed in the chat box upon clicking
 	 * the send button.
@@ -605,6 +634,7 @@ public class GUI extends Application {
 		msg.clear();
 		return msgToSend;
 	}
+
 	/**
 	 * This method will return the user name.
 	 *
@@ -614,6 +644,7 @@ public class GUI extends Application {
 		String name = userNameInput.getText();
 		return name;
 	}
+
 	/**
 	 * This method will return the IP address as a string
 	 *
@@ -623,6 +654,7 @@ public class GUI extends Application {
 		String ipAddress = ipInput.getText();
 		return ipAddress;
 	}
+
 	/**
 	 * This method will return the port number as a String
 	 *
@@ -632,6 +664,7 @@ public class GUI extends Application {
 		String portStr = portInput.getText();
 		return portStr;
 	}
+
 	/**
 	 * This method will return the avatar index. Note that it's 0-indexed.
 	 *
@@ -640,6 +673,7 @@ public class GUI extends Application {
 	public int getAvatarIndex() {
 		return avatarIndex;
 	}
+
 	/**
 	 * this method will set the world time
 	 * 
@@ -653,19 +687,7 @@ public class GUI extends Application {
 			}
 		});
 	}
-	public void changeAvatar() {
-		if (avatarIndex == 4) {
-			avatarIndex = 0;
-		} else {
-			avatarIndex++;
-		}
-		avatarGroup.getChildren().clear();
-		Image avatarImg = Images.getAvatarImageBySide(Avatar.values()[avatarIndex], Side.Front);
-		ImageView avatarImage = new ImageView(avatarImg);
-		avatarImage.setFitHeight(80);
-		avatarImage.setFitWidth(80);
-		avatarGroup.getChildren().add(avatarImage);
-	}
+
 	public void setWaitingRoomAvatar() {
 		Image avatarImg = Images.getAvatarImageBySide(Avatar.values()[avatarIndex], Side.Front);
 		ImageView avatarImage = new ImageView(avatarImg);
@@ -673,6 +695,7 @@ public class GUI extends Application {
 		avatarImage.setFitWidth(80);
 		playersWaiting.getChildren().add(avatarImage);
 	}
+
 	/**
 	 * this method will return the window
 	 *
@@ -681,6 +704,7 @@ public class GUI extends Application {
 	public Stage getWindow() {
 		return window;
 	}
+
 	/**
 	 * This method draws a minimap on the minimap panel.
 	 * 
@@ -766,10 +790,13 @@ public class GUI extends Application {
 					padding_top + (y - bound_top) * MINIMAP_TILE_WIDTH);
 		}
 	}
+
 	public void setInventory(List<String> inventory) {
 		itemsDescription = new HashMap<Point, String>();
 		int row = 0;
 		int col = 0;
+		itemGrid.getChildren().clear();
+		
 		for (String s : inventory) {
 			Image image = null;
 			if (s.startsWith("A")) {
@@ -778,6 +805,8 @@ public class GUI extends Application {
 				image = Images.ITEM_IMAGES.get('K');
 			} else if (s.startsWith("T")) {
 				image = Images.ITEM_IMAGES.get('T');
+			} else if (s.startsWith("B")) {
+				image = Images.ITEM_IMAGES.get('B');
 			}
 			ImageView imageView = new ImageView(image);
 			Label item = new Label();
@@ -786,6 +815,7 @@ public class GUI extends Application {
 			imageView.setFitHeight(60);
 			imageView.setImage(image);
 			item.setGraphic(imageView);
+
 			GridPane.setRowIndex(item, row);
 			GridPane.setColumnIndex(item, col);
 			itemGrid.getChildren().add(item);
@@ -796,11 +826,33 @@ public class GUI extends Application {
 				row++;
 			}
 		}
+		for (int i = row; i < 2; i++) {
+			for (int j = col; j < 4; j++) {
+				Label item = new Label();
+				item.getStyleClass().add("item-grid");
+				Image img = Images.INVENTORY_IMAGE;
+				ImageView image = new ImageView();
+				image.setFitWidth(60);
+				image.setFitHeight(60);
+				image.setImage(img);
+				item.setGraphic(image);
+				GridPane.setRowIndex(item, i);
+				GridPane.setColumnIndex(item, j);
+				itemsDescription.put(new Point(j, i), "N|none");
+				itemGrid.getChildren().add(item);
+			}
+			col = 0;
+		}
+		itemGrid.setGridLinesVisible(true);
 	}
+
 	public void setItemDescription(int x, int y) {
+		// System.out.println(x+" "+y);
 		String item = null;
 		for (Point p : itemsDescription.keySet()) {
+			// System.out.println(p.x+" "+p.y);
 			if (p.x == x && p.y == y) {
+				// System.out.println(p.x + " " + p.y);
 				item = itemsDescription.get(p);
 				break;
 			}
@@ -809,6 +861,7 @@ public class GUI extends Application {
 		if (item == null) {
 			return;
 		}
+		// System.out.println("string: " + item + ", length: " + item.length());
 		String description = item.substring(2, item.length());
 		Image img = null;
 		if (item.startsWith("A")) {
@@ -820,16 +873,20 @@ public class GUI extends Application {
 		} else if (item.startsWith("T")) {
 			img = Images.ITEM_IMAGES.get('T');
 			itemDetail.setText(description);
+		} else if (item.startsWith("B")) {
+			img = Images.ITEM_IMAGES.get('B');
 		} else {
 			img = Images.INVENTORY_IMAGE;
 			itemDetail.setText("No Item Currently Selected");
 		}
+
 		ImageView image = new ImageView();
-		image.setFitWidth(100);
-		image.setFitHeight(100);
+		image.setFitWidth(120);
+		image.setFitHeight(120);
 		image.setImage(img);
 		zoomedItem.setGraphic(image);
 	}
+
 	/**
 	 * This static helper method will pop up a warning dialog to user.
 	 *

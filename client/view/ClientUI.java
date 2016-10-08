@@ -130,8 +130,9 @@ public class ClientUI {
 	 * Event Handler for window events
 	 */
 	private EventHandler<WindowEvent> windowEvent;
-	
+
 	private int avatarIndex = 0;
+
 	/**
 	 * Constructor
 	 */
@@ -147,6 +148,7 @@ public class ClientUI {
 		gui = new GUI(this, render);
 		GUI.launch(GUI.class);
 	}
+
 	/**
 	 * This method is used to connect the players to the client which then
 	 * connects them to the server
@@ -181,6 +183,7 @@ public class ClientUI {
 		client.start();
 		return true;
 	}
+
 	/**
 	 * This method is used to start the listeners
 	 */
@@ -190,6 +193,7 @@ public class ClientUI {
 		setKeyEventHander();
 		setMouseEventHander();
 	}
+
 	/*
 	 * ===============================
 	 * 
@@ -207,6 +211,7 @@ public class ClientUI {
 	public void parseUID(int uid) {
 		this.uid = uid;
 	}
+
 	/**
 	 * When the client receives the user's virus type from the server, this
 	 * method will update the local record
@@ -217,6 +222,7 @@ public class ClientUI {
 	public void parseVirus(int virusIndex) {
 		this.virus = Virus.get(virusIndex);
 	}
+
 	/**
 	 * When the client receives a map string from the server, this method will
 	 * update the local table which records every area's map (in a plain char
@@ -228,6 +234,7 @@ public class ClientUI {
 	public void parseMap(String mapStr) {
 		ParserUtilities.parseMap(areas, mapStr);
 	}
+
 	/**
 	 * When the client receives the string recording all players positions from
 	 * the server, this method will update the local table which records every
@@ -239,6 +246,7 @@ public class ClientUI {
 	public void parsePosition(String posStr) {
 		ParserUtilities.parsePosition(positions, posStr);
 	}
+
 	/**
 	 * When the client receives the string recording all players avatars from
 	 * the server, this method will update the local table which records every
@@ -250,6 +258,7 @@ public class ClientUI {
 	public void parseAvatars(String avatarsStr) {
 		ParserUtilities.parseAvatar(avatars, avatarsStr);
 	}
+
 	/**
 	 * When the client receives a time string from the server, this method will
 	 * update the local time.
@@ -260,6 +269,7 @@ public class ClientUI {
 	public void parseTime(String timeStr) {
 		gui.setTime(timeStr);
 	}
+
 	/**
 	 * When the client receives a health update from the server, this method
 	 * will update the local health.
@@ -270,6 +280,7 @@ public class ClientUI {
 	public void parseHealth(int health) {
 		this.health = health;
 	}
+
 	/**
 	 * When the client receives a health update from the server, this method
 	 * will update the local health.
@@ -280,6 +291,7 @@ public class ClientUI {
 	public void parseVisibility(int visibility) {
 		this.visibility = visibility;
 	}
+
 	/**
 	 * When the client receives a inventory update from the server, this method
 	 * will update the local inventory.
@@ -290,6 +302,7 @@ public class ClientUI {
 	public void parseInventory(String invenStr) {
 		inventory = ParserUtilities.parseInventory(invenStr);
 	}
+
 	/**
 	 * When the client receives the string recording the status of player
 	 * holding torch from the server, this method will update the local table
@@ -302,6 +315,7 @@ public class ClientUI {
 	public void parseTorchStatus(String torchStatusStr) {
 		ParserUtilities.parseTorchStatus(torchStatus, torchStatusStr);
 	}
+
 	/**
 	 * When the client receives the string of chat message from the server, this
 	 * method will update the chat text area.
@@ -313,6 +327,7 @@ public class ClientUI {
 	public void parseChatMessage(String chat) {
 		gui.setChatText(chat);
 	}
+
 	/**
 	 * Get the user name
 	 * 
@@ -321,6 +336,7 @@ public class ClientUI {
 	public String getUserName() {
 		return userName;
 	}
+
 	/**
 	 * Get the avatar.
 	 * 
@@ -329,6 +345,7 @@ public class ClientUI {
 	public Avatar getAvatar() {
 		return avatar;
 	}
+
 	/*
 	 * ===============================
 	 * 
@@ -349,13 +366,14 @@ public class ClientUI {
 		// a. update minimap
 		gui.updateMinimap(playerLoc, uid, worldMap, visibility, positions);
 		// b. update the inventory
-		gui.setInventory(inventory);
+		// gui.setInventory(inventory);
 		// c. update the health bar if it is in right panel in GUI.
 		// 2. update Renderer
 		// a. call update renderer method.
 		render.render(playerLoc, worldMap, visibility, uid, avatars, positions);
 		gui.updateHealth((double) ((double) health / 600));
 	}
+
 	/**
 	 * Alert the Renderer and GUI to start the game.
 	 */
@@ -390,6 +408,7 @@ public class ClientUI {
 		});
 		gui.setHealthBar(health, virus);
 	}
+
 	/**
 	 * This method is used to set action event handlers. The actions for certain
 	 * button or FX component events are defined here.
@@ -445,7 +464,7 @@ public class ClientUI {
 					System.out.println("INFO");
 				} else if (event.toString().contains("AboutMenu")) {
 					System.out.println("ABOUT");
-				}else if (event.toString().contains("PrevAvatar")) {
+				} else if (event.toString().contains("PrevAvatar")) {
 					avatarIndex--;
 					if (avatarIndex < 0) {
 						avatarIndex = 3;
@@ -461,6 +480,7 @@ public class ClientUI {
 			}
 		};
 	}
+
 	/**
 	 * This method is used to set Key event handlers. The actions for Key events
 	 * are defined here.
@@ -485,26 +505,36 @@ public class ClientUI {
 					client.send(Packet.TurnRight);
 				} else if (keyCode == KeyCode.F) {
 					client.send(Packet.Unlock);
+					gui.setInventory(inventory);
 				} else if (keyCode == KeyCode.G) {
 					client.send(Packet.TakeOutItem);
+					gui.setInventory(inventory);
 				} else if (keyCode == KeyCode.R) {
 					client.send(Packet.Transit);
 				} else if (keyCode == KeyCode.DIGIT1) {
 					client.sendWithIndex(Packet.UseItem, 0);
+					gui.setInventory(inventory);
 				} else if (keyCode == KeyCode.DIGIT2) {
 					client.sendWithIndex(Packet.UseItem, 1);
+					gui.setInventory(inventory);
 				} else if (keyCode == KeyCode.DIGIT3) {
 					client.sendWithIndex(Packet.UseItem, 2);
+					gui.setInventory(inventory);
 				} else if (keyCode == KeyCode.DIGIT4) {
 					client.sendWithIndex(Packet.UseItem, 3);
+					gui.setInventory(inventory);
 				} else if (keyCode == KeyCode.DIGIT5) {
 					client.sendWithIndex(Packet.UseItem, 4);
+					gui.setInventory(inventory);
 				} else if (keyCode == KeyCode.DIGIT6) {
 					client.sendWithIndex(Packet.UseItem, 5);
+					gui.setInventory(inventory);
 				} else if (keyCode == KeyCode.DIGIT7) {
 					client.sendWithIndex(Packet.UseItem, 6);
+					gui.setInventory(inventory);
 				} else if (keyCode == KeyCode.DIGIT8) {
 					client.sendWithIndex(Packet.UseItem, 7);
+					gui.setInventory(inventory);
 				}
 				/*
 				 * TODO need more keys
@@ -516,6 +546,7 @@ public class ClientUI {
 			}
 		};
 	}
+
 	/**
 	 * This method is used to set mouse event handlers. The actions for mouse
 	 * events are defined here.
@@ -527,18 +558,19 @@ public class ClientUI {
 				// Currently this listen to clicks on the items
 				// TODO: some how make it work with items
 				// System.out.println("here" + event.toString());
-				if (event.toString().contains("Group")) {
-					gui.changeAvatar();
-				} else if (event.toString().contains("Grid")) {
+				if (event.toString().contains("Grid")) {
 					// System.out.println(event.getX());
-					int itemX = (int) (event.getX() / 60);
-					int itemY = (int) (event.getY() / 60);
-					gui.setItemDescription(itemX, itemY);
-					// System.out.println(itemX + " " + itemY);
+					if (inventory.size() != 0) {
+						int itemX = (int) (event.getX() / 60);
+						int itemY = (int) (event.getY() / 60);
+						gui.setItemDescription(itemX, itemY);
+						// System.out.println(itemX + " " + itemY);
+					}
 				}
 			}
 		};
 	}
+
 	/**
 	 * This method will return the action listeners
 	 * 
@@ -547,6 +579,7 @@ public class ClientUI {
 	public EventHandler<ActionEvent> getActionEventHandler() {
 		return actionEvent;
 	}
+
 	/**
 	 * This method will return the key listeners
 	 * 
@@ -555,6 +588,7 @@ public class ClientUI {
 	public EventHandler<KeyEvent> getKeyEventHander() {
 		return keyEvent;
 	}
+
 	/**
 	 * This method will return the mouse listener
 	 * 
@@ -563,6 +597,7 @@ public class ClientUI {
 	public EventHandler<MouseEvent> getMouseEventHander() {
 		return mouseEvent;
 	}
+
 	/**
 	 * This method will return the window listener
 	 * 
@@ -571,6 +606,7 @@ public class ClientUI {
 	public EventHandler<WindowEvent> getWindowEventHander() {
 		return windowEvent;
 	}
+
 	/**
 	 * Main function.
 	 * 
