@@ -21,6 +21,9 @@ public class Images {
     public static final Image TREE_IMAGE = loadImage("/tree.png");
 
     public static final Image CHEST_IMAGE = loadImage("/chest.png");
+    
+    public static final Image WALL_IMAGE = loadImage("/brickWall.png");
+
 
     public static final Image[] AVATAR_IMAGES = { loadImage("/front_stand_1.png"),
             loadImage("/front_stand_2.png"), loadImage("/front_stand_3.png"),
@@ -32,6 +35,11 @@ public class Images {
     public static final Map<Character, Image> MAP_OBJECT_IMAGES;
 
     public static final Map<Character, Image> ITEM_IMAGES;
+    
+    
+    
+    
+    
 
     /*
      * Initialise the table for Renderer. Each table contains a map which maps a char to
@@ -84,7 +92,7 @@ public class Images {
          MAP_OBJECT_IMAGES.put('B', loadImage("/barrel.png"));
          MAP_OBJECT_IMAGES.put('A', loadImage("/table.png"));
          MAP_OBJECT_IMAGES.put('U', loadImage("/Cupboard.png"));
-         //MAP_OBJECT_IMAGES.put('P', loadImage("/ScrapPile.png"));
+         MAP_OBJECT_IMAGES.put('P', loadImage("/ScrapPile.png"));
 //         this is the TransitionSpace, which is actually a normal ground for renderer.
          MAP_OBJECT_IMAGES.put('D', loadImage("/grass.png"));
 

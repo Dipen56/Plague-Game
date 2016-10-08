@@ -41,7 +41,7 @@ public class ClientUI {
 	//public static final int DEFAULT_CLK_PERIOD = 100;
 	
 	//Testing clock thread
-	public static final int DEFAULT_CLK_PERIOD = 1000;
+	public static final int DEFAULT_CLK_PERIOD = 2000;
 	// ============ info fields =================
 	/**
 	 * User id of this connection.
@@ -368,11 +368,10 @@ public class ClientUI {
 		// ====================
 
 		Position playerLoc = positions.get(uid);
-//		Position playerLoc = new Position(1, 1, 4, Direction.North);
+//	Position playerLoc = new Position(3, 1, 4, Direction.North);
 		int areaId = playerLoc.areaId;
 
 		//int areaId = 4;
-		System.out.println("X:" +playerLoc.x+" Y: "+playerLoc.y);
 		char[][] worldMap = areas.get(areaId);
 		/*
 		for(int i = 0; i < worldMap.length; i++){

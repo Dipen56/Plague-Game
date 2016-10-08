@@ -1,6 +1,7 @@
 package client.rendering;
 
 import java.awt.Point;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import client.view.GUI;
@@ -23,15 +24,8 @@ import javafx.scene.paint.ImagePattern;
  */
 
 public class Rendering {
-	private static final String PLAYER_IMAGE = "/standingstillrear.png";
-	// private static final String BACKGROUND_IMAGE = "/background.gif";
-	private static final String BACKGROUND_IMAGE = "/night.jpg";
-	private static final String GRASS_IMAGE = "/grass.png";
-	private static final String TREE_IMAGE = "/tree.png";
-	private static final String CHEST_IMAGE = "/chest.png";
-	// 35 y alignment of group
 	int gamePaneHeight = GUI.HEIGHT_VALUE - 35;
-	// 3 x alignment of group
+	public double scaleY = 1.2; // lower number less scaling
 	private int gamePanelWidth = GUI.GAMEPANE_WIDTH_VALUE-1;
 	private int tileWidth = 130;
 	private int tileHeight = 50;
@@ -48,7 +42,11 @@ public class Rendering {
 	private String direction;
 	// private int boardSize = 10;
 	private Pane renderGroup;
-	private int imageBound = 10;
+	private int imageBound = 0;
+	private HashMap<String, Point> cornerPoints = new HashMap<>();
+	private Polygon wallPolygon = new Polygon();
+	private int area = 0;
+
 
 	public Rendering() {
 		// will need to get board size passed in
@@ -102,6 +100,7 @@ public class Rendering {
 		Image grass = Images.GRASS_IMAGE;
 		addImage(renderGroup, background, gamePanelWidth, gamePaneHeight, 0, 0);
 		setNumSquares(worldMap.length, worldMap[0].length, direction, playerLoc, worldMap);
+	
 		double yTop = getTopOffset();
 		double previousTileWidth = tileWidth * Math.pow(scale, squaresInFront);
 		double xRightTop = centerWidth + previousTileWidth / 2;
@@ -118,7 +117,10 @@ public class Rendering {
 			double currentTileHeight = tileHeight * Math.pow(scale, squaresInFront - row - 1);
 			double xLeftBottom = centerWidth - currentTileWidth / 2;
 			double yBottom = yTop + currentTileHeight;
-			if (squaresInFront - row <= imageBound) {
+			if (squaresInFront - row >= imageBound) {
+				System.out.println("squares in front - row " + (squaresInFront-row));
+				System.out.println("ROW " + row);
+
 				addTile(squareFront, xLeftTop, xRightTop, xLeftBottom + currentTileWidth, xLeftBottom, yBottom, yTop,
 						renderGroup);
 				if (direction.equals(Direction.North) || direction.equals(Direction.South)) {
@@ -136,12 +138,32 @@ public class Rendering {
 					double tileXRightTop = xLeftTop - (col * previousTileWidth);
 					double tileXRightBottom = xLeftBottom - col * currentTileWidth;
 					double tileXLeftBottom = xLeftBottom - currentTileWidth - (col * currentTileWidth);
-					if (tileXRightTop >= 0) {
+					
+					
+					if (tileXRightTop >= 0) {	
+						
 						addTile(squareLeft, tileXLeftTop, tileXRightTop, tileXRightBottom, tileXLeftBottom, yBottom,
 								yTop, renderGroup);
 						addObject(tileXLeftTop, yBottom, tileXRightBottom, row, col, "left", worldMap, renderGroup,
 								direction, yTop);
+						
 					}
+					
+						if(worldMap.length <30){
+							System.out.println("row " + row);
+							System.out.println("col " + (col));
+
+							if(row == 0 && col == (squaresToLeft -1)){
+								System.out.println("here inside < 30 ");
+								System.out.println("[render]tileXLeftTop " + tileXLeftTop);
+								System.out.println("[render]tileXLeftBottom " + tileXLeftBottom);
+								System.out.println("[render] ytop " + yTop);
+
+							}
+						addPointsToList(row, col, (int) tileXLeftTop, (int) tileXLeftBottom, (int) tileXRightTop, (int) yBottom,
+								(int) yTop, playerLoc.areaId);
+						}
+					
 				}
 				for (int col = squaresToRight - 1; col >= 0; col--) {
 					Polygon squareRight = new Polygon();
@@ -154,9 +176,16 @@ public class Rendering {
 					if (tileXLeftTop >= 0) {
 						addTile(squareRight, tileXLeftTop, tileXRightTop, tileXRightBottom, tileXLeftBottom, yBottom,
 								yTop, renderGroup);
-						addObject(tileXLeftBottom, yBottom, tileXRightTop, row, col, "right", worldMap, renderGroup,
+					addObject(tileXLeftBottom, yBottom, tileXRightTop, row, col, "right", worldMap, renderGroup,
 								direction, yTop);
 					}
+					
+					
+						if(worldMap.length < 30){
+							addPointsToList(row, col, (int) tileXLeftTop, (int) tileXLeftBottom, (int) tileXRightTop, (int) yBottom,
+											(int) yTop, playerLoc.areaId);
+							}
+					
 				}
 			}
 			xLeftTop = xLeftBottom;
@@ -164,6 +193,14 @@ public class Rendering {
 			yTop = yBottom;
 			previousTileWidth = currentTileWidth;
 		}
+		
+		
+		
+	
+	
+	if(worldMap.length < 30){
+		renderRoom(renderGroup,direction);
+	}
 	}
 
 	private double getTopOffset() {
@@ -174,6 +211,8 @@ public class Rendering {
 		return gamePaneHeight - count;
 	}
 
+	
+	
 	private void addTile(Polygon p, double xLeftTop, double xRightTop, double xRightBottom, double xLeftBottom,
 			double yBottom, double yTop, Pane renderGroup) {
 		p.getPoints().add(xLeftTop);
@@ -216,6 +255,7 @@ public class Rendering {
 			squaresToRight = (height - squaresToLeft) - 1;
 			break;
 		}
+
 		if (squaresInFront < 0 || squaresInFront > map.length)
 			throw new RuntimeException("squaresInFront is out of bounds");
 	}
@@ -226,20 +266,10 @@ public class Rendering {
 
 	private void addObject(double tileXLeftBottom, double yBottom, double tileXRightBottom, int row, int col,
 			String side, char[][] worldMap, Pane renderGroup, Direction direction, double yTop) {
-		System.out.println(direction.toString());
 		Point imageCoordinate = getImagePoint(direction, row, col, side, worldMap.length, worldMap[0].length);
 		// System.out.println(direction.toString());
 		char object = worldMap[imageCoordinate.y][imageCoordinate.x];
 		Image image = getImageFromChar(object);
-		// if (image != null) {
-		// double height = image.getHeight() * Math.pow(0.8, squaresInFront -
-		// row - 1);
-		// double width = image.getWidth() * Math.pow(0.8, squaresInFront - row
-		// - 1);
-		// double xPoint = getImageX(width, tileXLeftBottom, tileXRightBottom);
-		// addImage(renderGroup, image, width, height, xPoint, yBottom -
-		// height);
-		// }
 		if (image != null) {
 			double height = image.getHeight() * Math.pow(scale, squaresInFront - row - 1);
 			double width = image.getWidth() * Math.pow(scale, squaresInFront - row - 1);
@@ -250,69 +280,51 @@ public class Rendering {
 	}
 
 	private Point getImagePoint(Direction direction, int row, int col, String side, int boardHeight, int boardWidth) {
-		// if (row < 0 || row >= boardHeight)
-		// throw new IllegalArgumentException("row is out of bounds.");
-		// if (col < 0 || col >= boardWidth)
-		// throw new IllegalArgumentException(" is out of bounds.");
 
 		switch (direction) {
 		case North:
 			if (side.equals("left")) {
 				Point temp = new Point(squaresToLeft - col - 1, row);
-				System.out.println(temp.x + " rightttttttttttt" + temp.y);
 				return temp;
 			} else if (side.equals("right")) {
 				Point temp = new Point(squaresToLeft + col + 1, row);
-				System.out.println(temp.x + " rightttttttttttt" + temp.y);
 				return temp;
 			} else {
 				Point temp = new Point(col, row);
-				System.out.println(temp.x + " rightttttttttttt" + temp.y);
 				return temp;
 			}
 		case South:
 
 			if (side.equals("left")) {
 				Point temp = new Point(boardWidth - (squaresToLeft - col), boardHeight - row - 1);
-				// System.out.println(temp.x+"lefttttttttttttt "+temp.y);
 				return temp;
 			} else if (side.equals("right")) {
 				Point temp = new Point((squaresToRight - col) - 1, boardHeight - row - 1);
-				// System.out.println(temp.x+" rightttttttttttt"+temp.y);
 				return temp;
 			} else {
 				Point temp = new Point(col, boardHeight - row - 1);
-				// System.out.println(temp.x+"centerttttttttttttttttttt
-				// "+temp.y);
 				return temp;
 			}
 		case East:
 			if (side.equals("left")) {
 				Point temp = new Point(boardWidth - 1 - row, squaresToLeft - col - 1);
-				System.out.println(temp.x + "lefttttttttttttt " + temp.y);
 				return temp;
 			} else if (side.equals("right")) {
 				Point temp = new Point(boardWidth - 1 - row, squaresToLeft + col + 1);
-				System.out.println(temp.x + " rightttttttttttt" + temp.y);
 				return temp;
 			} else {
 				Point temp = new Point(boardWidth - 1 - row, col);
-				System.out.println(temp.x + "centerttttttttttttttttttt " + temp.y);
-				System.out.println(boardHeight + " " + boardWidth);
 				return temp;
 			}
 		case West:
 			if (side.equals("left")) {
 				Point temp = new Point(row, col + 1);
-				System.out.println(temp.x + "lefttttttttttttt " + temp.y);
 				return temp;
 			} else if (side.equals("right")) {
 				Point temp = new Point(row, squaresToRight - col - 1);
-				System.out.println(temp.x + "lefttttttttttttt " + temp.y);
 				return temp;
 			} else {
 				Point temp = new Point(row, col);
-				System.out.println(temp.x + "lefttttttttttttt " + temp.y);
 				return temp;
 			}
 		}
@@ -335,6 +347,23 @@ public class Rendering {
 		}
 	}
 
+	private void addWall(Polygon p, double xLeftTop, double xRightTop, double xRightBottom, double xLeftBottom,
+			double yLeftBottom, double yLeftTop, double yRightBottom, double yRightTop, Pane renderGroup) {
+		Image grass = Images.WALL_IMAGE;
+		p.setLayoutY(10);
+		p.setFill(new ImagePattern(grass));
+		p.getPoints().add(xLeftTop);
+		p.getPoints().add(yLeftTop);
+		p.getPoints().add(xRightTop);
+		p.getPoints().add(yRightTop);
+		p.getPoints().add(xRightBottom);
+		p.getPoints().add(yRightBottom);
+		p.getPoints().add(xLeftBottom);
+		 p.getPoints().add(yLeftBottom);
+		 p.setStroke(javafx.scene.paint.Color.ANTIQUEWHITE);
+			p.setStrokeWidth(1);
+		renderGroup.getChildren().add(p);
+	}
 	private double getImageY(double imageHeight, double tileBottom, double tileTop) {
 		double tileHeight = tileBottom - tileTop;
 		double heightOffset = tileHeight / 2;
@@ -349,6 +378,56 @@ public class Rendering {
 		imageView.setX(setX);
 		imageView.setY(setY);
 		renderGroup.getChildren().add(imageView);
+	}
+	
+	
+	private void addPointsToList(int row, int col, int xTopLeft, int xBottomLeft, int xTopRight,
+			int yBottom, int yTop, int playerArea) {
+		System.out.println(area!=playerArea);
+		System.out.println("Squares to the left " + squaresToLeft);
+		System.out.println("Squares to the right " + squaresInFront);
+		System.out.println("Squares to the front " + squaresToRight);
+
+		
+		if ((col == squaresToLeft - 1 || squaresToLeft== 0) && row == 0  ) {
+			System.out.println("[addPoints]tileXLeftTop " + xTopLeft);
+			System.out.println("[addPoints]tileXLeftBottom " + xBottomLeft);
+			System.out.println("[addPoints]tileYLeftTop " + yTop);
+			//the key means this point is at row == 0 && col == Squares to the left
+			cornerPoints.put("0-SQL", new Point(xTopLeft,yTop));
+		}	
+		else if ((col == squaresToLeft-1 || squaresToLeft== 0) && row == squaresInFront-1){
+			//the key means this point is at row == Squares to front && col == Squares to the left
+			cornerPoints.put("SQF-SQL", new Point(xBottomLeft,yBottom));
+		}
+		else if(col == squaresToRight -1 && row == 0){
+			//the key means this point is at row == 0 && col == Squares to the right
+			cornerPoints.put("0-SQR", new Point(xTopRight,yTop));
+		}
+		else if( col == squaresToRight-1 && row == squaresInFront-1){
+			//the key means this point is at row == squares to the front && col == Squares to the right
+			cornerPoints.put("SQF-SQR", new Point(xTopRight,yBottom));
+		}	
+	}
+
+	
+	private void renderRoom(Pane renderGroup, Direction direction) {;
+		renderFrontWall(renderGroup,direction);
+	}
+
+	
+	public void renderFrontWall(Pane renderGroup,Direction direction){
+	
+		switch(direction){
+		case North:
+			wallPolygon = new Polygon();
+			double	height = (cornerPoints.get("0-SQL").getX() -((tileHeight - (50) ) * Math.pow(0.25, 0))) -20;
+			double startingX = cornerPoints.get("0-SQL").getX();
+			double startingY = cornerPoints.get("0-SQL").getY();
+			double endX = cornerPoints.get("0-SQR").getX();
+			addWall(wallPolygon,startingX,startingX,startingY,startingY,height, height,endX,endX,renderGroup);
+		}
+		
 	}
 
 	public void setDirection(String dir) {
@@ -382,5 +461,9 @@ public class Rendering {
 	public String toString() {
 		return "renderclass";
 	}
-
+	
+	private Image loadImage(String name) {
+		Image image = new Image(this.getClass().getResourceAsStream(name));
+		return image;
+	}
 }
