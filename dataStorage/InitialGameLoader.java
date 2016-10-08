@@ -36,32 +36,32 @@ public class InitialGameLoader {
     /**
      * An empty "room square".
      */
-    private static Obstacle e = new Obstacle("E");
+    private static Obstacle e = new Obstacle("E|RoomSquare");
 
     /**
      * A tree.
      */
-    private static Obstacle t = new Obstacle("T");
+    private static Obstacle t = new Obstacle("T|A tree.");
 
     /**
      * A rock.
      */
-    private static Obstacle r = new Obstacle("R");
+    private static Obstacle r = new Obstacle("R|A rock. That won't heal me.");
 
     /**
      * A chair.
      */
-    private static Obstacle c = new Obstacle("H");
+    private static Obstacle c = new Obstacle("H|It's a chair.");
 
     /**
      * A barrel.
      */
-    private static Obstacle b = new Obstacle("B");
+    private static Obstacle b = new Obstacle("B|People put things in there. I can't though.");
 
     /**
      * A table.
      */
-    private static Obstacle tb = new Obstacle("A");
+    private static Obstacle tb = new Obstacle("A|A table. That can't help me.");
 
     /**
      * A list of keys to containers and rooms.
