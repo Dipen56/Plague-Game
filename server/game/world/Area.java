@@ -72,7 +72,7 @@ public class Area {
 	 * @param areaID
 	 *            --- an unique if of this area.
 	 * @param description
-	 * 			  --- Describes this area.
+	 *            --- Describes this area.
 	 */
 	public Area(MapElement[][] board, int areaID, String description) {
 		this.map = board;
@@ -92,7 +92,7 @@ public class Area {
 	 * @param playerPortals
 	 *            --- A list of player spawn locations.
 	 * @param description
-	 * 			  --- Describes this area.
+	 *            --- Describes this area.
 	 */
 	public Area(MapElement[][] board, int areaID, List<int[]> playerPortals, String description) {
 		this.map = board;
@@ -132,9 +132,10 @@ public class Area {
 
 	/**
 	 * Returns the string describing the area.
+	 * 
 	 * @return
 	 */
-	public String getDescription(){
+	public String getDescription() {
 		return new String(description);
 	}
 
@@ -424,6 +425,8 @@ public class Area {
 		sb.append(width);
 		sb.append(",");
 		sb.append(height);
+		sb.append(",");
+		sb.append(description);
 
 		sb.append("\n");
 
