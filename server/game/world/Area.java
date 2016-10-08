@@ -44,6 +44,11 @@ public class Area {
 	private List<int[]> playerPortals = new ArrayList<>();
 
 	/**
+	 * Describes the area.
+	 */
+	private String description;
+
+	/**
 	 * Constructor
 	 *
 	 * This the proper constructor we use, although the argument could be
@@ -66,12 +71,15 @@ public class Area {
 	 *            --- a 2d-array of MapElement representing the board.
 	 * @param areaID
 	 *            --- an unique if of this area.
+	 * @param description
+	 * 			  --- Describes this area.
 	 */
-	public Area(MapElement[][] board, int areaID) {
+	public Area(MapElement[][] board, int areaID, String description) {
 		this.map = board;
 		this.width = board[0].length;
 		this.height = board.length;
 		this.areaId = areaID;
+		this.description = description;
 	}
 
 	/**
@@ -83,13 +91,16 @@ public class Area {
 	 *            --- Area id.
 	 * @param playerPortals
 	 *            --- A list of player spawn locations.
+	 * @param description
+	 * 			  --- Describes this area.
 	 */
-	public Area(MapElement[][] board, int areaID, List<int[]> playerPortals) {
+	public Area(MapElement[][] board, int areaID, List<int[]> playerPortals, String description) {
 		this.map = board;
 		this.width = board[0].length;
 		this.height = board.length;
 		this.areaId = areaID;
 		this.playerPortals = playerPortals;
+		this.description = description;
 	}
 
 	/**
@@ -117,6 +128,14 @@ public class Area {
 	 */
 	public int getHeight() {
 		return this.height;
+	}
+
+	/**
+	 * Returns the string describing the area.
+	 * @return
+	 */
+	public String getDescription(){
+		return new String(description);
 	}
 
 	/**
