@@ -387,18 +387,22 @@ public class InitialGameLoader {
      */
     public static void allocateRoomKeys() {
         int containerIndex = 0, keyIndex = 0;
+        String description = "A key that may lead to somewhere new.";	//The description to distinguish room keys from container keys.
+        Key key = null;
         for (int i = 0; i < NUMBER_OF_ROOMS; i++) {
             keyIndex = keys.size() - 4 + i;
+            key = keys.get(keyIndex);
+            key.changeDescription(description);
             if (Math.random() * 10 > 5) {
                 // Adds key to random outdoor chest
                 // generates index of chest.
                 containerIndex = (int) (Math.random() * 15 + 1);
-                ch[containerIndex].getLoot().add(keys.get(keyIndex));
+                ch[containerIndex].getLoot().add(key);
             } else {
                 // Adds key to random scrap pile. Generates index of scrap pile. Value 9
                 // is number of scrap piles outside.
                 containerIndex = (int) (Math.random() * 9 + 1);
-                s[containerIndex].getLoot().add(keys.get(keyIndex));
+                s[containerIndex].getLoot().add(key);
             }
         }
     }
@@ -436,9 +440,13 @@ public class InitialGameLoader {
      */
     private static void addContainerKeysToContainers() {
         int containerIndex = 0;
+        String description = "A key that may lead to treasure.";	//The description to distinguish room keys from container keys.
+        Key key = null;
         // Records which chests have had their key given out before i == index.
         List<Integer> addedInAdvance = new ArrayList<>();
         for (int i = 0; i < NUMBER_OF_CHESTS + NUMBER_OF_CUPBOARDS; i++) {
+        	key = keys.get(i);
+            key.changeDescription(description);
             /*
              * Randomly decides which sort of container will hold the key, out of Chest or
              * ScrapPile
@@ -452,7 +460,7 @@ public class InitialGameLoader {
                     // Prevents chest from holding its own key.
                 } while (containerIndex == i || addedInAdvance.contains(containerIndex));
                 // Adds the key to the chest.
-                ch[containerIndex].getLoot().add(keys.get(i));
+                ch[containerIndex].getLoot().add(key);
                 /*
                  * Makes sure key to this chest is put inside a ScrapPile, if this chest's
                  * key has not yet been assigned. The intention is to make chest access
@@ -460,12 +468,12 @@ public class InitialGameLoader {
                  */
                 if (i < containerIndex) {
                     s[(int) (Math.random() * NUMBER_OF_S_PILES)].getLoot()
-                            .add(keys.get(i));
+                            .add(key);
                     addedInAdvance.add(containerIndex);
                 }
             } else {
                 // ScrapPile
-                s[(int) (Math.random() * NUMBER_OF_S_PILES)].getLoot().add(keys.get(i));
+                s[(int) (Math.random() * NUMBER_OF_S_PILES)].getLoot().add(key);
                 addedInAdvance.add(containerIndex);
             }
         }
