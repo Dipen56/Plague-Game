@@ -14,6 +14,8 @@ public class Images {
 	public static final Image INVENTORY_IMAGE = loadImage("/item-tray.png");
 
 	public static final Image SLASH_SCREEN_IMAGE = loadImage("/spash-screen-background.png");
+	
+	public static final Image LOGIN_SCREEN_IMAGE=loadImage("/login-background.png");
 
 	public static final Image BACKGROUND_IMAGE = loadImage("/night.png");
 

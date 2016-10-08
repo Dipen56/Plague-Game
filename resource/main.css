@@ -89,4 +89,32 @@
 	-fx-background-color: transparent;
 	-fx-text-fill: rgb(255, 255, 0);
 }
+.virus-label{
+	-fx-text-fill: rgb(255, 255, 0);
+}
+.login-info{
+	-fx-alignment: CENTER;
+	-fx-text-fill: rgb(255, 255, 0);
+	-fx-font-size:30;
+	-fx-padding: 10;
+}
+
+.button-login{
+	-fx-background-color: transparent;
+	-fx-font-weight: bold;
+	-fx-font-size:30;
+	-fx-padding: 10;
+	-fx-text-fill: rgb(0, 255, 0);
+	-fx-border-weight: 20;
+	-fx-border-height: 20;
+}
+.button-login:hover{
+	-fx-background-color: transparent;
+	-fx-text-fill: rgb(255, 255, 0);
+}
+.input-login{
+	-fx-text-fill: rgb(0, 255, 0);
+	-fx-font-size:20;
+	-fx-font-weight: bold;
+}
 

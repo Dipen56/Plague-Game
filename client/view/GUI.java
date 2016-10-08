@@ -4,6 +4,7 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
+import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
@@ -33,11 +34,14 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import java.awt.Point;
+import java.lang.management.PlatformLoggingMXBean;
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
+import java.util.function.BinaryOperator;
 
 import server.game.player.Avatar;
 
@@ -47,9 +51,7 @@ import server.game.player.Virus;
 import client.rendering.Images;
 import client.rendering.Rendering;
 
-
 import client.rendering.Side;
-
 
 /**
  * This class represents the main GUI class this class bring together all the
@@ -59,7 +61,6 @@ import client.rendering.Side;
  *
  */
 public class GUI extends Application {
-
 	// GUI Style CSS
 	private static final String STYLE_CSS = "/main.css";
 	// Constants Dimensions
@@ -67,17 +68,14 @@ public class GUI extends Application {
 	public static final int HEIGHT_VALUE = 700;
 	private static final int RIGHTPANE_WIDTH_VALUE = WIDTH_VALUE - 600;
 	public static final int GAMEPANE_WIDTH_VALUE = WIDTH_VALUE - 400;
-
 	/**
 	 * Minimap tile width
 	 */
 	private static final int MINIMAP_TILE_WIDTH = 20;
-
 	/**
 	 * mini map color table
 	 */
 	private static final Map<Character, Color> MINIMAP_COLOR_TABLE;
-
 	static {
 		MINIMAP_COLOR_TABLE = new HashMap<>();
 		// ========== obstacles: Grey, Rock, Barrel, Table ===========
@@ -107,17 +105,13 @@ public class GUI extends Application {
 		// Room obstacles
 		MINIMAP_COLOR_TABLE.put('E', Color.rgb(19, 137, 245, 1.0));
 	}
-
 	// main window
 	private static Stage window;
-
 	// controls
 	private MenuBar menuBar;
 	private Label timeLable;
-
 	// private Label miniMapLable;
 	private Canvas miniMapCanvas;
-
 	private Label textAreaLable;
 	private TextField msg;
 	private Button send;
@@ -154,6 +148,7 @@ public class GUI extends Application {
 	private ProgressBar bar;
 	private Label virus;
 	private FlowPane healthPane;
+	private Label avatarLable;
 	// waiting room Controls
 	private FlowPane playersWaiting;
 	private Button readyGame;
@@ -169,7 +164,7 @@ public class GUI extends Application {
 	private EventHandler<WindowEvent> windowEvent;
 	private static int avatarIndex = 0;
 	private Map<Point, String> itemsDescription;
-
+	private List<Avatar> avatarList = new ArrayList<Avatar>();
 	// public GUI(ClientUI viewControler, Rendering rendering) {
 	// this.viewControler = viewControler;
 	// this.render = rendering;
@@ -179,11 +174,9 @@ public class GUI extends Application {
 		this.render = rendering;
 		chatText = new StringBuffer();
 	}
-
 	public GUI() {
 		// leave this constructor in here need to run the gui.
 	}
-
 	/**
 	 * this method will get passed in a stage which is the main window and will
 	 * start it
@@ -205,8 +198,9 @@ public class GUI extends Application {
 		slashScreen();
 		// loginScreen() ;
 		window.show();
+		window.setOnCloseRequest(e -> Platform.exit());
+		window.setOnCloseRequest(e-> System.exit(0));
 	}
-
 	public void slashScreen() {
 		Group slashGroup = new Group();
 		Image slashBackground = Images.SLASH_SCREEN_IMAGE;
@@ -236,59 +230,108 @@ public class GUI extends Application {
 		Scene slashScene = new Scene(slashBorderPane, WIDTH_VALUE, HEIGHT_VALUE);
 		slashScene.getStylesheets().add(this.getClass().getResource(STYLE_CSS).toExternalForm());
 		window.setScene(slashScene);
+		window.setOnCloseRequest(e -> Platform.exit());
+		window.setOnCloseRequest(e-> System.exit(0));
 	}
-
 	public void loginScreen() {
+		avatarList.add(Avatar.Avatar_1);
+		avatarList.add(Avatar.Avatar_2);
+		avatarList.add(Avatar.Avatar_3);
+		avatarList.add(Avatar.Avatar_4);
 		actionEvent = viewControler.getActionEventHandler();
 		keyEvent = viewControler.getKeyEventHander();
 		mouseEvent = viewControler.getMouseEventHander();
 		windowEvent = viewControler.getWindowEventHander();
-		VBox loginBox = new VBox(10);
+		Pane loginPane = new Pane();
+		Image loginBackground = Images.LOGIN_SCREEN_IMAGE;
+		ImageView loginBackgroundImage = new ImageView(loginBackground);
+		loginBackgroundImage.setFitHeight(HEIGHT_VALUE + 18);
+		loginBackgroundImage.setFitWidth(WIDTH_VALUE + 18);
+		loginPane.getChildren().add(loginBackgroundImage);
 		info = new Label();
-		info.setText("Enter The IP,Port and UserName");
-		loginBox.getChildren().add(info);
-		BorderPane loginBorderPane = new BorderPane();
+		info.setText("Welcome Players");
+		info.getStyleClass().add("login-info");
+		loginPane.getChildren().add(info);
+		info.setLayoutX(390);
+		FlowPane avatar = new FlowPane();
+		avatar.setPrefWidth(WIDTH_VALUE);
+		BorderPane left = new BorderPane();
+		Button prev = new Button("Prev");
+		prev.setOnAction(actionEvent);
+		prev.setId("PrevAvatar");
+		left.setCenter(prev);
+		prev.getStyleClass().add("button-login");
+		avatarLable = new Label();
+		avatarLable.setLayoutX(200);
+		Image avatarImg = Images.getAvatarImageBySide(avatarList.get(0), Side.Front);
+		avatarIndex = 0;
+		ImageView avatarImage = new ImageView(avatarImg);
+		avatarImage.setFitHeight(300);
+		avatarImage.setFitWidth(300);
+		avatarLable.setGraphic(avatarImage);
+		BorderPane right = new BorderPane();
+		Button next = new Button("Next");
+		next.setOnAction(actionEvent);
+		next.setId("NextAvatar");
+		next.getStyleClass().add("button-login");
+		right.setCenter(next);
+		avatar.getChildren().add(left);
+		avatar.getChildren().add(avatarLable);
+		avatar.getChildren().add(right);
+		loginPane.getChildren().add(avatar);
+		avatar.setLayoutX(280);
+		avatar.setLayoutY(100);
 		VBox inputStore = new VBox(5);
 		HBox userNameBox = new HBox(3);
 		Label user = new Label("Enter UserName");
+		user.getStyleClass().add("input-login");
+		userNameInput = new TextField();
 		userNameInput = new TextField();
 		userNameBox.getChildren().addAll(user, userNameInput);
-		// loginBox.getChildren().add(userNameBox);
 		HBox ipBox = new HBox(3);
 		Label ip = new Label("Enter IP Address");
+		ip.getStyleClass().add("input-login");
 		ipInput = new TextField();
 		ipBox.getChildren().addAll(ip, ipInput);
-		// loginBox.getChildren().add(ipBox);
 		HBox portBox = new HBox(3);
 		portBox.alignmentProperty().set(Pos.CENTER);
 		Label port = new Label("Enter Port");
+		port.getStyleClass().add("input-login");
 		portInput = new TextField();
 		portBox.getChildren().addAll(port, portInput);
-		// loginBox.getChildren().add(portBox);
 		inputStore.getChildren().addAll(userNameBox, ipBox, portBox);
-		loginBorderPane.setLeft(inputStore);
-		loginBox.getChildren().add(loginBorderPane);
-		avatarGroup = new Group();
-		Image avatarImg = Images.getAvatarImageBySide(Avatar.Avatar_1, Side.Front);
-		ImageView avatarImage = new ImageView(avatarImg);
-		avatarImage.setFitHeight(80);
-		avatarImage.setFitWidth(80);
-		avatarGroup.getChildren().add(avatarImage);
-		avatarGroup.setOnMousePressed(mouseEvent);
-		loginBorderPane.setRight(avatarGroup);
+		loginPane.getChildren().add(inputStore);
+		inputStore.setLayoutX(350);
+		inputStore.setLayoutY(450);
+		
 		FlowPane buttons = new FlowPane();
 		buttons.alignmentProperty().set(Pos.CENTER);
 		buttons.setHgap(10);
 		login = new Button("Login");
+		login.getStyleClass().add("button-login");
 		login.setOnAction(actionEvent);
 		quitLogin = new Button("Leave");
+		quitLogin.getStyleClass().add("button-login");
 		quitLogin.setOnAction(actionEvent);
 		buttons.getChildren().addAll(login, quitLogin);
-		loginBox.getChildren().add(buttons);
-		Scene slashScene = new Scene(loginBox, 350, 160);
-		window.setScene(slashScene);
+		loginPane.getChildren().add(buttons);
+		buttons.setLayoutX(300);
+		buttons.setLayoutY(580);
+		
+		Scene loginScene = new Scene(loginPane, WIDTH_VALUE, HEIGHT_VALUE);
+		loginScene.getStylesheets().add(this.getClass().getResource(STYLE_CSS).toExternalForm());
+		window.setScene(loginScene);
+		window.setOnCloseRequest(e -> Platform.exit());
+		window.setOnCloseRequest(e-> System.exit(0));
 	}
-
+	public void changeAvatarImage(int change) {
+		avatarIndex = change;
+		Image avatarImg = Images.getAvatarImageBySide(avatarList.get(change), Side.Front);
+		ImageView avatarImage = new ImageView(avatarImg);
+		avatarImage.setFitHeight(300);
+		avatarImage.setFitWidth(300);
+		avatarLable.setGraphic(avatarImage);
+	}
 	public void waitingRoom() {
 		VBox waitingRoomBox = new VBox(5);
 		Label waitingMsg = new Label();
@@ -310,8 +353,9 @@ public class GUI extends Application {
 		waitingRoomBox.getChildren().add(buttons);
 		Scene slashScene = new Scene(waitingRoomBox, 400, 170);
 		window.setScene(slashScene);
+		window.setOnCloseRequest(e -> Platform.exit());
+		window.setOnCloseRequest(e-> System.exit(0));
 	}
-
 	public void startGame() {
 		// Create a VBox which is just layout manger and adds gap of 10
 		rightPanel = new VBox(10);
@@ -338,8 +382,9 @@ public class GUI extends Application {
 		scene.setOnKeyPressed(keyEvent);
 		window.setOnCloseRequest(windowEvent);
 		window.setScene(scene);
+		window.setOnCloseRequest(e -> Platform.exit());
+		window.setOnCloseRequest(e-> System.exit(0));
 	}
-
 	/**
 	 * this method creats the health bar and adds it to the pane.
 	 * 
@@ -372,12 +417,10 @@ public class GUI extends Application {
 		healthPane.getChildren().add(healthBox);
 		group.getChildren().add(healthPane);
 	}
-
 	public void updateHealth(double health) {
 		bar.progressProperty().set(health);
 		group.getChildren().add(healthPane);
 	}
-
 	/**
 	 * this methods will set up the menu bar with all it items
 	 */
@@ -414,7 +457,6 @@ public class GUI extends Application {
 		// add the layout to the borderPane Layout
 		borderPane.setTop(menuBar);
 	}
-
 	/**
 	 * this method sets up the world clock controls
 	 */
@@ -429,26 +471,21 @@ public class GUI extends Application {
 		// timeLable.setText(clockTime);
 		rightPanel.getChildren().add(titlePane);
 	}
-
 	/**
 	 * this method will set up the controls for the mini map of the game
 	 */
 	public void setminiMap() {
 		TitledPane titlePane = new TitledPane();
 		titlePane.setText("Mini Map");
-
 		// miniMapLable = new Label();
 		// titlePane.setContent(miniMapLable);
 		// miniMapLable.setPrefWidth(400);
 		// miniMapLable.setPrefHeight(370);
-
 		miniMapCanvas = new Canvas(400, 370);
 		titlePane.setContent(miniMapCanvas);
-
 		miniMapCanvas.getStyleClass().add("minimap-lable");
 		rightPanel.getChildren().add(titlePane);
 	}
-
 	/**
 	 * this method will setup the chat controls
 	 */
@@ -481,7 +518,6 @@ public class GUI extends Application {
 		titlePane.setContent(chatControls);
 		rightPanel.getChildren().add(titlePane);
 	}
-
 	/**
 	 * this method will setup the items control
 	 */
@@ -536,7 +572,6 @@ public class GUI extends Application {
 		titlePane.setContent(hbox);
 		rightPanel.getChildren().add(titlePane);
 	}
-
 	/**
 	 * this method is used to set the chat message the text area in the gui
 	 *
@@ -559,7 +594,6 @@ public class GUI extends Application {
 			}
 		});
 	}
-
 	/**
 	 * this method will return the massage typed in the chat box upon clicking
 	 * the send button.
@@ -571,7 +605,6 @@ public class GUI extends Application {
 		msg.clear();
 		return msgToSend;
 	}
-
 	/**
 	 * This method will return the user name.
 	 *
@@ -581,7 +614,6 @@ public class GUI extends Application {
 		String name = userNameInput.getText();
 		return name;
 	}
-
 	/**
 	 * This method will return the IP address as a string
 	 *
@@ -591,7 +623,6 @@ public class GUI extends Application {
 		String ipAddress = ipInput.getText();
 		return ipAddress;
 	}
-
 	/**
 	 * This method will return the port number as a String
 	 *
@@ -601,7 +632,6 @@ public class GUI extends Application {
 		String portStr = portInput.getText();
 		return portStr;
 	}
-
 	/**
 	 * This method will return the avatar index. Note that it's 0-indexed.
 	 *
@@ -610,7 +640,6 @@ public class GUI extends Application {
 	public int getAvatarIndex() {
 		return avatarIndex;
 	}
-
 	/**
 	 * this method will set the world time
 	 * 
@@ -624,7 +653,6 @@ public class GUI extends Application {
 			}
 		});
 	}
-
 	public void changeAvatar() {
 		if (avatarIndex == 4) {
 			avatarIndex = 0;
@@ -638,7 +666,6 @@ public class GUI extends Application {
 		avatarImage.setFitWidth(80);
 		avatarGroup.getChildren().add(avatarImage);
 	}
-
 	public void setWaitingRoomAvatar() {
 		Image avatarImg = Images.getAvatarImageBySide(Avatar.values()[avatarIndex], Side.Front);
 		ImageView avatarImage = new ImageView(avatarImg);
@@ -646,7 +673,6 @@ public class GUI extends Application {
 		avatarImage.setFitWidth(80);
 		playersWaiting.getChildren().add(avatarImage);
 	}
-
 	/**
 	 * this method will return the window
 	 *
@@ -655,7 +681,6 @@ public class GUI extends Application {
 	public Stage getWindow() {
 		return window;
 	}
-
 	/**
 	 * This method draws a minimap on the minimap panel.
 	 * 
@@ -672,38 +697,31 @@ public class GUI extends Application {
 	 */
 	public void updateMinimap(Position playerLoc, int uId, char[][] areaMap, int visibility,
 			Map<Integer, Position> positions) {
-
 		// player's coordinate on board, and direction.
 		Position selfPosition = positions.get(uId);
 		int selfAreaId = selfPosition.areaId;
 		int selfX = selfPosition.x;
 		int selfY = selfPosition.y;
 		Direction selDir = selfPosition.getDirection();
-
 		// the width of height of current map
 		int width = areaMap[0].length;
 		int height = areaMap.length;
-
 		// the padding size on top and left of the minimap pane
 		// FIXME this should be changed to make the minimap drawing in the
 		// center
 		int padding_left = 0;
 		int padding_top = 0;
-
 		// set up the canvas
 		GraphicsContext gc = miniMapCanvas.getGraphicsContext2D();
 		gc.setStroke(Color.BLACK);
 		gc.setLineWidth(1);
-
 		// clear the old drawing
 		gc.clearRect(0, 0, 1000, 1000);
-
 		// calculate the four boundaries
 		int bound_top = selfY - visibility < 0 ? 0 : selfY - visibility;
 		int bound_bottom = selfY + visibility + 1 > height ? height : selfY + visibility + 1;
 		int bound_left = selfX - visibility < 0 ? 0 : selfX - visibility;
 		int bound_right = selfX + visibility + 1 > width ? width : selfX + visibility + 1;
-
 		// draw the minimap
 		Color color = null;
 		for (int row = bound_top; row < bound_bottom; row++) {
@@ -713,9 +731,7 @@ public class GUI extends Application {
 					// ERROR, this is an unknown character/MapElement
 					color = Color.BLACK;
 				}
-
 				gc.setFill(color);
-
 				// draw the map elements
 				gc.fillRect(padding_left + (col - bound_left) * MINIMAP_TILE_WIDTH,
 						padding_top + (row - bound_top) * MINIMAP_TILE_WIDTH, MINIMAP_TILE_WIDTH, MINIMAP_TILE_WIDTH);
@@ -723,24 +739,20 @@ public class GUI extends Application {
 						padding_top + (row - bound_top) * MINIMAP_TILE_WIDTH, MINIMAP_TILE_WIDTH, MINIMAP_TILE_WIDTH);
 			}
 		}
-
 		// draw player arrow on map
 		for (Position p : positions.values()) {
 			// if this player is not in the same map,skip.
 			if (p.areaId != selfAreaId) {
 				continue;
 			}
-
 			// this player's x, y, and direction
 			int x = p.x;
 			int y = p.y;
 			Direction dir = p.getDirection();
-
 			// if this player isn't within visible distance, skip
 			if (Math.abs(x - selfX) > visibility || Math.abs(y - selfY) > visibility) {
 				continue;
 			}
-
 			Image img;
 			if (x == selfX && y == selfY) {
 				// it's yourself
@@ -749,13 +761,11 @@ public class GUI extends Application {
 				// it's your enemy
 				img = Images.RED_ARROW.get(dir);
 			}
-
 			// draw arrows for different players
 			gc.drawImage(img, padding_left + (x - bound_left) * MINIMAP_TILE_WIDTH,
 					padding_top + (y - bound_top) * MINIMAP_TILE_WIDTH);
 		}
 	}
-
 	public void setInventory(List<String> inventory) {
 		itemsDescription = new HashMap<Point, String>();
 		int row = 0;
@@ -787,7 +797,6 @@ public class GUI extends Application {
 			}
 		}
 	}
-
 	public void setItemDescription(int x, int y) {
 		String item = null;
 		for (Point p : itemsDescription.keySet()) {
@@ -821,7 +830,6 @@ public class GUI extends Application {
 		image.setImage(img);
 		zoomedItem.setGraphic(image);
 	}
-
 	/**
 	 * This static helper method will pop up a warning dialog to user.
 	 *
@@ -836,5 +844,4 @@ public class GUI extends Application {
 		});
 		System.err.println(msg);
 	}
-
 }
