@@ -18,8 +18,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.layout.StackPane;
 import javafx.scene.image.ImageView;
 import javafx.geometry.Pos;
 import javafx.scene.layout.HBox;
@@ -33,20 +31,16 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import java.awt.Point;
-import java.util.ArrayDeque;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Queue;
 
 import server.game.player.Avatar;
-
 import server.game.player.Direction;
 import server.game.player.Position;
 import server.game.player.Virus;
 import client.rendering.Images;
 import client.rendering.Rendering;
-
 import client.rendering.Side;
 
 /**
@@ -57,6 +51,7 @@ import client.rendering.Side;
  *
  */
 public class GUI extends Application {
+
 	// GUI Style CSS
 	private static final String STYLE_CSS = "/main.css";
 	// Constants Dimensions
@@ -64,6 +59,11 @@ public class GUI extends Application {
 	public static final int HEIGHT_VALUE = 700;
 	private static final int RIGHTPANE_WIDTH_VALUE = WIDTH_VALUE - 600;
 	public static final int GAMEPANE_WIDTH_VALUE = WIDTH_VALUE - 400;
+
+	/**
+	 * Minimap height and width
+	 */
+	private static final int MINIMAP_CANVAS_SIZE = 200;
 
 	/**
 	 * Minimap tile width
@@ -109,7 +109,6 @@ public class GUI extends Application {
 	private static Stage window;
 
 	// controls
-	private MenuBar menuBar;
 	private Label timeLable;
 
 	// private Label miniMapLable;
@@ -128,7 +127,6 @@ public class GUI extends Application {
 	// standard layout
 	private BorderPane borderPane;
 	private StringBuffer chatText;
-	private StackPane gamePane;
 	// private Rendering render = new Rendering();
 	private static ClientUI viewControler;
 	// private static Rendering render;
@@ -145,7 +143,6 @@ public class GUI extends Application {
 	private TextField ipInput;
 	private TextField portInput;
 	private Group avatarGroup;
-	private String selectedAvatar;
 	private Label zoomedItem;
 	private Label itemDetail;
 	private ProgressBar bar;
@@ -167,10 +164,7 @@ public class GUI extends Application {
 	private static int avatarIndex = 0;
 	private Map<Point, String> itemsDescription;
 
-	// public GUI(ClientUI viewControler, Rendering rendering) {
-	// this.viewControler = viewControler;
-	// this.render = rendering;
-	// }
+	@SuppressWarnings("static-access")
 	public GUI(ClientUI viewControler, Rendering rendering) {
 		this.viewControler = viewControler;
 		this.render = rendering;
@@ -433,16 +427,12 @@ public class GUI extends Application {
 	public void setminiMap() {
 		TitledPane titlePane = new TitledPane();
 		titlePane.setText("Mini Map");
-
-		// miniMapLable = new Label();
-		// titlePane.setContent(miniMapLable);
-		// miniMapLable.setPrefWidth(400);
-		// miniMapLable.setPrefHeight(370);
-
-		miniMapCanvas = new Canvas(400, 370);
-		titlePane.setContent(miniMapCanvas);
-
-		miniMapCanvas.getStyleClass().add("minimap-lable");
+		miniMapCanvas = new Canvas(MINIMAP_CANVAS_SIZE, MINIMAP_CANVAS_SIZE);
+		miniMapCanvas.layoutXProperty().set(5);
+		BorderPane minimapLable = new BorderPane();
+		minimapLable.setCenter(miniMapCanvas);
+		minimapLable.getStyleClass().add("minimap-lable");
+		titlePane.setContent(minimapLable);
 		rightPanel.getChildren().add(titlePane);
 	}
 
@@ -681,19 +671,16 @@ public class GUI extends Application {
 		int width = areaMap[0].length;
 		int height = areaMap.length;
 
-		// the padding size on top and left of the minimap pane
-		// FIXME this should be changed to make the minimap drawing in the
-		// center
-		int padding_left = 0;
-		int padding_top = 0;
-
 		// set up the canvas
 		GraphicsContext gc = miniMapCanvas.getGraphicsContext2D();
 		gc.setStroke(Color.BLACK);
 		gc.setLineWidth(1);
 
 		// clear the old drawing
-		gc.clearRect(0, 0, 1000, 1000);
+		// TODO set it as the background color.
+
+		gc.setFill(Color.rgb(50, 54, 57));
+		gc.fillRect(0, 0, MINIMAP_CANVAS_SIZE, MINIMAP_CANVAS_SIZE);
 
 		// calculate the four boundaries
 		int bound_top = selfY - visibility < 0 ? 0 : selfY - visibility;
@@ -701,23 +688,25 @@ public class GUI extends Application {
 		int bound_left = selfX - visibility < 0 ? 0 : selfX - visibility;
 		int bound_right = selfX + visibility + 1 > width ? width : selfX + visibility + 1;
 
+		int divider = (bound_bottom - bound_top) > (bound_right - bound_left) ? bound_bottom - bound_top
+				: bound_right - bound_left;
+		double size = MINIMAP_CANVAS_SIZE / (divider);
+
 		// draw the minimap
 		Color color = null;
 		for (int row = bound_top; row < bound_bottom; row++) {
 			for (int col = bound_left; col < bound_right; col++) {
 				color = MINIMAP_COLOR_TABLE.get(areaMap[row][col]);
 				if (color == null) {
-					// ERROR, this is an unknown character/MapElement
+					// This is an unknown character/MapElement, shouldn't happen
 					color = Color.BLACK;
 				}
 
 				gc.setFill(color);
 
 				// draw the map elements
-				gc.fillRect(padding_left + (col - bound_left) * MINIMAP_TILE_WIDTH,
-						padding_top + (row - bound_top) * MINIMAP_TILE_WIDTH, MINIMAP_TILE_WIDTH, MINIMAP_TILE_WIDTH);
-				gc.strokeRect(padding_left + (col - bound_left) * MINIMAP_TILE_WIDTH,
-						padding_top + (row - bound_top) * MINIMAP_TILE_WIDTH, MINIMAP_TILE_WIDTH, MINIMAP_TILE_WIDTH);
+				gc.fillRect((col - bound_left) * size, (row - bound_top) * size, size, size);
+				gc.strokeRect((col - bound_left) * size, (row - bound_top) * size, size, size);
 			}
 		}
 
@@ -747,10 +736,10 @@ public class GUI extends Application {
 				img = Images.RED_ARROW.get(dir);
 			}
 
-			// draw arrows for different players
-			gc.drawImage(img, padding_left + (x - bound_left) * MINIMAP_TILE_WIDTH,
-					padding_top + (y - bound_top) * MINIMAP_TILE_WIDTH);
+			// draw arrows for players
+			gc.drawImage(img, (x - bound_left) * size, (y - bound_top) * size, size, size);
 		}
+
 	}
 
 	public void setInventory(List<String> inventory) {
@@ -833,4 +822,5 @@ public class GUI extends Application {
 		});
 		System.err.println(msg);
 	}
+
 }

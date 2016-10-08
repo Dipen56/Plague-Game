@@ -2,7 +2,6 @@ package client.view;
 
 import java.io.IOException;
 import java.net.Socket;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,12 +12,12 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.WindowEvent;
+
 import client.Client;
 import client.ParserUtilities;
 import client.rendering.Rendering;
 import server.Packet;
 import server.game.player.Avatar;
-import server.game.player.Direction;
 import server.game.player.Position;
 import server.game.player.Virus;
 
@@ -33,6 +32,7 @@ import server.game.player.Virus;
  *
  */
 public class ClientUI {
+
 	/**
 	 * The period between every update
 	 */
@@ -40,92 +40,111 @@ public class ClientUI {
 	// public static final int DEFAULT_CLK_PERIOD = 100;
 	// Testing clock thread
 	public static final int DEFAULT_CLK_PERIOD = 50;
+
 	// ============ info fields =================
 	/**
 	 * User id of this connection.
 	 */
 	private int uid;
+
 	/**
 	 * User name of this connection.
 	 */
 	private String userName;
+
 	/**
 	 * Avatar type of this connection.
 	 */
 	private Avatar avatar;
+
 	/**
 	 * Virus type of the player at this connection
 	 */
 	private Virus virus;
+
 	/**
 	 * The health left. This is updated by server broadcast.
 	 */
 	private int health;
+
 	/**
 	 * The visibility. This is updated by server broadcast.
 	 */
 	private int visibility;
+
 	/**
 	 * This map keeps track of all player's avatars. Renderer can look for which
 	 * avatar to render from here.
 	 */
 	private Map<Integer, Avatar> avatars;
+
 	/**
 	 * This map keeps track of all player's Positions. Renderer can look for
 	 * where to render different players from here.
 	 */
 	private Map<Integer, Position> positions;
+
 	/**
 	 * This map keeps track of the status for all players that whether he is
 	 * holding a torch.
 	 */
 	private Map<Integer, Boolean> torchStatus;
+
 	/**
 	 * This list keeps track of this player's inventory. Each item is
-	 * represented as a String whose format is: Character|Description. <br>
+	 * represented as a String whose format is: Character@Description. <br>
 	 * <br>
-	 * e.g. "A|An antidote. It has a label: Type G"<br>
+	 * e.g. "A@An antidote. It has a label: Type G"<br>
 	 * <br>
 	 * The character at beginning is used to look for resource image. The
 	 * description is used to pop up a hover tootip for this item.
 	 */
 	private List<String> inventory;
+	
 	/**
 	 * This is a mirror of the field, Map<Integer, Area> areas, in Game class,
 	 * except the area is represented as a char[][]. Renderer can look for what
 	 * map object to render from here.
 	 */
 	private Map<Integer, char[][]> areas;
+	
 	// ============ Model and Views =============
 	/**
 	 * The Gui
 	 */
 	private GUI gui;
+	
 	/**
 	 * The renderer
 	 */
 	private Rendering render;
+	
 	/**
 	 * The client side socket connection maintainer
 	 */
 	private Client client;
+	
 	/**
 	 * A clock thread for generating constant pulse to update rendering and GUI.
 	 */
 	private ClockThread clockThread;
+	
 	// ============ Event Handlers ==============
 	/**
 	 * Event Handler for buttons
 	 */
 	private EventHandler<ActionEvent> actionEvent;
+	
 	/**
 	 * Event Handler for key events
 	 */
 	private EventHandler<KeyEvent> keyEvent;
+	
 	/**
 	 * Event Handler for mouse events
 	 */
 	private EventHandler<MouseEvent> mouseEvent;
+	
 	/**
 	 * Event Handler for window events
 	 */

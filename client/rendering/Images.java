@@ -7,6 +7,14 @@ import javafx.scene.image.Image;
 import server.game.player.Avatar;
 import server.game.player.Direction;
 
+/**
+ * This is the image warehouse. All images used in this project are statically
+ * stored in this class. There are also some utility methods for quickly
+ * retrieving images.
+ * 
+ * @author Hector (Fang Zhao 300364061)
+ *
+ */
 public class Images {
 
 	public static final Image GAMEICON_IMAGE = loadImage("/game-icon.png");
@@ -59,6 +67,7 @@ public class Images {
 		AVATAR_IMAGES = new HashMap<>();
 		GREEN_ARROW = new HashMap<>();
 		RED_ARROW = new HashMap<>();
+
 		/*
 		 * TODO This is probably not appropriate, some map objects may need more
 		 * than one png path, e.g. a room has four sides of views, each of them

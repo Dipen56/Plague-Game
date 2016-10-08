@@ -206,7 +206,7 @@ public class InitialGameLoader {
                 + NUMBER_OF_ROOMS; i++) {
             do {
                 keyID = (int) (Math.random() * 1000);
-                key = new Key("A key with number " + keyID, keyID);
+                key = new Key("A key.", keyID);
 
             } while (keys.contains(key));
             // Adds the generated key to the lists.
@@ -423,7 +423,7 @@ public class InitialGameLoader {
             // antidote.
             if (result > 10 - multiplier * 10) {
                 Virus v = Virus.randomVirus(); // Adds an antidote to the list.
-                String description = "A temporary antidote to " + v.name();
+                String description = "An antidote";
                 loot.add(new Antidote(description, v));
                 multiplier *= 0.5; // reduces multiplier for next attempt.
             } else {
