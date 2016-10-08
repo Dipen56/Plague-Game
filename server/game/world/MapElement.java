@@ -10,5 +10,12 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement
 public interface MapElement {
-    
+
+	/**
+	 * Get the char that representing this map element for broadcasting the map.
+	 * 
+	 * @return --- a single char to represent the map element.
+	 */
+	public char getMapChar();
+
 }

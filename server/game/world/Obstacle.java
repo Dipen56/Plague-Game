@@ -8,62 +8,63 @@ package server.game.world;
  */
 public class Obstacle implements MapElement {
 
-    /**
-     * The char representation of this obstacle.
-     * 
-     * <p>
-     * <li>'T': tree
-     * <li>'R': chest
-     */
-    protected String charRep;
+	/**
+	 * The description
+	 */
+	protected String description;
 
-    /**
-     * Constructor
-     * 
-     * @param charRep
-     *            --- The char representation of this obstacle.
-     */
-    public Obstacle(String charRep) {
-        this.charRep = charRep;
-    }
+	/**
+	 * Constructor
+	 * 
+	 * @param charRep
+	 *            --- The char representation of this obstacle.
+	 */
+	public Obstacle(String charRep) {
+		this.description = charRep;
+	}
 
-    /**
-     * Get the char representation of this obstacle.
-     * 
-     * @return
-     */
-    public String getDescription() {
-        return charRep;
-    }
+	/**
+	 * Get the char representation of this obstacle.
+	 * 
+	 * @return
+	 */
+	public String getDescription() {
+		return description;
+	}
 
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((charRep == null) ? 0 : charRep.hashCode());
-        return result;
-    }
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((description == null) ? 0 : description.hashCode());
+		return result;
+	}
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        Obstacle other = (Obstacle) obj;
-        if (charRep == null) {
-            if (other.charRep != null)
-                return false;
-        } else if (!charRep.equals(other.charRep))
-            return false;
-        return true;
-    }
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Obstacle other = (Obstacle) obj;
+		if (description == null) {
+			if (other.description != null)
+				return false;
+		} else if (!description.equals(other.description))
+			return false;
+		return true;
+	}
 
-    @Override
-    public String toString() {
-        return charRep;
-    }
-    
+	@Override
+	public String toString() {
+		return description.substring(2);
+	}
+
+	@Override
+	public char getMapChar() {
+		return description.charAt(0);
+	}
+
 }
