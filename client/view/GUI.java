@@ -890,6 +890,7 @@ public class GUI extends Application {
 			itemDetail.setText(description);
 		} else if (item.startsWith("B")) {
 			img = Images.ITEM_IMAGES.get('B');
+			itemDetail.setText(description);
 		} else {
 			img = Images.INVENTORY_IMAGE;
 			itemDetail.setText("No Item Currently Selected");
