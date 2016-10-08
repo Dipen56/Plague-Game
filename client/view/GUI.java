@@ -28,6 +28,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.WindowEvent;
+import javafx.util.Duration;
+import javafx.animation.FadeTransition;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -148,6 +150,8 @@ public class GUI extends Application {
 	private FlowPane playersWaiting;
 	private Button readyGame;
 	private Button quitWaitingRoom;
+	private Label objectMessage;
+	private FadeTransition ft;
 	// this is for event
 	// for action events
 	private EventHandler<ActionEvent> actionEvent;
@@ -161,7 +165,6 @@ public class GUI extends Application {
 	private Map<Point, String> itemsDescription;
 
 	private List<Avatar> avatarList = new ArrayList<Avatar>();
-
 
 	@SuppressWarnings("static-access")
 	public GUI(ClientUI viewControler, Rendering rendering) {
@@ -501,7 +504,6 @@ public class GUI extends Application {
 		TitledPane titlePane = new TitledPane();
 		titlePane.setText("Mini Map");
 
-
 		miniMapCanvas = new Canvas(MINIMAP_CANVAS_SIZE, MINIMAP_CANVAS_SIZE);
 		miniMapCanvas.layoutXProperty().set(5);
 		BorderPane minimapLable = new BorderPane();
@@ -551,7 +553,7 @@ public class GUI extends Application {
 	public void setItems() {
 		TitledPane titlePane = new TitledPane();
 		titlePane.setText("Item Inventory");
-		VBox itemContainer = new VBox();
+		VBox itemContainer = new VBox(5);
 		HBox hbox = new HBox(5);
 		itemGrid = new GridPane();
 		itemGrid.setOnMouseMoved(mouseEvent);
@@ -599,7 +601,7 @@ public class GUI extends Application {
 		GridPane.setRowIndex(itemDetail, 0);
 		GridPane.setColumnIndex(itemDetail, 0);
 		itemDetail.setWrapText(true);
-		itemDetail.setPrefHeight(50);
+		itemDetail.setPrefHeight(100);
 		itemDetail.setPrefWidth(375);
 		detail.getChildren().add(itemDetail);
 		// hbox.getChildren().add(detail);
@@ -898,6 +900,43 @@ public class GUI extends Application {
 		image.setFitHeight(120);
 		image.setImage(img);
 		zoomedItem.setGraphic(image);
+	}
+
+	public void objectLabel() {
+		objectMessage = new Label();
+		objectMessage.setLayoutX((GAMEPANE_WIDTH_VALUE / 2) - 20);
+		objectMessage.setLayoutY(HEIGHT_VALUE - 160);
+		objectMessage.getStyleClass().add("object-description");
+
+	}
+
+	/**
+	 * This method is used to display to the user the objects description.
+	 * 
+	 * @param description
+	 */
+	public void displayObjectDescription(String description) {
+		objectMessage.setText(description);
+		//ft = new FadeTransition(Duration.millis(49), objectMessage);
+		//ft.setFromValue(0.0);
+		//ft.setToValue(1.0);
+		//ft.play();
+		group.getChildren().add(objectMessage);
+	}
+
+	/**
+	 * This static helper method will pop up a message dialog to user.
+	 *
+	 * @param msg
+	 */
+	public static void showMsgPane(String title, String msg) {
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				AlertBox.displayMsg(title, msg);
+			}
+		});
+		System.err.println(msg);
 	}
 
 	/**
