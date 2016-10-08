@@ -29,7 +29,7 @@ public class Antidote extends Item implements Destroyable, Tradable {
 
     /**
      * Constructor, give the antidote a description and virus type.
-     * 
+     *
      * @param description
      *            --- description
      * @param virus
@@ -42,7 +42,7 @@ public class Antidote extends Item implements Destroyable, Tradable {
 
     /**
      * Get the virus type that the antidote can be used for.
-     * 
+     *
      * @return --- the virus type
      */
     public Virus getVirus() {
@@ -69,11 +69,6 @@ public class Antidote extends Item implements Destroyable, Tradable {
         if (virus != other.virus)
             return false;
         return true;
-    }
-
-    @Override
-    public String toString() {
-        return super.toString() + " It has a label: " + virus.toString() + ".";
     }
 
 }

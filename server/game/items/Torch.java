@@ -25,7 +25,7 @@ public class Torch extends Item implements Destroyable, Tradable {
 
     /**
      * Constructor
-     * 
+     *
      * @param description
      *            --- the description
      */
@@ -37,7 +37,7 @@ public class Torch extends Item implements Destroyable, Tradable {
 
     /**
      * To be used in game load by XML parser only.
-     * 
+     *
      * @param description
      *            --- the description of this torch.
      * @param timeLimit
@@ -87,7 +87,7 @@ public class Torch extends Item implements Destroyable, Tradable {
 
     /**
      * Get the time left of this torch.
-     * 
+     *
      * @return --- how many seconds left for this torch to burn
      */
     public int getTimeLeft() {
@@ -123,13 +123,13 @@ public class Torch extends Item implements Destroyable, Tradable {
     public String toString() {
 
         // for easy testing
-        return super.toString() + " I reckon it has about " + timeLimit
-                + " seconds left to burn.";
+//        return super.toString() + " I reckon it has about " + timeLimit
+//                + " seconds left to burn.";
 
-        // int minutesLeft = timeLimit / 60;
-        // String minutesLeftString = minutesLeft >= 1 ? String.valueOf(minutesLeft)
-        // : "less than 1";
-        // return super.toString() + " I reckon it has about " + minutesLeftString
-        // + " minutes left to burn.";
+         int minutesLeft = timeLimit / 60;
+         String minutesLeftString = minutesLeft >= 1 ? String.valueOf(minutesLeft)
+         : "less than 1";
+         return super.toString() + " I reckon it has about " + minutesLeftString
+         + " minutes left to burn.";
     }
 }
