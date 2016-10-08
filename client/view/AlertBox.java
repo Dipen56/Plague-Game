@@ -1,14 +1,11 @@
 package client.view;
 
 import javafx.scene.Scene;
-
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-
-import sun.applet.Main;
-import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
-
 import javafx.geometry.Pos;
 
 /**

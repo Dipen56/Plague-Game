@@ -23,11 +23,6 @@ public class Room extends Area implements Lockable {
 	private boolean isLocked;
 
 	/**
-	 * A string describing this area.
-	 */
-	private String description;
-
-	/**
 	 * Constructor used to parse in a file. NOT used currently.
 	 *
 	 * @param filename
@@ -61,7 +56,6 @@ public class Room extends Area implements Lockable {
 		super(board, areaID, description);
 		this.keyID = keyID;
 		this.isLocked = isLocked;
-		this.description = description;
 	}
 
 	/**

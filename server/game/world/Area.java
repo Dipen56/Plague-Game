@@ -433,7 +433,7 @@ public class Area {
 		// chars
 		for (MapElement[] row : map) {
 			for (MapElement col : row) {
-				sb.append(col.toString());
+				sb.append(col.getMapChar());
 			}
 			sb.append("\n");
 		}

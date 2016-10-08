@@ -8,7 +8,6 @@ import java.util.Map;
 import server.game.items.Antidote;
 import server.game.items.Item;
 import server.game.items.Key;
-import server.game.items.Torch;
 import server.game.player.Direction;
 import server.game.player.Position;
 import server.game.player.Virus;
