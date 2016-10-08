@@ -61,7 +61,7 @@ public class Area {
 
 	/**
 	 * Constructor used only for text client.
-	 * 
+	 *
 	 * @param board
 	 *            --- a 2d-array of MapElement representing the board.
 	 * @param areaID
@@ -94,7 +94,7 @@ public class Area {
 
 	/**
 	 * Get all player portals.
-	 * 
+	 *
 	 * @return --- all player portals as a list.
 	 */
 	public List<int[]> getPlayerPortals() {
@@ -103,7 +103,7 @@ public class Area {
 
 	/**
 	 * Get the width of this board.
-	 * 
+	 *
 	 * @return --- width
 	 */
 	public int getWidth() {
@@ -112,7 +112,7 @@ public class Area {
 
 	/**
 	 * Get the height of this board.
-	 * 
+	 *
 	 * @return --- height
 	 */
 	public int getHeight() {
@@ -121,7 +121,7 @@ public class Area {
 
 	/**
 	 * Get the board.
-	 * 
+	 *
 	 * @return --- the board as a 2d-array of MapElement
 	 */
 	public MapElement[][] getMap() {
@@ -130,7 +130,7 @@ public class Area {
 
 	/**
 	 * Get the area ID
-	 * 
+	 *
 	 * @return --- area ID
 	 */
 	public int getAreaID() {
@@ -418,5 +418,4 @@ public class Area {
 
 		return sb.toString();
 	}
-
 }

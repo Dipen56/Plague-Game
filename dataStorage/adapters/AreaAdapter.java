@@ -32,13 +32,13 @@ public class AreaAdapter{
 	@XmlElement()
     protected MapElementAdapter[][] board;
 
-	
+
 	/**
 	 * A unique identifier for this area.
 	 */
 	@XmlElement
 	public int areaId = -1;
-	
+
 	// Other fields are for subtyping from copied class
 
 	/**
@@ -57,8 +57,14 @@ public class AreaAdapter{
 	 * For room field. isLocked. Always false if this area is not a room.
 	 */
 	@XmlElement
-	boolean isLocked = false;
-	
+	private boolean isLocked = false;
+
+	 /**
+     * A string describing this area.
+     */
+	@XmlElement
+	private String description;
+
 	/**
      * Empty position, which can be used to spawn players.
      */
@@ -67,7 +73,7 @@ public class AreaAdapter{
 	public AreaAdapter(Area area){
 		if(area == null)
 			throw new IllegalArgumentException("Argument is null");
-		
+
 		MapElement[][] board = area.getMap();
 		this.board = new MapElementAdapter[board.length][board[0].length];
 		MapElement me = null;
@@ -100,15 +106,15 @@ public class AreaAdapter{
 			}
 		}
 		this.areaId = area.getAreaID();
-		
-		
+
+
 		//Player portals
 		List<int[]>originalPortals = area.getPlayerPortals();
 		playerPortals = new int[originalPortals.size()][originalPortals.get(0).length];
 		for(int i = 0; i < originalPortals.size(); i++){
 			playerPortals[i] = originalPortals.get(i);
 		}
-		
+
 		//Copies room specific fields.
 		if(area instanceof Room){
 			this.subtype = "room";
@@ -117,14 +123,16 @@ public class AreaAdapter{
 		}else{
 			this.subtype = "none";
 		}
-		
+
+		this.description = area.getDescription();
+
 	}
 
 	/**
 	 * Only to be called by XML unmarshaller.
 	 */
 	AreaAdapter(){
-		
+
 	}
 
 	public String getSubtype(){
@@ -140,7 +148,7 @@ public class AreaAdapter{
 			throw new RuntimeException("Area ID should not be -1.");
 		if(this.board == null)
 			throw new RuntimeException("Map should not be null.");
-		
+
 		MapElement[][] board = new MapElement[this.board.length][this.board[0].length];
 		MapElementAdapter ame = null;
 		// Creates copies of the AltMapElements, as MapElements.
@@ -172,19 +180,19 @@ public class AreaAdapter{
 				}
 			}
 		}
-		
+
 		//player portals
 		List<int[]>playerPortals = new ArrayList<>();
 		for(int i = 0; i < this.playerPortals.length; i++){
 			playerPortals.add(this.playerPortals[i]);
 		}
-		
+
 		Area newArea = null;
 		if(this.subtype.equals("room")){
-			newArea = new Room(board, this.areaId, this.keyID, this.isLocked,playerPortals);
+			newArea = new Room(board, this.areaId, this.keyID, this.isLocked,playerPortals, description);
 		}
 		else{
-			newArea = new Area(board, this.areaId, playerPortals); 
+			newArea = new Area(board, this.areaId, playerPortals, description);
 		}
 
 		return newArea;

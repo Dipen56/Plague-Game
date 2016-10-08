@@ -22,6 +22,11 @@ public class Room extends Area implements Lockable {
     private boolean isLocked;
 
     /**
+     * A string describing this area.
+     */
+    private String description;
+
+    /**
      * Constructor used to parse in a file. NOT used currently.
      *
      * @param filename
@@ -48,11 +53,14 @@ public class Room extends Area implements Lockable {
      *            --- the key id
      * @param isLocked
      *            -- whether it is locked.
+     * @param description
+     * 			  --- A description of this area
      */
-    public Room(MapElement[][] board, int areaID, int keyID, boolean isLocked) {
-        super(board, areaID);
+    public Room(MapElement[][] board, int areaID, int keyID, boolean isLocked, String description) {
+        super(board, areaID, description);
         this.keyID = keyID;
         this.isLocked = isLocked;
+        this.description = description;
     }
 
     /**
@@ -68,10 +76,12 @@ public class Room extends Area implements Lockable {
      *            -- whether it is locked.
      * @param playerPortals
      *            --- A list of possible player spawn locations.
+     * @param description
+     * 			  --- A description of this area
      */
     public Room(MapElement[][] board, int areaID, int keyID, boolean isLocked,
-            List<int[]> playerPortals) {
-        super(board, areaID, playerPortals);
+            List<int[]> playerPortals, String description) {
+        super(board, areaID, playerPortals, description);
         this.keyID = keyID;
         this.isLocked = isLocked;
     }

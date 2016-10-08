@@ -30,8 +30,6 @@ public class LoadContentTests {
 	private static GameAdapter altGame;
 
 	static{
-		for(Area a: TestConst.areas.values())
-			a.registerPortals();
 		gameA = InitialGameLoader.makeGame();
 		altGame = new GameAdapter(gameA);
 		XmlFunctions.saveFile(altGame,"");

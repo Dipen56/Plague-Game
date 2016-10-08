@@ -49,7 +49,7 @@ public class TestConst {
 
         // first make the world map
         MapElement[][] worldBoard = new MapElement[7][8];
-        world = new Area(worldBoard, 0);
+        world = new Area(worldBoard, 0, "MainMap");
 
         // ground squares (positions we can enter)
         for (int y = 0; y < 7; y++) {
