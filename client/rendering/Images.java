@@ -7,6 +7,14 @@ import javafx.scene.image.Image;
 import server.game.player.Avatar;
 import server.game.player.Direction;
 
+/**
+ * This is the image warehouse. All images used in this project are statically
+ * stored in this class. There are also some utility methods for quickly
+ * retrieving images.
+ * 
+ * @author Hector (Fang Zhao 300364061)
+ *
+ */
 public class Images {
 
 	public static final Image GAMEICON_IMAGE = loadImage("/game-icon.png");
@@ -14,6 +22,8 @@ public class Images {
 	public static final Image INVENTORY_IMAGE = loadImage("/item-tray.png");
 
 	public static final Image SLASH_SCREEN_IMAGE = loadImage("/spash-screen-background.png");
+	
+	public static final Image LOGIN_SCREEN_IMAGE=loadImage("/login-background.png");
 
 	public static final Image BACKGROUND_IMAGE = loadImage("/night.png");
 
@@ -22,6 +32,15 @@ public class Images {
 	public static final Image TREE_IMAGE = loadImage("/tree.png");
 
 	public static final Image CHEST_IMAGE = loadImage("/chest.png");
+
+	/**
+	 * Four green arrow images used for rendering mini-map
+	 */
+	public static final Map<Direction, Image> GREEN_ARROW;
+	/**
+	 * Four red arrow images used for rendering mini-map
+	 */
+	public static final Map<Direction, Image> RED_ARROW;
 
 	/**
 	 * This is designed as a table for renderer to retrieve the avatar images.
@@ -48,6 +67,9 @@ public class Images {
 		MAP_OBJECT_IMAGES = new HashMap<>();
 		ITEM_IMAGES = new HashMap<>();
 		AVATAR_IMAGES = new HashMap<>();
+		GREEN_ARROW = new HashMap<>();
+		RED_ARROW = new HashMap<>();
+
 		/*
 		 * TODO This is probably not appropriate, some map objects may need more
 		 * than one png path, e.g. a room has four sides of views, each of them
@@ -131,10 +153,16 @@ public class Images {
 		avatarImg_4.put(Side.Right, loadImage("/Char_4_right_left_foot.png"));
 		AVATAR_IMAGES.put(Avatar.Avatar_4, avatarImg_4);
 
-		// public static final Image[] AVATAR_IMAGES = {
-		// loadImage("/front_stand_1.png"),
-		// loadImage("/front_stand_2.png"), loadImage("/front_stand_3.png"),
-		// loadImage("/front_stand_4.png"), loadImage("/front_stand_5.png") };
+		// =================== arrows ==========================
+
+		GREEN_ARROW.put(Direction.North, loadImage("/Green_North.png"));
+		GREEN_ARROW.put(Direction.East, loadImage("/Green_East.png"));
+		GREEN_ARROW.put(Direction.South, loadImage("/Green_South.png"));
+		GREEN_ARROW.put(Direction.West, loadImage("/Green_West.png"));
+		RED_ARROW.put(Direction.North, loadImage("/Red_North.png"));
+		RED_ARROW.put(Direction.East, loadImage("/Red_East.png"));
+		RED_ARROW.put(Direction.South, loadImage("/Red_South.png"));
+		RED_ARROW.put(Direction.West, loadImage("/Red_West.png"));
 	}
 
 	/**
@@ -175,4 +203,5 @@ public class Images {
 	public static Image loadImage(String name) {
 		return new Image(Images.class.getResourceAsStream(name));
 	}
+
 }

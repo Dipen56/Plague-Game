@@ -4,10 +4,7 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -26,230 +23,267 @@ import server.view.ServerGui;
  */
 public class ServerMain {
 
-    /**
-     * The period between every broadcast
-     */
-    public static final int DEFAULT_BROADCAST_CLK_PERIOD = 50;
+	/**
+	 * The period between every broadcast
+	 */
+	public static final int DEFAULT_BROADCAST_CLK_PERIOD = 50;
 
-    /**
-     * A series of port number, in case the port is used.
-     */
-    public static final int[] PORT_NUM = { 6000, 6001, 6002, 6003, 6004, 6005 };
+	/**
+	 * A series of port number, in case the port is used.
+	 */
+	public static final int[] PORT_NUM = { 6000, 6001, 6002, 6003, 6004, 6005 };
 
-    /**
-     * The server socket waiting for connection.
-     */
-    private ServerSocket serverSocket;
+	/**
+	 * The server socket waiting for connection.
+	 */
+	private ServerSocket serverSocket;
 
-    /**
-     * The game
-     */
-    private Game game;
+	/**
+	 * The game
+	 */
+	private Game game;
 
-    /**
-     * A buffer for messages that client send for chatting.
-     */
-    private Queue<String> messages;
+	/**
+	 * The number of players.
+	 */
+	private int numPlayers;
 
-    /**
-     * This map keeps track of every Receptionist for every connected client. The key is
-     * the unique id of each client
-     */
-    private HashMap<Integer, Receptionist> receptionists;
+	/**
+	 * A buffer for messages that client send for chatting.
+	 */
+	private Queue<String> messages;
 
-    /**
-     * Constructor
-     */
-    public ServerMain() {
-        receptionists = new HashMap<>();
-        messages = new ConcurrentLinkedQueue<>();
+	/**
+	 * This map keeps track of every Receptionist for every connected client.
+	 * The key is the unique id of each client
+	 */
+	private HashMap<Integer, Receptionist> receptionists;
 
-        // how many players?
-        System.out.println("How many players (between 2 and 4):");
-        int numPlayers = ParserUtilities.parseInt(2, 4);
+	/**
+	 * Constructor
+	 */
+	public ServerMain() {
+		receptionists = new HashMap<>();
+		messages = new ConcurrentLinkedQueue<>();
 
-        // create the game world with test version tiny world.
-        // game = new Game(TestConst.world, TestConst.areas);
+		// how many players?
+		System.out.println("How many players (between 2 and 4):");
+		numPlayers = ParserUtilities.parseInt(2, 4);
 
-        // load from game maker
-        game = InitialGameLoader.makeGame();
+		// create the game world with test version tiny world.
+		// game = new Game(TestConst.world, TestConst.areas);
 
-        // just for integration day demo
-        XmlFunctions.saveInitialFile(game);
+		// load from game maker
+		game = InitialGameLoader.makeGame();
 
-        // run the server
-        runServer(numPlayers);
-    }
+		// just for integration day demo
+		XmlFunctions.saveInitialFile(game);
 
-    /**
-     * This method listens to client connections, and when all clients are ready, a
-     * multi-player game is started.
-     * 
-     * @param numPlayers
-     *            --- the number of players
-     */
-    private void runServer(int numPlayers) {
+		// run the server
+		runServer(numPlayers);
+	}
 
-        serverSocket = createServerSocket();
-        // display the server address and port.
-        System.out.println("Plague server is listening on IP address: "
-                + serverSocket.getInetAddress().toString() + ", port: "
-                + serverSocket.getLocalPort());
+	/**
+	 * This method listens to client connections, and when all clients are
+	 * ready, a multi-player game is started.
+	 * 
+	 * @param numPlayers
+	 *            --- the number of players
+	 */
+	private void runServer(int numPlayers) {
 
-        // A simple GUI to display server running.
-        new Thread() {
-            public void run() {
-                ServerGui.port = serverSocket.getLocalPort();
-                ServerGui.ip = serverSocket.getInetAddress().toString();
-                ServerGui.launch(ServerGui.class);
-            }
-        }.start();
+		serverSocket = createServerSocket();
+		// display the server address and port.
+		System.out.println("Plague server is listening on IP address: " + serverSocket.getInetAddress().toString()
+				+ ", port: " + serverSocket.getLocalPort());
 
-        int count = 0;
-        try {
-            // Wait for a connection
-            while (count != numPlayers) {
-                Socket clientSocket = serverSocket.accept();
-                int uId = clientSocket.getPort();
+		// A simple GUI to display server running.
+		new Thread() {
+			public void run() {
+				ServerGui.port = serverSocket.getLocalPort();
+				ServerGui.ip = serverSocket.getInetAddress().toString();
+				ServerGui.launch(ServerGui.class);
+			}
+		}.start();
 
-                System.out.println("Accepted connection from: "
-                        + clientSocket.getInetAddress().toString() + ". uId is: " + uId
-                        + ".");
+		int count = 0;
+		try {
+			// Wait for a connection
+			while (count != numPlayers) {
+				Socket clientSocket = serverSocket.accept();
+				int uId = clientSocket.getPort();
 
-                Receptionist receptionist = new Receptionist(this, clientSocket, uId,
-                        game);
-                // send the map to client
-                receptionist.sendMapID();
-                receptionists.put(uId, receptionist);
-                count++;
-            }
+				System.out.println("Accepted connection from: " + clientSocket.getInetAddress().toString()
+						+ ". uId is: " + uId + ".");
 
-            System.out.println(
-                    "All clients accepted, now entering lobby, wait till all players are ready");
+				Receptionist receptionist = new Receptionist(this, clientSocket, uId, game);
+				// send the map to client
+				receptionist.sendMapID();
+				receptionists.put(uId, receptionist);
+				count++;
+			}
 
-            // start the initialisation process (enter the lobby)
-            runGame();
+			System.out.println("All clients accepted, now entering lobby, wait till all players are ready");
 
-        } catch (IOException e) {
-            System.err.println("I/O error: " + e.getMessage());
-        } finally {
-            /*
-             * XXX maybe need more clean up actions, close server, etc.
-             */
-            try {
-                serverSocket.close();
-            } catch (IOException e) {
-                System.err.println("I/O error: " + e.getMessage());
-            }
-        }
-    }
+			// start the initialisation process (enter the lobby)
+			runGame();
 
-    /**
-     * Start the multi-player game.
-     */
-    private void runGame() {
+		} catch (IOException e) {
+			System.err.println("I/O error: " + e.getMessage());
+		} finally {
+			/*
+			 * XXX maybe need more clean up actions, close server, etc.
+			 */
+			try {
+				serverSocket.close();
+			} catch (IOException e) {
+				System.err.println("I/O error: " + e.getMessage());
+			}
+		}
+	}
 
-        // join the player in, get the player's user name, avatar and id.
-        for (Receptionist r : receptionists.values()) {
-            r.receiveNameAvatar();
-        }
+	/**
+	 * Start the multi-player game.
+	 */
+	private void runGame() {
 
-        // broadcast each client's virus type
-        for (Receptionist r : receptionists.values()) {
-            r.sendVirusType();
-        }
+		// join the player in, get the player's user name, avatar and id.
+		for (Receptionist r : receptionists.values()) {
+			r.receiveNameAvatar();
+		}
 
-        // broadcast every player's avatar
-        for (Receptionist r : receptionists.values()) {
-            r.sendAvatars();
-        }
+		// broadcast each client's virus type
+		for (Receptionist r : receptionists.values()) {
+			r.sendVirusType();
+		}
 
-        // Now get those workers busy
-        for (Receptionist r : receptionists.values()) {
-            r.start();
-        }
+		// broadcast every player's avatar
+		for (Receptionist r : receptionists.values()) {
+			r.sendAvatars();
+		}
 
-        // ======= Enter the lobby, waiting for everyone ready ========
+		// Now get those workers busy
+		for (Receptionist r : receptionists.values()) {
+			r.start();
+		}
 
-        // do not start timing until everybody is ready.
-        outer: while (true) {
-            for (Receptionist r : receptionists.values()) {
-                if (!r.isReady()) {
-                    try {
-                        Thread.sleep(DEFAULT_BROADCAST_CLK_PERIOD);
-                    } catch (InterruptedException e) {
-                        // Should never happen
-                    }
-                    continue outer;
-                }
-            }
-            break;
-        }
+		// ======= Enter the lobby, waiting for everyone ready ========
 
-        // ====== everybody is ready, now enter the game ========
-        for (Receptionist r : receptionists.values()) {
-            r.setGameRunning();
-        }
+		// do not start timing until everybody is ready.
+		outer: while (true) {
+			for (Receptionist r : receptionists.values()) {
+				if (!r.isReady()) {
+					try {
+						Thread.sleep(DEFAULT_BROADCAST_CLK_PERIOD);
+					} catch (InterruptedException e) {
+						// Should never happen
+					}
+					continue outer;
+				}
+			}
+			break;
+		}
 
-        System.out.println("Finished waiting for everybody ready. Game start");
+		// ====== everybody is ready, now enter the game ========
+		for (Receptionist r : receptionists.values()) {
+			r.setGameRunning();
+		}
 
-        game.startTiming();
-    }
+		System.out.println("Finished waiting for everybody ready. Game start");
 
-    /**
-     * This method creates a server socket. If it is not successfully created, a GameError
-     * is thrown.
-     * 
-     * @return --- the server socket.
-     */
-    private ServerSocket createServerSocket() {
+		game.startTiming();
+	}
 
-        ServerSocket s = null;
-        // try to create a server with port number from pre-defined array.
-        for (int i = 0; i < PORT_NUM.length; i++) {
-            try {
-                s = new ServerSocket(PORT_NUM[i], 50, InetAddress.getLocalHost());
-                break;
-            } catch (IOException e) {
-                continue;
-            }
-        }
+	/**
+	 * This method creates a server socket. If it is not successfully created, a
+	 * GameError is thrown.
+	 * 
+	 * @return --- the server socket.
+	 */
+	private ServerSocket createServerSocket() {
 
-        // check if it is created successfully
-        if (s != null) {
-            return s;
-        } else {
-            throw new GameError(
-                    "Cannot create server socket, all predefined ports are used");
-        }
-    }
+		ServerSocket s = null;
+		// try to create a server with port number from pre-defined array.
+		for (int i = 0; i < PORT_NUM.length; i++) {
+			try {
+				s = new ServerSocket(PORT_NUM[i], 50, InetAddress.getLocalHost());
+				break;
+			} catch (IOException e) {
+				continue;
+			}
+		}
 
-    /**
-     * Add a message into the queue, ready for the server to broadcast.
-     * 
-     * @param message
-     *            --- the message
-     */
-    public void addMessage(String message) {
-        messages.offer(message);
-    }
+		// check if it is created successfully
+		if (s != null) {
+			return s;
+		} else {
+			throw new GameError("Cannot create server socket, all predefined ports are used");
+		}
+	}
 
-    /**
-     * retrieve a message from the queue, and let the socket send it out.
-     * 
-     * @return --- the next message at the head of queue, or null if the queue is empty.
-     */
-    public String retrieveMessage() {
-        return messages.poll();
-    }
+	/**
+	 * Add a message into the queue, ready for the server to broadcast.
+	 * 
+	 * @param message
+	 *            --- the message
+	 */
+	public void addMessage(String message) {
+		for (int i = 0; i < numPlayers; i++) {
+			messages.offer(message);
+		}
+	}
 
-    /**
-     * Main function, start the server.
-     * 
-     * @param args
-     */
-    public static void main(String args[]) {
-        new ServerMain();
-    }
+	/**
+	 * retrieve a message from the queue, and let the socket send it out.
+	 * 
+	 * @return --- the next message at the head of queue, or null if the queue
+	 *         is empty.
+	 */
+	public String retrieveMessage() {
+		return messages.poll();
+	}
+
+	/**
+	 * Main function, start the server.
+	 * 
+	 * @param args
+	 */
+	public static void main(String args[]) {
+		new ServerMain();
+	}
+
+	/**
+	 * Load game
+	 * 
+	 * @param uid
+	 *            --- the uid of the client who requested to load game.
+	 * @return --- true/false for success/failure
+	 */
+	public boolean load(int uid) {
+		// check save file existence
+		String userName = game.getPlayerById(uid).getName();
+		boolean isExisting = XmlFunctions.saveExists(userName);
+
+		if (isExisting) {
+			// load game
+			game = XmlFunctions.loadFile(userName);
+
+			// make sure every client get access to the new game instance
+			for (Receptionist r : receptionists.values()) {
+				r.setGame(game);
+			}
+		}
+		return isExisting;
+	}
+
+	/**
+	 * Save game
+	 * 
+	 * @param uid
+	 *            --- the uid of the client who requested to save game.
+	 */
+	public void save(int uid) {
+		XmlFunctions.saveFile(game, game.getPlayerById(uid).getName());
+	}
 
 }
