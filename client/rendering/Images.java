@@ -93,6 +93,7 @@ public class Images {
 		MAP_OBJECT_IMAGES.put('U', loadImage("/Cupboard.png"));
 		MAP_OBJECT_IMAGES.put('P', loadImage("/ScrapPile1.png"));
 		MAP_OBJECT_IMAGES.put('D', loadImage("/door1.png"));
+		MAP_OBJECT_IMAGES.put('H', loadImage("/chair.png"));
 
 		// ============= inventory objects ====================
 
