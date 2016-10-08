@@ -57,6 +57,9 @@ public class ChestAdapter extends ObstacleAdapter{
 			else if(item instanceof Key){
 				loot[i] = (new KeyAdapter((Key)item));
 			}
+			else if(item instanceof Torch){
+				loot[i] = (new TorchAdapter((Torch)item));
+			}
 			else{
 				continue;
 			}
@@ -85,6 +88,9 @@ public class ChestAdapter extends ObstacleAdapter{
 				}
 				else if(item instanceof KeyAdapter){
 					newLoot.add(((KeyAdapter)item).getOriginal());
+				}
+				else if(item instanceof TorchAdapter){
+					newLoot.add(((TorchAdapter)item).getOriginal());
 				}
 				else{
 					throw new RuntimeException("Item is not of a recognised type.");

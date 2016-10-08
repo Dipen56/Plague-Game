@@ -47,6 +47,9 @@ public class GameAdapter{
 	private ScrapPileAdapter ScrapPileTypeProtector = new ScrapPileAdapter();
 	@XmlElement
 	private TransitionSpaceAdapter TransitionSpaceTypeProtector = new TransitionSpaceAdapter();
+	@XmlElement
+	private TorchAdapter torchTypeProtector = new TorchAdapter();
+
 
 
 	public static final GroundSpaceAdapter groundSpaceAdapter= new GroundSpaceAdapter();

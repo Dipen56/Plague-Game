@@ -9,6 +9,7 @@ import server.game.Game;
 import server.game.items.Antidote;
 import server.game.items.Item;
 import server.game.items.Key;
+import server.game.items.Torch;
 import server.game.player.Direction;
 import server.game.player.Position;
 import server.game.player.Virus;
@@ -109,10 +110,16 @@ public class InitialGameLoader {
             NUMBER_OF_S_PILES = 18, NUMBER_OF_ROOMS = 4;
 
     /**
+     * The number of torches in the game.
+     */
+    public static final int NUMBER_OF_TORCHES = 5;
+
+    /**
      * Multipliers for the antidote placement in containers.
      */
     public static final double ANTIDOTE_CHEST_MULT = 0.6, ANTIDOTE_S_PILE_MULT = 0.1,
             ANTIDOTE_CUPBOARD_MULT = 0.8;
+
 
     /**
      * Produces a Game object from a number of component objects.
@@ -168,6 +175,8 @@ public class InitialGameLoader {
             } while (areaIDs.contains(id));
             areaIDs.add(id);
         }
+
+
 
         // Sets up all transition spaces.
         // Outside transition spaces
@@ -243,11 +252,20 @@ public class InitialGameLoader {
             s[i] = new ScrapPile("A pile of useless scrap. Or is it?", loot);
         }
 
+
+      //Creates all torches, and adds them to chests.
+        for(int i = 0; i < NUMBER_OF_TORCHES; i++){
+        	//Puts the torch in a randomly selected chest.
+        	chestLoot.get((int)(Math.random() * NUMBER_OF_CHESTS)).add(new Torch("A torch."));
+        }
+
         // Adds Room keys to random container
         allocateRoomKeys();
 
         // Adds container keys to containers
         addContainerKeysToContainers();
+
+
 
         /**
          * Key map key: g = groundspace t = tree r = rock b = barrel tb = table ch = chest
@@ -274,7 +292,7 @@ public class InitialGameLoader {
                 { s[16], s[17], cp[5], b, b, ch[22] } };
 
         // Puts the rooms together.
-        //TODO: change back to true 
+        //TODO: change back to true
         Room room1 = new Room(room1Map, areaIDs.get(1),
                 keys.get(keys.size() - 4).getKeyID(), false);
         Room room2 = new Room(room2Map, areaIDs.get(2),
@@ -427,7 +445,7 @@ public class InitialGameLoader {
             // antidote.
             if (result > 10 - multiplier * 10) {
                 Virus v = Virus.randomVirus(); // Adds an antidote to the list.
-                String description = "An antidote";
+                String description = "An antidote to help a victim of the "+ v.toString() + ". Should keep them alive...for a little while.";
                 loot.add(new Antidote(description, v));
                 multiplier *= 0.5; // reduces multiplier for next attempt.
             } else {

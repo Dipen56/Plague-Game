@@ -16,7 +16,7 @@ public class Key extends Item implements Tradable {
 
 	/**
 	 * Constructor
-	 * 
+	 *
 	 * @param description
 	 *            --- the description
 	 * @param keyID
@@ -29,7 +29,7 @@ public class Key extends Item implements Tradable {
 
 	/**
 	 * Get the key id.
-	 * 
+	 *
 	 * @return --- key id
 	 */
 	public int getKeyID() {
@@ -58,8 +58,4 @@ public class Key extends Item implements Tradable {
 		return true;
 	}
 
-	@Override
-	public String toString() {
-		return super.toString() + " A number is engraved on it: " + keyID + ".";
-	}
 }
