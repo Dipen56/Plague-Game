@@ -50,7 +50,7 @@ public class GameAdapter{
 	@XmlElement
 	private TorchAdapter torchTypeProtector = new TorchAdapter();
 	@XmlElement
-	private BagAdapter bagTypeProctector = new BagAdapter();
+	private BagAdapter bagTypeProtector = new BagAdapter();
 
 
 

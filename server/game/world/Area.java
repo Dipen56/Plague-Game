@@ -44,6 +44,11 @@ public class Area {
     private List<int[]> playerPortals = new ArrayList<>();
 
     /**
+     * A string describing this area.
+     */
+    private String description;
+
+    /**
      * Constructor
      *
      * This the proper constructor we use, although the argument could be different. The
@@ -60,17 +65,20 @@ public class Area {
 
     /**
      * Constructor used only for text client.
-     * 
+     *
      * @param board
      *            --- a 2d-array of MapElement representing the board.
      * @param areaID
      *            --- an unique if of this area.
+     * @param description
+     * 			  --- A description of this area
      */
-    public Area(MapElement[][] board, int areaID) {
+    public Area(MapElement[][] board, int areaID, String description) {
         this.map = board;
         this.width = board[0].length;
         this.height = board.length;
         this.areaId = areaID;
+        this.description = description;
     }
 
     /**
@@ -82,27 +90,39 @@ public class Area {
      *            --- Area id.
      * @param playerPortals
      *            --- A list of player spawn locations.
+     * @param description
+     * 			  --- A description of this area.
      */
-    public Area(MapElement[][] board, int areaID, List<int[]> playerPortals) {
+    public Area(MapElement[][] board, int areaID, List<int[]> playerPortals, String description) {
         this.map = board;
         this.width = board[0].length;
         this.height = board.length;
         this.areaId = areaID;
         this.playerPortals = playerPortals;
+        this.description = description;
     }
 
     /**
      * Get all player portals.
-     * 
+     *
      * @return --- all player portals as a list.
      */
     public List<int[]> getPlayerPortals() {
         return this.playerPortals;
     }
 
+
+    /**
+     * Returns the String describing this area.
+     * @return
+     */
+    public String getDescription(){
+    	return new String(this.description);
+    }
+
     /**
      * Get the width of this board.
-     * 
+     *
      * @return --- width
      */
     public int getWidth() {
@@ -111,7 +131,7 @@ public class Area {
 
     /**
      * Get the height of this board.
-     * 
+     *
      * @return --- height
      */
     public int getHeight() {
@@ -120,7 +140,7 @@ public class Area {
 
     /**
      * Get the board.
-     * 
+     *
      * @return --- the board as a 2d-array of MapElement
      */
     public MapElement[][] getMap() {
@@ -129,7 +149,7 @@ public class Area {
 
     /**
      * Get the area ID
-     * 
+     *
      * @return --- area ID
      */
     public int getAreaID() {

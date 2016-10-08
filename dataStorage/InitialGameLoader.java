@@ -314,13 +314,13 @@ public class InitialGameLoader {
         // Puts the rooms together.
         //TODO: change back to true
         Room room1 = new Room(room1Map, areaIDs.get(1),
-                keys.get(keys.size() - 4).getKeyID(), false);
+                keys.get(keys.size() - 4).getKeyID(), false, "Room1");
         Room room2 = new Room(room2Map, areaIDs.get(2),
-                keys.get(keys.size() - 3).getKeyID(), false);
+                keys.get(keys.size() - 3).getKeyID(), false, "Room2");
         Room room3 = new Room(room3Map, areaIDs.get(3),
-                keys.get(keys.size() - 2).getKeyID(), false);
+                keys.get(keys.size() - 2).getKeyID(), false, "Room3");
         Room room4 = new Room(room4Map, areaIDs.get(4),
-                keys.get(keys.size() - 1).getKeyID(), false);
+                keys.get(keys.size() - 1).getKeyID(), false, "Room4");
 
         MapElement[][] worldMap = {
                 { t, t, t, t, t, t, t, t, t, g, t, t, t, t, t, t, t, t, t, t, t, t, t, t,
@@ -385,7 +385,7 @@ public class InitialGameLoader {
                         g, t, t, t, t, t, t, t } };
 
         // Puts game world Area together.
-        Area world = new Area(worldMap, areaIDs.get(0));
+        Area world = new Area(worldMap, areaIDs.get(0), "Main Map");
 
         // A map of all area ids and their game areas
         Map<Integer, Area> areas = new HashMap<>();
