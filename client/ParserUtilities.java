@@ -18,6 +18,7 @@ import server.game.player.Position;
  */
 public class ParserUtilities {
 
+
 	/**
 	 * A universally used console input scanner. It's used in test based UI
 	 */
@@ -445,5 +446,6 @@ public class ParserUtilities {
 
 		return line.charAt(0);
 	}
+
 
 }
