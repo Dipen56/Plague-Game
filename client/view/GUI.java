@@ -29,6 +29,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.WindowEvent;
+import javafx.util.Duration;
+import javafx.animation.FadeTransition;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -154,6 +156,8 @@ public class GUI extends Application {
 	private FlowPane playersWaiting;
 	private Button readyGame;
 	private Button quitWaitingRoom;
+	private Label objectMessage;
+	private FadeTransition ft;
 	// this is for event
 	// for action events
 	private EventHandler<ActionEvent> actionEvent;
@@ -167,7 +171,6 @@ public class GUI extends Application {
 	private Map<Point, String> itemsDescription;
 
 	private List<Avatar> avatarList = new ArrayList<Avatar>();
-
 
 	@SuppressWarnings("static-access")
 	public GUI(ClientUI viewControler, Rendering rendering) {
@@ -369,7 +372,6 @@ public class GUI extends Application {
 		readyGame.setDisable(true);
 		waitingMsg.setText("Waiting for other players...");
 	}
-    
 
 	public void startGame() {
 		// Create a VBox which is just layout manger and adds gap of 10
@@ -448,7 +450,6 @@ public class GUI extends Application {
 		healthBarText.setText(String.valueOf(health));
 		group.getChildren().add(healthPane);
 	}
-    
 
 	/**
 	 * this methods will set up the menu bar with all it items
@@ -509,7 +510,6 @@ public class GUI extends Application {
 		TitledPane titlePane = new TitledPane();
 		titlePane.setText("Mini Map");
 
-
 		miniMapCanvas = new Canvas(MINIMAP_CANVAS_SIZE, MINIMAP_CANVAS_SIZE);
 		miniMapCanvas.layoutXProperty().set(5);
 		BorderPane minimapLable = new BorderPane();
@@ -519,7 +519,6 @@ public class GUI extends Application {
 
 		rightPanel.getChildren().add(titlePane);
 	}
-    
 
 	/**
 	 * this method will setup the chat controls
@@ -560,7 +559,7 @@ public class GUI extends Application {
 	public void setItems() {
 		TitledPane titlePane = new TitledPane();
 		titlePane.setText("Item Inventory");
-		VBox itemContainer = new VBox();
+		VBox itemContainer = new VBox(5);
 		HBox hbox = new HBox(5);
 		itemGrid = new GridPane();
 		itemGrid.setOnMouseMoved(mouseEvent);
@@ -608,7 +607,7 @@ public class GUI extends Application {
 		GridPane.setRowIndex(itemDetail, 0);
 		GridPane.setColumnIndex(itemDetail, 0);
 		itemDetail.setWrapText(true);
-		itemDetail.setPrefHeight(50);
+		itemDetail.setPrefHeight(100);
 		itemDetail.setPrefWidth(375);
 		detail.getChildren().add(itemDetail);
 		// hbox.getChildren().add(detail);
@@ -673,7 +672,6 @@ public class GUI extends Application {
 		String ipAddress = ipInput.getText();
 		return ipAddress;
 	}
-
 
 	/**
 	 * This method will return the port number as a String
@@ -755,7 +753,7 @@ public class GUI extends Application {
 		GraphicsContext gc = miniMapCanvas.getGraphicsContext2D();
 		gc.setStroke(Color.BLACK);
 		gc.setLineWidth(1);
-        
+
 		// clear the old drawing
 		gc.setFill(Color.rgb(50, 54, 57));
 		gc.fillRect(0, 0, MINIMAP_CANVAS_SIZE, MINIMAP_CANVAS_SIZE);
@@ -819,7 +817,7 @@ public class GUI extends Application {
 		int row = 0;
 		int col = 0;
 		itemGrid.getChildren().clear();
-		
+
 		for (String s : inventory) {
 			Image image = null;
 			if (s.startsWith("A")) {
@@ -908,6 +906,43 @@ public class GUI extends Application {
 		image.setFitHeight(120);
 		image.setImage(img);
 		zoomedItem.setGraphic(image);
+	}
+
+	public void objectLabel() {
+		objectMessage = new Label();
+		objectMessage.setLayoutX((GAMEPANE_WIDTH_VALUE / 2) - 20);
+		objectMessage.setLayoutY(HEIGHT_VALUE - 160);
+		objectMessage.getStyleClass().add("object-description");
+
+	}
+
+	/**
+	 * This method is used to display to the user the objects description.
+	 * 
+	 * @param description
+	 */
+	public void displayObjectDescription(String description) {
+		objectMessage.setText(description);
+		//ft = new FadeTransition(Duration.millis(49), objectMessage);
+		//ft.setFromValue(0.0);
+		//ft.setToValue(1.0);
+		//ft.play();
+		group.getChildren().add(objectMessage);
+	}
+
+	/**
+	 * This static helper method will pop up a message dialog to user.
+	 *
+	 * @param msg
+	 */
+	public static void showMsgPane(String title, String msg) {
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				AlertBox.displayMsg(title, msg);
+			}
+		});
+		System.err.println(msg);
 	}
 
 	/**

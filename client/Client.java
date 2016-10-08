@@ -142,6 +142,18 @@ public class Client extends Thread {
 	}
 
 	/**
+	 * this method is used to let the player know that the game is over and
+	 * rather they have won or not.
+	 * 
+	 * @param title
+	 * @param msg
+	 */
+	public void GameOver(String title, String msg) {
+		//TODO: needs to be called when the game is over
+		GUI.showMsgPane(title, msg);
+	}
+
+	/**
 	 * Set ready to enter the game.
 	 * 
 	 * @param isUserReady
