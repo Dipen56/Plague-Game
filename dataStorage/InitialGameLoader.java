@@ -110,9 +110,9 @@ public class InitialGameLoader {
             NUMBER_OF_S_PILES = 18, NUMBER_OF_ROOMS = 4;
 
     /**
-     * The number of torches in the game.
+     * The number of certain items in the game.
      */
-    public static final int NUMBER_OF_TORCHES = 5;
+    public static final int NUMBER_OF_TORCHES = 5, NUMBER_OF_BAGS = 15;
 
     /**
      * Multipliers for the antidote placement in containers.
@@ -252,20 +252,35 @@ public class InitialGameLoader {
             s[i] = new ScrapPile("A pile of useless scrap. Or is it?", loot);
         }
 
-
-      //Creates all torches, and adds them to chests.
-        for(int i = 0; i < NUMBER_OF_TORCHES; i++){
-        	//Puts the torch in a randomly selected chest.
-        	chestLoot.get((int)(Math.random() * NUMBER_OF_CHESTS)).add(new Torch("A torch."));
-        }
-
         // Adds Room keys to random container
         allocateRoomKeys();
 
         // Adds container keys to containers
         addContainerKeysToContainers();
 
+        //Creates all torches, and adds them to chests.
+        for(int i = 0; i < NUMBER_OF_TORCHES; i++){
+        	//Puts the torch in a randomly selected chest.
+        	chestLoot.get((int)(Math.random() * NUMBER_OF_CHESTS)).add(new Torch("A torch."));
+        }
 
+        int rand = -1;
+        String description = null;
+        Virus v = null;
+        //Creates Bags, puts an antidote in each, and adds them to random chests and scrap piles
+        for(int i = 0; i < NUMBER_OF_BAGS; i++){
+        	rand = (int)(Math.random() * (NUMBER_OF_BAGS + NUMBER_OF_S_PILES));		//random number used to put in particular chest or scrap pile
+        	 v = Virus.randomVirus(); // Adds an antidote to the list.
+             description = "An antidote to help a victim of the "+ v.toString() + ". Should keep them alive...for a little while.";
+        	//Chest
+        	if(rand < NUMBER_OF_BAGS){
+        		chestLoot.get(rand).add(new Bag(new Antidote(description, v)));
+        	}
+        	else{
+        		//ScrapPile
+        		scrapLoot.get(rand).add(new Bag(new Antidote(description, v)));
+        	}
+        }
 
         /**
          * Key map key: g = groundspace t = tree r = rock b = barrel tb = table ch = chest
@@ -439,13 +454,16 @@ public class InitialGameLoader {
      */
     private static void spawnAntidotes(List<Item> loot, double multiplier) {
         int result = 0;
+        String description = null;
+        Virus v = null;
+
         for (int i = 0; i < 3; i++) {
             result = (int) (Math.random() * 10);
             // As the multiplier decreases, the less chance of adding an
             // antidote.
             if (result > 10 - multiplier * 10) {
-                Virus v = Virus.randomVirus(); // Adds an antidote to the list.
-                String description = "An antidote to help a victim of the "+ v.toString() + ". Should keep them alive...for a little while.";
+                v = Virus.randomVirus(); // Adds an antidote to the list.
+                description = "An antidote to help a victim of the "+ v.toString() + ". Should keep them alive...for a little while.";
                 loot.add(new Antidote(description, v));
                 multiplier *= 0.5; // reduces multiplier for next attempt.
             } else {
