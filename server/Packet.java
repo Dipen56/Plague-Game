@@ -1,136 +1,138 @@
 package server;
 
 /**
- * This enumeration class represents the data packets exchanged between server and client.
+ * This enumeration class represents the data packets exchanged between server
+ * and client.
  *
- * For efficiency each Packet should be converted to byte in transition. This class also
- * provides methods to perform byte <--> Packet conversion.
+ * For efficiency each Packet should be converted to byte in transition. This
+ * class also provides methods to perform byte <--> Packet conversion.
  *
  * @author Rafaela & Hector
  *
  */
 public enum Packet {
 
-    /**
-     * Move forward.
-     */
-    Forward,
+	/**
+	 * Move forward.
+	 */
+	Forward,
 
-    /**
-     * Move backward.
-     */
-    Backward,
+	/**
+	 * Move backward.
+	 */
+	Backward,
 
-    /**
-     * Move left.
-     */
-    Left,
+	/**
+	 * Move left.
+	 */
+	Left,
 
-    /**
-     * Move right.
-     */
-    Right,
+	/**
+	 * Move right.
+	 */
+	Right,
 
-    /**
-     * Turn Light.
-     */
-    TurnLeft,
+	/**
+	 * Turn Light.
+	 */
+	TurnLeft,
 
-    /**
-     * Turn Right.
-     */
-    TurnRight,
+	/**
+	 * Turn Right.
+	 */
+	TurnRight,
 
-    /**
-     * Transit between areas.
-     */
-    Transit,
+	/**
+	 * Transit between areas.
+	 */
+	Transit,
 
-    /**
-     * Use an Item. This should be followed by an index indicating which item in
-     * inventory.
-     */
-    UseItem,
+	/**
+	 * Use an Item. This should be followed by an index indicating which item in
+	 * inventory.
+	 */
+	UseItem,
 
-    /**
-     * Destroy an Item. This should be followed by index indicating which item in
-     * inventory.
-     */
-    DestroyItem,
+	/**
+	 * Destroy an Item. This should be followed by index indicating which item
+	 * in inventory.
+	 */
+	DestroyItem,
 
-    /**
-     * Put an item inside a container. This should be followed by index indicating which
-     * item in inventory.
-     */
-    PutItemIntoContainer,
+	/**
+	 * Put an item inside a container. This should be followed by index
+	 * indicating which item in inventory.
+	 */
+	PutItemIntoContainer,
 
-    /**
-     * Take out items from a container.
-     */
-    TakeOutItem,
+	/**
+	 * Take out items from a container.
+	 */
+	TakeOutItem,
 
-    /**
-     * Unlock a lockable object in front.
-     */
-    Unlock,
+	/**
+	 * Unlock a lockable object in front.
+	 */
+	Unlock,
 
-    /**
-     * Disconnect with server/client. This is used for both side.
-     */
-    Disconnect,
+	/**
+	 * Disconnect with server/client. This is used for both side.
+	 */
+	Disconnect,
 
-    /**
-     * Save game status
-     */
-    Save,
+	/**
+	 * Save game status
+	 */
+	Save,
 
-    /**
-     * Load game status
-     */
-    Load,
+	/**
+	 * Load game status
+	 */
+	Load,
 
-    /**
-     * Chat massage
-     */
-    Chat,
+	/**
+	 * Chat massage
+	 */
+	Chat,
 
-    /**
-     * A flag indicating ready.
-     */
-    Ready;
+	/**
+	 * A flag indicating ready.
+	 */
+	Ready;
 
-    /*
-     * NOTE!!!!!
-     *
-     * If new packet type is added, the long nasty switch statement in Receptionist and
-     * Client should both be added.
-     *
-     * TODO:
-     *
-     * need to add:
-     */
+	/*
+	 * NOTE!!!!!
+	 *
+	 * If new packet type is added, the long nasty switch statement in
+	 * Receptionist and Client should both be added.
+	 *
+	 * TODO:
+	 *
+	 * need to add:
+	 */
 
-    /**
-     * Convert the Packet into byte.
-     * 
-     * @return --- a byte value which equals the ordinal number.
-     */
-    public byte toByte() {
-        // We are never going to have more than 127 values in this enum. Safe to cast.
-        return (byte) this.ordinal();
-    }
+	/**
+	 * Convert the Packet into byte.
+	 * 
+	 * @return --- a byte value which equals the ordinal number.
+	 */
+	public byte toByte() {
+		// We are never going to have more than 127 values in this enum. Safe to
+		// cast.
+		return (byte) this.ordinal();
+	}
 
-    /**
-     * Convert a byte back to a Packet.
-     *
-     * @param b
-     *            --- a byte balue
-     * @return --- the Packet whose ordinal number equals the byte.
-     */
-    public static Packet fromByte(byte b) {
-        if (b < 0 || b >= Packet.values().length) {
-            throw new IndexOutOfBoundsException();
-        }
-        return Packet.values()[b];
-    }
+	/**
+	 * Convert a byte back to a Packet.
+	 *
+	 * @param b
+	 *            --- a byte balue
+	 * @return --- the Packet whose ordinal number equals the byte.
+	 */
+	public static Packet fromByte(byte b) {
+		if (b < 0 || b >= Packet.values().length) {
+			throw new IndexOutOfBoundsException();
+		}
+		return Packet.values()[b];
+	}
 }

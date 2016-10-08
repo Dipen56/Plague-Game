@@ -145,4 +145,9 @@ public class Cupboard extends Obstacle implements Container, Lockable {
 		return super.toString();
 	}
 
+	@Override
+	public char getMapChar() {
+		return 'U';
+	}
+
 }

@@ -18,7 +18,6 @@ import client.ParserUtilities;
 import client.rendering.Rendering;
 import server.Packet;
 import server.game.player.Avatar;
-import server.game.player.Player;
 import server.game.player.Position;
 import server.game.player.Virus;
 
@@ -201,7 +200,7 @@ public class ClientUI {
 		try {
 			s = new Socket(ip, port);
 		} catch (IOException e) {
-			GUI.showWarningPane("Failed to connect to server, I/O exceptions, " + e.toString());
+			GUI.showWarningPane("Failed to connect to server");
 			return false;
 		}
 		client = new Client(s, this);
@@ -539,9 +538,11 @@ public class ClientUI {
 					client.send(Packet.TurnRight);
 				} else if (keyCode == KeyCode.F) {
 					client.send(Packet.Unlock);
+					// FIXME
 					gui.setInventory(inventory);
 				} else if (keyCode == KeyCode.G) {
 					client.send(Packet.TakeOutItem);
+					// FIXME
 					gui.setInventory(inventory);
 				} else if (keyCode == KeyCode.R) {
 					client.send(Packet.Transit);

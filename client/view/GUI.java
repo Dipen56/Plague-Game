@@ -4,7 +4,6 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
-import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
@@ -69,10 +68,6 @@ public class GUI extends Application {
 	 */
 	private static final int MINIMAP_CANVAS_SIZE = 200;
 
-	/**
-	 * Minimap tile width
-	 */
-	private static final int MINIMAP_TILE_WIDTH = 20;
 	/**
 	 * mini map color table
 	 */
@@ -140,7 +135,6 @@ public class GUI extends Application {
 	private TextField userNameInput;
 	private TextField ipInput;
 	private TextField portInput;
-	private Group avatarGroup;
 	private Label zoomedItem;
 	private Label itemDetail;
 	private ProgressBar bar;
@@ -369,7 +363,6 @@ public class GUI extends Application {
 		readyGame.setDisable(true);
 		waitingMsg.setText("Waiting for other players...");
 	}
-    
 
 	public void startGame() {
 		// Create a VBox which is just layout manger and adds gap of 10
@@ -448,7 +441,6 @@ public class GUI extends Application {
 		healthBarText.setText(String.valueOf(health));
 		group.getChildren().add(healthPane);
 	}
-    
 
 	/**
 	 * this methods will set up the menu bar with all it items
@@ -519,7 +511,6 @@ public class GUI extends Application {
 
 		rightPanel.getChildren().add(titlePane);
 	}
-    
 
 	/**
 	 * this method will setup the chat controls
@@ -674,7 +665,6 @@ public class GUI extends Application {
 		return ipAddress;
 	}
 
-
 	/**
 	 * This method will return the port number as a String
 	 *
@@ -755,7 +745,7 @@ public class GUI extends Application {
 		GraphicsContext gc = miniMapCanvas.getGraphicsContext2D();
 		gc.setStroke(Color.BLACK);
 		gc.setLineWidth(1);
-        
+
 		// clear the old drawing
 		gc.setFill(Color.rgb(50, 54, 57));
 		gc.fillRect(0, 0, MINIMAP_CANVAS_SIZE, MINIMAP_CANVAS_SIZE);
@@ -819,7 +809,7 @@ public class GUI extends Application {
 		int row = 0;
 		int col = 0;
 		itemGrid.getChildren().clear();
-		
+
 		for (String s : inventory) {
 			Image image = null;
 			if (s.startsWith("A")) {

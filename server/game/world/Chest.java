@@ -149,4 +149,9 @@ public class Chest extends Obstacle implements Container, Lockable {
 		return super.toString();
 	}
 
+	@Override
+	public char getMapChar() {
+		return 'C';
+	}
+
 }

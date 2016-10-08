@@ -378,6 +378,7 @@ public class Client extends Thread {
 	 * 
 	 * @param incoming
 	 */
+	@SuppressWarnings("unused")
 	private void printTestString(String incoming) {
 		Scanner sc = new Scanner(incoming);
 
