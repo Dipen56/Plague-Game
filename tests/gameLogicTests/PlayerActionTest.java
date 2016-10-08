@@ -608,7 +608,7 @@ public class PlayerActionTest {
         }
 
         List<Item> inventory = player.getInventory();
-        if (!inventory.contains(new Antidote("A potion of antidote.", Virus.T_Virus))
+        if (!inventory.contains(new Antidote("A potion of antidote.", Virus.Black_Death))
                 || !inventory.contains(new Key("A key.", 456))) {
             fail("Should have taken out an antidote and a key");
         }
@@ -638,7 +638,8 @@ public class PlayerActionTest {
         }
 
         inventory = player.getInventory();
-        if (!inventory.contains(new Antidote("A potion of antidote.", Virus.G_Virus))) {
+        if (!inventory
+                .contains(new Antidote("A potion of antidote.", Virus.Spanish_Flu))) {
             fail("Should have taken out another antidote");
         }
 

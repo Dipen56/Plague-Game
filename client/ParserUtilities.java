@@ -337,20 +337,18 @@ public class ParserUtilities {
      * 
      * <p>
      * Say an item (type A, description B), its string representation will be
-     * <i>"A|B"</i>, where A is a single character, B is the return of <i>toString()</i>.
-     * Every two items are separated with a line separator.
+     * <i>"A@B"</i>, where A is a single character, B is the return of <i>toString()</i>.
+     * Every two items are separated with a '|' character.
      * 
      * <p>
      * For example, this player has an Antidote (description: "foofoo"), and a Key
      * (description: "barbar").
-     * 
+     *
      * <p>
-     * The string representation of his inventory is expected to be
-     * <i>"A|foofoo\nB|barbar"</i>
-     * 
+     * The string representation of his inventory will be <i>"A@foofoo|B@barbar"</i>
      * <p>
      * Character abbreviation table:<br>
-     * 
+     *
      * <li>A: Antidote<br>
      * <li>K: Key<br>
      * <li>T: Torch<br>
@@ -367,12 +365,13 @@ public class ParserUtilities {
         List<String> list = new ArrayList<>();
 
         if (invenStr.length() < 1) {
+            // empty inventory
             return list;
         }
 
         Scanner scanner = new Scanner(invenStr);
         String line = scanner.nextLine();
-        String[] items = line.split("|");
+        String[] items = line.split("\\|"); // not '|' I spent days debugging this!
 
         for (String item : items) {
             list.add(item);

@@ -16,353 +16,384 @@ import server.Packet;
 import server.ServerMain;
 
 /**
- * This class represents a single thread that handles communication with a connected
- * server. It receives events from the server connection via a socket as well as send
- * actions to the server about the player's command.
+ * This class represents a single thread that handles communication with a
+ * connected server. It receives events from the server connection via a socket
+ * as well as send actions to the server about the player's command.
  * 
  * @author Rafaela & Hector
  *
  */
 public class Client extends Thread {
 
-    /**
-     * The period between every broadcast
-     */
-    public static final int DEFAULT_UPDATE_CLK_PERIOD = 20;
+	/**
+	 * The period between every broadcast
+	 */
+	public static final int DEFAULT_UPDATE_CLK_PERIOD = 20;
 
-    /**
-     * The pointer to the controller so we can let controller update renderer and GUI.
-     */
-    private ClientUI controller;
+	/**
+	 * The pointer to the controller so we can let controller update renderer
+	 * and GUI.
+	 */
+	private ClientUI controller;
 
-    /**
-     * The socket connection with server
-     */
-    private final Socket socket;
+	/**
+	 * The socket connection with server
+	 */
+	private final Socket socket;
 
-    /**
-     * The upload link to the server
-     */
-    private DataOutputStream output;
+	/**
+	 * The upload link to the server
+	 */
+	private DataOutputStream output;
 
-    /**
-     * The download link from the server
-     */
-    private DataInputStream input;
+	/**
+	 * The download link from the server
+	 */
+	private DataInputStream input;
 
-    /**
-     * This flag is used to indicate whether the user is ready to enter the game.
-     */
-    private boolean isUserReady;
+	/**
+	 * This flag is used to indicate whether the user is ready to enter the
+	 * game.
+	 */
+	private boolean isUserReady;
 
-    /**
-     * This flag is used to indicate whether the game is running
-     */
-    private boolean isGameRunning;
+	/**
+	 * This flag is used to indicate whether the game is running
+	 */
+	private boolean isGameRunning;
 
-    /**
-     * Constructor. It also initialise the socket input and output.
-     * 
-     * @param socket
-     *            --- the socket connecting the server
-     * @param controller
-     *            --- the controller
-     */
-    public Client(Socket socket, ClientUI controller) {
-        this.socket = socket;
-        this.controller = controller;
-        isUserReady = false;
-        isGameRunning = false;
+	/**
+	 * Constructor. It also initialise the socket input and output.
+	 * 
+	 * @param socket
+	 *            --- the socket connecting the server
+	 * @param controller
+	 *            --- the controller
+	 */
+	public Client(Socket socket, ClientUI controller) {
+		this.socket = socket;
+		this.controller = controller;
+		isUserReady = false;
+		isGameRunning = false;
 
-        // initialise the socket input and output
-        try {
-            output = new DataOutputStream(
-                    new BufferedOutputStream(socket.getOutputStream()));
-            input = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
-        } catch (IOException e) {
-            GUI.showWarningPane("I/O exceptions, " + e.toString());
-            e.printStackTrace();
-        }
-    }
+		// initialise the socket input and output
+		try {
+			output = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
+			input = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
+		} catch (IOException e) {
+			GUI.showWarningPane("I/O exceptions, " + e.toString());
+			e.printStackTrace();
+		}
+	}
 
-    /**
-     * This method will send a packet to server.
-     * 
-     * @param packet
-     *            --- the packet need to send
-     */
-    public void send(Packet packet) {
-        try {
-            output.writeByte(packet.toByte());
-            output.flush();
-        } catch (IOException e) {
-            GUI.showWarningPane("I/O exceptions, " + e.toString());
-            e.printStackTrace();
-        }
-    }
+	/**
+	 * This method will send a packet to server.
+	 * 
+	 * @param packet
+	 *            --- the packet need to send
+	 */
+	public void send(Packet packet) {
+		try {
+			output.writeByte(packet.toByte());
+			output.flush();
+		} catch (IOException e) {
+			GUI.showWarningPane("I/O exceptions, " + e.toString());
+			e.printStackTrace();
+		}
+	}
 
-    /**
-     * This method will send a packet to server, with an integer followed. This integer is
-     * usually used as a index for special commands.
-     * 
-     * @param packet
-     *            --- the packet need to send
-     * @param i
-     *            --- the index
-     */
-    public void sendWithIndex(Packet packet, int i) {
-        try {
-            output.writeByte(packet.toByte());
-            output.writeInt(i);
-            output.flush();
-        } catch (IOException e) {
-            GUI.showWarningPane("I/O exceptions, " + e.toString());
-            e.printStackTrace();
-        }
-    }
+	/**
+	 * This method will send a packet to server, with an integer followed. This
+	 * integer is usually used as a index for special commands.
+	 * 
+	 * @param packet
+	 *            --- the packet need to send
+	 * @param i
+	 *            --- the index
+	 */
+	public void sendWithIndex(Packet packet, int i) {
+		try {
+			output.writeByte(packet.toByte());
+			output.writeInt(i);
+			output.flush();
+		} catch (IOException e) {
+			GUI.showWarningPane("I/O exceptions, " + e.toString());
+			e.printStackTrace();
+		}
+	}
 
-    /**
-     * Set ready to enter the game.
-     * 
-     * @param isUserReady
-     */
-    public void setUserReady(boolean isUserReady) {
-        this.isUserReady = isUserReady;
-    }
+	/**
+	 * This method will send a packet to server, with an String followed. This
+	 * string is usually used as extra message for special commands.
+	 * 
+	 * @param packet
+	 *            --- the packet need to send
+	 * @param str
+	 *            --- extra message
+	 */
+	public void sendWithString(Packet packet, String str) {
+		try {
+			output.writeByte(packet.toByte());
+			output.writeUTF(str);
+			output.flush();
+		} catch (IOException e) {
+			GUI.showWarningPane("I/O exceptions, " + e.toString());
+			e.printStackTrace();
+		}
+	}
 
-    @Override
-    public void run() {
-        try {
-            // 1. receive from server about the maps
-            String incoming = input.readUTF();
-            while (!incoming.equals("Fin")) {
-                controller.parseMap(incoming);
-                System.out.println("received map string:\n" + incoming);
-                incoming = input.readUTF();
-            }
+	/**
+	 * Set ready to enter the game.
+	 * 
+	 * @param isUserReady
+	 */
+	public void setUserReady(boolean isUserReady) {
+		this.isUserReady = isUserReady;
+	}
 
-            // 2. get the uId from server.
-            int uid = input.readInt();
-            controller.parseUID(uid);
+	@Override
+	public void run() {
+		try {
+			// 1. receive from server about the maps
+			String incoming = input.readUTF();
+			while (!incoming.equals("Fin")) {
+				controller.parseMap(incoming);
+				System.out.println("received map string:\n" + incoming);
+				incoming = input.readUTF();
+			}
 
-            // 3. tell the server the avatar index and user name
-            output.writeByte(controller.getAvatar().ordinal());
-            output.flush();
-            output.writeUTF(controller.getUserName());
-            output.flush();
+			// 2. get the uId from server.
+			int uid = input.readInt();
+			controller.parseUID(uid);
 
-            // 4. get the virus type from server.
-            int virusIndex = input.readInt();
-            controller.parseVirus(virusIndex);
+			// 3. tell the server the avatar index and user name
+			output.writeByte(controller.getAvatar().ordinal());
+			output.flush();
+			output.writeUTF(controller.getUserName());
+			output.flush();
 
-            // 5. get everybody's avatar
-            String avatars = input.readUTF();
-            controller.parseAvatars(avatars);
+			// 4. get the virus type from server.
+			int virusIndex = input.readInt();
+			controller.parseVirus(virusIndex);
 
-            // don't start the game until server tell us to start.
-            // (when all clients are ready).
-            while (true) {
-                if (isUserReady) {
-                    output.writeByte(Packet.Ready.toByte());
-                    output.flush();
-                    break;
-                }
+			// 5. get everybody's avatar
+			String avatars = input.readUTF();
+			controller.parseAvatars(avatars);
 
-                try {
-                    Thread.sleep(ServerMain.DEFAULT_BROADCAST_CLK_PERIOD);
-                } catch (InterruptedException e) {
-                    // Should never happen
-                }
-            }
+			// don't start the game until server tell us to start.
+			// (when all clients are ready).
+			while (true) {
+				if (isUserReady) {
+					output.writeByte(Packet.Ready.toByte());
+					output.flush();
+					break;
+				}
 
-            // wait until the server tells us ready to begin
-            while (true) {
-                if (input.available() != 0) {
+				try {
+					Thread.sleep(ServerMain.DEFAULT_BROADCAST_CLK_PERIOD);
+				} catch (InterruptedException e) {
+					// Should never happen
+				}
+			}
 
-                    Packet packet = Packet.fromByte(input.readByte());
-                    if (packet == Packet.Ready) {
-                        isGameRunning = true;
-                    }
-                }
+			// wait until the server tells us ready to begin
+			while (true) {
+				if (input.available() != 0) {
 
-                if (isGameRunning && isUserReady) {
-                    System.out.println("two flags are all ready");
-                    break;
-                }
+					Packet packet = Packet.fromByte(input.readByte());
+					if (packet == Packet.Ready) {
+						isGameRunning = true;
+					}
+				}
 
-                try {
-                    Thread.sleep(ServerMain.DEFAULT_BROADCAST_CLK_PERIOD);
-                } catch (InterruptedException e) {
-                    // Should never happen
-                }
-            }
+				if (isGameRunning && isUserReady) {
+					System.out.println("two flags are all ready");
+					break;
+				}
 
-            // now start rendering the game interface
-            controller.startGame();
+				try {
+					Thread.sleep(ServerMain.DEFAULT_BROADCAST_CLK_PERIOD);
+				} catch (InterruptedException e) {
+					// Should never happen
+				}
+			}
 
-            // last, let the client constantly get updated from server.
-            while (isGameRunning) {
-                if (input.available() > 0) {
-                    incoming = input.readUTF();
-                    stringToGame(incoming);
+			// now start rendering the game interface
+			controller.startGame();
 
-                    // ======= [TESTING] ==========
-                    // printTestString(incoming);
-                }
+			// last, let the client constantly get updated from server.
+			while (isGameRunning) {
+				if (input.available() > 0) {
+					incoming = input.readUTF();
+					stringToGame(incoming);
 
-                try {
-                    Thread.sleep(DEFAULT_UPDATE_CLK_PERIOD);
-                } catch (InterruptedException e) {
-                    // Should never happen
-                }
-            }
-        } catch (IOException e) {
-            GUI.showWarningPane("I/O Error: " + e.getMessage());
-            e.printStackTrace();
-        } finally {
-            try {
-                // TODO cleaning up process.
+					// ======= [TESTING] ==========
+					// printTestString(incoming);
+				}
 
-                // send server a disconnect packet
+				try {
+					Thread.sleep(DEFAULT_UPDATE_CLK_PERIOD);
+				} catch (InterruptedException e) {
+					// Should never happen
+				}
+			}
+		} catch (IOException e) {
+			GUI.showWarningPane("I/O Error: " + e.getMessage());
+			e.printStackTrace();
+		} finally {
+			try {
+				// TODO cleaning up process.
 
-                // close input and output.
+				// send server a disconnect packet
 
-                socket.close();
-            } catch (IOException e) {
-                System.err.println("I/O error. But who cares, disconnected anyway.");
-            }
-        }
-    }
+				// close input and output.
 
-    /**
-     * This method generates a String representation of the game status. The format of it
-     * is:
-     * 
-     * <p>
-     * <li>Time
-     * <li>Health
-     * <li>Visibility
-     * <li>Positions of all players
-     * <li>The inventory of the player in this client
-     * <li>The status of player holding torch or not.
-     * 
-     * <p>
-     * Each one of them is separated by a new line character '\n'. The format of each part
-     * should refer to {@link client.ParserUtilities #parseTime(String) parseTime},
-     * {@link client.ParserUtilities #parsePosition(java.util.Map, String) parsePosition},
-     * {@link client.ParserUtilities #parseInventory(String) parseInventory}, and
-     * {@link client.ParserUtilities #parseTorchStatus(Map, String) parseTorchStatus}..
-     * 
-     * @return --- a String representation of the game status
-     */
-    private void stringToGame(String gameStr) {
-        Scanner s = new Scanner(gameStr);
-        String line;
+				socket.close();
+			} catch (IOException e) {
+				System.err.println("I/O error. But who cares, disconnected anyway.");
+			}
+		}
+	}
 
-        // 1. time
-        if (s.hasNextLine()) {
-            line = s.nextLine();
-            controller.parseTime(line);
-        } else {
-            System.out.println("Data incomplete, no time received.");
-            // Data is incomplete, ignore.
-            s.close();
-            return;
-        }
+	/**
+	 * This method generates a String representation of the game status. The
+	 * format of it is:
+	 * 
+	 * <p>
+	 * <li>Time
+	 * <li>Health
+	 * <li>Visibility
+	 * <li>Positions of all players
+	 * <li>The inventory of the player in this client
+	 * <li>The status of player holding torch or not.
+	 * <li>Chat message if there is any.
+	 * 
+	 * <p>
+	 * Each one of them is separated by a new line character '\n'. The format of
+	 * each part should refer to
+	 * {@link client.ParserUtilities #parseTime(String) parseTime},
+	 * {@link client.ParserUtilities #parsePosition(java.util.Map, String)
+	 * parsePosition}, {@link client.ParserUtilities #parseInventory(String)
+	 * parseInventory}, and
+	 * {@link client.ParserUtilities #parseTorchStatus(Map, String)
+	 * parseTorchStatus}..
+	 * 
+	 * @return --- a String representation of the game status
+	 */
+	private void stringToGame(String gameStr) {
+		Scanner s = new Scanner(gameStr);
+		String line;
 
-        // 2. health
-        if (s.hasNextLine()) {
-            line = s.nextLine();
-            try {
-                controller.parseHealth(Integer.valueOf(line));
-            } catch (NumberFormatException e) {
-                // Data is incorrect, ignore.
-                System.out.println("Data incorrect, health is not integer.");
-                s.close();
-                return;
-            }
-        } else {
-            System.out.println("Data incomplete, no health received.");
-            // Data is incomplete, ignore.
-            s.close();
-            return;
-        }
+		// 1. time
+		if (s.hasNextLine()) {
+			line = s.nextLine();
+			controller.parseTime(line);
+		} else {
+			System.out.println("Data incomplete, no time received.");
+			// Data is incomplete, ignore.
+			s.close();
+			return;
+		}
 
-        // 3. visibility
-        if (s.hasNextLine()) {
-            line = s.nextLine();
-            try {
-                controller.parseVisibility(Integer.valueOf(line));
-            } catch (NumberFormatException e) {
-                // Data is incorrect, ignore.
-                System.out.println("Data incorrect, visibility is not integer.");
-                s.close();
-                return;
-            }
-        } else {
-            System.out.println("Data incomplete, no visibility received.");
-            // Data is incomplete, ignore.
-            s.close();
-            return;
-        }
+		// 2. health
+		if (s.hasNextLine()) {
+			line = s.nextLine();
+			try {
+				controller.parseHealth(Integer.valueOf(line));
+			} catch (NumberFormatException e) {
+				// Data is incorrect, ignore.
+				System.out.println("Data incorrect, health is not integer.");
+				s.close();
+				return;
+			}
+		} else {
+			System.out.println("Data incomplete, no health received.");
+			// Data is incomplete, ignore.
+			s.close();
+			return;
+		}
 
-        // 4. all players' positions
-        if (s.hasNextLine()) {
-            line = s.nextLine();
-            controller.parsePosition(line);
-        } else {
-            System.out.println("Data incomplete, no player's positions received.");
-            // Data is incomplete, ignore.
-            s.close();
-            return;
-        }
+		// 3. visibility
+		if (s.hasNextLine()) {
+			line = s.nextLine();
+			try {
+				controller.parseVisibility(Integer.valueOf(line));
+			} catch (NumberFormatException e) {
+				// Data is incorrect, ignore.
+				System.out.println("Data incorrect, visibility is not integer.");
+				s.close();
+				return;
+			}
+		} else {
+			System.out.println("Data incomplete, no visibility received.");
+			// Data is incomplete, ignore.
+			s.close();
+			return;
+		}
 
-        // 5. inventory String
-        if (s.hasNextLine()) {
-            line = s.nextLine();
-            controller.parseInventory(line);
-        } else {
-            System.out.println("Data incomplete, no inventory received.");
-            // Data is incomplete, ignore.
-            s.close();
-            return;
-        }
+		// 4. all players' positions
+		if (s.hasNextLine()) {
+			line = s.nextLine();
+			controller.parsePosition(line);
+		} else {
+			System.out.println("Data incomplete, no player's positions received.");
+			// Data is incomplete, ignore.
+			s.close();
+			return;
+		}
 
-        // 6. holding torch or not for all players.
-        if (s.hasNextLine()) {
-            line = s.nextLine();
-            controller.parseTorchStatus(line);
-        } else {
-            System.out.println("Data incomplete, no torch status received.");
-            // Data is incomplete, ignore.
-            s.close();
-            return;
-        }
+		// 5. inventory String
+		if (s.hasNextLine()) {
+			line = s.nextLine();
+			controller.parseInventory(line);
+		} else {
+			System.out.println("Data incomplete, no inventory received.");
+			// Data is incomplete, ignore.
+			s.close();
+			return;
+		}
 
-        // close the scanner
-        s.close();
-    }
+		// 6. holding torch or not for all players.
+		if (s.hasNextLine()) {
+			line = s.nextLine();
+			controller.parseTorchStatus(line);
+		} else {
+			System.out.println("Data incomplete, no torch status received.");
+			// Data is incomplete, ignore.
+			s.close();
+			return;
+		}
 
-    /**
-     * A helper method for testing
-     * 
-     * @param incoming
-     */
-    private void printTestString(String incoming) {
-        Scanner sc = new Scanner(incoming);
+		// 7. chat message
+		if (s.hasNextLine()) {
+			line = s.nextLine();
+			controller.parseChatMessage(line);
+		}
 
-        System.out.println("Time: " + sc.nextLine());
-        System.out.println("Health: " + sc.nextLine());
-        System.out.println("Visibility: " + sc.nextLine());
-        System.out.println("Players: " + sc.nextLine());
+		// close the scanner
+		s.close();
+	}
 
-        if (sc.hasNextLine()) {
-            System.out.println("Inventory: " + sc.nextLine());
-        }
+	/**
+	 * A helper method for testing
+	 * 
+	 * @param incoming
+	 */
+	private void printTestString(String incoming) {
+		Scanner sc = new Scanner(incoming);
 
-        System.out.println("=====================================");
+		System.out.println("Time: " + sc.nextLine());
+		System.out.println("Health: " + sc.nextLine());
+		System.out.println("Visibility: " + sc.nextLine());
+		System.out.println("Players: " + sc.nextLine());
 
-        sc.close();
-    }
+		if (sc.hasNextLine()) {
+			System.out.println("Inventory: " + sc.nextLine());
+		}
+
+		System.out.println("=====================================");
+
+		sc.close();
+	}
 
 }

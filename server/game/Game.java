@@ -45,13 +45,13 @@ public class Game {
      * The visibility in daytime. This number indicates that everything within this
      * distance on world grid is visible.
      */
-    public static final int DAY_VISIBLIITY = 8;
+    public static final int DAY_VISIBLIITY = 7;
 
     /**
      * The visibility in night time. This number indicates that everything within this
      * distance on world grid is visible.
      */
-    public static final int NIGHT_VISIBILITY = 2;
+    public static final int NIGHT_VISIBILITY = 3;
 
     /**
      * The visibility if the player is holding a torch in night time. This number
@@ -165,7 +165,8 @@ public class Game {
      * @param gameID
      *            --- A unique hash number for each game instance.
      */
-    public Game(Area world, Map<Integer, Area> areas, Map<Integer, Player> players, int gameID) {
+    public Game(Area world, Map<Integer, Area> areas, Map<Integer, Player> players,
+            int gameID) {
 
         this.world = world;
         this.areas = areas;
@@ -236,6 +237,7 @@ public class Game {
             public void run() {
                 // decrease every player's life
                 for (Player p : players.values()) {
+                	//TODO: this was -1 before
                     p.increaseHealth(-1);
 
                     // if the player is holding a torch, decrease torch's life
