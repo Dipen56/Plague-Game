@@ -18,10 +18,12 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 import javafx.scene.image.ImageView;
 import javafx.geometry.Pos;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -31,12 +33,14 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import java.awt.Point;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import server.game.player.Avatar;
 import server.game.player.Direction;
+import server.game.player.Player;
 import server.game.player.Position;
 import server.game.player.Virus;
 import client.rendering.Images;
@@ -107,13 +111,10 @@ public class GUI extends Application {
 
 	// main window
 	private static Stage window;
-
 	// controls
 	private Label timeLable;
-
 	// private Label miniMapLable;
 	private Canvas miniMapCanvas;
-
 	private Label textAreaLable;
 	private TextField msg;
 	private Button send;
@@ -146,9 +147,12 @@ public class GUI extends Application {
 	private Label zoomedItem;
 	private Label itemDetail;
 	private ProgressBar bar;
+	private Text healthBarText;
 	private Label virus;
 	private FlowPane healthPane;
+	private Label avatarLable;
 	// waiting room Controls
+	private Label waitingMsg;
 	private FlowPane playersWaiting;
 	private Button readyGame;
 	private Button quitWaitingRoom;
@@ -163,6 +167,8 @@ public class GUI extends Application {
 	private EventHandler<WindowEvent> windowEvent;
 	private static int avatarIndex = 0;
 	private Map<Point, String> itemsDescription;
+
+	private List<Avatar> avatarList = new ArrayList<Avatar>();
 
 	@SuppressWarnings("static-access")
 	public GUI(ClientUI viewControler, Rendering rendering) {
@@ -196,6 +202,8 @@ public class GUI extends Application {
 		slashScreen();
 		// loginScreen() ;
 		window.show();
+		window.setOnCloseRequest(e -> Platform.exit());
+		window.setOnCloseRequest(e -> System.exit(0));
 	}
 
 	public void slashScreen() {
@@ -227,64 +235,116 @@ public class GUI extends Application {
 		Scene slashScene = new Scene(slashBorderPane, WIDTH_VALUE, HEIGHT_VALUE);
 		slashScene.getStylesheets().add(this.getClass().getResource(STYLE_CSS).toExternalForm());
 		window.setScene(slashScene);
+		window.setOnCloseRequest(e -> Platform.exit());
+		window.setOnCloseRequest(e -> System.exit(0));
 	}
 
 	public void loginScreen() {
+		avatarList.add(Avatar.Avatar_1);
+		avatarList.add(Avatar.Avatar_2);
+		avatarList.add(Avatar.Avatar_3);
+		avatarList.add(Avatar.Avatar_4);
 		actionEvent = viewControler.getActionEventHandler();
 		keyEvent = viewControler.getKeyEventHander();
 		mouseEvent = viewControler.getMouseEventHander();
 		windowEvent = viewControler.getWindowEventHander();
-		VBox loginBox = new VBox(10);
+		Pane loginPane = new Pane();
+		Image loginBackground = Images.LOGIN_SCREEN_IMAGE;
+		ImageView loginBackgroundImage = new ImageView(loginBackground);
+		loginBackgroundImage.setFitHeight(HEIGHT_VALUE + 18);
+		loginBackgroundImage.setFitWidth(WIDTH_VALUE + 18);
+		loginPane.getChildren().add(loginBackgroundImage);
 		info = new Label();
-		info.setText("Enter The IP,Port and UserName");
-		loginBox.getChildren().add(info);
-		BorderPane loginBorderPane = new BorderPane();
+		info.setText("Welcome Players");
+		info.getStyleClass().add("login-info");
+		loginPane.getChildren().add(info);
+		info.setLayoutX(390);
+		FlowPane avatar = new FlowPane();
+		avatar.setPrefWidth(WIDTH_VALUE);
+		BorderPane left = new BorderPane();
+		Button prev = new Button("Prev");
+		prev.setOnAction(actionEvent);
+		prev.setId("PrevAvatar");
+		left.setCenter(prev);
+		prev.getStyleClass().add("button-login");
+		avatarLable = new Label();
+		avatarLable.setLayoutX(200);
+		Image avatarImg = Images.getAvatarImageBySide(avatarList.get(0), Side.Front);
+		avatarIndex = 0;
+		ImageView avatarImage = new ImageView(avatarImg);
+		avatarImage.setFitHeight(300);
+		avatarImage.setFitWidth(300);
+		avatarLable.setGraphic(avatarImage);
+		BorderPane right = new BorderPane();
+		Button next = new Button("Next");
+		next.setOnAction(actionEvent);
+		next.setId("NextAvatar");
+		next.getStyleClass().add("button-login");
+		right.setCenter(next);
+		avatar.getChildren().add(left);
+		avatar.getChildren().add(avatarLable);
+		avatar.getChildren().add(right);
+		loginPane.getChildren().add(avatar);
+		avatar.setLayoutX(280);
+		avatar.setLayoutY(100);
 		VBox inputStore = new VBox(5);
 		HBox userNameBox = new HBox(3);
 		Label user = new Label("Enter UserName");
+		user.getStyleClass().add("input-login");
+		userNameInput = new TextField();
 		userNameInput = new TextField();
 		userNameBox.getChildren().addAll(user, userNameInput);
-		// loginBox.getChildren().add(userNameBox);
 		HBox ipBox = new HBox(3);
 		Label ip = new Label("Enter IP Address");
+		ip.getStyleClass().add("input-login");
 		ipInput = new TextField();
 		ipBox.getChildren().addAll(ip, ipInput);
-		// loginBox.getChildren().add(ipBox);
 		HBox portBox = new HBox(3);
 		portBox.alignmentProperty().set(Pos.CENTER);
 		Label port = new Label("Enter Port");
+		port.getStyleClass().add("input-login");
 		portInput = new TextField();
 		portBox.getChildren().addAll(port, portInput);
-		// loginBox.getChildren().add(portBox);
 		inputStore.getChildren().addAll(userNameBox, ipBox, portBox);
-		loginBorderPane.setLeft(inputStore);
-		loginBox.getChildren().add(loginBorderPane);
-		avatarGroup = new Group();
-		Image avatarImg = Images.getAvatarImageBySide(Avatar.Avatar_1, Side.Front);
-		ImageView avatarImage = new ImageView(avatarImg);
-		avatarImage.setFitHeight(80);
-		avatarImage.setFitWidth(80);
-		avatarGroup.getChildren().add(avatarImage);
-		avatarGroup.setOnMousePressed(mouseEvent);
-		loginBorderPane.setRight(avatarGroup);
+		loginPane.getChildren().add(inputStore);
+		inputStore.setLayoutX(350);
+		inputStore.setLayoutY(450);
+
 		FlowPane buttons = new FlowPane();
 		buttons.alignmentProperty().set(Pos.CENTER);
 		buttons.setHgap(10);
 		login = new Button("Login");
+		login.getStyleClass().add("button-login");
 		login.setOnAction(actionEvent);
 		quitLogin = new Button("Leave");
+		quitLogin.getStyleClass().add("button-login");
 		quitLogin.setOnAction(actionEvent);
 		buttons.getChildren().addAll(login, quitLogin);
-		loginBox.getChildren().add(buttons);
-		Scene slashScene = new Scene(loginBox, 350, 160);
-		window.setScene(slashScene);
+		loginPane.getChildren().add(buttons);
+		buttons.setLayoutX(300);
+		buttons.setLayoutY(580);
+
+		Scene loginScene = new Scene(loginPane, WIDTH_VALUE, HEIGHT_VALUE);
+		loginScene.getStylesheets().add(this.getClass().getResource(STYLE_CSS).toExternalForm());
+		window.setScene(loginScene);
+		window.setOnCloseRequest(e -> Platform.exit());
+		window.setOnCloseRequest(e -> System.exit(0));
+	}
+
+	public void changeAvatarImage(int change) {
+		avatarIndex = change;
+		Image avatarImg = Images.getAvatarImageBySide(avatarList.get(change), Side.Front);
+		ImageView avatarImage = new ImageView(avatarImg);
+		avatarImage.setFitHeight(300);
+		avatarImage.setFitWidth(300);
+		avatarLable.setGraphic(avatarImage);
 	}
 
 	public void waitingRoom() {
 		VBox waitingRoomBox = new VBox(5);
-		Label waitingMsg = new Label();
+		waitingMsg = new Label();
 		waitingMsg.setText(
-				"Welome Players! When Your Ready To Start Click Ready. When The Minimum Number Of Player Have Connect The Game Will Start");
+				"Welcome! When you are ready to start, click Ready. When the minimum number of players have connected, the game will automatically start.");
 		waitingMsg.setWrapText(true);
 		waitingRoomBox.getChildren().add(waitingMsg);
 		playersWaiting = new FlowPane();
@@ -301,6 +361,14 @@ public class GUI extends Application {
 		waitingRoomBox.getChildren().add(buttons);
 		Scene slashScene = new Scene(waitingRoomBox, 400, 170);
 		window.setScene(slashScene);
+		window.setOnCloseRequest(e -> Platform.exit());
+		window.setOnCloseRequest(e -> System.exit(0));
+	}
+
+	public void disableReadyButton() {
+		readyGame.setDisable(true);
+		waitingMsg.setText("Waiting for other players...");
+
 	}
 
 	public void startGame() {
@@ -329,6 +397,8 @@ public class GUI extends Application {
 		scene.setOnKeyPressed(keyEvent);
 		window.setOnCloseRequest(windowEvent);
 		window.setScene(scene);
+		window.setOnCloseRequest(e -> Platform.exit());
+		window.setOnCloseRequest(e -> System.exit(0));
 	}
 
 	/**
@@ -351,21 +421,31 @@ public class GUI extends Application {
 		avatarImage.setFitWidth(50);
 		healthPane.getChildren().add(avatarImage);
 		VBox healthBox = new VBox(2);
+
+		StackPane barPlusNum = new StackPane();
+
 		bar = new ProgressBar(health);
 		bar.setPrefWidth(98);
+
+		healthBarText = new Text();
+		healthBarText.setText(String.valueOf(Player.MAX_HEALTH));
+
+		barPlusNum.getChildren().setAll(bar, healthBarText);
+
 		virus = new Label();
 		virus.setText("Virus Type: " + virusName.toString());
 		virus.setWrapText(true);
 		virus.setPrefWidth(98);
 		virus.getStyleClass().add("virus-label");
-		healthBox.getChildren().add(bar);
+		healthBox.getChildren().add(barPlusNum);
 		healthBox.getChildren().add(virus);
 		healthPane.getChildren().add(healthBox);
 		group.getChildren().add(healthPane);
 	}
 
-	public void updateHealth(double health) {
-		bar.progressProperty().set(health);
+	public void updateHealth(int health) {
+		bar.progressProperty().set((double) ((double) health / Player.MAX_HEALTH));
+		healthBarText.setText(String.valueOf(health));
 		group.getChildren().add(healthPane);
 	}
 
@@ -427,12 +507,14 @@ public class GUI extends Application {
 	public void setminiMap() {
 		TitledPane titlePane = new TitledPane();
 		titlePane.setText("Mini Map");
+
 		miniMapCanvas = new Canvas(MINIMAP_CANVAS_SIZE, MINIMAP_CANVAS_SIZE);
 		miniMapCanvas.layoutXProperty().set(5);
 		BorderPane minimapLable = new BorderPane();
 		minimapLable.setCenter(miniMapCanvas);
 		minimapLable.getStyleClass().add("minimap-lable");
 		titlePane.setContent(minimapLable);
+
 		rightPanel.getChildren().add(titlePane);
 	}
 
@@ -659,14 +741,12 @@ public class GUI extends Application {
 	 */
 	public void updateMinimap(Position playerLoc, int uId, char[][] areaMap, int visibility,
 			Map<Integer, Position> positions) {
-
 		// player's coordinate on board, and direction.
 		Position selfPosition = positions.get(uId);
 		int selfAreaId = selfPosition.areaId;
 		int selfX = selfPosition.x;
 		int selfY = selfPosition.y;
 		Direction selDir = selfPosition.getDirection();
-
 		// the width of height of current map
 		int width = areaMap[0].length;
 		int height = areaMap.length;
@@ -677,8 +757,6 @@ public class GUI extends Application {
 		gc.setLineWidth(1);
 
 		// clear the old drawing
-		// TODO set it as the background color.
-
 		gc.setFill(Color.rgb(50, 54, 57));
 		gc.fillRect(0, 0, MINIMAP_CANVAS_SIZE, MINIMAP_CANVAS_SIZE);
 
@@ -701,32 +779,26 @@ public class GUI extends Application {
 					// This is an unknown character/MapElement, shouldn't happen
 					color = Color.BLACK;
 				}
-
 				gc.setFill(color);
-
 				// draw the map elements
 				gc.fillRect((col - bound_left) * size, (row - bound_top) * size, size, size);
 				gc.strokeRect((col - bound_left) * size, (row - bound_top) * size, size, size);
 			}
 		}
-
 		// draw player arrow on map
 		for (Position p : positions.values()) {
 			// if this player is not in the same map,skip.
 			if (p.areaId != selfAreaId) {
 				continue;
 			}
-
 			// this player's x, y, and direction
 			int x = p.x;
 			int y = p.y;
 			Direction dir = p.getDirection();
-
 			// if this player isn't within visible distance, skip
 			if (Math.abs(x - selfX) > visibility || Math.abs(y - selfY) > visibility) {
 				continue;
 			}
-
 			Image img;
 			if (x == selfX && y == selfY) {
 				// it's yourself

@@ -18,6 +18,7 @@ import client.ParserUtilities;
 import client.rendering.Rendering;
 import server.Packet;
 import server.game.player.Avatar;
+import server.game.player.Player;
 import server.game.player.Position;
 import server.game.player.Virus;
 
@@ -100,55 +101,57 @@ public class ClientUI {
 	 * description is used to pop up a hover tootip for this item.
 	 */
 	private List<String> inventory;
-	
+
 	/**
 	 * This is a mirror of the field, Map<Integer, Area> areas, in Game class,
 	 * except the area is represented as a char[][]. Renderer can look for what
 	 * map object to render from here.
 	 */
 	private Map<Integer, char[][]> areas;
-	
+
 	// ============ Model and Views =============
 	/**
 	 * The Gui
 	 */
 	private GUI gui;
-	
+
 	/**
 	 * The renderer
 	 */
 	private Rendering render;
-	
+
 	/**
 	 * The client side socket connection maintainer
 	 */
 	private Client client;
-	
+
 	/**
 	 * A clock thread for generating constant pulse to update rendering and GUI.
 	 */
 	private ClockThread clockThread;
-	
+
 	// ============ Event Handlers ==============
 	/**
 	 * Event Handler for buttons
 	 */
 	private EventHandler<ActionEvent> actionEvent;
-	
+
 	/**
 	 * Event Handler for key events
 	 */
 	private EventHandler<KeyEvent> keyEvent;
-	
+
 	/**
 	 * Event Handler for mouse events
 	 */
 	private EventHandler<MouseEvent> mouseEvent;
-	
+
 	/**
 	 * Event Handler for window events
 	 */
 	private EventHandler<WindowEvent> windowEvent;
+
+	private int avatarIndex = 0;
 
 	/**
 	 * Constructor
@@ -375,30 +378,20 @@ public class ClientUI {
 	 * and GUI.
 	 */
 	public void updateRenderAndGui() {
-
 		// 0. necessary variables
 		Position playerLoc = positions.get(uid);
 		int areaId = playerLoc.areaId;
 		char[][] worldMap = areas.get(areaId);
-
 		// 1. update GUI
-
 		// a. update minimap
 		gui.updateMinimap(playerLoc, uid, worldMap, visibility, positions);
-
 		// b. update the inventory
 		gui.setInventory(inventory);
-
 		// c. update the health bar if it is in right panel in GUI.
-
 		// 2. update Renderer
-
 		// a. call update renderer method.
-
 		render.render(playerLoc, worldMap, visibility, uid, avatars, positions);
-
-		gui.updateHealth((double) ((double) health / 600));
-
+		gui.updateHealth(health);
 	}
 
 	/**
@@ -465,9 +458,12 @@ public class ClientUI {
 						GUI.showWarningPane("Port number should be an integer");
 						return;
 					}
-					loginPlayer(gui.getIpAddress(), port, gui.getUserName(), gui.getAvatarIndex());
-					// in the waiting room
-					gui.waitingRoom();
+
+					if (loginPlayer(gui.getIpAddress(), port, gui.getUserName(), gui.getAvatarIndex())) {
+						// in the waiting room
+						gui.waitingRoom();
+
+					}
 				} else if (event.toString().contains("Leave")) {
 					// this is for the login screen
 					gui.getWindow().close();
@@ -477,6 +473,8 @@ public class ClientUI {
 					 * it's waiting for others.
 					 */
 					client.setUserReady(true);
+					gui.disableReadyButton();
+
 				} else if (event.toString().contains("Leave Game")) {
 					// this is for leaving the waiting room
 					gui.getWindow().close();
@@ -491,6 +489,18 @@ public class ClientUI {
 					System.out.println("INFO");
 				} else if (event.toString().contains("AboutMenu")) {
 					System.out.println("ABOUT");
+				} else if (event.toString().contains("PrevAvatar")) {
+					avatarIndex--;
+					if (avatarIndex < 0) {
+						avatarIndex = 3;
+					}
+					gui.changeAvatarImage(avatarIndex);
+				} else if (event.toString().contains("NextAvatar")) {
+					avatarIndex++;
+					if (avatarIndex > 3) {
+						avatarIndex = 0;
+					}
+					gui.changeAvatarImage(avatarIndex);
 				}
 			}
 		};
