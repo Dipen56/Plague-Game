@@ -34,21 +34,23 @@ public class GameAdapter{
 	 * Without it, the parser does not recognise these types of object, and they will not be written to the game save.
 	 */
 	@XmlElement
-	private ObstacleAdapter ObstTypeProtector = new ObstacleAdapter();
+	private ObstacleAdapter obstTypeProtector = new ObstacleAdapter();
 	@XmlElement
-	private ChestAdapter ChestTypeProtector = new ChestAdapter();
+	private ChestAdapter chestTypeProtector = new ChestAdapter();
 	@XmlElement
-	private AntidoteAdapter AntidoteTypeProtector = new AntidoteAdapter();
+	private AntidoteAdapter antidoteTypeProtector = new AntidoteAdapter();
 	@XmlElement
-	private KeyAdapter KeyTypeProtector = new KeyAdapter();
+	private KeyAdapter keyTypeProtector = new KeyAdapter();
 	@XmlElement
-	private CupboardAdapter CupboardTypeProtector = new CupboardAdapter();
+	private CupboardAdapter cupboardTypeProtector = new CupboardAdapter();
 	@XmlElement
-	private ScrapPileAdapter ScrapPileTypeProtector = new ScrapPileAdapter();
+	private ScrapPileAdapter scrapPileTypeProtector = new ScrapPileAdapter();
 	@XmlElement
-	private TransitionSpaceAdapter TransitionSpaceTypeProtector = new TransitionSpaceAdapter();
+	private TransitionSpaceAdapter transitionSpaceTypeProtector = new TransitionSpaceAdapter();
 	@XmlElement
 	private TorchAdapter torchTypeProtector = new TorchAdapter();
+	@XmlElement
+	private BagAdapter bagTypeProctector = new BagAdapter();
 
 
 

@@ -9,6 +9,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import server.game.items.Antidote;
+import server.game.items.Bag;
 import server.game.items.Item;
 import server.game.items.Key;
 import server.game.items.Torch;
@@ -39,6 +40,9 @@ public class ScrapPileAdapter extends ObstacleAdapter{
 			item = spLoot.get(i);
 			if(item instanceof Antidote){
 				this.loot[i] = new AntidoteAdapter((Antidote)item);
+			}
+			else if(item instanceof Bag){
+				this.loot[i] = new BagAdapter((Bag)item);
 			}
 			else if(item instanceof Key){
 				this.loot[i] = new KeyAdapter((Key)item);
@@ -75,6 +79,10 @@ public class ScrapPileAdapter extends ObstacleAdapter{
 				else if(item instanceof KeyAdapter){
 					newLoot.add(((KeyAdapter)item).getOriginal());
 				}
+				else if(item instanceof BagAdapter){
+					newLoot.add(((BagAdapter)item).getOriginal());
+				}
+
 				else{
 					throw new RuntimeException("Item is not of a recognised type.");
 				}

@@ -7,6 +7,7 @@ import java.util.HashMap;
 
 import server.game.Game;
 import server.game.items.Antidote;
+import server.game.items.Bag;
 import server.game.items.Item;
 import server.game.items.Key;
 import server.game.items.Torch;
@@ -267,18 +268,22 @@ public class InitialGameLoader {
         int rand = -1;
         String description = null;
         Virus v = null;
+        List<Item> loot = null;
         //Creates Bags, puts an antidote in each, and adds them to random chests and scrap piles
         for(int i = 0; i < NUMBER_OF_BAGS; i++){
         	rand = (int)(Math.random() * (NUMBER_OF_BAGS + NUMBER_OF_S_PILES));		//random number used to put in particular chest or scrap pile
-        	 v = Virus.randomVirus(); // Adds an antidote to the list.
-             description = "An antidote to help a victim of the "+ v.toString() + ". Should keep them alive...for a little while.";
-        	//Chest
+        	v = Virus.randomVirus(); // Adds an antidote to the list.
+            description = "An antidote to help a victim of the "+ v.toString() + ". Should keep them alive...for a little while.";
+            loot = new ArrayList<Item>();
+            loot.add(new Antidote(description, v));
+
+             //Chest
         	if(rand < NUMBER_OF_BAGS){
-        		chestLoot.get(rand).add(new Bag(new Antidote(description, v)));
+        		chestLoot.get(rand).add(new Bag(description, loot));
         	}
         	else{
         		//ScrapPile
-        		scrapLoot.get(rand).add(new Bag(new Antidote(description, v)));
+        		scrapLoot.get(rand-NUMBER_OF_BAGS).add(new Bag(description, loot));
         	}
         }
 
