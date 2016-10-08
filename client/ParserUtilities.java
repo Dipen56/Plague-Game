@@ -153,8 +153,7 @@ public class ParserUtilities {
 		Scanner scanner = new Scanner(avatarsStr);
 		String line = scanner.nextLine();
 
-		String[] posStrs = line.split("\\|"); // not '|' I spent days debugging
-												// this!
+		String[] posStrs = line.split("\\|"); // not '|'
 
 		int uId = -1;
 		int avatarIndex = -1;
@@ -220,8 +219,7 @@ public class ParserUtilities {
 		Scanner scanner = new Scanner(torchStatusStr);
 		String line = scanner.nextLine();
 
-		String[] posStrs = line.split("\\|"); // not '|' I spent days debugging
-												// this!
+		String[] posStrs = line.split("\\|"); // not '|'
 
 		int uId = -1;
 		int isHoldingTorch = -1;
@@ -286,8 +284,7 @@ public class ParserUtilities {
 		Scanner scanner = new Scanner(positionsStr);
 		String line = scanner.nextLine();
 
-		String[] posStrs = line.split("\\|"); // not '|' I spent days debugging
-												// this!
+		String[] posStrs = line.split("\\|"); // not '|'
 
 		int uId = -1;
 		int areaId = -1;
@@ -353,6 +350,7 @@ public class ParserUtilities {
 	 * <li>A: Antidote<br>
 	 * <li>K: Key<br>
 	 * <li>T: Torch<br>
+	 * <li>B: Bag<br>
 	 * <br>
 	 * 
 	 * @param invenStr
@@ -372,8 +370,7 @@ public class ParserUtilities {
 
 		Scanner scanner = new Scanner(invenStr);
 		String line = scanner.nextLine();
-		String[] items = line.split("\\|"); // not '|' I spent days debugging
-											// this!
+		String[] items = line.split("\\|"); // not '|'
 
 		for (String item : items) {
 			list.add(item);

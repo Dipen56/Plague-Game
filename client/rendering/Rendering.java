@@ -88,12 +88,12 @@ public class Rendering {
 					addObject(xLeftTop, yBottom, xRightTop, row, playerLoc.x, "middle", worldMap, renderGroup,
 							direction, yTop);
 					addAvatar(xLeftTop, yBottom, xRightTop, row, playerLoc.x, "middle", worldMap, renderGroup,
-							direction, yTop, avatars, positions);
+							direction, yTop, avatars, positions,uid);
 				} else {
 					addObject(xLeftTop, yBottom, xRightTop, row, playerLoc.y, "middle", worldMap, renderGroup,
 							direction, yTop);
 					addAvatar(xLeftTop, yBottom, xRightTop, row, playerLoc.y, "middle", worldMap, renderGroup,
-							direction, yTop, avatars, positions);
+							direction, yTop, avatars, positions,uid);
 				}
 				for (int col = squaresToLeft - 1; col >= 0; col--) {
 					Polygon squareLeft = new Polygon();
@@ -109,7 +109,9 @@ public class Rendering {
 						addObject(tileXLeftTop, yBottom, tileXRightBottom, row, col, "left", worldMap, renderGroup,
 								direction, yTop);
 						addAvatar(tileXLeftTop, yBottom, tileXRightBottom, row, col, "left", worldMap, renderGroup,
-								direction, yTop, avatars, positions);
+
+								direction, yTop, avatars, positions,uid);
+
 					}
 				}
 				for (int col = squaresToRight - 1; col >= 0; col--) {
@@ -126,7 +128,9 @@ public class Rendering {
 						addObject(tileXLeftBottom, yBottom, tileXRightTop, row, col, "right", worldMap, renderGroup,
 								direction, yTop);
 						addAvatar(tileXLeftBottom, yBottom, tileXRightTop, row, col, "right", worldMap, renderGroup,
-								direction, yTop, avatars, positions);
+
+								direction, yTop, avatars, positions,uid);
+
 					}
 				}
 			}
@@ -172,8 +176,10 @@ public class Rendering {
 		p.getPoints().add(yBottom);
 		p.getPoints().add(xLeftBottom);
 		p.getPoints().add(yBottom);
+		//This forms the grid of squares
 		p.setStroke(javafx.scene.paint.Color.AQUA);
 		p.setStrokeWidth(1);
+		//////////////////////////////////////////////
 		renderGroup.getChildren().add(p);
 	}
 
@@ -231,10 +237,13 @@ public class Rendering {
 	 * @param yTop
 	 * @param avatars
 	 * @param positions
+	 * @param uid 
 	 */
 	public void addAvatar(double xLeftTop, double yBottom, double xRightTop, int row, int x, String string,
 			char[][] worldMap, Pane renderGroup2, Direction direction2, double yTop, Map<Integer, Avatar> avatars,
-			Map<Integer, Position> positions) {
+			Map<Integer, Position> positions, int uid) {
+		//Image playerImg = Images.getAvatarImageBySide(avatars.get(uid), Side.Back);
+		//Image another = Images.getAvatarImageByDirection(Avatar.get(22), Direction.East, Direction.West);
 	}
 
 	/**

@@ -19,10 +19,12 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 import javafx.scene.image.ImageView;
 import javafx.geometry.Pos;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -32,15 +34,14 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import java.awt.Point;
-import java.lang.management.PlatformLoggingMXBean;
 import java.util.ArrayList;
-import java.util.function.BinaryOperator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import server.game.player.Avatar;
 import server.game.player.Direction;
+import server.game.player.Player;
 import server.game.player.Position;
 import server.game.player.Virus;
 import client.rendering.Images;
@@ -143,10 +144,12 @@ public class GUI extends Application {
 	private Label zoomedItem;
 	private Label itemDetail;
 	private ProgressBar bar;
+	private Text healthBarText;
 	private Label virus;
 	private FlowPane healthPane;
 	private Label avatarLable;
 	// waiting room Controls
+	private Label waitingMsg;
 	private FlowPane playersWaiting;
 	private Button readyGame;
 	private Button quitWaitingRoom;
@@ -195,7 +198,7 @@ public class GUI extends Application {
 		// loginScreen() ;
 		window.show();
 		window.setOnCloseRequest(e -> Platform.exit());
-		window.setOnCloseRequest(e-> System.exit(0));
+		window.setOnCloseRequest(e -> System.exit(0));
 	}
 	public void slashScreen() {
 		Group slashGroup = new Group();
@@ -227,7 +230,7 @@ public class GUI extends Application {
 		slashScene.getStylesheets().add(this.getClass().getResource(STYLE_CSS).toExternalForm());
 		window.setScene(slashScene);
 		window.setOnCloseRequest(e -> Platform.exit());
-		window.setOnCloseRequest(e-> System.exit(0));
+		window.setOnCloseRequest(e -> System.exit(0));
 	}
 	public void loginScreen() {
 		avatarList.add(Avatar.Avatar_1);
@@ -299,7 +302,7 @@ public class GUI extends Application {
 		loginPane.getChildren().add(inputStore);
 		inputStore.setLayoutX(350);
 		inputStore.setLayoutY(450);
-		
+
 		FlowPane buttons = new FlowPane();
 		buttons.alignmentProperty().set(Pos.CENTER);
 		buttons.setHgap(10);
@@ -313,13 +316,14 @@ public class GUI extends Application {
 		loginPane.getChildren().add(buttons);
 		buttons.setLayoutX(300);
 		buttons.setLayoutY(580);
-		
+
 		Scene loginScene = new Scene(loginPane, WIDTH_VALUE, HEIGHT_VALUE);
 		loginScene.getStylesheets().add(this.getClass().getResource(STYLE_CSS).toExternalForm());
 		window.setScene(loginScene);
 		window.setOnCloseRequest(e -> Platform.exit());
-		window.setOnCloseRequest(e-> System.exit(0));
+		window.setOnCloseRequest(e -> System.exit(0));
 	}
+
 	public void changeAvatarImage(int change) {
 		avatarIndex = change;
 		Image avatarImg = Images.getAvatarImageBySide(avatarList.get(change), Side.Front);
@@ -330,9 +334,9 @@ public class GUI extends Application {
 	}
 	public void waitingRoom() {
 		VBox waitingRoomBox = new VBox(5);
-		Label waitingMsg = new Label();
+		waitingMsg = new Label();
 		waitingMsg.setText(
-				"Welome Players! When Your Ready To Start Click Ready. When The Minimum Number Of Player Have Connect The Game Will Start");
+				"Welcome! When you are ready to start, click Ready. When the minimum number of players have connected, the game will automatically start.");
 		waitingMsg.setWrapText(true);
 		waitingRoomBox.getChildren().add(waitingMsg);
 		playersWaiting = new FlowPane();
@@ -350,8 +354,14 @@ public class GUI extends Application {
 		Scene slashScene = new Scene(waitingRoomBox, 400, 170);
 		window.setScene(slashScene);
 		window.setOnCloseRequest(e -> Platform.exit());
-		window.setOnCloseRequest(e-> System.exit(0));
+		window.setOnCloseRequest(e -> System.exit(0));
 	}
+
+	public void disableReadyButton() {
+		readyGame.setDisable(true);
+		waitingMsg.setText("Waiting for other players...");
+	}
+    
 	public void startGame() {
 		// Create a VBox which is just layout manger and adds gap of 10
 		rightPanel = new VBox(10);
@@ -379,7 +389,7 @@ public class GUI extends Application {
 		window.setOnCloseRequest(windowEvent);
 		window.setScene(scene);
 		window.setOnCloseRequest(e -> Platform.exit());
-		window.setOnCloseRequest(e-> System.exit(0));
+		window.setOnCloseRequest(e -> System.exit(0));
 	}
 	/**
 	 * this method creats the health bar and adds it to the pane.
@@ -401,22 +411,34 @@ public class GUI extends Application {
 		avatarImage.setFitWidth(50);
 		healthPane.getChildren().add(avatarImage);
 		VBox healthBox = new VBox(2);
+
+		StackPane barPlusNum = new StackPane();
+
 		bar = new ProgressBar(health);
 		bar.setPrefWidth(98);
+
+		healthBarText = new Text();
+		healthBarText.setText(String.valueOf(Player.MAX_HEALTH));
+
+		barPlusNum.getChildren().setAll(bar, healthBarText);
+
 		virus = new Label();
 		virus.setText("Virus Type: " + virusName.toString());
 		virus.setWrapText(true);
 		virus.setPrefWidth(98);
 		virus.getStyleClass().add("virus-label");
-		healthBox.getChildren().add(bar);
+		healthBox.getChildren().add(barPlusNum);
 		healthBox.getChildren().add(virus);
 		healthPane.getChildren().add(healthBox);
 		group.getChildren().add(healthPane);
 	}
-	public void updateHealth(double health) {
-		bar.progressProperty().set(health);
+
+	public void updateHealth(int health) {
+		bar.progressProperty().set((double) ((double) health / Player.MAX_HEALTH));
+		healthBarText.setText(String.valueOf(health));
 		group.getChildren().add(healthPane);
 	}
+    
 	/**
 	 * this methods will set up the menu bar with all it items
 	 */
@@ -453,6 +475,7 @@ public class GUI extends Application {
 		// add the layout to the borderPane Layout
 		borderPane.setTop(menuBar);
 	}
+    
 	/**
 	 * this method sets up the world clock controls
 	 */
@@ -467,6 +490,7 @@ public class GUI extends Application {
 		// timeLable.setText(clockTime);
 		rightPanel.getChildren().add(titlePane);
 	}
+    
 	/**
 	 * this method will set up the controls for the mini map of the game
 	 */
@@ -483,6 +507,7 @@ public class GUI extends Application {
 
 		rightPanel.getChildren().add(titlePane);
 	}
+    
 	/**
 	 * this method will setup the chat controls
 	 */
@@ -515,6 +540,7 @@ public class GUI extends Application {
 		titlePane.setContent(chatControls);
 		rightPanel.getChildren().add(titlePane);
 	}
+    
 	/**
 	 * this method will setup the items control
 	 */
@@ -569,6 +595,7 @@ public class GUI extends Application {
 		titlePane.setContent(hbox);
 		rightPanel.getChildren().add(titlePane);
 	}
+    
 	/**
 	 * this method is used to set the chat message the text area in the gui
 	 *
@@ -591,6 +618,7 @@ public class GUI extends Application {
 			}
 		});
 	}
+    
 	/**
 	 * this method will return the massage typed in the chat box upon clicking
 	 * the send button.
@@ -602,6 +630,7 @@ public class GUI extends Application {
 		msg.clear();
 		return msgToSend;
 	}
+    
 	/**
 	 * This method will return the user name.
 	 *
@@ -611,6 +640,7 @@ public class GUI extends Application {
 		String name = userNameInput.getText();
 		return name;
 	}
+    
 	/**
 	 * This method will return the IP address as a string
 	 *
@@ -620,6 +650,7 @@ public class GUI extends Application {
 		String ipAddress = ipInput.getText();
 		return ipAddress;
 	}
+    
 	/**
 	 * This method will return the port number as a String
 	 *
@@ -629,6 +660,7 @@ public class GUI extends Application {
 		String portStr = portInput.getText();
 		return portStr;
 	}
+    
 	/**
 	 * This method will return the avatar index. Note that it's 0-indexed.
 	 *
@@ -637,6 +669,7 @@ public class GUI extends Application {
 	public int getAvatarIndex() {
 		return avatarIndex;
 	}
+    
 	/**
 	 * this method will set the world time
 	 * 
@@ -650,6 +683,7 @@ public class GUI extends Application {
 			}
 		});
 	}
+    
 	public void changeAvatar() {
 		if (avatarIndex == 4) {
 			avatarIndex = 0;
