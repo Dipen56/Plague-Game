@@ -1,7 +1,9 @@
 package client.rendering;
 
 import java.awt.Point;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import javax.swing.ImageIcon;
 import client.view.ClientUI;
@@ -17,6 +19,7 @@ import server.game.player.Player;
 import server.game.player.Position;
 import server.game.world.Area;
 import javafx.scene.paint.ImagePattern;
+import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 
 /**
@@ -41,8 +44,11 @@ public class Rendering {
 	private int squaresToRight = 0;
 	private Pane renderGroup;
 	private int imageBound = 10;
+	private Label mapDescription;
 
 	public Rendering() {
+		
+
 	}
 
 	/**
@@ -88,12 +94,12 @@ public class Rendering {
 					addObject(xLeftTop, yBottom, xRightTop, row, playerLoc.x, "middle", worldMap, renderGroup,
 							direction, yTop);
 					addAvatar(xLeftTop, yBottom, xRightTop, row, playerLoc.x, "middle", worldMap, renderGroup,
-							direction, yTop, avatars, positions,uid);
+							direction, yTop, avatars, positions, uid);
 				} else {
 					addObject(xLeftTop, yBottom, xRightTop, row, playerLoc.y, "middle", worldMap, renderGroup,
 							direction, yTop);
 					addAvatar(xLeftTop, yBottom, xRightTop, row, playerLoc.y, "middle", worldMap, renderGroup,
-							direction, yTop, avatars, positions,uid);
+							direction, yTop, avatars, positions, uid);
 				}
 				for (int col = squaresToLeft - 1; col >= 0; col--) {
 					Polygon squareLeft = new Polygon();
@@ -110,7 +116,7 @@ public class Rendering {
 								direction, yTop);
 						addAvatar(tileXLeftTop, yBottom, tileXRightBottom, row, col, "left", worldMap, renderGroup,
 
-								direction, yTop, avatars, positions,uid);
+								direction, yTop, avatars, positions, uid);
 
 					}
 				}
@@ -129,7 +135,7 @@ public class Rendering {
 								direction, yTop);
 						addAvatar(tileXLeftBottom, yBottom, tileXRightTop, row, col, "right", worldMap, renderGroup,
 
-								direction, yTop, avatars, positions,uid);
+								direction, yTop, avatars, positions, uid);
 
 					}
 				}
@@ -176,7 +182,7 @@ public class Rendering {
 		p.getPoints().add(yBottom);
 		p.getPoints().add(xLeftBottom);
 		p.getPoints().add(yBottom);
-		//This forms the grid of squares
+		// This forms the grid of squares
 		p.setStroke(javafx.scene.paint.Color.AQUA);
 		p.setStrokeWidth(1);
 		//////////////////////////////////////////////
@@ -237,13 +243,15 @@ public class Rendering {
 	 * @param yTop
 	 * @param avatars
 	 * @param positions
-	 * @param uid 
+	 * @param uid
 	 */
 	public void addAvatar(double xLeftTop, double yBottom, double xRightTop, int row, int x, String string,
 			char[][] worldMap, Pane renderGroup2, Direction direction2, double yTop, Map<Integer, Avatar> avatars,
 			Map<Integer, Position> positions, int uid) {
-		//Image playerImg = Images.getAvatarImageBySide(avatars.get(uid), Side.Back);
-		//Image another = Images.getAvatarImageByDirection(Avatar.get(22), Direction.East, Direction.West);
+		// Image playerImg = Images.getAvatarImageBySide(avatars.get(uid),
+		// Side.Back);
+		// Image another = Images.getAvatarImageByDirection(Avatar.get(22),
+		// Direction.East, Direction.West);
 	}
 
 	/**
@@ -264,7 +272,7 @@ public class Rendering {
 	 */
 	private void addObject(double tileXLeftBottom, double yBottom, double tileXRightBottom, int row, int col,
 			String side, char[][] worldMap, Pane renderGroup, Direction direction, double yTop) {
-		//System.out.println(direction.toString());
+		// System.out.println(direction.toString());
 		Point imageCoordinate = getImagePoint(direction, row, col, side, worldMap.length, worldMap[0].length);
 		// System.out.println(direction.toString());
 		char object = worldMap[imageCoordinate.y][imageCoordinate.x];
@@ -334,11 +342,11 @@ public class Rendering {
 				Point temp = new Point(boardWidth - 1 - row, col);
 				// System.out.println(temp.x + "centerttttttttttttttttttt " +
 				// temp.y);
-				//System.out.println(boardHeight + " " + boardWidth);
+				// System.out.println(boardHeight + " " + boardWidth);
 				return temp;
 			}
 		case West:
-			//System.out.println(col + " " + row);
+			// System.out.println(col + " " + row);
 			if (side.equals("left")) {
 				// this loop is broken
 				Point temp = new Point(row, boardHeight - (squaresToLeft - col));
@@ -424,6 +432,20 @@ public class Rendering {
 		imageView.setX(setX);
 		imageView.setY(setY);
 		renderGroup.getChildren().add(imageView);
+	}
+
+	public void setAreaDescription() {
+		mapDescription = new Label();
+		mapDescription.setWrapText(true);
+		mapDescription.setLayoutX(gamePanelWidth - 150);
+		mapDescription.setLayoutY(30);
+		mapDescription.getStyleClass().add("area-description");
+		
+	}
+
+	public void updateAreaDescription(String areaDescription) {
+		mapDescription.setText(areaDescription);
+		renderGroup.getChildren().add(mapDescription);
 	}
 
 	/**

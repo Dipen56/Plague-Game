@@ -400,6 +400,7 @@ public class ClientUI {
 
 		gui.updateHealth(health);
 		gui.setInventory(inventory);
+		render.updateAreaDescription(descriptions.get(areaId));
 		gui.displayObjectDescription("Grass");
 
 	}
@@ -438,6 +439,8 @@ public class ClientUI {
 		});
 		gui.setHealthBar(health, virus);
 		gui.objectLabel();
+		render.setAreaDescription();
+		
 	}
 
 	/**
@@ -542,36 +545,36 @@ public class ClientUI {
 				} else if (keyCode == KeyCode.F) {
 					client.send(Packet.Unlock);
 
-					//gui.setInventory(inventory);
+					// gui.setInventory(inventory);
 				} else if (keyCode == KeyCode.G) {
 					client.send(Packet.TakeOutItem);
-					//gui.setInventory(inventory);
+					// gui.setInventory(inventory);
 				} else if (keyCode == KeyCode.R) {
 					client.send(Packet.Transit);
 				} else if (keyCode == KeyCode.DIGIT1) {
 					client.sendWithIndex(Packet.UseItem, 0);
-					//gui.setInventory(inventory);
+					// gui.setInventory(inventory);
 				} else if (keyCode == KeyCode.DIGIT2) {
-					client.sendWithIndex(Packet.UseItem, 1);			
-					//gui.setInventory(inventory);
+					client.sendWithIndex(Packet.UseItem, 1);
+					// gui.setInventory(inventory);
 				} else if (keyCode == KeyCode.DIGIT3) {
 					client.sendWithIndex(Packet.UseItem, 2);
-					//gui.setInventory(inventory);
+					// gui.setInventory(inventory);
 				} else if (keyCode == KeyCode.DIGIT4) {
 					client.sendWithIndex(Packet.UseItem, 3);
-					//gui.setInventory(inventory);
+					// gui.setInventory(inventory);
 				} else if (keyCode == KeyCode.DIGIT5) {
 					client.sendWithIndex(Packet.UseItem, 4);
-					//gui.setInventory(inventory);
+					// gui.setInventory(inventory);
 				} else if (keyCode == KeyCode.DIGIT6) {
 					client.sendWithIndex(Packet.UseItem, 5);
-					//gui.setInventory(inventory);
+					// gui.setInventory(inventory);
 				} else if (keyCode == KeyCode.DIGIT7) {
 					client.sendWithIndex(Packet.UseItem, 6);
-					//gui.setInventory(inventory);
+					// gui.setInventory(inventory);
 				} else if (keyCode == KeyCode.DIGIT8) {
 					client.sendWithIndex(Packet.UseItem, 7);
-					//gui.setInventory(inventory);
+					// gui.setInventory(inventory);
 				}
 				/*
 				 * TODO need more keys
@@ -607,6 +610,8 @@ public class ClientUI {
 			}
 		};
 	}
+
+
 
 	/**
 	 * This method will return the action listeners

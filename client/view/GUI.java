@@ -150,8 +150,9 @@ public class GUI extends Application {
 	private FlowPane playersWaiting;
 	private Button readyGame;
 	private Button quitWaitingRoom;
-	private Label objectMessage;
+	private Label objectDescription;
 	private FadeTransition ft;
+
 	// this is for event
 	// for action events
 	private EventHandler<ActionEvent> actionEvent;
@@ -904,10 +905,10 @@ public class GUI extends Application {
 	}
 
 	public void objectLabel() {
-		objectMessage = new Label();
-		objectMessage.setLayoutX((GAMEPANE_WIDTH_VALUE / 2) - 20);
-		objectMessage.setLayoutY(HEIGHT_VALUE - 160);
-		objectMessage.getStyleClass().add("object-description");
+		objectDescription = new Label();
+		objectDescription.setLayoutX((GAMEPANE_WIDTH_VALUE / 2) - 20);
+		objectDescription.setLayoutY(HEIGHT_VALUE - 160);
+		objectDescription.getStyleClass().add("object-description");
 
 	}
 
@@ -917,14 +918,11 @@ public class GUI extends Application {
 	 * @param description
 	 */
 	public void displayObjectDescription(String description) {
-		objectMessage.setText(description);
-		//ft = new FadeTransition(Duration.millis(49), objectMessage);
-		//ft.setFromValue(0.0);
-		//ft.setToValue(1.0);
-		//ft.play();
-		group.getChildren().add(objectMessage);
+		objectDescription.setText(description);
+		group.getChildren().add(objectDescription);
 	}
-
+	
+	
 	/**
 	 * This static helper method will pop up a message dialog to user.
 	 *
