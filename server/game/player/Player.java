@@ -121,11 +121,11 @@ public class Player {
 
 	/**
 	 * A construction used for loading this player from a data file.
-	 * 
+	 *
 	 * The builder pattern was considered as an alternative to this constructor.
 	 * As this will only be constructed once per game load, that pattern was
 	 * considered unnecessary.
-	 * 
+	 *
 	 * @param avatar
 	 *            --- the avatar
 	 * @param health
@@ -139,7 +139,6 @@ public class Player {
 		this.healthSavingValue = health;
 		this.health = health;
 		this.avatar = avatar;
-
 		// required to load with builder pattern.
 		this.loading = true;
 	}
@@ -228,7 +227,7 @@ public class Player {
 
 	/**
 	 * This method let the player to extinguish a torch.
-	 * 
+	 *
 	 * @param torch
 	 *            --- a torch
 	 */
@@ -253,7 +252,7 @@ public class Player {
 
 	/**
 	 * Is the player holding a lighted torch?
-	 * 
+	 *
 	 * @return --- true/false for yes/no
 	 */
 	public boolean isHoldingTorch() {
@@ -263,7 +262,7 @@ public class Player {
 	/**
 	 * Get the torch in hand. If the player isn't holding a torch, null is
 	 * returned.
-	 * 
+	 *
 	 * @return --- the torch in hand. If the player isn't holding a torch, null
 	 *         is returned.
 	 */
@@ -448,7 +447,7 @@ public class Player {
 
 	/**
 	 * Set the player's direction.
-	 * 
+	 *
 	 * @param direction
 	 *            --- the direction.
 	 */
@@ -460,7 +459,7 @@ public class Player {
 	 * Set the player's position. Note that Position is a class representing all
 	 * geographic informations including areaID, coordinates(x, y), and
 	 * direction. So this method sets all these four things.
-	 * 
+	 *
 	 * @param pos
 	 *            --- the new position.
 	 */
@@ -478,7 +477,7 @@ public class Player {
 
 	/**
 	 * Get the name.
-	 * 
+	 *
 	 * @return --- player specified name.
 	 */
 	public String getName() {
@@ -487,7 +486,7 @@ public class Player {
 
 	/**
 	 * Get the unique id of this client.
-	 * 
+	 *
 	 * @return --- the unique id of this client.
 	 */
 	public int getId() {
@@ -496,7 +495,7 @@ public class Player {
 
 	/**
 	 * Get the avatar
-	 * 
+	 *
 	 * @return --- the avatar
 	 */
 	public Avatar getAvatar() {
@@ -505,7 +504,7 @@ public class Player {
 
 	/**
 	 * Get the areaID of the area that the player is currently in.
-	 * 
+	 *
 	 * @return --- the areaID
 	 */
 	public int getAreaID() {
@@ -519,7 +518,7 @@ public class Player {
 
 	/**
 	 * Get current player's position.
-	 * 
+	 *
 	 * @return
 	 */
 	public Position getPosition() {
@@ -528,7 +527,7 @@ public class Player {
 
 	/**
 	 * Get current player's direction.
-	 * 
+	 *
 	 * @return --- current direction.
 	 */
 	public Direction getDirection() {
@@ -537,7 +536,7 @@ public class Player {
 
 	/**
 	 * Get the virus type that the player carries.
-	 * 
+	 *
 	 * @return
 	 */
 	public Virus getVirus() {
@@ -546,7 +545,7 @@ public class Player {
 
 	/**
 	 * Get all items in inventory as a list.
-	 * 
+	 *
 	 * @return --- all items in inventory as a list.
 	 */
 	public List<Item> getInventory() {
@@ -555,7 +554,7 @@ public class Player {
 
 	/**
 	 * This method is used to track all torches owned by this player.
-	 * 
+	 *
 	 * @return --- all torches owned by this player.
 	 */
 	public List<Torch> getAllTorches() {
@@ -572,7 +571,7 @@ public class Player {
 
 	/**
 	 * This method is used to track all keys owned by this player.
-	 * 
+	 *
 	 * @return --- all keys owned by this player.
 	 */
 	public List<Key> getAllKeys() {
@@ -589,7 +588,7 @@ public class Player {
 
 	/**
 	 * Get the health value from saved game.
-	 * 
+	 *
 	 * @return --- saved value of health.
 	 */
 	public int getHealthFromSave() {
@@ -598,7 +597,7 @@ public class Player {
 
 	/**
 	 * Is this player still alive?
-	 * 
+	 *
 	 * @return --- true/false for yes/no
 	 */
 	public boolean isAlive() {
@@ -607,7 +606,7 @@ public class Player {
 
 	/**
 	 * Get the health left.
-	 * 
+	 *
 	 * @return --- the health left
 	 */
 	public int getHealthLeft() {
@@ -617,7 +616,7 @@ public class Player {
 	/**
 	 * Sets the virus field. Can only be used while the player is loading from a
 	 * data file.
-	 * 
+	 *
 	 * @param v
 	 *            --- A Virus.
 	 */
@@ -629,7 +628,7 @@ public class Player {
 	/**
 	 * Sets the isAlive field. Can only be used while the player is loading from
 	 * a data file.
-	 * 
+	 *
 	 * @param isAlive
 	 *            --- A boolean describing whether the player is alive or not.
 	 */
@@ -641,7 +640,7 @@ public class Player {
 	/**
 	 * Sets the inventory field. Can only be used while the player is loading
 	 * from a data file.
-	 * 
+	 *
 	 * @param newInventory
 	 *            --- A list of items.
 	 */
@@ -653,39 +652,40 @@ public class Player {
 	/**
 	 * Sets the name field. Can only be used while the player is loading from a
 	 * data file.
-	 * 
+	 *
 	 * @param name
 	 *            --- The player's name.
 	 */
 	public void setName(String name) {
 		if (loading)
 			this.name = name;
+		else
+			this.name = "DEFAULT";
 	}
 
 	/**
-	 * Sets the id field. Can only be used while the player is loading from a
+	 * Sets the id field. Should only be used while the player is loading from a
 	 * data file.
-	 * 
+	 *
 	 * @param id
 	 *            --- The player's id.
 	 */
-	public void setId(int id) {
-		if (loading)
-			this.uID = id;
+	public void resetId(int id) {
+		this.uID = id;
 	}
 
 	/**
 	 * This method is used to generate the string for broadcasting player's
 	 * position and direction to clients. The String has the following format:
-	 * 
+	 *
 	 * <p>
 	 * Say Player(uId: 123) is in area(areaId: 456), his coordinates is (78,
 	 * 90), and his facing direction is north (clockwisely we have North: 0;
 	 * East: 1; South: 2; West: 3):
-	 * 
+	 *
 	 * <p>
 	 * The string will be <i>"123,456,78,90,0"</i>
-	 * 
+	 *
 	 * @return --- a string representation of the player's geographical
 	 *         information, i.e. areaId, coordinate(x, y), and direction. This
 	 *         is used for network transmission.
