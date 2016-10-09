@@ -761,6 +761,8 @@ public class Game {
 			return false;
 		} else if (item instanceof Bag) {
 			Bag bag = (Bag) item;
+			// Remove bag from inventory to allow space for item
+			player.getInventory().remove(bag);
 			// try to take things out
 			boolean b = player.tryTakeItemsFromContainer(bag);
 			// check if it's all taken out
