@@ -29,6 +29,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.WindowEvent;
+import javafx.util.Duration;
+import javafx.animation.FadeTransition;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -38,6 +40,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javafx.scene.control.ContextMenu;
 
 import server.game.player.Avatar;
 import server.game.player.Direction;
@@ -183,6 +186,8 @@ public class GUI extends Application {
 	private Button readyGame;
 	private Button quitWaitingRoom;
 	private Label objectDescription;
+	
+	private TitledPane titlePane;
 
 	// this is for event
 	// for action events
@@ -590,7 +595,7 @@ public class GUI extends Application {
 	 * this method will setup the items control
 	 */
 	public void setItems() {
-		TitledPane titlePane = new TitledPane();
+		titlePane = new TitledPane();
 		titlePane.setText("Item Inventory");
 		VBox itemContainer = new VBox(5);
 		HBox hbox = new HBox(5);
@@ -960,12 +965,58 @@ public class GUI extends Application {
 		zoomedItem.setGraphic(image);
 	}
 
+	public String getItemDescription(int x, int y) {
+		String item = null;
+		for (Point p : itemsDescription.keySet()) {
+			// System.out.println(p.x+" "+p.y);
+			if (p.x == x && p.y == y) {
+				// System.out.println(p.x + " " + p.y);
+				item = itemsDescription.get(p);
+				break;
+			}
+		}
+		return item;
+	}
+
 	public void objectLabel() {
 		objectDescription = new Label();
+		objectDescription.setWrapText(true);
+		objectDescription.setPrefWidth(150);
 		objectDescription.setLayoutX((GAMEPANE_WIDTH_VALUE / 2) - 20);
-		objectDescription.setLayoutY(HEIGHT_VALUE - 160);
+		objectDescription.setLayoutY(HEIGHT_VALUE - 170);
 		objectDescription.getStyleClass().add("object-description");
 
+	}
+
+	public void keyRightClickOption() {
+		ContextMenu contextMenu = new ContextMenu();
+		MenuItem item1 = new MenuItem("Insert");
+		item1.setId("right-insert");
+		item1.setOnAction(actionEvent);
+		MenuItem item2 = new MenuItem("Use");
+		item2.setId("right-use");
+		item2.setOnAction(actionEvent);
+		contextMenu.getItems().addAll(item1, item2);
+		titlePane.setContextMenu(contextMenu);
+	}
+
+	public void antidoteRightClickOption() {
+		ContextMenu contextMenu = new ContextMenu();
+		MenuItem item1 = new MenuItem("Insert");
+		item1.setId("right-insert");
+		item1.setOnAction(actionEvent);
+		MenuItem item2 = new MenuItem("Use");
+		item2.setId("right-use");
+		item2.setOnAction(actionEvent);
+		MenuItem item3 = new MenuItem("Drop");
+		item3.setId("drop-use");
+		item3.setOnAction(actionEvent);
+		contextMenu.getItems().addAll(item1, item2, item3);
+		titlePane.setContextMenu(contextMenu);
+	}
+
+	public void rightClickClear() {
+		titlePane.setContextMenu(null);
 	}
 
 	/**

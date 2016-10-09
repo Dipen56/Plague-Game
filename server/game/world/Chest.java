@@ -54,9 +54,9 @@ public class Chest extends Obstacle implements Container, Lockable {
 		if (loot == null) {
 			this.loot = new ArrayList<>();
 		} else {
-			if (loot.size() > Container.CHEST_SIZE) {
-				throw new GameError("Chest can only contain " + Container.CHEST_SIZE + " items.");
-			}
+//			if (loot.size() > Container.CHEST_SIZE) {
+//				throw new GameError("Chest can only contain " + Container.CHEST_SIZE + " items.");
+//			}
 			this.loot = loot;
 		}
 	}

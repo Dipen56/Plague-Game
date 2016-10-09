@@ -10,11 +10,13 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.WindowEvent;
 
 import client.Client;
 import client.ParserUtilities;
+import client.rendering.Images;
 import client.rendering.Rendering;
 import server.Packet;
 import server.game.player.Avatar;
@@ -28,7 +30,7 @@ import server.game.player.Virus;
  * GUI/Renderer. The controller tells the server about the user's action by
  * interpreting mouse and keyboard events from the user, and updates the
  * renderer/GUI according to the received information from server.
- * 
+ *
  * @author Dipen & Hector
  *
  */
@@ -58,7 +60,7 @@ public class ClientUI {
 	 */
 	private Avatar avatar;
 
-	/**
+	/**e
 	 * Virus type of the player at this connection
 	 */
 	private Virus virus;
@@ -72,6 +74,11 @@ public class ClientUI {
 	 * The visibility. This is updated by server broadcast.
 	 */
 	private int visibility;
+
+	/**
+	 * True if player health reached zero.
+	 */
+	private boolean playerDead = false;
 
 	/**
 	 * This map keeps track of all player's avatars. Renderer can look for which
@@ -156,8 +163,14 @@ public class ClientUI {
 	 * Event Handler for window events
 	 */
 	private EventHandler<WindowEvent> windowEvent;
-
+	/**
+	 * This is the index of the Avatar
+	 */
 	private int avatarIndex = 0;
+	/**
+	 * This string is used for right click action.
+	 */
+	private String itemDescription;
 
 	private boolean descriptionToggle = true;
 
@@ -181,7 +194,7 @@ public class ClientUI {
 	/**
 	 * This method is used to connect the players to the client which then
 	 * connects them to the server
-	 * 
+	 *
 	 * @param ip
 	 *            --- the server ip address.
 	 * @param port
@@ -225,15 +238,15 @@ public class ClientUI {
 
 	/*
 	 * ===============================
-	 * 
+	 *
 	 * Methods related to the client
-	 * 
+	 *
 	 * ===============================
 	 */
 	/**
 	 * When the client receives the user ID from the server, this method will
 	 * update the local user ID.
-	 * 
+	 *
 	 * @param uid
 	 *            --- user id
 	 */
@@ -244,7 +257,7 @@ public class ClientUI {
 	/**
 	 * When the client receives the user's virus type from the server, this
 	 * method will update the local record
-	 * 
+	 *
 	 * @param virusIndex
 	 *            --- index of virus, which is equal to its ordinal number.
 	 */
@@ -256,7 +269,7 @@ public class ClientUI {
 	 * When the client receives a map string from the server, this method will
 	 * update the local table which records every area's map (in a plain char
 	 * matrix).
-	 * 
+	 *
 	 * @param mapStr
 	 *            --- a string representation of all maps in game.
 	 */
@@ -268,7 +281,7 @@ public class ClientUI {
 	 * When the client receives the string recording all players positions from
 	 * the server, this method will update the local table which records every
 	 * player's position.
-	 * 
+	 *
 	 * @param posStr
 	 *            --- a string representation of all positions of players.
 	 */
@@ -280,7 +293,7 @@ public class ClientUI {
 	 * When the client receives the string recording all players avatars from
 	 * the server, this method will update the local table which records every
 	 * player's avatar.
-	 * 
+	 *
 	 * @param avatarsStr
 	 *            --- a string representation of all avatars of all players.
 	 */
@@ -291,7 +304,7 @@ public class ClientUI {
 	/**
 	 * When the client receives a time string from the server, this method will
 	 * update the local time.
-	 * 
+	 *
 	 * @param timeStr
 	 *            --- a string representation of world time.
 	 */
@@ -302,7 +315,7 @@ public class ClientUI {
 	/**
 	 * When the client receives a health update from the server, this method
 	 * will update the local health.
-	 * 
+	 *
 	 * @param health
 	 *            --- the health left
 	 */
@@ -313,7 +326,7 @@ public class ClientUI {
 	/**
 	 * When the client receives a health update from the server, this method
 	 * will update the local health.
-	 * 
+	 *
 	 * @param visibility
 	 *            --- the visibility
 	 */
@@ -324,7 +337,7 @@ public class ClientUI {
 	/**
 	 * When the client receives a inventory update from the server, this method
 	 * will update the local inventory.
-	 * 
+	 *
 	 * @param invenStr
 	 *            --- a string representation of inventory items.
 	 */
@@ -336,7 +349,7 @@ public class ClientUI {
 	 * When the client receives the string recording the status of player
 	 * holding torch from the server, this method will update the local table
 	 * which records every player's status of holding torch.
-	 * 
+	 *
 	 * @param torchStatusStr
 	 *            --- a string representation of the status of player holding
 	 *            torch
@@ -348,7 +361,7 @@ public class ClientUI {
 	/**
 	 * When the client receives the string of chat message from the server, this
 	 * method will update the chat text area.
-	 * 
+	 *
 	 * @param chat
 	 *            --- a string representation of the status of player holding
 	 *            torch
@@ -358,8 +371,17 @@ public class ClientUI {
 	}
 
 	/**
+	 * This method reset uid for a hard reset
+	 *
+	 * @param uId
+	 */
+	public void resetUid(int uId) {
+		this.uid = uId;
+	}
+
+	/**
 	 * Get the user name
-	 * 
+	 *
 	 * @return --- the player's choice of user name
 	 */
 	public String getUserName() {
@@ -368,7 +390,7 @@ public class ClientUI {
 
 	/**
 	 * Get the avatar.
-	 * 
+	 *
 	 * @return --- the player's choice of avatar
 	 */
 	public Avatar getAvatar() {
@@ -377,9 +399,9 @@ public class ClientUI {
 
 	/*
 	 * ===============================
-	 * 
+	 *
 	 * Methods related to the render
-	 * 
+	 *
 	 * ===============================
 	 */
 	/**
@@ -414,6 +436,14 @@ public class ClientUI {
 			gui.displayObjectDescription("");
 		}
 
+		// 7. if player is dead, prompt it.
+		if(!playerDead){
+			//Displays dialog when player health is 0
+			if(health == 0){
+				AlertBox.displayMsg("YOU ARE DEAD", "GAMEOVER");
+				playerDead = true;
+			}
+		}
 	}
 
 	/**
@@ -424,26 +454,6 @@ public class ClientUI {
 			@Override
 			public void run() {
 				gui.startGame();
-				// Position pos = new Position(4, 0, 1, Direction.South);
-				// char[][] world = {
-				// // NORTH
-				// { 'C', 'T', 'T', 'G', 'G', 'T', 'C', 'T' },
-				// // 2
-				// { 'G', 'G', 'G', 'G', 'G', 'G', 'C', 'C' },
-				// // 3
-				// { 'G', 'G', 'G', 'G', 'G', 'G', 'C', 'T' },
-				// // 4
-				// { 'T', 'C', 'G', 'G', 'G', 'C', 'T', 'C' },
-				// // 5
-				// { 'G', 'G', 'G', 'G', 'G', 'G', 'C', 'T' },
-				// // 6
-				// { 'G', 'G', 'G', 'G', 'C', 'G', 'C', 'C' },
-				// // 7
-				// { 'G', 'G', 'C', 'G', 'T', 'G', 'C', 'G' },
-				// // 8
-				// { 'C', 'T', 'G', 'G', 'G', 'T', 'C', 'T' } };
-				// // SOUTH
-				// render.render(pos, world, 1, uid);
 				clockThread = new ClockThread(DEFAULT_CLK_PERIOD, ClientUI.this);
 				clockThread.start();
 			}
@@ -462,6 +472,7 @@ public class ClientUI {
 		actionEvent = new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
+
 				if (event.toString().contains("Send")) {
 					// send chat message.
 					client.sendWithString(Packet.Chat, gui.getChatMsg());
@@ -523,6 +534,23 @@ public class ClientUI {
 						avatarIndex = 0;
 					}
 					gui.changeAvatarImage(avatarIndex);
+				} else if (event.toString().contains("right-insert")) {
+					System.out.println("insert");
+					
+
+					
+					
+					// TODO: use itemDescription
+					;
+				} else if (event.toString().contains("right-use")) {
+					// TODO: use itemDescription
+					// this is for the login screen
+					System.out.println("right-use");
+				} else if (event.toString().contains("drop-use")) {
+					// TODO: use itemDescription
+					// this is for the login screen
+					System.out.println("drop-use");
+
 				} else if (event.toString().contains("Description")) {
 					descriptionToggle = !descriptionToggle;
 					gui.setDescriptionOn(descriptionToggle);
@@ -556,43 +584,34 @@ public class ClientUI {
 				} else if (keyCode == KeyCode.F) {
 					client.send(Packet.Unlock);
 
-					// gui.setInventory(inventory);
 				} else if (keyCode == KeyCode.G) {
 					client.send(Packet.TakeOutItem);
-					// gui.setInventory(inventory);
+
 				} else if (keyCode == KeyCode.R) {
 					client.send(Packet.Transit);
 				} else if (keyCode == KeyCode.DIGIT1) {
 					client.sendWithIndex(Packet.UseItem, 0);
-					// gui.setInventory(inventory);
 				} else if (keyCode == KeyCode.DIGIT2) {
 					client.sendWithIndex(Packet.UseItem, 1);
-					// gui.setInventory(inventory);
 				} else if (keyCode == KeyCode.DIGIT3) {
 					client.sendWithIndex(Packet.UseItem, 2);
-					// gui.setInventory(inventory);
 				} else if (keyCode == KeyCode.DIGIT4) {
 					client.sendWithIndex(Packet.UseItem, 3);
-					// gui.setInventory(inventory);
 				} else if (keyCode == KeyCode.DIGIT5) {
 					client.sendWithIndex(Packet.UseItem, 4);
-					// gui.setInventory(inventory);
 				} else if (keyCode == KeyCode.DIGIT6) {
 					client.sendWithIndex(Packet.UseItem, 5);
-					// gui.setInventory(inventory);
 				} else if (keyCode == KeyCode.DIGIT7) {
 					client.sendWithIndex(Packet.UseItem, 6);
-					// gui.setInventory(inventory);
 				} else if (keyCode == KeyCode.DIGIT8) {
 					client.sendWithIndex(Packet.UseItem, 7);
-					// gui.setInventory(inventory);
 				}
 				/*
 				 * TODO need more keys
-				 * 
+				 *
 				 * How to implement shift + 1 keys???
-				 * 
-				 * 
+				 *
+				 *
 				 */
 			}
 		};
@@ -609,7 +628,8 @@ public class ClientUI {
 				// Currently this listen to clicks on the items
 				// TODO: some how make it work with items
 				// System.out.println("here" + event.toString());
-				if (event.toString().contains("Grid")) {
+
+				if (event.toString().contains("Grid") && event.isSecondaryButtonDown() == false) {
 					// System.out.println(event.getX());
 					if (inventory.size() != 0) {
 						int itemX = (int) (event.getX() / 60);
@@ -617,13 +637,38 @@ public class ClientUI {
 						gui.setItemDescription(itemX, itemY);
 						// System.out.println(itemX + " " + itemY);
 					}
+				} else if (event.getButton() == MouseButton.SECONDARY) {
+					if (inventory.size() != 0) {
+						int itemX = (int) (event.getX() / 60);
+						int itemY = (int) (event.getY() / 60);
+						String item = gui.getItemDescription(itemX, itemY);
+						// System.out.println("item " + item);
+						if (item != null) {
+							itemDescription = item;
+							if (item.startsWith("A")) {
+								gui.antidoteRightClickOption();
+							} else if (item.startsWith("K")) {
+								gui.keyRightClickOption();
+							} else if (item.startsWith("T")) {
+								gui.antidoteRightClickOption();
+							} else if (item.startsWith("B")) {
+								gui.keyRightClickOption();
+							} else if (item.startsWith("N")) {
+								gui.rightClickClear();
+							}
+						} else {
+							gui.rightClickClear();
+						}
+						// System.out.println(itemX + " " + itemY);
+					}
+					// System.out.println("here" + event.toString());
 				}
 			}
 		};
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public String getFrontElementString() {
@@ -681,7 +726,7 @@ public class ClientUI {
 
 	/**
 	 * This method will return the action listeners
-	 * 
+	 *
 	 * @return --- the action listeners
 	 */
 	public EventHandler<ActionEvent> getActionEventHandler() {
@@ -690,7 +735,7 @@ public class ClientUI {
 
 	/**
 	 * This method will return the key listeners
-	 * 
+	 *
 	 * @return --- the key listeners
 	 */
 	public EventHandler<KeyEvent> getKeyEventHander() {
@@ -699,7 +744,7 @@ public class ClientUI {
 
 	/**
 	 * This method will return the mouse listener
-	 * 
+	 *
 	 * @return --- the mouse listener
 	 */
 	public EventHandler<MouseEvent> getMouseEventHander() {
@@ -708,7 +753,7 @@ public class ClientUI {
 
 	/**
 	 * This method will return the window listener
-	 * 
+	 *
 	 * @return --- the window listener
 	 */
 	public EventHandler<WindowEvent> getWindowEventHander() {
@@ -717,10 +762,11 @@ public class ClientUI {
 
 	/**
 	 * Main function.
-	 * 
+	 *
 	 * @param args
 	 */
 	public static void main(String[] args) {
 		new ClientUI();
 	}
+
 }
