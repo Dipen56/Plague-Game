@@ -299,7 +299,8 @@ public class Receptionist extends Thread {
 						server.save(uid);
 						break;
 					case Load:
-						server.load(uid);
+						if(!server.load(uid))
+							throw new RuntimeException("Game could not load.");
 						break;
 					case Chat:
 						String message = "[" + userName + "] " + input.readUTF();

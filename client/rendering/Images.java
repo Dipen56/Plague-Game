@@ -180,7 +180,6 @@ public class Images {
 	 * @return --- the proper image to render the other player.
 	 */
 	public static Image getAvatarImageByDirection(Avatar otherAvatar, Direction ownDir, Direction hisDir) {
-
 		return AVATAR_IMAGES.get(otherAvatar).get(Side.getSideByRelativeDirection(ownDir, hisDir));
 	}
 
