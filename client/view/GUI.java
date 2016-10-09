@@ -185,7 +185,7 @@ public class GUI extends Application {
 	public void start(Stage mainWindow) throws Exception {
 		window = mainWindow;
 		window.setTitle("Plague Game");
-		window.getIcons().add(Images.GAMEICON_IMAGE);
+		//window.getIcons().add(Images.GAMEICON_IMAGE);
 		// this will disable and enable resizing so when we have a working
 		// version we can just set this to false;
 		// this starts the action listener

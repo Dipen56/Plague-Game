@@ -25,7 +25,7 @@ import tests.gameLogicTests.WorldLogicTest;
 
 /**
  * This class is the client side UI, which is where the user start the game
- * from. It also servers as the controller for communicating between client and
+ * from. It also serves as the controller for communicating between client and
  * GUI/Renderer. The controller tells the server about the user's action by
  * interpreting mouse and keyboard events from the user, and updates the
  * renderer/GUI according to the received information from server.

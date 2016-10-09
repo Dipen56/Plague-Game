@@ -39,7 +39,7 @@ public class ServerGui extends Application {
     public void start(Stage mainWindow) throws Exception {
         window = mainWindow;
         window.setTitle("Plague Game Server");
-        window.getIcons().add(loadImage(GAMEICON_IMAGE));
+       // window.getIcons().add(loadImage(GAMEICON_IMAGE));
         borderPane = new BorderPane();
         textLabel = new Label();
         textLabel.getStyleClass().add("root-server");
