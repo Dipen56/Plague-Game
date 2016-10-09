@@ -163,9 +163,9 @@ public class ClientUI {
 	 */
 	private int avatarIndex = 0;
 	/**
-	 * This string is used for right click action.
+	 * This is index for the item array
 	 */
-	private String itemDescription;
+	private int itemIndex;
 
 	/**
 	 * Constructor
@@ -513,14 +513,15 @@ public class ClientUI {
 					gui.changeAvatarImage(avatarIndex);
 				} else if (event.toString().contains("right-insert")) {
 					System.out.println("insert");
-					// TODO: use itemDescription
+					System.out.println(itemIndex);
+					// TODO: use itemIndex
 					;
 				} else if (event.toString().contains("right-use")) {
-					// TODO: use itemDescription
+					// TODO: use itemIndex
 					// this is for the login screen
 					System.out.println("right-use");
 				} else if (event.toString().contains("drop-use")) {
-					// TODO: use itemDescription
+					// TODO: use itemIndex
 					// this is for the login screen
 					System.out.println("drop-use");
 
@@ -610,9 +611,9 @@ public class ClientUI {
 						int itemX = (int) (event.getX() / 60);
 						int itemY = (int) (event.getY() / 60);
 						String item = gui.getItemDescription(itemX, itemY);
+
 						// System.out.println("item " + item);
 						if (item != null) {
-							itemDescription = item;
 							if (item.startsWith("A")) {
 								gui.antidoteRightClickOption();
 							} else if (item.startsWith("K")) {
@@ -623,6 +624,20 @@ public class ClientUI {
 								gui.keyRightClickOption();
 							} else if (item.startsWith("N")) {
 								gui.rightClickClear();
+							}
+							if (itemY == 0) {
+								itemIndex = itemX;
+							} else if (itemY == 1) {
+								if (itemX == 0) {
+									itemIndex = 4;
+								} else if (itemX == 1) {
+									itemIndex = 5;
+								} else if (itemX == 2) {
+									itemIndex = 6;
+								} else if (itemX == 3) {
+									itemIndex = 7;
+								}
+
 							}
 						} else {
 							gui.rightClickClear();
