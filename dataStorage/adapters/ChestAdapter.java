@@ -8,6 +8,7 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 
 import server.game.items.Antidote;
+import server.game.items.Bag;
 import server.game.items.Item;
 import server.game.items.Key;
 import server.game.items.Torch;
@@ -57,6 +58,15 @@ public class ChestAdapter extends ObstacleAdapter{
 			else if(item instanceof Key){
 				loot[i] = (new KeyAdapter((Key)item));
 			}
+			else if(item instanceof Key){
+				this.loot[i] = new KeyAdapter((Key)item);
+			}
+			else if(item instanceof Torch){
+				loot[i] = (new TorchAdapter((Torch)item));
+			}
+			else if(item instanceof Bag){
+				loot[i] = (new BagAdapter((Bag)item));
+			}
 			else{
 				continue;
 			}
@@ -85,6 +95,12 @@ public class ChestAdapter extends ObstacleAdapter{
 				}
 				else if(item instanceof KeyAdapter){
 					newLoot.add(((KeyAdapter)item).getOriginal());
+				}
+				else if(item instanceof TorchAdapter){
+					newLoot.add(((TorchAdapter)item).getOriginal());
+				}
+				else if(item instanceof BagAdapter){
+					newLoot.add(((BagAdapter)item).getOriginal());
 				}
 				else{
 					throw new RuntimeException("Item is not of a recognised type.");

@@ -422,6 +422,12 @@ public class Rendering {
 		renderGroup.getChildren().add(mapDescription);
 	}
 
+
+	public void applyWeather() {
+
+	}
+
+
 	/**
 	 * Sets the pane to be renderGroup
 	 * 
