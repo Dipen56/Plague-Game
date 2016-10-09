@@ -30,7 +30,7 @@ public class Images {
 
 	public static final Image GRASS_IMAGE = loadImage("/grass.png");
 
-	public static final Image TREE_IMAGE = loadImage("/tree.png");
+	public static final Image TREE_IMAGE = loadImage("/Tree.gif");
 
 	public static final Image CHEST_IMAGE = loadImage("/chest.png");
 
@@ -128,31 +128,31 @@ public class Images {
 		// ============= Avatar images ====================
 
 		Map<Side, Image> avatarImg_1 = new HashMap<>();
-		avatarImg_1.put(Side.Front, loadImage("/Char_1_front_stand.png"));
-		avatarImg_1.put(Side.Back, loadImage("/Char_1_rear_stand.png"));
-		avatarImg_1.put(Side.Left, loadImage("/Char_1_left_right_foot.png"));
-		avatarImg_1.put(Side.Right, loadImage("/Char_1_right_left_foot.png"));
+		avatarImg_1.put(Side.Front, loadImage("/Char_1_Front.gif"));
+		avatarImg_1.put(Side.Back, loadImage("/Char_1_Rear.gif"));
+		avatarImg_1.put(Side.Left, loadImage("/Char_1_Left.gif"));
+		avatarImg_1.put(Side.Right, loadImage("/Char_1_Right.gif"));
 		AVATAR_IMAGES.put(Avatar.Avatar_1, avatarImg_1);
 
 		Map<Side, Image> avatarImg_2 = new HashMap<>();
-		avatarImg_2.put(Side.Front, loadImage("/Char_2_front_stand.png"));
-		avatarImg_2.put(Side.Back, loadImage("/Char_2_rear_stand.png"));
-		avatarImg_2.put(Side.Left, loadImage("/Char_2_left_right_foot.png"));
-		avatarImg_2.put(Side.Right, loadImage("/Char_2_right_left_foot.png"));
+		avatarImg_2.put(Side.Front, loadImage("/Char_3_Front.gif"));
+		avatarImg_2.put(Side.Back, loadImage("/Char_3_Back.gif"));
+		avatarImg_2.put(Side.Left, loadImage("/Char_3_Left.gif"));
+		avatarImg_2.put(Side.Right, loadImage("/Char_3_Right.gif"));
 		AVATAR_IMAGES.put(Avatar.Avatar_2, avatarImg_2);
 
 		Map<Side, Image> avatarImg_3 = new HashMap<>();
-		avatarImg_3.put(Side.Front, loadImage("/Char_3_front_stand.png"));
-		avatarImg_3.put(Side.Back, loadImage("/Char_3_rear_stand.png"));
-		avatarImg_3.put(Side.Left, loadImage("/Char_3_left_left_foot.png"));
-		avatarImg_3.put(Side.Right, loadImage("/Char_3_right_right_foot.png"));
+		avatarImg_3.put(Side.Front, loadImage("/Char_2_Front.gif"));
+		avatarImg_3.put(Side.Back, loadImage("/Char_2_Rear.gif"));
+		avatarImg_3.put(Side.Left, loadImage("/Char_2_left.gif"));
+		avatarImg_3.put(Side.Right, loadImage("/Char_2_right.gif"));
 		AVATAR_IMAGES.put(Avatar.Avatar_3, avatarImg_3);
 
 		Map<Side, Image> avatarImg_4 = new HashMap<>();
-		avatarImg_4.put(Side.Front, loadImage("/Char_4_front_stand.png"));
-		avatarImg_4.put(Side.Back, loadImage("/Char_4_rear_stand.png"));
-		avatarImg_4.put(Side.Left, loadImage("/Char_4_left_left_foot.png"));
-		avatarImg_4.put(Side.Right, loadImage("/Char_4_right_left_foot.png"));
+		avatarImg_4.put(Side.Front, loadImage("/Char_4_Front.gif"));
+		avatarImg_4.put(Side.Back, loadImage("/Char_4_Back.gif"));
+		avatarImg_4.put(Side.Left, loadImage("/Char_4_left.gif"));
+		avatarImg_4.put(Side.Right, loadImage("/Char_4_right.gif"));
 		AVATAR_IMAGES.put(Avatar.Avatar_4, avatarImg_4);
 
 		// =================== arrows ==========================
