@@ -303,7 +303,7 @@ public class Receptionist extends Thread {
 						server.save(uid);
 						break;
 					case Load:
-						if(!server.load(uid))
+						if (!server.load(uid))
 							throw new RuntimeException("Game could not load.");
 						break;
 					case Chat:
@@ -405,6 +405,10 @@ public class Receptionist extends Thread {
 		String torchStatus = game.getTorchStatusString();
 		gameString.append(torchStatus);
 		gameString.append('\n');
+
+		// ======= optional message broadcast =======
+
+		// FIXME all optional message should have a prefix
 
 		// 7. chat message
 		String message = server.retrieveMessage();

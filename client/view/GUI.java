@@ -28,9 +28,10 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.stage.WindowEvent;
-import javafx.util.Duration;
-import javafx.animation.FadeTransition;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -40,7 +41,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javafx.scene.control.ContextMenu;
 
 import server.game.player.Avatar;
 import server.game.player.Direction;
@@ -186,7 +186,7 @@ public class GUI extends Application {
 	private Button readyGame;
 	private Button quitWaitingRoom;
 	private Label objectDescription;
-	
+
 	private TitledPane titlePane;
 
 	// this is for event
@@ -440,16 +440,21 @@ public class GUI extends Application {
 	 * @param health
 	 * @param virusName
 	 */
-	public void setHealthBar(double health, Virus virusName) {
+	public void setHealthBar(double health, Virus virusName, Avatar avatar) {
 		healthPane = new FlowPane();
 		healthPane.setHgap(2);
 		healthPane.setPrefHeight(50);
 		healthPane.setPrefWidth(150);
 		healthPane.setLayoutX(10);
 		healthPane.setLayoutY(10);
-		// TODO link it to the avatar image using avatar index upto
-		Image avatar = Images.SLASH_SCREEN_IMAGE;
-		ImageView avatarImage = new ImageView(avatar);
+
+		/*
+		 * TODO link it to the avatar image using avatar index upto. use
+		 */
+
+		// Image avatarImg = Images.PROFILE_IMAGES.get(avatar);
+		Image avatarImg = Images.SLASH_SCREEN_IMAGE;
+		ImageView avatarImage = new ImageView(avatarImg);
 		avatarImage.setFitHeight(60);
 		avatarImage.setFitWidth(50);
 		healthPane.getChildren().add(avatarImage);
@@ -568,6 +573,11 @@ public class GUI extends Application {
 		chatControls.setPrefWidth(400);
 		chatControls.setPrefHeight(200);
 		chatControls.getStyleClass().add("chatarea-background");
+		ScrollPane scrollPane = new ScrollPane();
+		scrollPane.setFitToHeight(true);
+		scrollPane.setPrefHeight(150);
+		scrollPane.setHbarPolicy(ScrollBarPolicy.NEVER);
+		scrollPane.setVbarPolicy(ScrollBarPolicy.ALWAYS);
 		textAreaLable = new Label();
 		textAreaLable.setAlignment(Pos.TOP_LEFT);
 		textAreaLable.setText(chatText.toString());
@@ -575,6 +585,7 @@ public class GUI extends Application {
 		textAreaLable.setPrefHeight(150);
 		textAreaLable.getStyleClass().add("chat-display");
 		textAreaLable.setWrapText(true);
+		scrollPane.setContent(textAreaLable);
 		HBox hbox = new HBox(5);
 		send = new Button("Send");
 		send.setOnAction(actionEvent);
@@ -585,7 +596,8 @@ public class GUI extends Application {
 		msg.setPrefHeight(40);
 		hbox.getChildren().add(msg);
 		hbox.getChildren().add(send);
-		chatControls.getChildren().add(textAreaLable);
+		// chatControls.getChildren().add(textAreaLable);\
+		chatControls.getChildren().add(scrollPane);
 		chatControls.getChildren().add(hbox);
 		titlePane.setContent(chatControls);
 		rightPanel.getChildren().add(titlePane);
@@ -1039,21 +1051,6 @@ public class GUI extends Application {
 			@Override
 			public void run() {
 				AlertBox.displayMsg(title, msg);
-			}
-		});
-		System.err.println(msg);
-	}
-
-	/**
-	 * This static helper method will pop up a warning dialog to user.
-	 *
-	 * @param msg
-	 */
-	public static void showWarningPane(String msg) {
-		Platform.runLater(new Runnable() {
-			@Override
-			public void run() {
-				AlertBox.displayMsg("Warning", msg);
 			}
 		});
 		System.err.println(msg);
