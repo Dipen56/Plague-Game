@@ -58,7 +58,7 @@ public class ClientUI {
 	 */
 	private Avatar avatar;
 
-	/**
+	/**e
 	 * Virus type of the player at this connection
 	 */
 	private Virus virus;

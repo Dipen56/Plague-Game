@@ -17,7 +17,7 @@ import server.game.world.Area;
  * This class represents a single thread that handles communication with a
  * connected client. It receives events from a client connection via a socket as
  * well as send information to the client about the current board state.
- * 
+ *
  * @author Rafaela & Hector
  *
  */
@@ -72,7 +72,7 @@ public class Receptionist extends Thread {
 
 	/**
 	 * Constructor. It also initialises the socket input and output.
-	 * 
+	 *
 	 * @param server
 	 *            --- the server
 	 * @param socket
@@ -172,7 +172,7 @@ public class Receptionist extends Thread {
 
 	/**
 	 * Is this client ready to enter game?
-	 * 
+	 *
 	 * @return --- true/false for yes/no
 	 */
 	public boolean isReady() {
@@ -280,7 +280,8 @@ public class Receptionist extends Thread {
 						server.save(uid);
 						break;
 					case Load:
-						server.load(uid);
+						if(!server.load(uid))
+							throw new RuntimeException("Game could not load.");
 						break;
 					case Chat:
 						String message = "[" + userName + "] " + input.readUTF();
@@ -322,7 +323,7 @@ public class Receptionist extends Thread {
 	/**
 	 * This method generates a String representation of the game status. The
 	 * format of it is:
-	 * 
+	 *
 	 * <p>
 	 * <li>Time
 	 * <li>Health
@@ -331,7 +332,7 @@ public class Receptionist extends Thread {
 	 * <li>The inventory of the player in this client
 	 * <li>The status of player holding torch or not.
 	 * <li>Chat message if there is any.
-	 * 
+	 *
 	 * <p>
 	 * Each one of them is separated by a new line character '\n'. The format of
 	 * each part should refer to
@@ -341,7 +342,7 @@ public class Receptionist extends Thread {
 	 * parseInventory}, and
 	 * {@link client.ParserUtilities #parseTorchStatus(Map, String)
 	 * parseTorchStatus}.
-	 * 
+	 *
 	 * @return --- a String representation of the game status
 	 */
 	private String gameToString() {
@@ -389,9 +390,9 @@ public class Receptionist extends Thread {
 
 		/*
 		 * TODO 8. user-specified content
-		 * 
-		 * 
-		 * 
+		 *
+		 *
+		 *
 		 * chat message
 		 */
 
@@ -401,7 +402,7 @@ public class Receptionist extends Thread {
 	/**
 	 * This method is used when the server loads game back, the game instance
 	 * gets re-referenced.
-	 * 
+	 *
 	 * @param game
 	 *            --- the new game instance
 	 */
