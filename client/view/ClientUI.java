@@ -458,7 +458,7 @@ public class ClientUI {
 				clockThread.start();
 			}
 		});
-		gui.setHealthBar(health, virus);
+		gui.setHealthBar(health, virus,userName);
 		gui.objectLabel();
 		render.setAreaDescription();
 
