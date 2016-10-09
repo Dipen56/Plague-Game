@@ -286,6 +286,7 @@ public class Game {
 		// delete player from player list.
 		Player player = players.remove(playerId);
 
+		/*
 		// randomly re-distribute all keys in his inventory
 		List<Key> hisKeys = player.getAllKeys();
 		if (!hisKeys.isEmpty()) {
@@ -294,6 +295,7 @@ public class Game {
 				containers.get(0).getLoot().add(k);
 			}
 		}
+		*/
 
 	}
 

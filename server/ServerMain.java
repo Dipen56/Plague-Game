@@ -275,7 +275,7 @@ public class ServerMain {
 				Game newGame = XmlFunctions.loadFile(userName);
 				if (newGame == null)
 					throw new IOException("Game object not constucted");
-				String username = null;
+
 				Map<Integer, Player> map = new HashMap<>();
 
 
@@ -290,28 +290,14 @@ public class ServerMain {
 					newID = player.getId();
 					//Resets UID of player in newGame
 					p.resetId(newID);
-					map.put(newID, player);
+					map.put(newID, p);
 				}
 				//Reset players map
 				newGame.resetPlayers(map);
 
 
 				// make sure every client get access to the new game instance,
-				// and updates uid field to uid from load
 				for (Receptionist r : receptionists.values()) {
-					// Gets the username using the current UID
-
-					username = game.getPlayerById(r.getUID()).getName();
-
-					System.out.println("username: " + username + ", uid: " + r.getUID());
-
-					player = newGame.getPlayerByName(username);
-
-
-
-					//each player needs uid update, and mapping in game needs update
-
-
 					// Updates the game field.
 					r.setGame(newGame);
 				}
