@@ -164,7 +164,7 @@ public class PlayerAdapter {
 		p.setDirection(direction);//set direction
 		p.setVirus(virus);
 		p.setIsAlive(isAlive);
-		p.setId(uID);
+		p.resetId(uID);
 		p.setName(name);
 		p.setInventory(newInventory);
 
