@@ -39,6 +39,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javafx.scene.control.ContextMenu;
 
 import server.game.player.Avatar;
 import server.game.player.Direction;
@@ -79,7 +80,7 @@ public class GUI extends Application {
 	 * mini map color table
 	 */
 	public static final Map<Character, String> MAP_OBJECT_DESCRIPTION;
-	
+
 	/*
 	 * initialise the instruction table for minimap color and map element
 	 * description
@@ -87,9 +88,9 @@ public class GUI extends Application {
 	static {
 		MINIMAP_COLOR_TABLE = new HashMap<>();
 		MAP_OBJECT_DESCRIPTION = new HashMap<>();
-		
+
 		// ========== obstacles: Grey, Rock, Barrel, Table ===========
-		
+
 		// Rock
 		MINIMAP_COLOR_TABLE.put('R', Color.rgb(83, 86, 102, 1.0));
 		MAP_OBJECT_DESCRIPTION.put('R', "A rock. That won't heal me.");
@@ -102,9 +103,9 @@ public class GUI extends Application {
 		// Chair
 		MINIMAP_COLOR_TABLE.put('H', Color.rgb(83, 86, 102, 1.0));
 		MAP_OBJECT_DESCRIPTION.put('H', "It's a chair. I'd rather sit on it to rest.");
-		
+
 		// ===== Containers: golden, chest, cupboard, scrap pile =====
-		
+
 		// Chest
 		MINIMAP_COLOR_TABLE.put('C', Color.rgb(255, 170, 37, 1.0));
 		MAP_OBJECT_DESCRIPTION.put('C', "A chest. Probably contains loot.");
@@ -114,9 +115,9 @@ public class GUI extends Application {
 		// Scrap pile
 		MINIMAP_COLOR_TABLE.put('P', Color.rgb(255, 170, 37, 1.0));
 		MAP_OBJECT_DESCRIPTION.put('P', "A pile of useless scrap. Or is it?");
-		
+
 		// ============== Tree or ground: green ======================
-		
+
 		// Tree, dark green
 		MINIMAP_COLOR_TABLE.put('T', Color.rgb(68, 170, 58, 1.0));
 		MAP_OBJECT_DESCRIPTION.put('T', "A tree. Why they all look the same?");
@@ -126,15 +127,14 @@ public class GUI extends Application {
 		// Door space, this is just ground
 		MINIMAP_COLOR_TABLE.put('D', Color.rgb(200, 236, 204, 1.0));
 		MAP_OBJECT_DESCRIPTION.put('D', "");
-		
-		
+
 		// =========== Room obstacles: blue ====================
-		
+
 		// Room obstacles
 		MINIMAP_COLOR_TABLE.put('E', Color.rgb(19, 137, 245, 1.0));
 		MAP_OBJECT_DESCRIPTION.put('E', "I found a hidden cabin! I need to get inside.");
 	}
-	
+
 	// main window
 	private static Stage window;
 	// controls
@@ -184,6 +184,7 @@ public class GUI extends Application {
 	private Button quitWaitingRoom;
 	private Label objectDescription;
 	private FadeTransition ft;
+	private TitledPane titlePane;
 
 	// this is for event
 	// for action events
@@ -584,7 +585,7 @@ public class GUI extends Application {
 	 * this method will setup the items control
 	 */
 	public void setItems() {
-		TitledPane titlePane = new TitledPane();
+		titlePane = new TitledPane();
 		titlePane.setText("Item Inventory");
 		VBox itemContainer = new VBox(5);
 		HBox hbox = new HBox(5);
@@ -936,12 +937,56 @@ public class GUI extends Application {
 		zoomedItem.setGraphic(image);
 	}
 
+	public String getItemDescription(int x, int y) {
+		String item = null;
+		for (Point p : itemsDescription.keySet()) {
+			// System.out.println(p.x+" "+p.y);
+			if (p.x == x && p.y == y) {
+				// System.out.println(p.x + " " + p.y);
+				item = itemsDescription.get(p);
+				break;
+			}
+		}
+		return item;
+	}
+
 	public void objectLabel() {
 		objectDescription = new Label();
 		objectDescription.setLayoutX((GAMEPANE_WIDTH_VALUE / 2) - 20);
 		objectDescription.setLayoutY(HEIGHT_VALUE - 160);
 		objectDescription.getStyleClass().add("object-description");
 
+	}
+
+	public void keyRightClickOption(){
+		 ContextMenu contextMenu = new ContextMenu();
+		 MenuItem item1 = new MenuItem("Insert");
+		 item1.setId("right-insert");
+		 item1.setOnAction(actionEvent);
+		 MenuItem item2 = new MenuItem("Use");
+		 item2.setId("right-use");
+		 item2.setOnAction(actionEvent);
+		 contextMenu.getItems().addAll(item1, item2);
+		 titlePane.setContextMenu(contextMenu);
+	}
+	
+	public void antidoteRightClickOption(){
+		 ContextMenu contextMenu = new ContextMenu();
+		 MenuItem item1 = new MenuItem("Insert");
+		 item1.setId("right-insert");
+		 item1.setOnAction(actionEvent);
+		 MenuItem item2 = new MenuItem("Use");
+		 item2.setId("right-use");
+		 item2.setOnAction(actionEvent);
+		 MenuItem item3 = new MenuItem("Drop");
+		 item3.setId("drop-use");
+		 item3.setOnAction(actionEvent);
+		 contextMenu.getItems().addAll(item1, item2,item3);
+		 titlePane.setContextMenu(contextMenu);
+	}
+
+	public void rightClickClear() {
+		 titlePane.setContextMenu(null);
 	}
 
 	/**
@@ -953,8 +998,7 @@ public class GUI extends Application {
 		objectDescription.setText(description);
 		group.getChildren().add(objectDescription);
 	}
-	
-	
+
 	/**
 	 * This static helper method will pop up a message dialog to user.
 	 *
