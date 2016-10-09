@@ -402,7 +402,7 @@ public class ClientUI {
 		gui.updateHealth(health);
 		gui.setInventory(inventory);
 		render.updateAreaDescription(descriptions.get(areaId));
-		gui.displayObjectDescription("Grass");
+		gui.displayObjectDescription(getFrontElementString());
 
 	}
 
@@ -414,26 +414,6 @@ public class ClientUI {
 			@Override
 			public void run() {
 				gui.startGame();
-				// Position pos = new Position(4, 0, 1, Direction.South);
-				// char[][] world = {
-				// // NORTH
-				// { 'C', 'T', 'T', 'G', 'G', 'T', 'C', 'T' },
-				// // 2
-				// { 'G', 'G', 'G', 'G', 'G', 'G', 'C', 'C' },
-				// // 3
-				// { 'G', 'G', 'G', 'G', 'G', 'G', 'C', 'T' },
-				// // 4
-				// { 'T', 'C', 'G', 'G', 'G', 'C', 'T', 'C' },
-				// // 5
-				// { 'G', 'G', 'G', 'G', 'G', 'G', 'C', 'T' },
-				// // 6
-				// { 'G', 'G', 'G', 'G', 'C', 'G', 'C', 'C' },
-				// // 7
-				// { 'G', 'G', 'C', 'G', 'T', 'G', 'C', 'G' },
-				// // 8
-				// { 'C', 'T', 'G', 'G', 'G', 'T', 'C', 'T' } };
-				// // SOUTH
-				// render.render(pos, world, 1, uid);
 				clockThread = new ClockThread(DEFAULT_CLK_PERIOD, ClientUI.this);
 				clockThread.start();
 			}
@@ -595,7 +575,7 @@ public class ClientUI {
 			public void handle(MouseEvent event) {
 				// Currently this listen to clicks on the items
 				// TODO: some how make it work with items
-				// System.out.println("here" + event.toString());
+				//System.out.println("here" + event.toString());
 				if (event.toString().contains("Grid")) {
 					// System.out.println(event.getX());
 					if (inventory.size() != 0) {
@@ -604,6 +584,8 @@ public class ClientUI {
 						gui.setItemDescription(itemX, itemY);
 						// System.out.println(itemX + " " + itemY);
 					}
+				}else if(event.toString().contains("Grid") ){
+					
 				}
 			}
 		};

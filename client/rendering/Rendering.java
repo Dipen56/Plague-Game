@@ -47,7 +47,6 @@ public class Rendering {
 	private Label mapDescription;
 
 	public Rendering() {
-		
 
 	}
 
@@ -440,12 +439,16 @@ public class Rendering {
 		mapDescription.setLayoutX(gamePanelWidth - 150);
 		mapDescription.setLayoutY(30);
 		mapDescription.getStyleClass().add("area-description");
-		
+
 	}
 
 	public void updateAreaDescription(String areaDescription) {
 		mapDescription.setText(areaDescription);
 		renderGroup.getChildren().add(mapDescription);
+	}
+
+	public void applyWeather() {
+
 	}
 
 	/**
