@@ -10,11 +10,13 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.WindowEvent;
 
 import client.Client;
 import client.ParserUtilities;
+import client.rendering.Images;
 import client.rendering.Rendering;
 import server.Packet;
 import server.game.player.Avatar;
@@ -156,8 +158,14 @@ public class ClientUI {
 	 * Event Handler for window events
 	 */
 	private EventHandler<WindowEvent> windowEvent;
-
+	/**
+	 * This is the index of the Avatar
+	 */
 	private int avatarIndex = 0;
+	/**
+	 * This string is used for right click action.
+	 */
+	private String itemDescription;
 
 	/**
 	 * Constructor
@@ -421,7 +429,7 @@ public class ClientUI {
 		gui.setHealthBar(health, virus);
 		gui.objectLabel();
 		render.setAreaDescription();
-		
+
 	}
 
 	/**
@@ -432,6 +440,7 @@ public class ClientUI {
 		actionEvent = new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
+				
 				if (event.toString().contains("Send")) {
 					// send chat message.
 					client.sendWithString(Packet.Chat, gui.getChatMsg());
@@ -493,6 +502,19 @@ public class ClientUI {
 						avatarIndex = 0;
 					}
 					gui.changeAvatarImage(avatarIndex);
+				} else if (event.toString().contains("right-insert")) {
+					System.out.println("insert");
+					// TODO: use itemDescription 
+					;
+				} else if (event.toString().contains("right-use")) {
+					// TODO: use itemDescription 
+					// this is for the login screen
+					System.out.println("right-use");
+				} else if (event.toString().contains("drop-use")) {
+					// TODO: use itemDescription 
+					// this is for the login screen
+					System.out.println("drop-use");
+					
 				}
 			}
 		};
@@ -522,37 +544,26 @@ public class ClientUI {
 					client.send(Packet.TurnRight);
 				} else if (keyCode == KeyCode.F) {
 					client.send(Packet.Unlock);
-
-					// gui.setInventory(inventory);
 				} else if (keyCode == KeyCode.G) {
 					client.send(Packet.TakeOutItem);
-					// gui.setInventory(inventory);
 				} else if (keyCode == KeyCode.R) {
 					client.send(Packet.Transit);
 				} else if (keyCode == KeyCode.DIGIT1) {
 					client.sendWithIndex(Packet.UseItem, 0);
-					// gui.setInventory(inventory);
 				} else if (keyCode == KeyCode.DIGIT2) {
 					client.sendWithIndex(Packet.UseItem, 1);
-					// gui.setInventory(inventory);
 				} else if (keyCode == KeyCode.DIGIT3) {
 					client.sendWithIndex(Packet.UseItem, 2);
-					// gui.setInventory(inventory);
 				} else if (keyCode == KeyCode.DIGIT4) {
 					client.sendWithIndex(Packet.UseItem, 3);
-					// gui.setInventory(inventory);
 				} else if (keyCode == KeyCode.DIGIT5) {
 					client.sendWithIndex(Packet.UseItem, 4);
-					// gui.setInventory(inventory);
 				} else if (keyCode == KeyCode.DIGIT6) {
 					client.sendWithIndex(Packet.UseItem, 5);
-					// gui.setInventory(inventory);
 				} else if (keyCode == KeyCode.DIGIT7) {
 					client.sendWithIndex(Packet.UseItem, 6);
-					// gui.setInventory(inventory);
 				} else if (keyCode == KeyCode.DIGIT8) {
 					client.sendWithIndex(Packet.UseItem, 7);
-					// gui.setInventory(inventory);
 				}
 				/*
 				 * TODO need more keys
@@ -575,8 +586,8 @@ public class ClientUI {
 			public void handle(MouseEvent event) {
 				// Currently this listen to clicks on the items
 				// TODO: some how make it work with items
-				//System.out.println("here" + event.toString());
-				if (event.toString().contains("Grid")) {
+				// System.out.println("here" + event.toString());
+				if (event.toString().contains("Grid") && event.isSecondaryButtonDown() == false) {
 					// System.out.println(event.getX());
 					if (inventory.size() != 0) {
 						int itemX = (int) (event.getX() / 60);
@@ -584,14 +595,35 @@ public class ClientUI {
 						gui.setItemDescription(itemX, itemY);
 						// System.out.println(itemX + " " + itemY);
 					}
-				}else if(event.toString().contains("Grid") ){
-					
+				} else if (event.getButton() == MouseButton.SECONDARY) {
+					if (inventory.size() != 0) {
+						int itemX = (int) (event.getX() / 60);
+						int itemY = (int) (event.getY() / 60);
+						String item = gui.getItemDescription(itemX, itemY);
+						// System.out.println("item " + item);
+						if (item != null) {
+							itemDescription = item;
+							if (item.startsWith("A")) {
+								gui.antidoteRightClickOption();
+							} else if (item.startsWith("K")) {
+								gui.keyRightClickOption();
+							} else if (item.startsWith("T")) {
+								gui.antidoteRightClickOption();
+							} else if (item.startsWith("B")) {
+								gui.keyRightClickOption();
+							} else if (item.startsWith("N")) {
+								gui.rightClickClear();
+							}
+						} else {
+							gui.rightClickClear();
+						}
+						// System.out.println(itemX + " " + itemY);
+					}
+					// System.out.println("here" + event.toString());
 				}
 			}
 		};
 	}
-
-
 
 	/**
 	 * 
