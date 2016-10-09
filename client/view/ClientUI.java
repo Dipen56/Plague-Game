@@ -76,6 +76,11 @@ public class ClientUI {
 	private int visibility;
 
 	/**
+	 * True if player health reached zero.
+	 */
+	private boolean playerDead = false;
+
+	/**
 	 * This map keeps track of all player's avatars. Renderer can look for which
 	 * avatar to render from here.
 	 */
@@ -429,8 +434,15 @@ public class ClientUI {
 			gui.displayObjectDescription(getFrontElementString());
 		} else {
 			gui.displayObjectDescription("");
-		}
 
+		// 7. if player is dead, prompt it.
+		if(!playerDead){
+			//Displays dialog when player health is 0
+			if(health == 0){
+				AlertBox.displayMsg("YOU ARE DEAD", "GAMEOVER");
+				playerDead = true;
+			}
+		}
 	}
 
 	/**
