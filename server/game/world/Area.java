@@ -18,405 +18,426 @@ import server.game.player.Position;
  */
 public class Area {
 
-    /**
-     * Width of the map.
-     */
-    private int width;
+	/**
+	 * Width of the map.
+	 */
+	private int width;
 
-    /**
-     * Height of the map.
-     */
-    private int height;
+	/**
+	 * Height of the map.
+	 */
+	private int height;
 
-    /**
-     * The map itself.
-     */
-    protected MapElement[][] map;
+	/**
+	 * The map itself.
+	 */
+	protected MapElement[][] map;
 
-    /**
-     * Each area has a unique ID number, which can be used for locating player.
-     */
-    private int areaId;
+	/**
+	 * Each area has a unique ID number, which can be used for locating player.
+	 */
+	private int areaId;
 
-    /**
-     * Empty position, which can be used to spawn players.
-     */
-    private List<int[]> playerPortals = new ArrayList<>();
+	/**
+	 * Empty position, which can be used to spawn players.
+	 */
+	private List<int[]> playerPortals = new ArrayList<>();
 
-    /**
-     * Constructor
-     *
-     * This the proper constructor we use, although the argument could be different. The
-     * basic idea is we read in a file, parse it, and construct the world with what's in
-     * the file. The file could be XML, or simple text file. It's still to be decided.
-     *
-     * @param filename
-     */
-    public Area(String filename) {
+	/**
+	 * Describes the area.
+	 */
+	private String description;
 
-        // TODO: Not useful yet
+	/**
+	 * Constructor
+	 *
+	 * This the proper constructor we use, although the argument could be
+	 * different. The basic idea is we read in a file, parse it, and construct
+	 * the world with what's in the file. The file could be XML, or simple text
+	 * file. It's still to be decided.
+	 *
+	 * @param filename
+	 */
+	public Area(String filename) {
 
-    }
+		// TODO: Not useful yet
 
-    /**
-     * Constructor used only for text client.
-     * 
-     * @param board
-     *            --- a 2d-array of MapElement representing the board.
-     * @param areaID
-     *            --- an unique if of this area.
-     */
-    public Area(MapElement[][] board, int areaID) {
-        this.map = board;
-        this.width = board[0].length;
-        this.height = board.length;
-        this.areaId = areaID;
-    }
+	}
 
-    /**
-     * Constructor used in data storage.
-     *
-     * @param board
-     *            --- board
-     * @param areaID
-     *            --- Area id.
-     * @param playerPortals
-     *            --- A list of player spawn locations.
-     */
-    public Area(MapElement[][] board, int areaID, List<int[]> playerPortals) {
-        this.map = board;
-        this.width = board[0].length;
-        this.height = board.length;
-        this.areaId = areaID;
-        this.playerPortals = playerPortals;
-    }
+	/**
+	 * Constructor used only for text client.
+	 *
+	 * @param board
+	 *            --- a 2d-array of MapElement representing the board.
+	 * @param areaID
+	 *            --- an unique if of this area.
+	 * @param description
+	 *            --- Describes this area.
+	 */
+	public Area(MapElement[][] board, int areaID, String description) {
+		this.map = board;
+		this.width = board[0].length;
+		this.height = board.length;
+		this.areaId = areaID;
+		this.description = description;
+	}
 
-    /**
-     * Get all player portals.
-     * 
-     * @return --- all player portals as a list.
-     */
-    public List<int[]> getPlayerPortals() {
-        return this.playerPortals;
-    }
+	/**
+	 * Constructor used in data storage.
+	 *
+	 * @param board
+	 *            --- board
+	 * @param areaID
+	 *            --- Area id.
+	 * @param playerPortals
+	 *            --- A list of player spawn locations.
+	 * @param description
+	 *            --- Describes this area.
+	 */
+	public Area(MapElement[][] board, int areaID, List<int[]> playerPortals, String description) {
+		this.map = board;
+		this.width = board[0].length;
+		this.height = board.length;
+		this.areaId = areaID;
+		this.playerPortals = playerPortals;
+		this.description = description;
+	}
 
-    /**
-     * Get the width of this board.
-     * 
-     * @return --- width
-     */
-    public int getWidth() {
-        return width;
-    }
+	/**
+	 * Get all player portals.
+	 *
+	 * @return --- all player portals as a list.
+	 */
+	public List<int[]> getPlayerPortals() {
+		return this.playerPortals;
+	}
 
-    /**
-     * Get the height of this board.
-     * 
-     * @return --- height
-     */
-    public int getHeight() {
-        return this.height;
-    }
+	/**
+	 * Get the width of this board.
+	 *
+	 * @return --- width
+	 */
+	public int getWidth() {
+		return width;
+	}
 
-    /**
-     * Get the board.
-     * 
-     * @return --- the board as a 2d-array of MapElement
-     */
-    public MapElement[][] getMap() {
-        return this.map;
-    }
+	/**
+	 * Get the height of this board.
+	 *
+	 * @return --- height
+	 */
+	public int getHeight() {
+		return this.height;
+	}
 
-    /**
-     * Get the area ID
-     * 
-     * @return --- area ID
-     */
-    public int getAreaID() {
-        return this.areaId;
-    }
+	/**
+	 * Returns the string describing the area.
+	 * 
+	 * @return
+	 */
+	public String getDescription() {
+		return new String(description);
+	}
 
-    /**
-     * let this area remember where empty positions are, so that player can be spawned
-     * from one of them.
-     */
-    public void registerPortals() {
-        for (int row = 0; row < map.length; row++) {
-            for (int col = 0; col < map[0].length; col++) {
-                if (map[row][col] instanceof GroundSpace) {
-                    playerPortals.add(new int[] { col, row });
-                }
-            }
-        }
-    }
+	/**
+	 * Get the board.
+	 *
+	 * @return --- the board as a 2d-array of MapElement
+	 */
+	public MapElement[][] getMap() {
+		return this.map;
+	}
 
-    /**
-     * Get a random empty position to spawn a player.
-     *
-     * @param game
-     *            --- the game instance
-     * @return --- an empty position to spawn player. If this area is so occupied that
-     *         there is no empty space, null will be returned.
-     */
-    public synchronized Position getPlayerSpawnPos(Game game) {
-        Collections.shuffle(playerPortals);
-        for (int[] e : playerPortals) {
-            Position p = new Position(e[0], e[1], areaId, Direction.randomDirection());
-            if (!game.isOccupiedByOtherPlayer(p)) {
-                return p;
-            }
-        }
-        return null;
-    }
+	/**
+	 * Get the area ID
+	 *
+	 * @return --- area ID
+	 */
+	public int getAreaID() {
+		return this.areaId;
+	}
 
-    /**
-     * This method checks whether the given position is in this area.
-     *
-     * @param position
-     *            --- the position to be checked.
-     * @return --- true if the given position is in area; or false if it's out of area
-     *         boundary or it's in other area.
-     */
-    public boolean isInBoard(Position position) {
-        if (position == null) {
-            return false;
-        }
+	/**
+	 * let this area remember where empty positions are, so that player can be
+	 * spawned from one of them.
+	 */
+	public void registerPortals() {
+		for (int row = 0; row < map.length; row++) {
+			for (int col = 0; col < map[0].length; col++) {
+				if (map[row][col] instanceof GroundSpace) {
+					playerPortals.add(new int[] { col, row });
+				}
+			}
+		}
+	}
 
-        if (position.areaId != areaId) {
-            return false;
-        }
+	/**
+	 * Get a random empty position to spawn a player.
+	 *
+	 * @param game
+	 *            --- the game instance
+	 * @return --- an empty position to spawn player. If this area is so
+	 *         occupied that there is no empty space, null will be returned.
+	 */
+	public synchronized Position getPlayerSpawnPos(Game game) {
+		Collections.shuffle(playerPortals);
+		for (int[] e : playerPortals) {
+			Position p = new Position(e[0], e[1], areaId, Direction.randomDirection());
+			if (!game.isOccupiedByOtherPlayer(p)) {
+				return p;
+			}
+		}
+		return null;
+	}
 
-        if (position.x < 0 || position.x >= width || position.y < 0
-                || position.y >= height) {
-            return false;
-        }
+	/**
+	 * This method checks whether the given position is in this area.
+	 *
+	 * @param position
+	 *            --- the position to be checked.
+	 * @return --- true if the given position is in area; or false if it's out
+	 *         of area boundary or it's in other area.
+	 */
+	public boolean isInBoard(Position position) {
+		if (position == null) {
+			return false;
+		}
 
-        return true;
-    }
+		if (position.areaId != areaId) {
+			return false;
+		}
 
-    /**
-     * Get MapElement at coordinate (x, y)
-     *
-     * @param x
-     * @param y
-     * @return --- the ground type at coordinate (x, y); or null if the given (x, y) is
-     *         out of current map.
-     */
-    public MapElement getMapElementAt(int x, int y) {
-        if (x < 0 || x >= width) {
-            return null;
-        }
+		if (position.x < 0 || position.x >= width || position.y < 0 || position.y >= height) {
+			return false;
+		}
 
-        if (y < 0 || y >= height) {
-            return null;
-        }
+		return true;
+	}
 
-        return map[y][x];
-    }
+	/**
+	 * Get MapElement at coordinate (x, y)
+	 *
+	 * @param x
+	 * @param y
+	 * @return --- the ground type at coordinate (x, y); or null if the given
+	 *         (x, y) is out of current map.
+	 */
+	public MapElement getMapElementAt(int x, int y) {
+		if (x < 0 || x >= width) {
+			return null;
+		}
 
-    /**
-     * Get the MapElement type in front of the player.
-     *
-     * @param player
-     *            --- the player
-     * @return --- the MapElement type in front of the player; or null if that place is
-     *         out of current map.
-     */
-    public MapElement getFrontMapElement(Player player) {
-        Position currentPos = player.getPosition();
-        int x = currentPos.x;
-        int y = currentPos.y;
-        Direction direction = player.getDirection();
-        MapElement frontMapElement;
+		if (y < 0 || y >= height) {
+			return null;
+		}
 
-        switch (direction) {
-        case East:
-            frontMapElement = getMapElementAt(x + 1, y);
-            break;
-        case North:
-            frontMapElement = getMapElementAt(x, y - 1);
-            break;
-        case South:
-            frontMapElement = getMapElementAt(x, y + 1);
-            break;
-        case West:
-            frontMapElement = getMapElementAt(x - 1, y);
-            break;
-        default:
-            // this should not happen
-            frontMapElement = null;
-        }
+		return map[y][x];
+	}
 
-        return frontMapElement;
-    }
+	/**
+	 * Get the MapElement type in front of the player.
+	 *
+	 * @param player
+	 *            --- the player
+	 * @return --- the MapElement type in front of the player; or null if that
+	 *         place is out of current map.
+	 */
+	public MapElement getFrontMapElement(Player player) {
+		Position currentPos = player.getPosition();
+		int x = currentPos.x;
+		int y = currentPos.y;
+		Direction direction = player.getDirection();
+		MapElement frontMapElement;
 
-    /**
-     * Get the MapElement type behind the player.
-     *
-     * @param player
-     *            --- the player
-     * @return --- the MapElement type behind the player; or null if that space is out of
-     *         current map.
-     */
-    public MapElement getBackMapElement(Player player) {
-        Position currentPos = player.getPosition();
-        int x = currentPos.x;
-        int y = currentPos.y;
-        Direction direction = player.getDirection();
-        MapElement backPos;
+		switch (direction) {
+		case East:
+			frontMapElement = getMapElementAt(x + 1, y);
+			break;
+		case North:
+			frontMapElement = getMapElementAt(x, y - 1);
+			break;
+		case South:
+			frontMapElement = getMapElementAt(x, y + 1);
+			break;
+		case West:
+			frontMapElement = getMapElementAt(x - 1, y);
+			break;
+		default:
+			// this should not happen
+			frontMapElement = null;
+		}
 
-        switch (direction) {
-        case East:
-            backPos = getMapElementAt(x - 1, y);
-            break;
-        case North:
-            backPos = getMapElementAt(x, y + 1);
-            break;
-        case South:
-            backPos = getMapElementAt(x, y - 1);
-            break;
-        case West:
-            backPos = getMapElementAt(x + 1, y);
-            break;
-        default:
-            // this should not happen
-            backPos = null;
-        }
+		return frontMapElement;
+	}
 
-        return backPos;
-    }
+	/**
+	 * Get the MapElement type behind the player.
+	 *
+	 * @param player
+	 *            --- the player
+	 * @return --- the MapElement type behind the player; or null if that space
+	 *         is out of current map.
+	 */
+	public MapElement getBackMapElement(Player player) {
+		Position currentPos = player.getPosition();
+		int x = currentPos.x;
+		int y = currentPos.y;
+		Direction direction = player.getDirection();
+		MapElement backPos;
 
-    /**
-     * Get the MapElement type on the left of the player.
-     *
-     * @param player
-     *            --- the player
-     * @return --- the MapElement type on the left of the player; or null if that space is
-     *         out of current map.
-     */
-    public MapElement getLeftMapElement(Player player) {
-        Position currentPos = player.getPosition();
-        int x = currentPos.x;
-        int y = currentPos.y;
-        Direction direction = player.getDirection();
-        MapElement leftPos;
+		switch (direction) {
+		case East:
+			backPos = getMapElementAt(x - 1, y);
+			break;
+		case North:
+			backPos = getMapElementAt(x, y + 1);
+			break;
+		case South:
+			backPos = getMapElementAt(x, y - 1);
+			break;
+		case West:
+			backPos = getMapElementAt(x + 1, y);
+			break;
+		default:
+			// this should not happen
+			backPos = null;
+		}
 
-        switch (direction) {
-        case East:
-            leftPos = getMapElementAt(x, y - 1);
-            break;
-        case North:
-            leftPos = getMapElementAt(x - 1, y);
-            break;
-        case South:
-            leftPos = getMapElementAt(x + 1, y);
-            break;
-        case West:
-            leftPos = getMapElementAt(x, y + 1);
-            break;
-        default:
-            // this should not happen
-            leftPos = null;
-        }
+		return backPos;
+	}
 
-        return leftPos;
-    }
+	/**
+	 * Get the MapElement type on the left of the player.
+	 *
+	 * @param player
+	 *            --- the player
+	 * @return --- the MapElement type on the left of the player; or null if
+	 *         that space is out of current map.
+	 */
+	public MapElement getLeftMapElement(Player player) {
+		Position currentPos = player.getPosition();
+		int x = currentPos.x;
+		int y = currentPos.y;
+		Direction direction = player.getDirection();
+		MapElement leftPos;
 
-    /**
-     * Get the MapElement type on the right of the player.
-     *
-     * @param player
-     *            --- the player
-     * @return --- the MapElement type on the right of the player; or null if that space
-     *         is out of current map.
-     */
-    public MapElement getRightMapElement(Player player) {
-        Position currentPos = player.getPosition();
-        int x = currentPos.x;
-        int y = currentPos.y;
-        Direction direction = player.getDirection();
-        MapElement rightPos;
+		switch (direction) {
+		case East:
+			leftPos = getMapElementAt(x, y - 1);
+			break;
+		case North:
+			leftPos = getMapElementAt(x - 1, y);
+			break;
+		case South:
+			leftPos = getMapElementAt(x + 1, y);
+			break;
+		case West:
+			leftPos = getMapElementAt(x, y + 1);
+			break;
+		default:
+			// this should not happen
+			leftPos = null;
+		}
 
-        switch (direction) {
-        case East:
-            rightPos = getMapElementAt(x, y + 1);
-            break;
-        case North:
-            rightPos = getMapElementAt(x + 1, y);
-            break;
-        case South:
-            rightPos = getMapElementAt(x - 1, y);
-            break;
-        case West:
-            rightPos = getMapElementAt(x, y - 1);
-            break;
-        default:
-            // this should not happen
-            rightPos = null;
-        }
+		return leftPos;
+	}
 
-        return rightPos;
-    }
+	/**
+	 * Get the MapElement type on the right of the player.
+	 *
+	 * @param player
+	 *            --- the player
+	 * @return --- the MapElement type on the right of the player; or null if
+	 *         that space is out of current map.
+	 */
+	public MapElement getRightMapElement(Player player) {
+		Position currentPos = player.getPosition();
+		int x = currentPos.x;
+		int y = currentPos.y;
+		Direction direction = player.getDirection();
+		MapElement rightPos;
 
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + areaId;
-        result = prime * result + height;
-        result = prime * result + Arrays.deepHashCode(map);
-        result = prime * result
-                + ((playerPortals == null) ? 0 : playerPortals.hashCode());
-        result = prime * result + width;
-        return result;
-    }
+		switch (direction) {
+		case East:
+			rightPos = getMapElementAt(x, y + 1);
+			break;
+		case North:
+			rightPos = getMapElementAt(x + 1, y);
+			break;
+		case South:
+			rightPos = getMapElementAt(x - 1, y);
+			break;
+		case West:
+			rightPos = getMapElementAt(x, y - 1);
+			break;
+		default:
+			// this should not happen
+			rightPos = null;
+		}
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        Area other = (Area) obj;
-        if (areaId != other.areaId)
-            return false;
-        if (height != other.height)
-            return false;
-        if (!Arrays.deepEquals(map, other.map))
-            return false;
-        if (playerPortals == null) {
-            if (other.playerPortals != null)
-                return false;
-        } else if (!playerPortals.equals(other.playerPortals))
-            return false;
-        if (width != other.width)
-            return false;
-        return true;
-    }
+		return rightPos;
+	}
 
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + areaId;
+		result = prime * result + height;
+		result = prime * result + Arrays.deepHashCode(map);
+		result = prime * result + ((playerPortals == null) ? 0 : playerPortals.hashCode());
+		result = prime * result + width;
+		return result;
+	}
 
-        // areaId, width, height
-        sb.append(areaId);
-        sb.append(",");
-        sb.append(width);
-        sb.append(",");
-        sb.append(height);
-        sb.append("\n");
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Area other = (Area) obj;
+		if (areaId != other.areaId)
+			return false;
+		if (height != other.height)
+			return false;
+		if (!Arrays.deepEquals(map, other.map))
+			return false;
+		if (playerPortals == null) {
+			if (other.playerPortals != null)
+				return false;
+		} else if (!playerPortals.equals(other.playerPortals))
+			return false;
+		if (width != other.width)
+			return false;
+		return true;
+	}
 
-        // chars
-        for (MapElement[] row : map) {
-            for (MapElement col : row) {
-                sb.append(col.toString());
-            }
-            sb.append("\n");
-        }
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
 
-        return sb.toString();
-    }
+		// areaId, width, height
+		sb.append(areaId);
+		sb.append(",");
+		sb.append(width);
+		sb.append(",");
+		sb.append(height);
+		sb.append(",");
+		sb.append(description);
 
+		sb.append("\n");
+
+		// chars
+		for (MapElement[] row : map) {
+			for (MapElement col : row) {
+				sb.append(col.getMapChar());
+			}
+			sb.append("\n");
+		}
+
+		return sb.toString();
+	}
 }

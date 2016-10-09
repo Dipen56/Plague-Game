@@ -11,6 +11,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import server.game.items.Antidote;
+import server.game.items.Bag;
 import server.game.items.Destroyable;
 import server.game.items.Item;
 import server.game.items.Key;
@@ -257,6 +258,13 @@ public class Game {
 						Torch t = p.getTorchInHand();
 						if (t != null && t.isFlaming()) {
 							t.Burn();
+
+							// if the torch dies out, destroy it
+							if (t.getTimeLeft() <= 0) {
+								p.extinguishTorch(t);
+								p.destroyItem(t);
+							}
+
 						}
 					}
 				}
@@ -740,6 +748,17 @@ public class Game {
 		} else if (item instanceof Key) {
 			// Key is not to be used manually
 			return false;
+		} else if (item instanceof Bag) {
+			Bag bag = (Bag) item;
+			// try to take things out
+			boolean b = player.tryTakeItemsFromContainer(bag);
+			// check if it's all taken out
+			List<Item> loot = bag.getLoot();
+			if (loot.isEmpty()) {
+				// now delete the bag
+				player.getInventory().remove(item);
+			}
+			return b;
 		}
 
 		// could have more else if clause if there are more types
@@ -1000,6 +1019,7 @@ public class Game {
 	 * <li>A: Antidote<br>
 	 * <li>K: Key<br>
 	 * <li>T: Torch<br>
+	 * <li>B: Bag<br>
 	 * <br>
 	 *
 	 * @param uid
@@ -1020,6 +1040,8 @@ public class Game {
 				sb.append("K@");
 			} else if (i instanceof Torch) {
 				sb.append("T@");
+			} else if (i instanceof Bag) {
+				sb.append("B@");
 			}
 			sb.append(i.toString());
 			sb.append("|");

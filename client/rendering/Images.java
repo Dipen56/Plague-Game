@@ -11,7 +11,7 @@ import server.game.player.Direction;
  * This is the image warehouse. All images used in this project are statically
  * stored in this class. There are also some utility methods for quickly
  * retrieving images.
- * 
+ *
  * @author Hector (Fang Zhao 300364061)
  *
  */
@@ -74,7 +74,7 @@ public class Images {
 		 * TODO This is probably not appropriate, some map objects may need more
 		 * than one png path, e.g. a room has four sides of views, each of them
 		 * should be different.
-		 * 
+		 *
 		 * But the idea is, we initialise this map for renderer so that renderer
 		 * knows what map object to render by looking into this map.
 		 */
@@ -83,28 +83,28 @@ public class Images {
 
 		/*
 		 * E: Room Obstacle
-		 * 
+		 *
 		 * G: Ground Space
-		 * 
+		 *
 		 * T: Tree
-		 * 
+		 *
 		 * R: Rock
-		 * 
+		 *
 		 * B: Barrel
-		 * 
+		 *
 		 * A: Table
-		 * 
+		 *
 		 * C: Chest
-		 * 
+		 *
 		 * U: Cupboard
-		 * 
+		 *
 		 * P: Scrap Pile
-		 * 
+		 *
 		 * H: chair
-		 * 
+		 *
 		 * D: a door. This should be rendered as ground, but it indicates which
 		 * direction the room should be facing.
-		 * 
+		 *
 		 */
 
 		MAP_OBJECT_IMAGES.put('T', loadImage("/treeresized.png"));
@@ -122,6 +122,7 @@ public class Images {
 		ITEM_IMAGES.put('A', loadImage("/antidote.png"));
 		ITEM_IMAGES.put('K', loadImage("/key.png"));
 		ITEM_IMAGES.put('T', loadImage("/torch.png"));
+		ITEM_IMAGES.put('B', loadImage("/bag.png"));
 
 		// ============= Avatar images ====================
 
@@ -168,7 +169,7 @@ public class Images {
 	/**
 	 * This utility method is used to retrieve avatar image according to your
 	 * own direction and the other player's direction.
-	 * 
+	 *
 	 * @param avatar
 	 *            --- the avatar
 	 * @param ownDir
@@ -183,7 +184,7 @@ public class Images {
 
 	/**
 	 * This utility method is used to retrieve avatar image from a given side.
-	 * 
+	 *
 	 * @param avatar
 	 *            --- the avatar
 	 * @param side

@@ -1,35 +1,45 @@
-package server.game.world;
+package server.game.items;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import server.game.items.Item;
+import server.game.GameError;
 import server.game.player.Player;
+import server.game.world.Container;
 
 /**
- * This class represents a pile of scrap. A pile of scrap can contain loot.
- *
+ * This class represents a bag. A bag can contain at least one loot.
+ * 
  * @author Hector (Fang Zhao 300364061)
  *
  */
-public class ScrapPile extends Obstacle implements Container {
+public class Bag extends Item implements Container {
 
 	/**
-	 * The loot inside
+	 * Items in the bag.
 	 */
 	private List<Item> loot;
 
 	/**
 	 * Constructor
-	 *
+	 * 
 	 * @param description
 	 *            --- description
 	 * @param loot
-	 *            --- The loot inside
+	 *            --- the loot inside.
 	 */
-	public ScrapPile(String description, List<Item> loot) {
+	public Bag(String description, List<Item> loot) {
 		super(description);
-		this.loot = loot;
+
+		if (loot == null) {
+			this.loot = new ArrayList<>();
+		} else {
+			if (loot.size() > Container.OTHER_SIZE) {
+				throw new GameError("Chest can only contain " + Container.OTHER_SIZE + " items.");
+			}
+			this.loot = loot;
+		}
 	}
 
 	@Override
@@ -39,11 +49,8 @@ public class ScrapPile extends Obstacle implements Container {
 
 	@Override
 	public boolean putItemIn(Item item) {
-		if (loot.size() >= Container.OTHER_SIZE) {
-			return false;
-		}
-
-		return loot.add(item);
+		// bag is one-use item.
+		return false;
 	}
 
 	@Override
@@ -79,23 +86,13 @@ public class ScrapPile extends Obstacle implements Container {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		ScrapPile other = (ScrapPile) obj;
+		Bag other = (Bag) obj;
 		if (loot == null) {
 			if (other.loot != null)
 				return false;
 		} else if (!loot.equals(other.loot))
 			return false;
 		return true;
-	}
-
-	@Override
-	public String toString() {
-		return super.toString();
-	}
-
-	@Override
-	public char getMapChar() {
-		return 'P';
 	}
 
 }

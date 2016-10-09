@@ -11,6 +11,8 @@ import server.game.player.Avatar;
 import server.game.player.Direction;
 import server.game.player.Position;
 import javafx.scene.paint.ImagePattern;
+import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
 
 /**
  * This class represents the main rendering class, this class will control the
@@ -33,8 +35,10 @@ public class Rendering {
 	private int squaresToLeft = 0;
 	private int squaresToRight = 0;
 	private Pane renderGroup;
+	private Label mapDescription;
 
 	public Rendering() {
+
 	}
 
 	/**
@@ -100,6 +104,7 @@ public class Rendering {
 								direction, yTop);
 						addAvatar(tileXLeftTop, yBottom, tileXRightBottom, row, col, "left", worldMap, renderGroup,
 								direction, yTop, avatars, positions, uid);
+
 					}
 				}
 				for (int col = squaresToRight - 1; col >= 0; col--) {
@@ -401,6 +406,20 @@ public class Rendering {
 		imageView.setX(setX);
 		imageView.setY(setY);
 		renderGroup.getChildren().add(imageView);
+	}
+
+	public void setAreaDescription() {
+		mapDescription = new Label();
+		mapDescription.setWrapText(true);
+		mapDescription.setLayoutX(gamePanelWidth - 150);
+		mapDescription.setLayoutY(30);
+		mapDescription.getStyleClass().add("area-description");
+
+	}
+
+	public void updateAreaDescription(String areaDescription) {
+		mapDescription.setText(areaDescription);
+		renderGroup.getChildren().add(mapDescription);
 	}
 
 	/**

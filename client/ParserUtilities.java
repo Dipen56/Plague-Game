@@ -18,6 +18,7 @@ import server.game.player.Position;
  */
 public class ParserUtilities {
 
+
 	/**
 	 * A universally used console input scanner. It's used in test based UI
 	 */
@@ -36,7 +37,8 @@ public class ParserUtilities {
 	 * have the following format:
 	 * 
 	 * <p>
-	 * Say we have a 3 by 3 room (room's areaId is 1):<br>
+	 * Say we have a 3 by 3 room (room's areaId is 1, description:
+	 * "blabla"):<br>
 	 * <p>
 	 * GGG<br>
 	 * GGC<br>
@@ -46,8 +48,8 @@ public class ParserUtilities {
 	 * G stands for empty space, C stands for chest, D stands for door.
 	 * 
 	 * <p>
-	 * The string should be <i>"1,3,3\nGGG\nGGC\nGTG"</i>, [areaId, width,
-	 * height\nMapChars]
+	 * The string should be <i>"1,3,3,blabla\nGGG\nGGC\nGTG"</i>, [areaId,
+	 * width, height, description\nMapChars]
 	 * 
 	 * @param areas
 	 *            --- a map recording all area boards in game, where the key is
@@ -56,20 +58,22 @@ public class ParserUtilities {
 	 *            --- a string recording all area boards in game, received by
 	 *            client from server.
 	 */
-	public static void parseMap(Map<Integer, char[][]> areas, String string) {
+	public static void parseMap(Map<Integer, char[][]> areas, Map<Integer, String> descriptions, String string) {
 
 		Scanner scanner = new Scanner(string);
 		String line = scanner.nextLine();
 
 		// first get the width and height
-		String[] widthHeight = line.split(",");
+		String[] firstLine = line.split(",");
 		int areaId = -1;
 		int width = -1;
 		int height = -1;
+		String description = null;
 		try {
-			areaId = Integer.valueOf(widthHeight[0]);
-			width = Integer.valueOf(widthHeight[1]);
-			height = Integer.valueOf(widthHeight[2]);
+			areaId = Integer.valueOf(firstLine[0]);
+			width = Integer.valueOf(firstLine[1]);
+			height = Integer.valueOf(firstLine[2]);
+			description = firstLine[3];
 
 			if (areaId < 0 || width <= 0 || height <= 0) {
 				System.out
@@ -123,6 +127,9 @@ public class ParserUtilities {
 		// job done, let's put it in map.
 		areas.put(areaId, map);
 
+		// put descriptions into map
+		descriptions.put(areaId, description);
+
 		scanner.close();
 	}
 
@@ -153,8 +160,7 @@ public class ParserUtilities {
 		Scanner scanner = new Scanner(avatarsStr);
 		String line = scanner.nextLine();
 
-		String[] posStrs = line.split("\\|"); // not '|' I spent days debugging
-												// this!
+		String[] posStrs = line.split("\\|"); // not '|'
 
 		int uId = -1;
 		int avatarIndex = -1;
@@ -220,8 +226,7 @@ public class ParserUtilities {
 		Scanner scanner = new Scanner(torchStatusStr);
 		String line = scanner.nextLine();
 
-		String[] posStrs = line.split("\\|"); // not '|' I spent days debugging
-												// this!
+		String[] posStrs = line.split("\\|"); // not '|'
 
 		int uId = -1;
 		int isHoldingTorch = -1;
@@ -286,8 +291,7 @@ public class ParserUtilities {
 		Scanner scanner = new Scanner(positionsStr);
 		String line = scanner.nextLine();
 
-		String[] posStrs = line.split("\\|"); // not '|' I spent days debugging
-												// this!
+		String[] posStrs = line.split("\\|"); // not '|'
 
 		int uId = -1;
 		int areaId = -1;
@@ -353,6 +357,7 @@ public class ParserUtilities {
 	 * <li>A: Antidote<br>
 	 * <li>K: Key<br>
 	 * <li>T: Torch<br>
+	 * <li>B: Bag<br>
 	 * <br>
 	 * 
 	 * @param invenStr
@@ -372,8 +377,7 @@ public class ParserUtilities {
 
 		Scanner scanner = new Scanner(invenStr);
 		String line = scanner.nextLine();
-		String[] items = line.split("\\|"); // not '|' I spent days debugging
-											// this!
+		String[] items = line.split("\\|"); // not '|'
 
 		for (String item : items) {
 			list.add(item);
@@ -442,5 +446,6 @@ public class ParserUtilities {
 
 		return line.charAt(0);
 	}
+
 
 }
