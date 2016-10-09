@@ -41,6 +41,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javafx.scene.control.ContextMenu;
+import javafx.scene.control.ScrollPane;
 
 import server.game.player.Avatar;
 import server.game.player.Direction;
@@ -50,6 +51,7 @@ import server.game.player.Virus;
 import client.rendering.Images;
 import client.rendering.Rendering;
 import client.rendering.Side;
+import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 
 /**
  * This class represents the main GUI class this class bring together all the
@@ -568,6 +570,11 @@ public class GUI extends Application {
 		chatControls.setPrefWidth(400);
 		chatControls.setPrefHeight(200);
 		chatControls.getStyleClass().add("chatarea-background");
+		ScrollPane scrollPane = new ScrollPane();
+		scrollPane.setFitToHeight(true);
+		scrollPane.setPrefHeight(150);
+		scrollPane.setHbarPolicy(ScrollBarPolicy.NEVER);
+		scrollPane.setVbarPolicy(ScrollBarPolicy.ALWAYS);
 		textAreaLable = new Label();
 		textAreaLable.setAlignment(Pos.TOP_LEFT);
 		textAreaLable.setText(chatText.toString());
@@ -575,6 +582,7 @@ public class GUI extends Application {
 		textAreaLable.setPrefHeight(150);
 		textAreaLable.getStyleClass().add("chat-display");
 		textAreaLable.setWrapText(true);
+		scrollPane.setContent(textAreaLable);
 		HBox hbox = new HBox(5);
 		send = new Button("Send");
 		send.setOnAction(actionEvent);
@@ -585,7 +593,8 @@ public class GUI extends Application {
 		msg.setPrefHeight(40);
 		hbox.getChildren().add(msg);
 		hbox.getChildren().add(send);
-		chatControls.getChildren().add(textAreaLable);
+		// chatControls.getChildren().add(textAreaLable);\
+		chatControls.getChildren().add(scrollPane);
 		chatControls.getChildren().add(hbox);
 		titlePane.setContent(chatControls);
 		rightPanel.getChildren().add(titlePane);
