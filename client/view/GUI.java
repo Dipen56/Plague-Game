@@ -952,41 +952,43 @@ public class GUI extends Application {
 
 	public void objectLabel() {
 		objectDescription = new Label();
+		objectDescription.setWrapText(true);
+		objectDescription.setPrefWidth(150);
 		objectDescription.setLayoutX((GAMEPANE_WIDTH_VALUE / 2) - 20);
-		objectDescription.setLayoutY(HEIGHT_VALUE - 160);
+		objectDescription.setLayoutY(HEIGHT_VALUE - 170);
 		objectDescription.getStyleClass().add("object-description");
 
 	}
 
-	public void keyRightClickOption(){
-		 ContextMenu contextMenu = new ContextMenu();
-		 MenuItem item1 = new MenuItem("Insert");
-		 item1.setId("right-insert");
-		 item1.setOnAction(actionEvent);
-		 MenuItem item2 = new MenuItem("Use");
-		 item2.setId("right-use");
-		 item2.setOnAction(actionEvent);
-		 contextMenu.getItems().addAll(item1, item2);
-		 titlePane.setContextMenu(contextMenu);
+	public void keyRightClickOption() {
+		ContextMenu contextMenu = new ContextMenu();
+		MenuItem item1 = new MenuItem("Insert");
+		item1.setId("right-insert");
+		item1.setOnAction(actionEvent);
+		MenuItem item2 = new MenuItem("Use");
+		item2.setId("right-use");
+		item2.setOnAction(actionEvent);
+		contextMenu.getItems().addAll(item1, item2);
+		titlePane.setContextMenu(contextMenu);
 	}
-	
-	public void antidoteRightClickOption(){
-		 ContextMenu contextMenu = new ContextMenu();
-		 MenuItem item1 = new MenuItem("Insert");
-		 item1.setId("right-insert");
-		 item1.setOnAction(actionEvent);
-		 MenuItem item2 = new MenuItem("Use");
-		 item2.setId("right-use");
-		 item2.setOnAction(actionEvent);
-		 MenuItem item3 = new MenuItem("Drop");
-		 item3.setId("drop-use");
-		 item3.setOnAction(actionEvent);
-		 contextMenu.getItems().addAll(item1, item2,item3);
-		 titlePane.setContextMenu(contextMenu);
+
+	public void antidoteRightClickOption() {
+		ContextMenu contextMenu = new ContextMenu();
+		MenuItem item1 = new MenuItem("Insert");
+		item1.setId("right-insert");
+		item1.setOnAction(actionEvent);
+		MenuItem item2 = new MenuItem("Use");
+		item2.setId("right-use");
+		item2.setOnAction(actionEvent);
+		MenuItem item3 = new MenuItem("Drop");
+		item3.setId("drop-use");
+		item3.setOnAction(actionEvent);
+		contextMenu.getItems().addAll(item1, item2, item3);
+		titlePane.setContextMenu(contextMenu);
 	}
 
 	public void rightClickClear() {
-		 titlePane.setContextMenu(null);
+		titlePane.setContextMenu(null);
 	}
 
 	/**
