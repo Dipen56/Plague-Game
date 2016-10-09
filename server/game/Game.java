@@ -29,11 +29,12 @@ import server.game.world.Room;
 import server.game.world.TransitionSpace;
 
 /**
- * This class represents the game.
+ * This class represents the game world. All external access to game world is
+ * done through this class.
+ * 
  *
  * TODO <br>
  * 1. the game is not detecting win condition<br>
- * 2. it doesn't support save/load yet<br>
  * 3. it doesn't support trading system yet<br>
  * 4. it has no npc or enemy.<br>
  *
@@ -70,6 +71,11 @@ public class Game {
 	 * The hour when the sun set
 	 */
 	private static final int SUNSET_TIME = 18;
+
+	/**
+	 * The speed of world time advancing
+	 */
+	public static final int TIME_ADVANCING_SPEED = 480;
 
 	/**
 	 * A static instance used in board grid to represent the ground space (no
@@ -269,8 +275,8 @@ public class Game {
 					}
 				}
 
-				// time advance by 1 second
-				clock = clock.plusSeconds(480);
+				// time advance by some amount
+				clock = clock.plusSeconds(TIME_ADVANCING_SPEED);
 			}
 		}, 1000, 1000);
 	}

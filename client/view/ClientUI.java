@@ -167,6 +167,8 @@ public class ClientUI {
 	 */
 	private String itemDescription;
 
+	private boolean descriptionToggle = true;
+
 	/**
 	 * Constructor
 	 */
@@ -406,20 +408,28 @@ public class ClientUI {
 		Position playerLoc = positions.get(uid);
 		int areaId = playerLoc.areaId;
 		char[][] worldMap = areas.get(areaId);
-		// 1. update GUI
-		// a. update minimap
+
+		// 1. update minimap
 		gui.updateMinimap(playerLoc, uid, worldMap, visibility, positions);
-		// b. update the inventory
-		// gui.setInventory(inventory);
-		// c. update the health bar if it is in right panel in GUI.
-		// 2. update Renderer
-		// a. call update renderer method.
+
+		// 2. update the renderer
 		render.render(playerLoc, worldMap, visibility, uid, avatars, positions);
 
+		// 3. update the health bar
 		gui.updateHealth(health);
+
+		// 4. update the inventory
 		gui.setInventory(inventory);
+
+		// 5. update area/room description
 		render.updateAreaDescription(descriptions.get(areaId));
-		gui.displayObjectDescription(getFrontElementString());
+
+		// 6. update the map object description
+		if (descriptionToggle) {
+			gui.displayObjectDescription(getFrontElementString());
+		} else {
+			gui.displayObjectDescription("");
+		}
 
 	}
 
@@ -524,6 +534,9 @@ public class ClientUI {
 					// this is for the login screen
 					System.out.println("drop-use");
 
+				} else if (event.toString().contains("Description")) {
+					descriptionToggle = !descriptionToggle;
+					gui.setDescriptionOn(descriptionToggle);
 				}
 			}
 		};
@@ -553,8 +566,10 @@ public class ClientUI {
 					client.send(Packet.TurnRight);
 				} else if (keyCode == KeyCode.F) {
 					client.send(Packet.Unlock);
+
 				} else if (keyCode == KeyCode.G) {
 					client.send(Packet.TakeOutItem);
+
 				} else if (keyCode == KeyCode.R) {
 					client.send(Packet.Transit);
 				} else if (keyCode == KeyCode.DIGIT1) {

@@ -1,6 +1,9 @@
 package client.rendering;
 
 import java.awt.Point;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import client.view.GUI;
 import javafx.scene.image.Image;
@@ -21,7 +24,6 @@ import javafx.scene.control.ProgressBar;
  * @author Angelo
  *
  */
-
 public class Rendering {
 
 	private int gamePaneHeight = GUI.HEIGHT_VALUE - 35;
@@ -230,7 +232,7 @@ public class Rendering {
 			String side, char[][] worldMap, Pane renderGroup, Direction direction, double yTop,
 			Map<Integer, Avatar> avatars, Map<Integer, Position> positions, int uid) {
 		// Current player
-		Image playerImg = Images.getAvatarImageBySide(avatars.get(uid), Side.Back);
+		Image playerImg = Images.getAvatarImageBySide(avatars.get(uid), Side.Back, false);
 		Point imageCoordinate = getImagePoint(direction, row, col, side, worldMap.length, worldMap[0].length);
 		if (playerImg != null && positions.get(uid).x == imageCoordinate.x
 				&& positions.get(uid).y == imageCoordinate.y) {
@@ -247,7 +249,7 @@ public class Rendering {
 			int otherPlayerX = userPosition.x;
 			int otherPlayerY = userPosition.y;
 			if (imageCoordinate.x == otherPlayerX && imageCoordinate.y == otherPlayerY) {
-				Image otherAvatar = Images.getAvatarImageByDirection(avatarIDs, direction, userPosition.getDirection());
+				Image otherAvatar = Images.getAvatarImageByDirection(avatarIDs, direction, userPosition.getDirection(),false);
 				if (otherAvatar != null) {
 					double height = otherAvatar.getHeight() * Math.pow(scale, squaresInFront - row - 1);
 					double width = otherAvatar.getWidth() * Math.pow(scale, squaresInFront - row - 1);
@@ -414,13 +416,13 @@ public class Rendering {
 		mapDescription.setLayoutX(gamePanelWidth - 150);
 		mapDescription.setLayoutY(30);
 		mapDescription.getStyleClass().add("area-description");
-
 	}
 
 	public void updateAreaDescription(String areaDescription) {
 		mapDescription.setText(areaDescription);
 		renderGroup.getChildren().add(mapDescription);
 	}
+
 
 	public void applyWeather() {
 

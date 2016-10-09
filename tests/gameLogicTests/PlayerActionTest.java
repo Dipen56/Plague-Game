@@ -1,14 +1,20 @@
 package tests.gameLogicTests;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
 import org.junit.Test;
 
 import server.game.Game;
 import server.game.TestConst;
 import server.game.items.Antidote;
+import server.game.items.Bag;
 import server.game.items.Item;
 import server.game.items.Key;
 import server.game.items.Torch;
@@ -17,6 +23,9 @@ import server.game.player.Direction;
 import server.game.player.Player;
 import server.game.player.Position;
 import server.game.player.Virus;
+import server.game.world.Area;
+import server.game.world.Chest;
+import server.game.world.MapElement;
 
 /**
  * These tests are related to players actions.
@@ -38,7 +47,10 @@ public class PlayerActionTest {
 	@Test
 	public void validMove() {
 		// mock a game world
-		Game game = new Game(TestConst.world, TestConst.areas);
+		Map<Integer, Area> areas = TestConst.createAreas();
+		Area world = areas.get(0);
+		Game game = new Game(world, areas);
+
 		// mock player
 		Player player = new Player(MOCK_UID, Avatar.Avatar_1, "Hector");
 		game.joinPlayer(player);
@@ -148,7 +160,10 @@ public class PlayerActionTest {
 	@Test
 	public void invalidMove() {
 		// mock a game world
-		Game game = new Game(TestConst.world, TestConst.areas);
+		Map<Integer, Area> areas = TestConst.createAreas();
+		Area world = areas.get(0);
+		Game game = new Game(world, areas);
+
 		// mock player
 		Player player = new Player(MOCK_UID, Avatar.Avatar_1, "Hector");
 		game.joinPlayer(player);
@@ -272,7 +287,10 @@ public class PlayerActionTest {
 		for (int i = 0; i < 100; i++) {
 
 			// mock a game world
-			Game game = new Game(TestConst.world, TestConst.areas);
+			Map<Integer, Area> areas = TestConst.createAreas();
+			Area world = areas.get(0);
+			Game game = new Game(world, areas);
+
 			// mock player
 			Player player = new Player(MOCK_UID, Avatar.Avatar_1, "Hector");
 			game.joinPlayer(player);
@@ -304,7 +322,10 @@ public class PlayerActionTest {
 	@Test
 	public void blockBetweenPlayers() {
 		// mock a game world
-		Game game = new Game(TestConst.world, TestConst.areas);
+		Map<Integer, Area> areas = TestConst.createAreas();
+		Area world = areas.get(0);
+		Game game = new Game(world, areas);
+
 		// mock player
 		Player player_1 = new Player(MOCK_UID, Avatar.Avatar_1, "Hector");
 		Player player_2 = new Player(MOCK_UID + 1, Avatar.Avatar_2, "AnotherPlayer");
@@ -352,7 +373,10 @@ public class PlayerActionTest {
 	@Test
 	public void validTransit() {
 		// mock a game world
-		Game game = new Game(TestConst.world, TestConst.areas);
+		Map<Integer, Area> areas = TestConst.createAreas();
+		Area world = areas.get(0);
+		Game game = new Game(world, areas);
+
 		// mock player
 		Player player = new Player(MOCK_UID, Avatar.Avatar_1, "Hector");
 		game.joinPlayer(player);
@@ -377,7 +401,10 @@ public class PlayerActionTest {
 	@Test
 	public void invalidTransit() {
 		// mock a game world
-		Game game = new Game(TestConst.world, TestConst.areas);
+		Map<Integer, Area> areas = TestConst.createAreas();
+		Area world = areas.get(0);
+		Game game = new Game(world, areas);
+
 		// mock player
 		Player player = new Player(MOCK_UID, Avatar.Avatar_1, "Hector");
 		game.joinPlayer(player);
@@ -414,7 +441,10 @@ public class PlayerActionTest {
 	@Test
 	public void validUnlock() {
 		// mock a game world
-		Game game = new Game(TestConst.world, TestConst.areas);
+		Map<Integer, Area> areas = TestConst.createAreas();
+		Area world = areas.get(0);
+		Game game = new Game(world, areas);
+
 		// mock player
 		Player player = new Player(MOCK_UID, Avatar.Avatar_1, "Hector");
 		game.joinPlayer(player);
@@ -442,7 +472,10 @@ public class PlayerActionTest {
 	@Test
 	public void invalidUnlock() {
 		// mock a game world
-		Game game = new Game(TestConst.world, TestConst.areas);
+		Map<Integer, Area> areas = TestConst.createAreas();
+		Area world = areas.get(0);
+		Game game = new Game(world, areas);
+
 		// mock player
 		Player player = new Player(MOCK_UID, Avatar.Avatar_1, "Hector");
 		game.joinPlayer(player);
@@ -481,7 +514,10 @@ public class PlayerActionTest {
 	@Test
 	public void validTakeItems() {
 		// mock a game world
-		Game game = new Game(TestConst.world, TestConst.areas);
+		Map<Integer, Area> areas = TestConst.createAreas();
+		Area world = areas.get(0);
+		Game game = new Game(world, areas);
+
 		// mock player
 		Player player = new Player(MOCK_UID, Avatar.Avatar_1, "Hector");
 		game.joinPlayer(player);
@@ -535,7 +571,10 @@ public class PlayerActionTest {
 	@Test
 	public void invalidTakeItems() {
 		// mock a game world
-		Game game = new Game(TestConst.world, TestConst.areas);
+		Map<Integer, Area> areas = TestConst.createAreas();
+		Area world = areas.get(0);
+		Game game = new Game(world, areas);
+
 		// mock player
 		Player player = new Player(MOCK_UID, Avatar.Avatar_1, "Hector");
 		game.joinPlayer(player);
@@ -582,13 +621,162 @@ public class PlayerActionTest {
 	}
 
 	/**
+	 * This method tests whether the player can put items into a container when
+	 * they should be able to do so.
+	 */
+	@Test
+	public void validPutItemsIntoContainer() {
+		// mock a game world
+		Map<Integer, Area> areas = TestConst.createAreas();
+		Area world = areas.get(0);
+		Game game = new Game(world, areas);
+
+		// mock player
+		Player player = new Player(MOCK_UID, Avatar.Avatar_1, "Hector");
+		game.joinPlayer(player);
+
+		// ====== put items into chest 1 ======
+		player.setPosition(new Position(1, 0, 0, Direction.East));
+		Antidote antidote = new Antidote("An antidote", Virus.randomVirus());
+		player.pickUpItem(antidote);
+
+		// put items into container
+		game.playerPutItemIntoContainer(MOCK_UID, 0);
+
+		// the player should no longer have the item
+		if (player.getInventory().contains(antidote)) {
+			fail("After put item into the container, player shouldn't still have it.");
+		}
+
+		MapElement me = areas.get(0).getMapElementAt(2, 0);
+		Chest chest = null;
+		try {
+			chest = (Chest) me;
+		} catch (ClassCastException e) {
+			// shouldn't happen
+		}
+
+		// the container should have item.
+		if (!chest.getLoot().contains(antidote)) {
+			fail("After put item into the container, the container should have item.");
+		}
+
+		// then try to get it out again
+		if (!game.playerTakeItemsFromContainer(MOCK_UID)) {
+			fail("player should be able to take items from the chest 1");
+		}
+
+		List<Item> inventory = player.getInventory();
+		if (!inventory.contains(new Antidote("A potion of antidote.", Virus.Black_Death))
+				|| !inventory.contains(new Key("A key.", 456)) || !inventory.contains(antidote)) {
+			fail("Should have taken out an antidote and a key");
+		}
+
+	}
+
+	/**
+	 * This method tests whether the player can put items into a container when
+	 * they shouldn't be able to do so.
+	 */
+	@Test
+	public void invalidPutItemsIntoContainer() {
+		// mock a game world
+		Map<Integer, Area> areas = TestConst.createAreas();
+		Area world = areas.get(0);
+		Game game = new Game(world, areas);
+
+		// mock player
+		Player player = new Player(MOCK_UID, Avatar.Avatar_1, "Hector");
+		game.joinPlayer(player);
+
+		// ====== invalid put items into chest 1 ======
+		player.setPosition(new Position(1, 0, 0, Direction.West));
+		Antidote antidote = new Antidote("An antidote", Virus.randomVirus());
+		player.pickUpItem(antidote);
+
+		// invalid put items into container, wrong direction
+		if (game.playerPutItemIntoContainer(MOCK_UID, 0)) {
+			fail("Player shouldn't be able to put items inside, the direction is incorrect");
+		}
+		// the player should still have the item
+		if (!player.getInventory().contains(antidote)) {
+			fail("player should still have it.");
+		}
+
+		// invalid put items into container
+		player.setPosition(new Position(0, 0, 0, Direction.East));
+		if (game.playerPutItemIntoContainer(MOCK_UID, 0)) {
+			fail("Player shouldn't be able to put items inside, the chest is not infront.");
+		}
+
+		// the player should still have the item
+		if (!player.getInventory().contains(antidote)) {
+			fail("player should still have it.");
+		}
+
+		// ====== invalid put items into chest 2 ======
+		player.setPosition(new Position(6, 3, 0, Direction.West));
+		// invalid put items into container, wrong direction
+		if (game.playerPutItemIntoContainer(MOCK_UID, 0)) {
+			fail("Player shouldn't be able to put items inside, the chest is locked");
+		}
+		// the player should still have the item
+		if (!player.getInventory().contains(antidote)) {
+			fail("player should still have it.");
+		}
+
+		// ====== now let the player put items into chest 2 ======
+		player.setPosition(new Position(6, 3, 0, Direction.West));
+		player.pickUpItem(new Key("A key.", 456));
+		if (!game.playerUnlockLockable(MOCK_UID)) {
+			fail("should be able to unlock the chest");
+		}
+		// valid put items into container, wrong direction
+		if (!game.playerPutItemIntoContainer(MOCK_UID, 0)) {
+			fail("Player should be able to put items inside");
+		}
+
+		// the player should no longer have the item
+		if (player.getInventory().contains(antidote)) {
+			fail("After put item into the container, player shouldn't still have it.");
+		}
+
+		MapElement me = areas.get(0).getMapElementAt(5, 3);
+		Chest chest = null;
+		try {
+			chest = (Chest) me;
+		} catch (ClassCastException e) {
+			// shouldn't happen
+		}
+
+		// the container should have item.
+		if (!chest.getLoot().contains(antidote)) {
+			fail("After put item into the container, the container should have item.");
+		}
+
+		// then try to get it out again
+		if (!game.playerTakeItemsFromContainer(MOCK_UID)) {
+			fail("player should be able to take items from the chest 1");
+		}
+
+		List<Item> inventory = player.getInventory();
+		if (!inventory.contains(antidote)) {
+			fail("Should have taken out the antidote");
+		}
+
+	}
+
+	/**
 	 * This method tests whether the player can use antidote, and the effect of
 	 * antidote.
 	 */
 	@Test
 	public void validUseAntidote() {
 		// mock a game world
-		Game game = new Game(TestConst.world, TestConst.areas);
+		Map<Integer, Area> areas = TestConst.createAreas();
+		Area world = areas.get(0);
+		Game game = new Game(world, areas);
+
 		// mock player
 		Player player = new Player(MOCK_UID, Avatar.Avatar_1, "Hector");
 		game.joinPlayer(player);
@@ -605,7 +793,10 @@ public class PlayerActionTest {
 		// try antidote with other virus serveral times more
 		for (int i = 0; i < 10; i++) {
 			// mock a game world
-			game = new Game(TestConst.world, TestConst.areas);
+			areas = TestConst.createAreas();
+			world = areas.get(0);
+			game = new Game(world, areas);
+
 			// mock player
 			player = new Player(MOCK_UID, Avatar.Avatar_1, "Hector");
 			game.joinPlayer(player);
@@ -627,13 +818,211 @@ public class PlayerActionTest {
 	}
 
 	/**
+	 * This method tests whether the player can use torch, and the effect of
+	 * torch.
+	 */
+	@Test
+	public void validUseTorch() {
+
+		for (int i = 0; i < 50; i++) {
+
+			// mock a game world
+			Map<Integer, Area> areas = TestConst.createAreas();
+			Area world = areas.get(0);
+			Game game = new Game(world, areas);
+
+			// mock player
+			Player player = new Player(MOCK_UID, Avatar.Avatar_1, "Hector");
+			game.joinPlayer(player);
+
+			// use torch
+			Torch torch = new Torch("A good torch");
+			player.pickUpItem(torch);
+			if (!game.playerUseItem(MOCK_UID, 0)) {
+				fail("player should be able to use antidote at index 0");
+			}
+
+			assertTrue("player should be holding a torch", player.isHoldingTorch());
+
+			// get the world time
+			LocalTime time = game.getClock();
+
+			// check the torch has already taken effect
+			if (time.getHour() >= 6 && time.getHour() < 18) {
+				assertEquals("the visibility is wrong", game.getPlayerVisibility(MOCK_UID), Game.DAY_VISIBLIITY);
+			} else {
+				assertEquals("the visibility is wrong", game.getPlayerVisibility(MOCK_UID), Game.TORCH_VISIBILITY);
+			}
+		}
+	}
+
+	/**
+	 * This method tests whether the player can use bag, and the effect of bag.
+	 */
+	@Test
+	public void validUseBag() {
+		// mock a game world
+		Map<Integer, Area> areas = TestConst.createAreas();
+		Area world = areas.get(0);
+		Game game = new Game(world, areas);
+		// mock player
+		Player player = new Player(MOCK_UID, Avatar.Avatar_1, "Hector");
+		game.joinPlayer(player);
+
+		// make a bag that contains another bag
+		List<Item> anotherLoot = new ArrayList<>();
+		Antidote antidote = new Antidote("an antidote", Virus.randomVirus());
+		Key key = new Key("a key", 000);
+		Torch torch = new Torch("a torch");
+		anotherLoot.add(antidote);
+		anotherLoot.add(key);
+		anotherLoot.add(torch);
+		Bag anotherBag = new Bag("Another bag", anotherLoot);
+
+		List<Item> loot = new ArrayList<>();
+		loot.add(anotherBag);
+		Bag bag = new Bag("a bag", loot);
+
+		player.pickUpItem(bag);
+
+		// let the player use the bag
+		if (!game.playerUseItem(MOCK_UID, 0)) {
+			fail("player should be able to use the bag at index 0");
+		}
+
+		// see if the player get everything
+		for (Item item : bag.getLoot()) {
+			if (!player.getInventory().contains(item)) {
+				fail("player should have item: " + item.toString());
+			}
+		}
+
+		// the player shouldn't still have the bag
+		if (player.getInventory().contains(bag)) {
+			fail("player shouldn't still have the bag");
+		}
+
+		// let the player use another bag
+		if (!game.playerUseItem(MOCK_UID, 0)) {
+			fail("player should be able to use another bag at index 0");
+		}
+
+		// see if the player get everything
+		for (Item item : anotherBag.getLoot()) {
+			if (!player.getInventory().contains(item)) {
+				fail("player should have item: " + item.toString());
+			}
+		}
+
+		// the player shouldn't still have the bag
+		if (player.getInventory().contains(anotherBag)) {
+			fail("player shouldn't still have the bag");
+		}
+
+		assertEquals("the player should have 3 items", 3, player.getInventory().size());
+
+	}
+
+	/**
+	 * This method tests whether the player can destroy items when they should
+	 * be able to do so.
+	 */
+	@Test
+	public void validDestroy() {
+		// mock a game world
+		Map<Integer, Area> areas = TestConst.createAreas();
+		Area world = areas.get(0);
+		Game game = new Game(world, areas);
+		// mock player
+		Player player = new Player(MOCK_UID, Avatar.Avatar_1, "Hector");
+		game.joinPlayer(player);
+
+		// mock some items
+		Antidote antidote = new Antidote("an antidote", Virus.randomVirus());
+		Torch torch = new Torch("a torch");
+
+		// pick up items
+		player.pickUpItem(antidote);
+		player.pickUpItem(torch);
+
+		// test antidote
+		if (!game.playerDestroyItem(MOCK_UID, 0)) {
+			fail("player should be able to destroy antidote");
+		}
+		if (player.getInventory().contains(antidote)) {
+			fail("player shouldn't have antidote");
+		}
+
+		// test torch
+		if (!game.playerDestroyItem(MOCK_UID, 0)) {
+			fail("player should be able to destroy antidote");
+		}
+		if (player.getInventory().contains(antidote)) {
+			fail("player shouldn't have antidote");
+		}
+
+	}
+
+	/**
+	 * This method tests whether the player can destroy items when they
+	 * shouldn't be able to do so.
+	 */
+	@Test
+	public void invalidDestroy() {
+		// mock a game world
+		Map<Integer, Area> areas = TestConst.createAreas();
+		Area world = areas.get(0);
+		Game game = new Game(world, areas);
+		// mock player
+		Player player = new Player(MOCK_UID, Avatar.Avatar_1, "Hector");
+		game.joinPlayer(player);
+
+		// mock some items
+		Key key = new Key("a key", 000);
+
+		List<Item> loot = new ArrayList<>();
+		Antidote anotherAntidote = new Antidote("another antidote", Virus.randomVirus());
+		loot.add(anotherAntidote);
+		Bag bag = new Bag("Another bag", loot);
+
+		// pick up items
+		player.pickUpItem(key);
+		player.pickUpItem(bag);
+
+		// test key
+		if (game.playerDestroyItem(MOCK_UID, 0)) {
+			fail("player shouldn't be able to destroy key");
+		}
+		if (!player.getInventory().contains(key)) {
+			fail("player should have the key");
+		}
+
+		// test bag
+		if (game.playerDestroyItem(MOCK_UID, 1)) {
+			fail("player shouldn't be able to destroy bag");
+		}
+		if (!player.getInventory().contains(bag)) {
+			fail("player should have the bag");
+		}
+
+		// test item that the player doesn't have
+		if (game.playerDestroyItem(MOCK_UID, 3)) {
+			fail("player shouldn't be able to destroy things he doesn't have");
+		}
+
+	}
+
+	/**
 	 * This method tests player's visibility.
 	 */
 	@Test
 	public void playerVisibility() {
 		for (int i = 0; i < 50; i++) {
 			// mock a game world
-			Game game = new Game(TestConst.world, TestConst.areas);
+			Map<Integer, Area> areas = TestConst.createAreas();
+			Area world = areas.get(0);
+			Game game = new Game(world, areas);
+
 			// mock player
 			Player player = new Player(MOCK_UID, Avatar.Avatar_1, "Hector");
 			game.joinPlayer(player);
@@ -642,15 +1031,15 @@ public class PlayerActionTest {
 
 			if (hour >= 6 && hour < 18) {
 				// it's day time
-				assertEquals("visibility is wrong", game.getPlayerVisibility(MOCK_UID), Game.DAY_VISIBLIITY);
+				assertEquals("visibility is wrong", Game.DAY_VISIBLIITY, game.getPlayerVisibility(MOCK_UID));
 			} else {
 				// it's night time
-				assertEquals("visibility is wrong", game.getPlayerVisibility(MOCK_UID), Game.NIGHT_VISIBILITY);
+				assertEquals("visibility is wrong", Game.NIGHT_VISIBILITY, game.getPlayerVisibility(MOCK_UID));
 
 				// light up a torch
 				player.pickUpItem(new Torch("a torch"));
 				game.playerUseItem(MOCK_UID, 0);
-				assertEquals("visibility is wrong", game.getPlayerVisibility(MOCK_UID), Game.TORCH_VISIBILITY);
+				assertEquals("visibility is wrong", Game.TORCH_VISIBILITY, game.getPlayerVisibility(MOCK_UID));
 			}
 		}
 	}

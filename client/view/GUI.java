@@ -4,6 +4,7 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
@@ -162,6 +163,8 @@ public class GUI extends Application {
 	private Button play;
 	private Button quit;
 	private Button help;
+	private CheckMenuItem descriptionToggle;
+
 	// Controls for the login Screen
 	private Label info;
 	private Button login;
@@ -183,7 +186,7 @@ public class GUI extends Application {
 	private Button readyGame;
 	private Button quitWaitingRoom;
 	private Label objectDescription;
-	private FadeTransition ft;
+	
 	private TitledPane titlePane;
 
 	// this is for event
@@ -299,7 +302,7 @@ public class GUI extends Application {
 		prev.getStyleClass().add("button-login");
 		avatarLable = new Label();
 		avatarLable.setLayoutX(200);
-		Image avatarImg = Images.getAvatarImageBySide(avatarList.get(0), Side.Front);
+		Image avatarImg = Images.getAvatarImageBySide(avatarList.get(0), Side.Front, false);
 		avatarIndex = 0;
 		ImageView avatarImage = new ImageView(avatarImg);
 		avatarImage.setFitHeight(300);
@@ -363,7 +366,7 @@ public class GUI extends Application {
 
 	public void changeAvatarImage(int change) {
 		avatarIndex = change;
-		Image avatarImg = Images.getAvatarImageBySide(avatarList.get(change), Side.Front);
+		Image avatarImg = Images.getAvatarImageBySide(avatarList.get(change), Side.Front, false);
 		ImageView avatarImage = new ImageView(avatarImg);
 		avatarImage.setFitHeight(300);
 		avatarImage.setFitWidth(300);
@@ -494,11 +497,18 @@ public class GUI extends Application {
 		MenuItem itmSave = new MenuItem("Save");
 		itmSave.setId("SaveMenu");
 		itmSave.setOnAction(actionEvent);
+
+		// description toggle menu item
+		descriptionToggle = new CheckMenuItem("Des");
+		descriptionToggle.setId("Description");
+		descriptionToggle.setOnAction(actionEvent);
+		descriptionToggle.selectedProperty().setValue(true);
+
 		MenuItem itmClose = new MenuItem("Close");
 		itmClose.setId("CloseMenu");
 		itmClose.setOnAction(actionEvent);
 		// add the items to menu
-		file.getItems().addAll(itmLoad, itmSave, itmClose);
+		file.getItems().addAll(itmLoad, itmSave, descriptionToggle, itmClose);
 		// creates the menu
 		Menu help = new Menu("Help");
 		// creates the menu items
@@ -721,6 +731,24 @@ public class GUI extends Application {
 	}
 
 	/**
+	 * Is the description toggle on
+	 * 
+	 * @return
+	 */
+	public boolean isDescriptionOn() {
+		return descriptionToggle.selectedProperty().getValue();
+	}
+
+	/**
+	 * Set the description toggle as the given boolean value
+	 * 
+	 * @param boo
+	 */
+	public void setDescriptionOn(boolean boo) {
+		this.descriptionToggle.selectedProperty().setValue(boo);
+	}
+
+	/**
 	 * this method will set the world time
 	 * 
 	 * @param worldTime
@@ -735,7 +763,7 @@ public class GUI extends Application {
 	}
 
 	public void setWaitingRoomAvatar() {
-		Image avatarImg = Images.getAvatarImageBySide(Avatar.values()[avatarIndex], Side.Front);
+		Image avatarImg = Images.getAvatarImageBySide(Avatar.values()[avatarIndex], Side.Front, false);
 		ImageView avatarImage = new ImageView(avatarImg);
 		avatarImage.setFitHeight(80);
 		avatarImage.setFitWidth(80);

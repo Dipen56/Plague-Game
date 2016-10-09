@@ -553,23 +553,6 @@ public class Player {
 	}
 
 	/**
-	 * This method is used to track all torches owned by this player.
-	 *
-	 * @return --- all torches owned by this player.
-	 */
-	public List<Torch> getAllTorches() {
-		List<Torch> torches = new ArrayList<>();
-
-		for (Item itm : inventory) {
-			if (itm instanceof Torch) {
-				torches.add((Torch) itm);
-			}
-		}
-
-		return torches;
-	}
-
-	/**
 	 * This method is used to track all keys owned by this player.
 	 *
 	 * @return --- all keys owned by this player.

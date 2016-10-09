@@ -91,8 +91,8 @@ public class TransitionSpace extends GroundSpace {
 	}
 
 	@Override
-	public String toString() {
-		return "D";
+	public char getMapChar() {
+		return 'D';
 	}
 
 }

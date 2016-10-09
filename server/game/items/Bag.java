@@ -35,9 +35,10 @@ public class Bag extends Item implements Container {
 		if (loot == null) {
 			this.loot = new ArrayList<>();
 		} else {
-			if (loot.size() > Container.OTHER_SIZE) {
-				throw new GameError("Chest can only contain " + Container.OTHER_SIZE + " items.");
-			}
+			// if (loot.size() > Container.OTHER_SIZE) {
+			// throw new GameError("Bag can only contain " +
+			// Container.OTHER_SIZE + " items.");
+			// }
 			this.loot = loot;
 		}
 	}
