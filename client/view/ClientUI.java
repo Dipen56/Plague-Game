@@ -434,6 +434,7 @@ public class ClientUI {
 			gui.displayObjectDescription(getFrontElementString());
 		} else {
 			gui.displayObjectDescription("");
+		}
 
 		// 7. if player is dead, prompt it.
 		if(!playerDead){
