@@ -443,11 +443,13 @@ public class GUI extends Application {
 	 * @param health
 	 * @param virusName
 	 */
-	public void setHealthBar(double health, Virus virusName, Avatar avatar) {
+
+	public void setHealthBar(double health, Virus virusName, String userName) {
+
 		healthPane = new FlowPane();
 		healthPane.setHgap(2);
 		healthPane.setPrefHeight(50);
-		healthPane.setPrefWidth(150);
+		healthPane.setPrefWidth(200);
 		healthPane.setLayoutX(10);
 		healthPane.setLayoutY(10);
 
@@ -466,7 +468,7 @@ public class GUI extends Application {
 		StackPane barPlusNum = new StackPane();
 
 		bar = new ProgressBar(health);
-		bar.setPrefWidth(98);
+		bar.setPrefWidth(148);
 
 		healthBarText = new Text();
 		healthBarText.setText(String.valueOf(Player.MAX_HEALTH));
@@ -474,9 +476,9 @@ public class GUI extends Application {
 		barPlusNum.getChildren().setAll(bar, healthBarText);
 
 		virus = new Label();
-		virus.setText("Virus Type: " + virusName.toString());
+		virus.setText(" UserName: "+userName+"\n Virus Type: " + virusName.toString());
 		virus.setWrapText(true);
-		virus.setPrefWidth(98);
+		virus.setPrefWidth(148);
 		virus.getStyleClass().add("virus-label");
 		healthBox.getChildren().add(barPlusNum);
 		healthBox.getChildren().add(virus);
@@ -577,7 +579,7 @@ public class GUI extends Application {
 		chatControls.setPrefHeight(200);
 		chatControls.getStyleClass().add("chatarea-background");
 		ScrollPane scrollPane = new ScrollPane();
-		scrollPane.setFitToHeight(true);
+		// scrollPane.setFitToHeight(true);
 		scrollPane.setPrefHeight(150);
 		scrollPane.setHbarPolicy(ScrollBarPolicy.NEVER);
 		scrollPane.setVbarPolicy(ScrollBarPolicy.ALWAYS);
