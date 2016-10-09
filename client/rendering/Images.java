@@ -30,7 +30,7 @@ public class Images {
 
 	public static final Image GRASS_IMAGE = loadImage("/grass.png");
 
-	public static final Image TREE_IMAGE = loadImage("/Tree.gif");
+	public static final Image TREE_IMAGE = loadImage("/treeresized.png");
 
 	public static final Image CHEST_IMAGE = loadImage("/chest.png");
 
