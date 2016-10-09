@@ -17,7 +17,7 @@ import server.game.world.Area;
  * This class represents a single thread that handles communication with a
  * connected client. It receives events from a client connection via a socket as
  * well as send information to the client about the current board state.
- * 
+ *
  * @author Rafaela & Hector
  *
  */
@@ -36,7 +36,7 @@ public class Receptionist extends Thread {
 	/**
 	 * User (client) id of this connection.
 	 */
-	private final int uid;
+	private int uid;
 
 	/**
 	 * User (client) specified name of this connection.
@@ -72,7 +72,7 @@ public class Receptionist extends Thread {
 
 	/**
 	 * Constructor. It also initialises the socket input and output.
-	 * 
+	 *
 	 * @param server
 	 *            --- the server
 	 * @param socket
@@ -172,7 +172,7 @@ public class Receptionist extends Thread {
 
 	/**
 	 * Is this client ready to enter game?
-	 * 
+	 *
 	 * @return --- true/false for yes/no
 	 */
 	public boolean isReady() {
@@ -185,6 +185,25 @@ public class Receptionist extends Thread {
 	 */
 	public void setGameRunning() {
 		this.isGameRunning = true;
+	}
+
+	/**
+	 * Updates the uid field.
+	 *
+	 * @param A
+	 *            new uid integer.
+	 */
+	public void setUID(int uid) {
+		this.uid = uid;
+	}
+
+	/**
+	 * Gets the id of the player.
+	 *
+	 * @return The player UID.
+	 */
+	public int getUID() {
+		return this.uid;
 	}
 
 	@Override
@@ -309,6 +328,8 @@ public class Receptionist extends Thread {
 			System.err.println("Player " + uid + " disconnected.");
 		} catch (InterruptedException e) {
 			System.err.println("Thread sleep interrupted. No big deal.");
+		} catch (RuntimeException e) {
+			e.printStackTrace();
 		} finally {
 			game.disconnectPlayer(uid);
 			try {
@@ -322,7 +343,7 @@ public class Receptionist extends Thread {
 	/**
 	 * This method generates a String representation of the game status. The
 	 * format of it is:
-	 * 
+	 *
 	 * <p>
 	 * <li>Time
 	 * <li>Health
@@ -331,7 +352,7 @@ public class Receptionist extends Thread {
 	 * <li>The inventory of the player in this client
 	 * <li>The status of player holding torch or not.
 	 * <li>Chat message if there is any.
-	 * 
+	 *
 	 * <p>
 	 * Each one of them is separated by a new line character '\n'. The format of
 	 * each part should refer to
@@ -341,7 +362,7 @@ public class Receptionist extends Thread {
 	 * parseInventory}, and
 	 * {@link client.ParserUtilities #parseTorchStatus(Map, String)
 	 * parseTorchStatus}.
-	 * 
+	 *
 	 * @return --- a String representation of the game status
 	 */
 	private String gameToString() {
@@ -389,9 +410,9 @@ public class Receptionist extends Thread {
 
 		/*
 		 * TODO 8. user-specified content
-		 * 
-		 * 
-		 * 
+		 *
+		 *
+		 *
 		 * chat message
 		 */
 
@@ -401,7 +422,7 @@ public class Receptionist extends Thread {
 	/**
 	 * This method is used when the server loads game back, the game instance
 	 * gets re-referenced.
-	 * 
+	 *
 	 * @param game
 	 *            --- the new game instance
 	 */

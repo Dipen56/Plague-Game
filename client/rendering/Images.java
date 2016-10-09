@@ -25,7 +25,7 @@ public class Images {
 
 	public static final Image LOGIN_SCREEN_IMAGE = loadImage("/login-background.png");
 
-	//public static final Image BACKGROUND_IMAGE = loadImage("/night.png");
+	// public static final Image BACKGROUND_IMAGE = loadImage("/night.png");
 	public static final Image BACKGROUND_IMAGE = loadImage("/background.gif");
 
 	public static final Image GRASS_IMAGE = loadImage("/grass.png");
@@ -180,6 +180,16 @@ public class Images {
 	 * @return --- the proper image to render the other player.
 	 */
 	public static Image getAvatarImageByDirection(Avatar otherAvatar, Direction ownDir, Direction hisDir) {
+
+		System.out.println("ownDir == null: " + ownDir == null);
+		System.out.println("hisDir == null: " + hisDir == null);
+
+		System.out.println("AVATAR_IMAGES == null: " + AVATAR_IMAGES == null);
+		System.out.println("AVATAR_IMAGES.get(otherAvatar) == null: " + AVATAR_IMAGES.get(otherAvatar) == null);
+		System.out
+				.println("AVATAR_IMAGES.get(otherAvatar).get(Side.getSideByRelativeDirection(ownDir, hisDir)) == null: "
+						+ AVATAR_IMAGES.get(otherAvatar).get(Side.getSideByRelativeDirection(ownDir, hisDir)) == null);
+
 		return AVATAR_IMAGES.get(otherAvatar).get(Side.getSideByRelativeDirection(ownDir, hisDir));
 	}
 
