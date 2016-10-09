@@ -1,0 +1,132 @@
+.root{
+	-fx-background-color: #353535;
+}
+.cotrolvbox{
+	-fx-background-color: #242731;
+	-fx-border-color: #505360;
+	-fx-padding: 14;
+}
+.world-time-lable{
+	-fx-background-color: #323639;
+	-fx-border-color: #505360;
+	-fx-background-radius: 4;
+	-fx-border-radius: 4;
+	-fx-text-fill: rgb(255, 255, 255);
+	-fx-alignment: CENTER;
+	-fx-effect: dropshadow( one-pass-box , black ,0 , 0.0 , 0 , 2 );
+}
+.minimap-lable{
+	-fx-background-color: #323639;
+	-fx-border-color: #505360;
+	-fx-background-radius: 4;
+	-fx-border-radius: 4;
+	-fx-text-fill: rgb(255, 255, 255);
+	-fx-alignment: CENTER;
+	-fx-effect: dropshadow( one-pass-box , black ,0 , 0.0 , 0 , 2 );
+}
+.chatarea-background{
+	-fx-background-color: #323639;
+	-fx-border-color: #505360;
+	-fx-background-radius: 4;
+	-fx-border-radius: 4;
+	-fx-text-fill: rgb(255, 255, 255);
+	-fx-alignment: CENTER;
+	-fx-effect: dropshadow( one-pass-box , black ,0 , 0.0 , 0 , 2 );
+}
+.chat-display{
+	-fx-background-color: #404040;
+	-fx-border-color: #505360;
+	-fx-background-radius: 4;
+	-fx-border-radius: 4;
+	-fx-text-fill: rgb(255, 255, 255);
+}
+.button-send{
+	-fx-background-color: #323639;
+	-fx-border-color: #505360;
+	-fx-text-fill: rgb(255, 255, 255);
+	-fx-alignment: CENTER;
+}
+.button-send:hover{
+	-fx-background-color: #76B900;
+	-fx-border-color: #505360;
+	-fx-text-fill: rgb(255, 255, 255);
+	-fx-alignment: CENTER;
+}
+.itempane-background{
+	-fx-background-color: #323639;
+	-fx-border-color: #505360;
+	-fx-background-radius: 4;
+	-fx-border-radius: 4;
+	-fx-text-fill: rgb(255, 255, 255);
+	-fx-effect: dropshadow( one-pass-box , black ,0 , 0.0 , 0 , 2 );
+}
+.item-lable{
+	-fx-padding: 5;
+	-fx-text-fill: rgb(255, 255, 255);
+}
+.item-grid{
+	-fx-background-color: #505050;
+	-fx-border-color: #505360;
+}
+.item-grid:hover{
+	-fx-background-color: #505050;
+	-fx-border-color: #FFFF00;
+}
+.root-server{
+	-fx-background-color: #353535;
+	-fx-alignment: CENTER;
+	-fx-text-fill: rgb(255, 255, 255);
+	-fx-font-size: 14pt;
+}
+.button-slashscreen{
+	-fx-background-color: transparent;
+	-fx-alignment: CENTER;
+	-fx-font-weight: bold;
+	-fx-font-size:30;
+	-fx-padding: 10;
+	-fx-font-fill: #AD0202;
+	-fx-border-weight: 20;
+	-fx-border-height: 20;
+}
+.button-slashscreen:hover{
+	-fx-background-color: transparent;
+	-fx-text-fill: rgb(255, 255, 0);
+}
+.virus-label{
+	-fx-text-fill: rgb(255, 255, 0);
+}
+.login-info{
+	-fx-alignment: CENTER;
+	-fx-text-fill: rgb(255, 255, 0);
+	-fx-font-size:30;
+	-fx-padding: 10;
+}
+
+.button-login{
+	-fx-background-color: transparent;
+	-fx-font-weight: bold;
+	-fx-font-size:30;
+	-fx-padding: 10;
+	-fx-text-fill: rgb(0, 255, 0);
+	-fx-border-weight: 20;
+	-fx-border-height: 20;
+}
+.button-login:hover{
+	-fx-background-color: transparent;
+	-fx-text-fill: rgb(255, 255, 0);
+}
+.input-login{
+	-fx-text-fill: rgb(0, 255, 0);
+	-fx-font-size:20;
+	-fx-font-weight: bold;
+}
+.object-description{
+	-fx-text-fill: rgb(0, 255, 0);
+	-fx-font-weight: bold;
+	-fx-font-size:15;
+} 
+.area-description{
+	-fx-text-fill: rgb(0, 255, 0);
+	-fx-font-weight: bold;
+	-fx-font-size:20;
+} 
