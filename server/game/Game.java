@@ -258,6 +258,13 @@ public class Game {
 						Torch t = p.getTorchInHand();
 						if (t != null && t.isFlaming()) {
 							t.Burn();
+
+							// if the torch dies out, destroy it
+							if (t.getTimeLeft() <= 0) {
+								p.extinguishTorch(t);
+								p.destroyItem(t);
+							}
+
 						}
 					}
 				}

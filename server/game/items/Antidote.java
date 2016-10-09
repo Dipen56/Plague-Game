@@ -13,9 +13,9 @@ public class Antidote extends Item implements Destroyable, Tradable {
 
 	/**
 	 * How long this antidote is going to prolong player's life if it's correct
-	 * type. This number is set to 2 hours (equivalent 2 minutes in game).
+	 * type. This number is set to 1 hours (equivalent 1 minutes in game).
 	 */
-	public static final int EFFECT = 2 * 60;
+	public static final int EFFECT = 1 * 60;
 
 	/**
 	 * If this antidote is of a wrong type, the player can be cured by this

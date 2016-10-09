@@ -11,7 +11,7 @@ public class Torch extends Item implements Destroyable, Tradable {
 	/**
 	 * Each torch can burn up to 3 minute.
 	 */
-	private static final int INIT_TIME = 3 * 60;
+	private static final int INIT_TIME = 1 * 60;
 
 	/**
 	 * The "health" of this torch. The number indicates how many seconds left to

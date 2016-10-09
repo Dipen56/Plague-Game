@@ -41,7 +41,7 @@ public class InitialGameLoader {
 	/**
 	 * A tree.
 	 */
-	private static Obstacle t = new Obstacle("T|A tree.");
+	private static Obstacle t = new Obstacle("T|A tree. Why they all look the same?");
 
 	/**
 	 * A rock.
@@ -51,7 +51,7 @@ public class InitialGameLoader {
 	/**
 	 * A chair.
 	 */
-	private static Obstacle c = new Obstacle("H|It's a chair.");
+	private static Obstacle c = new Obstacle("H|It's a chair. I'd rather sit on it to rest.");
 
 	/**
 	 * A barrel.

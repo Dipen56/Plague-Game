@@ -18,6 +18,7 @@ import client.ParserUtilities;
 import client.rendering.Rendering;
 import server.Packet;
 import server.game.player.Avatar;
+import server.game.player.Direction;
 import server.game.player.Position;
 import server.game.player.Virus;
 
@@ -482,10 +483,7 @@ public class ClientUI {
 					// this is for the login screen
 					gui.getWindow().close();
 				} else if (event.toString().contains("Ready")) {
-					/*
-					 * TODO set the ready button unavailable. tell the player
-					 * it's waiting for others.
-					 */
+
 					client.setUserReady(true);
 					gui.disableReadyButton();
 
@@ -612,6 +610,63 @@ public class ClientUI {
 	}
 
 
+
+	/**
+	 * 
+	 * @return
+	 */
+	public String getFrontElementString() {
+
+		Position selfPos = positions.get(uid);
+		Direction selfDir = selfPos.getDirection();
+		int currentAreaId = selfPos.areaId;
+		char[][] currentMap = areas.get(currentAreaId);
+		int width = currentMap[0].length;
+		int height = currentMap.length;
+
+		// what's in front
+		int frontX;
+		int frontY;
+		switch (selfDir) {
+		case East:
+			if (selfPos.x + 1 >= width) {
+				return "";
+			}
+			frontX = selfPos.x + 1;
+			frontY = selfPos.y;
+			break;
+		case North:
+			if (selfPos.y - 1 < 0) {
+				return "";
+			}
+			frontX = selfPos.x;
+			frontY = selfPos.y - 1;
+			break;
+		case South:
+			if (selfPos.y + 1 >= height) {
+				return "";
+			}
+			frontX = selfPos.x;
+			frontY = selfPos.y + 1;
+			break;
+		case West:
+			if (selfPos.x - 1 < 0) {
+				return "";
+			}
+			frontX = selfPos.x - 1;
+			frontY = selfPos.y;
+			break;
+		default:
+			return "";
+		}
+
+		String decription = GUI.MAP_OBJECT_DESCRIPTION.get(currentMap[frontY][frontX]);
+		if (decription == null) {
+			return "";
+		} else {
+			return decription;
+		}
+	}
 
 	/**
 	 * This method will return the action listeners
