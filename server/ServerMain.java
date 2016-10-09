@@ -265,50 +265,49 @@ public class ServerMain {
 		// check save file existence
 		String userName = game.getPlayerById(uid).getName();
 		boolean isExisting = XmlFunctions.saveExists(userName);
+
+		if (!isExisting) {
+			System.err.println("Cannot find the save file for player " + userName);
+			return false;
+		}
+
 		Player player = null;
 		int newID = 0;
 		String name = null;
 
-		if (isExisting) {
-			try {
-				// load game
-				Game newGame = XmlFunctions.loadFile(userName);
-				if (newGame == null)
-					throw new IOException("Game object not constucted");
-
-				Map<Integer, Player> map = new HashMap<>();
-
-
-				//Reset player ID in Player object and in map.
-				for (Player p : newGame.getPlayers().values()){
-					//gets new ID from other version of player.
-					name = p.getName();
-					player = game.getPlayerByName(name);
-					//Skips player if they are not in the current game before load.
-					if(player == null)
-						continue;
-					newID = player.getId();
-					//Resets UID of player in newGame
-					p.resetId(newID);
-					map.put(newID, p);
-				}
-				//Reset players map
-				newGame.resetPlayers(map);
-
-
-				// make sure every client get access to the new game instance,
-				for (Receptionist r : receptionists.values()) {
-					// Updates the game field.
-					r.setGame(newGame);
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
-			} catch (RuntimeException e) {
-				e.printStackTrace();
-				throw new Error("Load failed");
-			}
+		// load game
+		Game newGame = XmlFunctions.loadFile(userName);
+		if (newGame == null) {
+			System.err.println("Game object not constucted, Load failed.");
+			return false;
 		}
-		return isExisting;
+
+		Map<Integer, Player> map = new HashMap<>();
+
+		// Reset player ID in Player object and in map.
+		for (Player p : newGame.getPlayers().values()) {
+			// gets new ID from other version of player.
+			name = p.getName();
+			player = game.getPlayerByName(name);
+			// Skips player if they are not in the current game before load.
+			if (player == null) {
+				continue;
+			}
+			newID = player.getId();
+			// Resets UID of player in newGame
+			p.resetId(newID);
+			map.put(newID, p);
+		}
+		// Reset players map
+		newGame.resetPlayers(map);
+
+		// make sure every client get access to the new game instance,
+		for (Receptionist r : receptionists.values()) {
+			// Updates the game field.
+			r.setGame(newGame);
+		}
+
+		return true;
 	}
 
 	/**

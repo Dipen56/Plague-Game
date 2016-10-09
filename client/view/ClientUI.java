@@ -16,7 +16,6 @@ import javafx.stage.WindowEvent;
 
 import client.Client;
 import client.ParserUtilities;
-import client.rendering.Images;
 import client.rendering.Rendering;
 import server.Packet;
 import server.game.player.Avatar;
@@ -60,8 +59,8 @@ public class ClientUI {
 	 */
 	private Avatar avatar;
 
-	/**e
-	 * Virus type of the player at this connection
+	/**
+	 * e Virus type of the player at this connection
 	 */
 	private Virus virus;
 
@@ -167,7 +166,7 @@ public class ClientUI {
 	 * This is the index of the Avatar
 	 */
 	private int avatarIndex = 0;
-    
+
 	/**
 	 * This is index for the item array
 	 */
@@ -209,7 +208,7 @@ public class ClientUI {
 	public boolean loginPlayer(String ip, int port, String userName, int avatarIndex) {
 		// ip address format check
 		if (!ip.matches("\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}")) {
-			GUI.showWarningPane("It's not a proper ip address.");
+			GUI.showMsgPane("Error", "It's not a correct ip address.");
 			return false;
 		}
 		// create a socket
@@ -217,7 +216,7 @@ public class ClientUI {
 		try {
 			s = new Socket(ip, port);
 		} catch (IOException e) {
-			GUI.showWarningPane("Failed to connect to server");
+			GUI.showMsgPane("Error", "Failed to connect to server");
 			return false;
 		}
 		client = new Client(s, this);
@@ -438,9 +437,9 @@ public class ClientUI {
 		}
 
 		// 7. if player is dead, prompt it.
-		if(!playerDead){
-			//Displays dialog when player health is 0
-			if(health == 0){
+		if (!playerDead) {
+			// Displays dialog when player health is 0
+			if (health == 0) {
 				AlertBox.displayMsg("YOU ARE DEAD", "GAMEOVER");
 				playerDead = true;
 			}
@@ -459,7 +458,7 @@ public class ClientUI {
 				clockThread.start();
 			}
 		});
-		gui.setHealthBar(health, virus);
+		gui.setHealthBar(health, virus, avatar);
 		gui.objectLabel();
 		render.setAreaDescription();
 
@@ -492,7 +491,7 @@ public class ClientUI {
 					try {
 						port = Integer.valueOf(gui.getPortString());
 					} catch (NumberFormatException e) {
-						GUI.showWarningPane("Port number should be an integer");
+						GUI.showMsgPane("Error", "Port number should be an integer");
 						return;
 					}
 
@@ -536,20 +535,20 @@ public class ClientUI {
 					}
 					gui.changeAvatarImage(avatarIndex);
 				} else if (event.toString().contains("right-insert")) {
-					System.out.println("insert");
 
-					System.out.println(itemIndex);
-					// TODO: use itemIndex
-					;
+					// System.out.println("insert");
+					// System.out.println(itemIndex);
+
+					// the player want to insert item into container
+					client.sendWithIndex(Packet.PutItemIntoContainer, itemIndex);
+
 				} else if (event.toString().contains("right-use")) {
-					// TODO: use itemIndex
-					// this is for the login screen
-					System.out.println("right-use");
-				} else if (event.toString().contains("drop-use")) {
-					// TODO: use itemIndex
+					// System.out.println("right-use");
+					client.sendWithIndex(Packet.UseItem, itemIndex);
 
-					// this is for the login screen
-					System.out.println("drop-use");
+				} else if (event.toString().contains("drop-use")) {
+					// System.out.println("drop-use");
+					client.sendWithIndex(Packet.DestroyItem, itemIndex);
 
 				} else if (event.toString().contains("Description")) {
 					descriptionToggle = !descriptionToggle;

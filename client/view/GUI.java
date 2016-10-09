@@ -28,9 +28,10 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.stage.WindowEvent;
-import javafx.util.Duration;
-import javafx.animation.FadeTransition;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -188,7 +189,7 @@ public class GUI extends Application {
 	private Button readyGame;
 	private Button quitWaitingRoom;
 	private Label objectDescription;
-	
+
 	private TitledPane titlePane;
 
 	// this is for event
@@ -442,16 +443,21 @@ public class GUI extends Application {
 	 * @param health
 	 * @param virusName
 	 */
-	public void setHealthBar(double health, Virus virusName) {
+	public void setHealthBar(double health, Virus virusName, Avatar avatar) {
 		healthPane = new FlowPane();
 		healthPane.setHgap(2);
 		healthPane.setPrefHeight(50);
 		healthPane.setPrefWidth(150);
 		healthPane.setLayoutX(10);
 		healthPane.setLayoutY(10);
-		// TODO link it to the avatar image using avatar index upto
-		Image avatar = Images.SLASH_SCREEN_IMAGE;
-		ImageView avatarImage = new ImageView(avatar);
+
+		/*
+		 * TODO link it to the avatar image using avatar index upto. use
+		 */
+
+		// Image avatarImg = Images.PROFILE_IMAGES.get(avatar);
+		Image avatarImg = Images.SLASH_SCREEN_IMAGE;
+		ImageView avatarImage = new ImageView(avatarImg);
 		avatarImage.setFitHeight(60);
 		avatarImage.setFitWidth(50);
 		healthPane.getChildren().add(avatarImage);
@@ -1048,21 +1054,6 @@ public class GUI extends Application {
 			@Override
 			public void run() {
 				AlertBox.displayMsg(title, msg);
-			}
-		});
-		System.err.println(msg);
-	}
-
-	/**
-	 * This static helper method will pop up a warning dialog to user.
-	 *
-	 * @param msg
-	 */
-	public static void showWarningPane(String msg) {
-		Platform.runLater(new Runnable() {
-			@Override
-			public void run() {
-				AlertBox.displayMsg("Warning", msg);
 			}
 		});
 		System.err.println(msg);

@@ -2,7 +2,6 @@ package server.game;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -292,25 +291,27 @@ public class Game {
 		// delete player from player list.
 		Player player = players.remove(playerId);
 
-		/*
+		// this feature is disabled due to constraints from data storage part
+
 		// randomly re-distribute all keys in his inventory
-		List<Key> hisKeys = player.getAllKeys();
-		if (!hisKeys.isEmpty()) {
-			for (Key k : hisKeys) {
-				Collections.shuffle(containers);
-				containers.get(0).getLoot().add(k);
-			}
-		}
-		*/
+		// List<Key> hisKeys = player.getAllKeys();
+		// if (!hisKeys.isEmpty()) {
+		// for (Key k : hisKeys) {
+		// Collections.shuffle(containers);
+		// containers.get(0).getLoot().add(k);
+		// }
+		// }
 
 	}
 
 	/**
-	 * Resets the players map to the new map provided.
-	 * Only to be called during game load.
-	 * @param The new players map from integer id to Player object
+	 * Resets the players map to the new map provided. Only to be called during
+	 * game load.
+	 * 
+	 * @param map
+	 *            --- The new players map from integer id to Player object
 	 */
-	public void resetPlayers(Map<Integer, Player> map){
+	public void resetPlayers(Map<Integer, Player> map) {
 		this.players = map;
 	}
 
@@ -763,8 +764,8 @@ public class Game {
 			}
 			return true;
 		} else if (item instanceof Key) {
-			// Key is not to be used manually
-			return false;
+			// let the player try to unlock something
+			return playerUnlockLockable(uid);
 		} else if (item instanceof Bag) {
 			Bag bag = (Bag) item;
 			// try to take things out
@@ -941,15 +942,18 @@ public class Game {
 
 	/**
 	 * Gets the player object with the name argument.
-	 * @param The name to match.
-	 * @return A Player object if a match is find. Returns null if there is no match.
+	 * 
+	 * @param The
+	 *            name to match.
+	 * @return A Player object if a match is find. Returns null if there is no
+	 *         match.
 	 */
-	public Player getPlayerByName(String name){
+	public Player getPlayerByName(String name) {
 		Player player = null;
-		//Looks through all players for a match.
-		for(Player p : this.players.values()){
-			if(p.getName().equals(name)){
-				 player = p;
+		// Looks through all players for a match.
+		for (Player p : this.players.values()) {
+			if (p.getName().equals(name)) {
+				player = p;
 				break;
 			}
 		}
