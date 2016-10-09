@@ -292,6 +292,10 @@ public class Receptionist extends Thread {
 					case TakeOutItem:
 						game.playerTakeItemsFromContainer(uid);
 						break;
+					case PutItemIntoContainer:
+						int index_3 = input.readInt();
+						game.playerPutItemIntoContainer(uid, index_3);
+						break;
 					case Unlock:
 						game.playerUnlockLockable(uid);
 						break;

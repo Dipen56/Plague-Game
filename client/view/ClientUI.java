@@ -167,6 +167,7 @@ public class ClientUI {
 	 * This is the index of the Avatar
 	 */
 	private int avatarIndex = 0;
+    
 	/**
 	 * This is index for the item array
 	 */
@@ -536,6 +537,7 @@ public class ClientUI {
 					gui.changeAvatarImage(avatarIndex);
 				} else if (event.toString().contains("right-insert")) {
 					System.out.println("insert");
+
 					System.out.println(itemIndex);
 					// TODO: use itemIndex
 					;
@@ -545,6 +547,7 @@ public class ClientUI {
 					System.out.println("right-use");
 				} else if (event.toString().contains("drop-use")) {
 					// TODO: use itemIndex
+
 					// this is for the login screen
 					System.out.println("drop-use");
 
@@ -642,6 +645,7 @@ public class ClientUI {
 
 						// System.out.println("item " + item);
 						if (item != null) {
+
 							if (item.startsWith("A")) {
 								gui.antidoteRightClickOption();
 							} else if (item.startsWith("K")) {
@@ -653,6 +657,7 @@ public class ClientUI {
 							} else if (item.startsWith("N")) {
 								gui.rightClickClear();
 							}
+
 							if (itemY == 0) {
 								itemIndex = itemX;
 							} else if (itemY == 1) {
@@ -667,6 +672,7 @@ public class ClientUI {
 								}
 
 							}
+
 						} else {
 							gui.rightClickClear();
 						}
