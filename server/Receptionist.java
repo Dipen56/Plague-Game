@@ -36,7 +36,7 @@ public class Receptionist extends Thread {
 	/**
 	 * User (client) id of this connection.
 	 */
-	private final int uid;
+	private int uid;
 
 	/**
 	 * User (client) specified name of this connection.
@@ -187,6 +187,25 @@ public class Receptionist extends Thread {
 		this.isGameRunning = true;
 	}
 
+	/**
+	 * Updates the uid field.
+	 *
+	 * @param A
+	 *            new uid integer.
+	 */
+	public void setUID(int uid) {
+		this.uid = uid;
+	}
+
+	/**
+	 * Gets the id of the player.
+	 *
+	 * @return The player UID.
+	 */
+	public int getUID() {
+		return this.uid;
+	}
+
 	@Override
 	public void run() {
 		try {
@@ -310,6 +329,8 @@ public class Receptionist extends Thread {
 			System.err.println("Player " + uid + " disconnected.");
 		} catch (InterruptedException e) {
 			System.err.println("Thread sleep interrupted. No big deal.");
+		} catch (RuntimeException e) {
+			e.printStackTrace();
 		} finally {
 			game.disconnectPlayer(uid);
 			try {

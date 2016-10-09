@@ -298,6 +298,15 @@ public class Game {
 	}
 
 	/**
+	 * Resets the players map to the new map provided.
+	 * Only to be called during game load.
+	 * @param The new players map from integer id to Player object
+	 */
+	public void resetPlayers(Map<Integer, Player> map){
+		this.players = map;
+	}
+
+	/**
 	 * This method check if the given position is occupied by other player.
 	 *
 	 * @param position
@@ -920,6 +929,23 @@ public class Game {
 	 */
 	public int getGameID() {
 		return this.gameID;
+	}
+
+	/**
+	 * Gets the player object with the name argument.
+	 * @param The name to match.
+	 * @return A Player object if a match is find. Returns null if there is no match.
+	 */
+	public Player getPlayerByName(String name){
+		Player player = null;
+		//Looks through all players for a match.
+		for(Player p : this.players.values()){
+			if(p.getName().equals(name)){
+				 player = p;
+				break;
+			}
+		}
+		return player;
 	}
 
 	/**

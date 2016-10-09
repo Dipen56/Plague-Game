@@ -25,7 +25,8 @@ public class Images {
 
 	public static final Image LOGIN_SCREEN_IMAGE = loadImage("/login-background.png");
 
-	public static final Image BACKGROUND_IMAGE = loadImage("/night.png");
+	// public static final Image BACKGROUND_IMAGE = loadImage("/night.png");
+	public static final Image BACKGROUND_IMAGE = loadImage("/background.gif");
 
 	public static final Image GRASS_IMAGE = loadImage("/grass.png");
 
@@ -129,8 +130,8 @@ public class Images {
 		Map<Side, Image> avatarImg_1 = new HashMap<>();
 		avatarImg_1.put(Side.Front, loadImage("/Char_1_front_stand.png"));
 		avatarImg_1.put(Side.Back, loadImage("/Char_1_rear_stand.png"));
-		avatarImg_1.put(Side.Left, loadImage("/Char_1_left_stand.png"));
-		avatarImg_1.put(Side.Right, loadImage("/Char_1_left_right_foot.png"));
+		avatarImg_1.put(Side.Left, loadImage("/Char_1_left_right_foot.png"));
+		avatarImg_1.put(Side.Right, loadImage("/Char_1_right_left_foot.png"));
 		AVATAR_IMAGES.put(Avatar.Avatar_1, avatarImg_1);
 
 		Map<Side, Image> avatarImg_2 = new HashMap<>();
@@ -178,8 +179,18 @@ public class Images {
 	 *            --- the other player's direction.
 	 * @return --- the proper image to render the other player.
 	 */
-	public static Image getAvatarImageByDirection(Avatar avatar, Direction ownDir, Direction hisDir) {
-		return AVATAR_IMAGES.get(avatar).get(Side.getSideByRelativeDirection(ownDir, hisDir));
+	public static Image getAvatarImageByDirection(Avatar otherAvatar, Direction ownDir, Direction hisDir) {
+
+		System.out.println("ownDir == null: " + ownDir == null);
+		System.out.println("hisDir == null: " + hisDir == null);
+
+		System.out.println("AVATAR_IMAGES == null: " + AVATAR_IMAGES == null);
+		System.out.println("AVATAR_IMAGES.get(otherAvatar) == null: " + AVATAR_IMAGES.get(otherAvatar) == null);
+		System.out
+				.println("AVATAR_IMAGES.get(otherAvatar).get(Side.getSideByRelativeDirection(ownDir, hisDir)) == null: "
+						+ AVATAR_IMAGES.get(otherAvatar).get(Side.getSideByRelativeDirection(ownDir, hisDir)) == null);
+
+		return AVATAR_IMAGES.get(otherAvatar).get(Side.getSideByRelativeDirection(ownDir, hisDir));
 	}
 
 	/**

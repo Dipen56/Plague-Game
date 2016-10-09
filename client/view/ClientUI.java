@@ -28,7 +28,7 @@ import server.game.player.Virus;
  * GUI/Renderer. The controller tells the server about the user's action by
  * interpreting mouse and keyboard events from the user, and updates the
  * renderer/GUI according to the received information from server.
- * 
+ *
  * @author Dipen & Hector
  *
  */
@@ -179,7 +179,7 @@ public class ClientUI {
 	/**
 	 * This method is used to connect the players to the client which then
 	 * connects them to the server
-	 * 
+	 *
 	 * @param ip
 	 *            --- the server ip address.
 	 * @param port
@@ -223,15 +223,15 @@ public class ClientUI {
 
 	/*
 	 * ===============================
-	 * 
+	 *
 	 * Methods related to the client
-	 * 
+	 *
 	 * ===============================
 	 */
 	/**
 	 * When the client receives the user ID from the server, this method will
 	 * update the local user ID.
-	 * 
+	 *
 	 * @param uid
 	 *            --- user id
 	 */
@@ -242,7 +242,7 @@ public class ClientUI {
 	/**
 	 * When the client receives the user's virus type from the server, this
 	 * method will update the local record
-	 * 
+	 *
 	 * @param virusIndex
 	 *            --- index of virus, which is equal to its ordinal number.
 	 */
@@ -254,7 +254,7 @@ public class ClientUI {
 	 * When the client receives a map string from the server, this method will
 	 * update the local table which records every area's map (in a plain char
 	 * matrix).
-	 * 
+	 *
 	 * @param mapStr
 	 *            --- a string representation of all maps in game.
 	 */
@@ -266,7 +266,7 @@ public class ClientUI {
 	 * When the client receives the string recording all players positions from
 	 * the server, this method will update the local table which records every
 	 * player's position.
-	 * 
+	 *
 	 * @param posStr
 	 *            --- a string representation of all positions of players.
 	 */
@@ -278,7 +278,7 @@ public class ClientUI {
 	 * When the client receives the string recording all players avatars from
 	 * the server, this method will update the local table which records every
 	 * player's avatar.
-	 * 
+	 *
 	 * @param avatarsStr
 	 *            --- a string representation of all avatars of all players.
 	 */
@@ -289,7 +289,7 @@ public class ClientUI {
 	/**
 	 * When the client receives a time string from the server, this method will
 	 * update the local time.
-	 * 
+	 *
 	 * @param timeStr
 	 *            --- a string representation of world time.
 	 */
@@ -300,7 +300,7 @@ public class ClientUI {
 	/**
 	 * When the client receives a health update from the server, this method
 	 * will update the local health.
-	 * 
+	 *
 	 * @param health
 	 *            --- the health left
 	 */
@@ -311,7 +311,7 @@ public class ClientUI {
 	/**
 	 * When the client receives a health update from the server, this method
 	 * will update the local health.
-	 * 
+	 *
 	 * @param visibility
 	 *            --- the visibility
 	 */
@@ -322,7 +322,7 @@ public class ClientUI {
 	/**
 	 * When the client receives a inventory update from the server, this method
 	 * will update the local inventory.
-	 * 
+	 *
 	 * @param invenStr
 	 *            --- a string representation of inventory items.
 	 */
@@ -334,7 +334,7 @@ public class ClientUI {
 	 * When the client receives the string recording the status of player
 	 * holding torch from the server, this method will update the local table
 	 * which records every player's status of holding torch.
-	 * 
+	 *
 	 * @param torchStatusStr
 	 *            --- a string representation of the status of player holding
 	 *            torch
@@ -346,7 +346,7 @@ public class ClientUI {
 	/**
 	 * When the client receives the string of chat message from the server, this
 	 * method will update the chat text area.
-	 * 
+	 *
 	 * @param chat
 	 *            --- a string representation of the status of player holding
 	 *            torch
@@ -356,8 +356,17 @@ public class ClientUI {
 	}
 
 	/**
+	 * This method reset uid for a hard reset
+	 *
+	 * @param uId
+	 */
+	public void resetUid(int uId) {
+		this.uid = uId;
+	}
+
+	/**
 	 * Get the user name
-	 * 
+	 *
 	 * @return --- the player's choice of user name
 	 */
 	public String getUserName() {
@@ -366,7 +375,7 @@ public class ClientUI {
 
 	/**
 	 * Get the avatar.
-	 * 
+	 *
 	 * @return --- the player's choice of avatar
 	 */
 	public Avatar getAvatar() {
@@ -375,9 +384,9 @@ public class ClientUI {
 
 	/*
 	 * ===============================
-	 * 
+	 *
 	 * Methods related to the render
-	 * 
+	 *
 	 * ===============================
 	 */
 	/**
@@ -421,7 +430,7 @@ public class ClientUI {
 		gui.setHealthBar(health, virus);
 		gui.objectLabel();
 		render.setAreaDescription();
-		
+
 	}
 
 	/**
@@ -556,10 +565,10 @@ public class ClientUI {
 				}
 				/*
 				 * TODO need more keys
-				 * 
+				 *
 				 * How to implement shift + 1 keys???
-				 * 
-				 * 
+				 *
+				 *
 				 */
 			}
 		};
@@ -575,7 +584,7 @@ public class ClientUI {
 			public void handle(MouseEvent event) {
 				// Currently this listen to clicks on the items
 				// TODO: some how make it work with items
-				//System.out.println("here" + event.toString());
+				// System.out.println("here" + event.toString());
 				if (event.toString().contains("Grid")) {
 					// System.out.println(event.getX());
 					if (inventory.size() != 0) {
@@ -584,17 +593,15 @@ public class ClientUI {
 						gui.setItemDescription(itemX, itemY);
 						// System.out.println(itemX + " " + itemY);
 					}
-				}else if(event.toString().contains("Grid") ){
-					
+				} else if (event.toString().contains("Grid")) {
+
 				}
 			}
 		};
 	}
 
-
-
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public String getFrontElementString() {
@@ -652,7 +659,7 @@ public class ClientUI {
 
 	/**
 	 * This method will return the action listeners
-	 * 
+	 *
 	 * @return --- the action listeners
 	 */
 	public EventHandler<ActionEvent> getActionEventHandler() {
@@ -661,7 +668,7 @@ public class ClientUI {
 
 	/**
 	 * This method will return the key listeners
-	 * 
+	 *
 	 * @return --- the key listeners
 	 */
 	public EventHandler<KeyEvent> getKeyEventHander() {
@@ -670,7 +677,7 @@ public class ClientUI {
 
 	/**
 	 * This method will return the mouse listener
-	 * 
+	 *
 	 * @return --- the mouse listener
 	 */
 	public EventHandler<MouseEvent> getMouseEventHander() {
@@ -679,7 +686,7 @@ public class ClientUI {
 
 	/**
 	 * This method will return the window listener
-	 * 
+	 *
 	 * @return --- the window listener
 	 */
 	public EventHandler<WindowEvent> getWindowEventHander() {
@@ -688,10 +695,11 @@ public class ClientUI {
 
 	/**
 	 * Main function.
-	 * 
+	 *
 	 * @param args
 	 */
 	public static void main(String[] args) {
 		new ClientUI();
 	}
+
 }
