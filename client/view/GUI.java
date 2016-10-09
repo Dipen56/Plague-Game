@@ -4,6 +4,7 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
@@ -77,7 +78,7 @@ public class GUI extends Application {
 	 * mini map color table
 	 */
 	public static final Map<Character, String> MAP_OBJECT_DESCRIPTION;
-	
+
 	/*
 	 * initialise the instruction table for minimap color and map element
 	 * description
@@ -85,9 +86,9 @@ public class GUI extends Application {
 	static {
 		MINIMAP_COLOR_TABLE = new HashMap<>();
 		MAP_OBJECT_DESCRIPTION = new HashMap<>();
-		
+
 		// ========== obstacles: Grey, Rock, Barrel, Table ===========
-		
+
 		// Rock
 		MINIMAP_COLOR_TABLE.put('R', Color.rgb(83, 86, 102, 1.0));
 		MAP_OBJECT_DESCRIPTION.put('R', "A rock. That won't heal me.");
@@ -100,9 +101,9 @@ public class GUI extends Application {
 		// Chair
 		MINIMAP_COLOR_TABLE.put('H', Color.rgb(83, 86, 102, 1.0));
 		MAP_OBJECT_DESCRIPTION.put('H', "It's a chair. I'd rather sit on it to rest.");
-		
+
 		// ===== Containers: golden, chest, cupboard, scrap pile =====
-		
+
 		// Chest
 		MINIMAP_COLOR_TABLE.put('C', Color.rgb(255, 170, 37, 1.0));
 		MAP_OBJECT_DESCRIPTION.put('C', "A chest. Probably contains loot.");
@@ -112,9 +113,9 @@ public class GUI extends Application {
 		// Scrap pile
 		MINIMAP_COLOR_TABLE.put('P', Color.rgb(255, 170, 37, 1.0));
 		MAP_OBJECT_DESCRIPTION.put('P', "A pile of useless scrap. Or is it?");
-		
+
 		// ============== Tree or ground: green ======================
-		
+
 		// Tree, dark green
 		MINIMAP_COLOR_TABLE.put('T', Color.rgb(68, 170, 58, 1.0));
 		MAP_OBJECT_DESCRIPTION.put('T', "A tree. Why they all look the same?");
@@ -124,15 +125,14 @@ public class GUI extends Application {
 		// Door space, this is just ground
 		MINIMAP_COLOR_TABLE.put('D', Color.rgb(200, 236, 204, 1.0));
 		MAP_OBJECT_DESCRIPTION.put('D', "");
-		
-		
+
 		// =========== Room obstacles: blue ====================
-		
+
 		// Room obstacles
 		MINIMAP_COLOR_TABLE.put('E', Color.rgb(19, 137, 245, 1.0));
 		MAP_OBJECT_DESCRIPTION.put('E', "I found a hidden cabin! I need to get inside.");
 	}
-	
+
 	// main window
 	private static Stage window;
 	// controls
@@ -160,6 +160,8 @@ public class GUI extends Application {
 	private Button play;
 	private Button quit;
 	private Button help;
+	private CheckMenuItem descriptionToggle;
+
 	// Controls for the login Screen
 	private Label info;
 	private Button login;
@@ -180,6 +182,8 @@ public class GUI extends Application {
 	private FlowPane playersWaiting;
 	private Button readyGame;
 	private Button quitWaitingRoom;
+	private Label objectDescription;
+
 	// this is for event
 	// for action events
 	private EventHandler<ActionEvent> actionEvent;
@@ -293,7 +297,7 @@ public class GUI extends Application {
 		prev.getStyleClass().add("button-login");
 		avatarLable = new Label();
 		avatarLable.setLayoutX(200);
-		Image avatarImg = Images.getAvatarImageBySide(avatarList.get(0), Side.Front);
+		Image avatarImg = Images.getAvatarImageBySide(avatarList.get(0), Side.Front, false);
 		avatarIndex = 0;
 		ImageView avatarImage = new ImageView(avatarImg);
 		avatarImage.setFitHeight(300);
@@ -357,7 +361,7 @@ public class GUI extends Application {
 
 	public void changeAvatarImage(int change) {
 		avatarIndex = change;
-		Image avatarImg = Images.getAvatarImageBySide(avatarList.get(change), Side.Front);
+		Image avatarImg = Images.getAvatarImageBySide(avatarList.get(change), Side.Front, false);
 		ImageView avatarImage = new ImageView(avatarImg);
 		avatarImage.setFitHeight(300);
 		avatarImage.setFitWidth(300);
@@ -488,11 +492,18 @@ public class GUI extends Application {
 		MenuItem itmSave = new MenuItem("Save");
 		itmSave.setId("SaveMenu");
 		itmSave.setOnAction(actionEvent);
+
+		// description toggle menu item
+		descriptionToggle = new CheckMenuItem("Des");
+		descriptionToggle.setId("Description");
+		descriptionToggle.setOnAction(actionEvent);
+		descriptionToggle.selectedProperty().setValue(true);
+
 		MenuItem itmClose = new MenuItem("Close");
 		itmClose.setId("CloseMenu");
 		itmClose.setOnAction(actionEvent);
 		// add the items to menu
-		file.getItems().addAll(itmLoad, itmSave, itmClose);
+		file.getItems().addAll(itmLoad, itmSave, descriptionToggle, itmClose);
 		// creates the menu
 		Menu help = new Menu("Help");
 		// creates the menu items
@@ -581,7 +592,7 @@ public class GUI extends Application {
 	public void setItems() {
 		TitledPane titlePane = new TitledPane();
 		titlePane.setText("Item Inventory");
-		VBox itemContainer = new VBox();
+		VBox itemContainer = new VBox(5);
 		HBox hbox = new HBox(5);
 		itemGrid = new GridPane();
 		itemGrid.setOnMouseMoved(mouseEvent);
@@ -629,7 +640,7 @@ public class GUI extends Application {
 		GridPane.setRowIndex(itemDetail, 0);
 		GridPane.setColumnIndex(itemDetail, 0);
 		itemDetail.setWrapText(true);
-		itemDetail.setPrefHeight(50);
+		itemDetail.setPrefHeight(100);
 		itemDetail.setPrefWidth(375);
 		detail.getChildren().add(itemDetail);
 		// hbox.getChildren().add(detail);
@@ -715,6 +726,24 @@ public class GUI extends Application {
 	}
 
 	/**
+	 * Is the description toggle on
+	 * 
+	 * @return
+	 */
+	public boolean isDescriptionOn() {
+		return descriptionToggle.selectedProperty().getValue();
+	}
+
+	/**
+	 * Set the description toggle as the given boolean value
+	 * 
+	 * @param boo
+	 */
+	public void setDescriptionOn(boolean boo) {
+		this.descriptionToggle.selectedProperty().setValue(boo);
+	}
+
+	/**
 	 * this method will set the world time
 	 * 
 	 * @param worldTime
@@ -729,7 +758,7 @@ public class GUI extends Application {
 	}
 
 	public void setWaitingRoomAvatar() {
-		Image avatarImg = Images.getAvatarImageBySide(Avatar.values()[avatarIndex], Side.Front);
+		Image avatarImg = Images.getAvatarImageBySide(Avatar.values()[avatarIndex], Side.Front, false);
 		ImageView avatarImage = new ImageView(avatarImg);
 		avatarImage.setFitHeight(80);
 		avatarImage.setFitWidth(80);
@@ -918,6 +947,7 @@ public class GUI extends Application {
 			itemDetail.setText(description);
 		} else if (item.startsWith("B")) {
 			img = Images.ITEM_IMAGES.get('B');
+			itemDetail.setText(description);
 		} else {
 			img = Images.INVENTORY_IMAGE;
 			itemDetail.setText("No Item Currently Selected");
@@ -928,6 +958,39 @@ public class GUI extends Application {
 		image.setFitHeight(120);
 		image.setImage(img);
 		zoomedItem.setGraphic(image);
+	}
+
+	public void objectLabel() {
+		objectDescription = new Label();
+		objectDescription.setLayoutX((GAMEPANE_WIDTH_VALUE / 2) - 20);
+		objectDescription.setLayoutY(HEIGHT_VALUE - 160);
+		objectDescription.getStyleClass().add("object-description");
+
+	}
+
+	/**
+	 * This method is used to display to the user the objects description.
+	 * 
+	 * @param description
+	 */
+	public void displayObjectDescription(String description) {
+		objectDescription.setText(description);
+		group.getChildren().add(objectDescription);
+	}
+
+	/**
+	 * This static helper method will pop up a message dialog to user.
+	 *
+	 * @param msg
+	 */
+	public static void showMsgPane(String title, String msg) {
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				AlertBox.displayMsg(title, msg);
+			}
+		});
+		System.err.println(msg);
 	}
 
 	/**

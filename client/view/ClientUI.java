@@ -159,6 +159,8 @@ public class ClientUI {
 
 	private int avatarIndex = 0;
 
+	private boolean descriptionToggle = true;
+
 	/**
 	 * Constructor
 	 */
@@ -389,17 +391,28 @@ public class ClientUI {
 		Position playerLoc = positions.get(uid);
 		int areaId = playerLoc.areaId;
 		char[][] worldMap = areas.get(areaId);
-		// 1. update GUI
-		// a. update minimap
+
+		// 1. update minimap
 		gui.updateMinimap(playerLoc, uid, worldMap, visibility, positions);
-		// b. update the inventory
-		// gui.setInventory(inventory);
-		// c. update the health bar if it is in right panel in GUI.
-		// 2. update Renderer
-		// a. call update renderer method.
+
+		// 2. update the renderer
 		render.render(playerLoc, worldMap, visibility, uid, avatars, positions);
 
+		// 3. update the health bar
 		gui.updateHealth(health);
+
+		// 4. update the inventory
+		gui.setInventory(inventory);
+
+		// 5. update area/room description
+		render.updateAreaDescription(descriptions.get(areaId));
+
+		// 6. update the map object description
+		if (descriptionToggle) {
+			gui.displayObjectDescription(getFrontElementString());
+		} else {
+			gui.displayObjectDescription("");
+		}
 
 	}
 
@@ -436,6 +449,9 @@ public class ClientUI {
 			}
 		});
 		gui.setHealthBar(health, virus);
+		gui.objectLabel();
+		render.setAreaDescription();
+
 	}
 
 	/**
@@ -507,6 +523,9 @@ public class ClientUI {
 						avatarIndex = 0;
 					}
 					gui.changeAvatarImage(avatarIndex);
+				} else if (event.toString().contains("Description")) {
+					descriptionToggle = !descriptionToggle;
+					gui.setDescriptionOn(descriptionToggle);
 				}
 			}
 		};
@@ -536,38 +555,37 @@ public class ClientUI {
 					client.send(Packet.TurnRight);
 				} else if (keyCode == KeyCode.F) {
 					client.send(Packet.Unlock);
-					// FIXME
-					gui.setInventory(inventory);
+
+					// gui.setInventory(inventory);
 				} else if (keyCode == KeyCode.G) {
 					client.send(Packet.TakeOutItem);
-					// FIXME
-					gui.setInventory(inventory);
+					// gui.setInventory(inventory);
 				} else if (keyCode == KeyCode.R) {
 					client.send(Packet.Transit);
 				} else if (keyCode == KeyCode.DIGIT1) {
 					client.sendWithIndex(Packet.UseItem, 0);
-					gui.setInventory(inventory);
+					// gui.setInventory(inventory);
 				} else if (keyCode == KeyCode.DIGIT2) {
 					client.sendWithIndex(Packet.UseItem, 1);
-					gui.setInventory(inventory);
+					// gui.setInventory(inventory);
 				} else if (keyCode == KeyCode.DIGIT3) {
 					client.sendWithIndex(Packet.UseItem, 2);
-					gui.setInventory(inventory);
+					// gui.setInventory(inventory);
 				} else if (keyCode == KeyCode.DIGIT4) {
 					client.sendWithIndex(Packet.UseItem, 3);
-					gui.setInventory(inventory);
+					// gui.setInventory(inventory);
 				} else if (keyCode == KeyCode.DIGIT5) {
 					client.sendWithIndex(Packet.UseItem, 4);
-					gui.setInventory(inventory);
+					// gui.setInventory(inventory);
 				} else if (keyCode == KeyCode.DIGIT6) {
 					client.sendWithIndex(Packet.UseItem, 5);
-					gui.setInventory(inventory);
+					// gui.setInventory(inventory);
 				} else if (keyCode == KeyCode.DIGIT7) {
 					client.sendWithIndex(Packet.UseItem, 6);
-					gui.setInventory(inventory);
+					// gui.setInventory(inventory);
 				} else if (keyCode == KeyCode.DIGIT8) {
 					client.sendWithIndex(Packet.UseItem, 7);
-					gui.setInventory(inventory);
+					// gui.setInventory(inventory);
 				}
 				/*
 				 * TODO need more keys

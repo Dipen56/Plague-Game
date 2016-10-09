@@ -30,17 +30,8 @@ import server.game.world.TransitionSpace;
  */
 public class TestConst {
 
-	/*
-	 * world area id: 0, the room area id: 1
-	 */
-	public static Area world;
-
-	/**
-	 * areas
-	 */
-	public static Map<Integer, Area> areas;
-
-	static {
+	public static Map<Integer, Area> createAreas() {
+		Map<Integer, Area> areas = new HashMap<>();
 
 		areas = new HashMap<>();
 
@@ -48,7 +39,7 @@ public class TestConst {
 
 		// first make the world map
 		MapElement[][] worldBoard = new MapElement[7][8];
-		world = new Area(worldBoard, 0, "MainMap");
+		Area world = new Area(worldBoard, 0, "MainMap");
 
 		// ground squares (positions we can enter)
 		for (int y = 0; y < 7; y++) {
@@ -142,6 +133,8 @@ public class TestConst {
 		for (Area a : areas.values()) {
 			a.registerPortals();
 		}
+
+		return areas;
 	}
 
 }
