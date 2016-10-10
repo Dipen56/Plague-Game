@@ -80,7 +80,7 @@ public class Client extends Thread {
 			output = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
 			input = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
 		} catch (IOException e) {
-			GUI.showWarningPane("I/O exceptions, " + e.toString());
+			GUI.showMsgPane("Error", "I/O exceptions, connection ended.");
 			e.printStackTrace();
 		}
 	}
@@ -96,7 +96,7 @@ public class Client extends Thread {
 			output.writeByte(packet.toByte());
 			output.flush();
 		} catch (IOException e) {
-			GUI.showWarningPane("I/O exceptions, " + e.toString());
+			GUI.showMsgPane("Error", "I/O exceptions, cannot send packet to server.");
 			e.printStackTrace();
 		}
 	}
@@ -116,7 +116,7 @@ public class Client extends Thread {
 			output.writeInt(i);
 			output.flush();
 		} catch (IOException e) {
-			GUI.showWarningPane("I/O exceptions, " + e.toString());
+			GUI.showMsgPane("Error", "I/O exceptions, cannot send packet to server.");
 			e.printStackTrace();
 		}
 	}
@@ -136,7 +136,7 @@ public class Client extends Thread {
 			output.writeUTF(str);
 			output.flush();
 		} catch (IOException e) {
-			GUI.showWarningPane("I/O exceptions, " + e.toString());
+			GUI.showMsgPane("Error", "I/O exceptions, " + e.toString());
 			e.printStackTrace();
 		}
 	}
@@ -249,7 +249,7 @@ public class Client extends Thread {
 				}
 			}
 		} catch (IOException e) {
-			GUI.showWarningPane("I/O Error: " + e.getMessage());
+			GUI.showMsgPane("Error", "I/O Error, cannot receive packet to server.");
 			e.printStackTrace();
 		} finally {
 			try {

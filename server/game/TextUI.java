@@ -1,5 +1,6 @@
 package server.game;
 
+import java.util.Map;
 import java.util.Scanner;
 
 import client.ParserUtilities;
@@ -37,7 +38,10 @@ public class TextUI {
 
 	private Game setupGame() {
 
-		Game game = new Game(TestConst.world, TestConst.areas);
+		Map<Integer, Area> areas = TestConst.createAreas();
+		Area world = areas.get(0);
+
+		Game game = new Game(world, areas);
 
 		// mock player
 		Player player = new Player(MOCK_UID, Avatar.Avatar_1, "Hector");

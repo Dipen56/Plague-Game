@@ -2,7 +2,6 @@ package server.game;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,11 +28,12 @@ import server.game.world.Room;
 import server.game.world.TransitionSpace;
 
 /**
- * This class represents the game.
+ * This class represents the game world. All external access to game world is
+ * done through this class.
+ * 
  *
  * TODO <br>
  * 1. the game is not detecting win condition<br>
- * 2. it doesn't support save/load yet<br>
  * 3. it doesn't support trading system yet<br>
  * 4. it has no npc or enemy.<br>
  *
@@ -70,6 +70,11 @@ public class Game {
 	 * The hour when the sun set
 	 */
 	private static final int SUNSET_TIME = 18;
+
+	/**
+	 * The speed of world time advancing
+	 */
+	public static final int TIME_ADVANCING_SPEED = 480;
 
 	/**
 	 * A static instance used in board grid to represent the ground space (no
@@ -269,8 +274,8 @@ public class Game {
 					}
 				}
 
-				// time advance by 1 second
-				clock = clock.plusSeconds(480);
+				// time advance by some amount
+				clock = clock.plusSeconds(TIME_ADVANCING_SPEED);
 			}
 		}, 1000, 1000);
 	}
@@ -286,25 +291,27 @@ public class Game {
 		// delete player from player list.
 		Player player = players.remove(playerId);
 
-		/*
+		// this feature is disabled due to constraints from data storage part
+
 		// randomly re-distribute all keys in his inventory
-		List<Key> hisKeys = player.getAllKeys();
-		if (!hisKeys.isEmpty()) {
-			for (Key k : hisKeys) {
-				Collections.shuffle(containers);
-				containers.get(0).getLoot().add(k);
-			}
-		}
-		*/
+		// List<Key> hisKeys = player.getAllKeys();
+		// if (!hisKeys.isEmpty()) {
+		// for (Key k : hisKeys) {
+		// Collections.shuffle(containers);
+		// containers.get(0).getLoot().add(k);
+		// }
+		// }
 
 	}
 
 	/**
-	 * Resets the players map to the new map provided.
-	 * Only to be called during game load.
-	 * @param The new players map from integer id to Player object
+	 * Resets the players map to the new map provided. Only to be called during
+	 * game load.
+	 * 
+	 * @param map
+	 *            --- The new players map from integer id to Player object
 	 */
-	public void resetPlayers(Map<Integer, Player> map){
+	public void resetPlayers(Map<Integer, Player> map) {
 		this.players = map;
 	}
 
@@ -757,8 +764,8 @@ public class Game {
 			}
 			return true;
 		} else if (item instanceof Key) {
-			// Key is not to be used manually
-			return false;
+			// let the player try to unlock something
+			return playerUnlockLockable(uid);
 		} else if (item instanceof Bag) {
 			Bag bag = (Bag) item;
 			// Remove bag from inventory to allow space for item
@@ -937,15 +944,18 @@ public class Game {
 
 	/**
 	 * Gets the player object with the name argument.
-	 * @param The name to match.
-	 * @return A Player object if a match is find. Returns null if there is no match.
+	 * 
+	 * @param The
+	 *            name to match.
+	 * @return A Player object if a match is find. Returns null if there is no
+	 *         match.
 	 */
-	public Player getPlayerByName(String name){
+	public Player getPlayerByName(String name) {
 		Player player = null;
-		//Looks through all players for a match.
-		for(Player p : this.players.values()){
-			if(p.getName().equals(name)){
-				 player = p;
+		// Looks through all players for a match.
+		for (Player p : this.players.values()) {
+			if (p.getName().equals(name)) {
+				player = p;
 				break;
 			}
 		}

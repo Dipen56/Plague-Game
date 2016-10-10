@@ -21,7 +21,7 @@ public class GroundSpace implements MapElement {
 
 	@Override
 	public String toString() {
-		return "G";
+		return "GroundSpace";
 	}
 
 	@Override

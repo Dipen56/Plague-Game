@@ -16,7 +16,6 @@ import javafx.stage.WindowEvent;
 
 import client.Client;
 import client.ParserUtilities;
-import client.rendering.Images;
 import client.rendering.Rendering;
 import server.Packet;
 import server.game.player.Avatar;
@@ -60,8 +59,8 @@ public class ClientUI {
 	 */
 	private Avatar avatar;
 
-	/**e
-	 * Virus type of the player at this connection
+	/**
+	 * e Virus type of the player at this connection
 	 */
 	private Virus virus;
 
@@ -167,10 +166,13 @@ public class ClientUI {
 	 * This is the index of the Avatar
 	 */
 	private int avatarIndex = 0;
+
 	/**
-	 * This string is used for right click action.
+	 * This is index for the item array
 	 */
-	private String itemDescription;
+	private int itemIndex;
+
+	private boolean descriptionToggle = true;
 
 	/**
 	 * Constructor
@@ -206,7 +208,7 @@ public class ClientUI {
 	public boolean loginPlayer(String ip, int port, String userName, int avatarIndex) {
 		// ip address format check
 		if (!ip.matches("\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}")) {
-			GUI.showWarningPane("It's not a proper ip address.");
+			GUI.showMsgPane("Error", "It's not a correct ip address.");
 			return false;
 		}
 		// create a socket
@@ -214,7 +216,7 @@ public class ClientUI {
 		try {
 			s = new Socket(ip, port);
 		} catch (IOException e) {
-			GUI.showWarningPane("Failed to connect to server");
+			GUI.showMsgPane("Error", "Failed to connect to server");
 			return false;
 		}
 		client = new Client(s, this);
@@ -411,28 +413,36 @@ public class ClientUI {
 		Position playerLoc = positions.get(uid);
 		int areaId = playerLoc.areaId;
 		char[][] worldMap = areas.get(areaId);
-		// 1. update GUI
-		// a. update minimap
+
+		// 1. update minimap
 		gui.updateMinimap(playerLoc, uid, worldMap, visibility, positions);
-		// b. update the inventory
-		// gui.setInventory(inventory);
-		// c. update the health bar if it is in right panel in GUI.
-		// 2. update Renderer
-		// a. call update renderer method.
+
+		// 2. update the renderer
 		render.render(playerLoc, worldMap, visibility, uid, avatars, positions);
 
+		// 3. update the health bar
 		gui.updateHealth(health);
+
+		// 4. update the inventory
 		gui.setInventory(inventory);
+
+		// 5. update area/room description
 		render.updateAreaDescription(descriptions.get(areaId));
-		gui.displayObjectDescription(getFrontElementString());
-		if(!playerDead){
-			//Displays dialog when player health is 0
-			if(health <= 0){
+		// 6. update the map object description
+		if (descriptionToggle) {
+			gui.displayObjectDescription(getFrontElementString());
+		} else {
+			gui.displayObjectDescription("");
+		}
+
+		// 7. if player is dead, prompt it.
+		if (!playerDead) {
+			// Displays dialog when player health is 0
+			if (health <= 0) {
 				AlertBox.displayMsg("YOU ARE DEAD", "GAMEOVER");
 				playerDead = true;
 			}
 		}
-
 	}
 
 	/**
@@ -447,7 +457,9 @@ public class ClientUI {
 				clockThread.start();
 			}
 		});
-		gui.setHealthBar(health, virus);
+
+		gui.setHealthBar(health, virus,userName);
+
 		gui.objectLabel();
 		render.setAreaDescription();
 
@@ -480,7 +492,7 @@ public class ClientUI {
 					try {
 						port = Integer.valueOf(gui.getPortString());
 					} catch (NumberFormatException e) {
-						GUI.showWarningPane("Port number should be an integer");
+						GUI.showMsgPane("Error", "Port number should be an integer");
 						return;
 					}
 
@@ -524,18 +536,24 @@ public class ClientUI {
 					}
 					gui.changeAvatarImage(avatarIndex);
 				} else if (event.toString().contains("right-insert")) {
-					System.out.println("insert");
-					// TODO: use itemDescription
-					;
-				} else if (event.toString().contains("right-use")) {
-					// TODO: use itemDescription
-					// this is for the login screen
-					System.out.println("right-use");
-				} else if (event.toString().contains("drop-use")) {
-					// TODO: use itemDescription
-					// this is for the login screen
-					System.out.println("drop-use");
 
+					// System.out.println("insert");
+					// System.out.println(itemIndex);
+
+					// the player want to insert item into container
+					client.sendWithIndex(Packet.PutItemIntoContainer, itemIndex);
+
+				} else if (event.toString().contains("right-use")) {
+					// System.out.println("right-use");
+					client.sendWithIndex(Packet.UseItem, itemIndex);
+
+				} else if (event.toString().contains("drop-use")) {
+					// System.out.println("drop-use");
+					client.sendWithIndex(Packet.DestroyItem, itemIndex);
+
+				} else if (event.toString().contains("Description")) {
+					descriptionToggle = !descriptionToggle;
+					gui.setDescriptionOn(descriptionToggle);
 				}
 			}
 		};
@@ -565,8 +583,10 @@ public class ClientUI {
 					client.send(Packet.TurnRight);
 				} else if (keyCode == KeyCode.F) {
 					client.send(Packet.Unlock);
+
 				} else if (keyCode == KeyCode.G) {
 					client.send(Packet.TakeOutItem);
+
 				} else if (keyCode == KeyCode.R) {
 					client.send(Packet.Transit);
 				} else if (keyCode == KeyCode.DIGIT1) {
@@ -622,9 +642,10 @@ public class ClientUI {
 						int itemX = (int) (event.getX() / 60);
 						int itemY = (int) (event.getY() / 60);
 						String item = gui.getItemDescription(itemX, itemY);
+
 						// System.out.println("item " + item);
 						if (item != null) {
-							itemDescription = item;
+
 							if (item.startsWith("A")) {
 								gui.antidoteRightClickOption();
 							} else if (item.startsWith("K")) {
@@ -636,6 +657,22 @@ public class ClientUI {
 							} else if (item.startsWith("N")) {
 								gui.rightClickClear();
 							}
+
+							if (itemY == 0) {
+								itemIndex = itemX;
+							} else if (itemY == 1) {
+								if (itemX == 0) {
+									itemIndex = 4;
+								} else if (itemX == 1) {
+									itemIndex = 5;
+								} else if (itemX == 2) {
+									itemIndex = 6;
+								} else if (itemX == 3) {
+									itemIndex = 7;
+								}
+
+							}
+
 						} else {
 							gui.rightClickClear();
 						}
