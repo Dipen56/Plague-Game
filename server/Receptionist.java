@@ -407,15 +407,20 @@ public class Receptionist extends Thread {
 		String torchStatus = game.getTorchStatusString();
 		gameString.append(torchStatus);
 		gameString.append('\n');
-
-		// 7. win/loose
+		
+		// 7. alive or not for all players
+		String aliveStatus = game.getAliveString();
+		gameString.append(aliveStatus);
+		gameString.append('\n');
+		
+		// 8. win/loose
 		String winStatus = game.getWinString();
 		gameString.append(winStatus);
 		gameString.append('\n');
 
 		// ======= optional message broadcast =======
 
-		// 8. chat message
+		// 9. chat message
 		String message = server.retrieveMessage();
 		if (message != null) {
 			// prefix a 'M' for message
@@ -424,7 +429,7 @@ public class Receptionist extends Thread {
 			gameString.append('\n');
 		}
 
-		// 9. notification
+		// 10. notification
 		String nMsg = server.retrieveNotification(uid);
 		if (nMsg != null) {
 			// prefix a 'N' for message
@@ -433,7 +438,7 @@ public class Receptionist extends Thread {
 			gameString.append('\n');
 		}
 
-		// TODO 10. more optional content
+		// TODO 11. more optional content
 
 		return gameString.toString();
 	}

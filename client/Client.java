@@ -366,7 +366,18 @@ public class Client extends Thread {
 			return;
 		}
 
-		// 7. win/loose
+		// 7. alive or not for all players
+		if (s.hasNextLine()) {
+			line = s.nextLine();
+			controller.parseAliveStatus(line);
+		} else {
+			System.out.println("Data incomplete, no status for player's aliveness received.");
+			// Data is incomplete, ignore.
+			s.close();
+			return;
+		}
+
+		// 8. win/loose
 		if (s.hasNextLine()) {
 			line = s.nextLine();
 			String[] strs = line.split(",");
@@ -375,7 +386,7 @@ public class Client extends Thread {
 			if (hasWinner) {
 				String winnerName = strs[1];
 				isGameRunning = false;
-				controller.GameOver("We have a winner", "The winner is " + winnerName);
+				controller.gameOver("We have a winner", "The winner is " + winnerName);
 			}
 
 		} else {
@@ -391,10 +402,10 @@ public class Client extends Thread {
 			line = s.nextLine();
 
 			if (line.startsWith("M")) {
-				// 8. chat message
+				// 9. chat message
 				controller.parseChatMessage(line.substring(1));
 			} else if (line.startsWith("N")) {
-				// 9. notification
+				// 10. notification
 				controller.parseNotificationMsg(line.substring(1));
 			}
 		}

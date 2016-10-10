@@ -1039,6 +1039,35 @@ public class Game {
 	}
 
 	/**
+	 * Generate a String of the status of all players' aliveness, i.e. whether
+	 * the is alive or not. This is used for the renderer at client side. The
+	 * String has the following format:
+	 * <i>"uId_1,true/false|uId_2,true/false"</i>, where true or false is
+	 * represented as 1 or 0.
+	 *
+	 * <p>
+	 * Say 2 players currently in game:
+	 * <li>player 1, id 111, is alive
+	 * <li>player 2, id 222, is dead<br>
+	 * <br>
+	 * <p>
+	 * The string representation will be <i>"111,1|222,0"</i>
+	 *
+	 * @return --- a string representation of the status of all players'
+	 *         aliveness. This is used for network transmission.
+	 */
+	public String getAliveString() {
+		StringBuilder sb = new StringBuilder();
+		for (Player p : players.values()) {
+			sb.append(p.getId());
+			sb.append(",");
+			sb.append(p.isAlive() ? '1' : '0');
+			sb.append("|");
+		}
+		return sb.toString();
+	}
+
+	/**
 	 * This method is used to generate the string for broadcasting player's
 	 * inventory to clients. The String has the following format:
 	 *
