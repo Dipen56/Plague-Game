@@ -68,9 +68,14 @@ public class Images {
 	public static final Image HOWTOPLAY_IMAGE = loadImage("/HowToPlay.png");
 
 	/**
-	 * Keyboard short-cut key help screen image
+	 * Keyboard short-cut help screen image
 	 */
-	public static final Image KEYBOARDSHORT_IMAGE = loadImage("/Keyboard_Help.png");
+	public static final Image KEYBOARDSHORT_IMAGE = loadImage("/Keyboard_Help.jpg");
+
+	/**
+	 * waiting room image
+	 */
+	public static final Image WAITING_ROOM_IMAGE = loadImage("/wating-room.gif");
 
 	/**
 	 * Four green arrow images used for rendering mini-map
@@ -115,7 +120,7 @@ public class Images {
 	public static final Map<Avatar, Map<Side, Image>> DEAD_IMAGES;
 
 	/*
-	 * Initialise the constant tables for renderer. 
+	 * Initialise the constant tables for renderer.
 	 */
 	static {
 		MAP_OBJECT_IMAGES = new HashMap<>();
@@ -244,7 +249,7 @@ public class Images {
 		RED_ARROW.put(Direction.West, loadImage("/Red_West.png"));
 
 		// ============= profile pictures =====================
-		
+
 		PROFILE_IMAGES.put(Avatar.Avatar_1, loadImage("/Char_1_face.png"));
 		PROFILE_IMAGES.put(Avatar.Avatar_2, loadImage("/Char_3_Face.png"));
 		PROFILE_IMAGES.put(Avatar.Avatar_3, loadImage("/Char_2_Face.png"));
