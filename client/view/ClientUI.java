@@ -479,8 +479,14 @@ public class ClientUI {
 					} else {
 						str = "Can't put items into it";
 					}
+				} else if (nMsg.startsWith("Y")) {
+					// This means try-unlock was failed.
+					frontMapElement = getFrontMapElement();
+					if (frontMapElement != 'C' && frontMapElement != 'E' && frontMapElement != 'U') {
+						str = "";
+					}
 				}
-				gui.setObjectDetail(nMsg);
+				gui.setObjectDetail(str);
 			}
 		});
 	}

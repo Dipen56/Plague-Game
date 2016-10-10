@@ -67,8 +67,14 @@ public class Images {
 	 */
 	public static final Image HOWTOPLAY_IMAGE = loadImage("/HowToPlay.png");
 
+	/**
+	 * Keyboard short-cut help screen image
+	 */
 	public static final Image KEYBOARDSHORT_IMAGE = loadImage("/Keyboard_Help.jpg");
 
+	/**
+	 * waiting room image
+	 */
 	public static final Image WAITING_ROOM_IMAGE = loadImage("/wating-room.gif");
 
 	/**

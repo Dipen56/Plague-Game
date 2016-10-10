@@ -288,7 +288,7 @@ public class Game {
 	 * @param playerId
 	 *            --- the id number of the disconnected player
 	 */
-    @SuppressWarnings("unused")
+	@SuppressWarnings("unused")
 	public void disconnectPlayer(int playerId) {
 		// delete player from player list.
 		Player player = players.remove(playerId);
