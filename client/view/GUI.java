@@ -156,7 +156,7 @@ public class GUI extends Application {
 	// Main window for the game
 	private static Stage window;
 	// controls
-	private Label worldTimeLabel;
+	private Label objectNotificationLabel;
 	private Canvas miniMapCanvas;
 	private Label textAreaLable;
 	private TextField chatMessage;
@@ -174,7 +174,7 @@ public class GUI extends Application {
 	private Label waitingRoomMessage;
 	private Button readyGame;
 	private Label objectDescription;
-	private Label objectNotifcation;
+	private Label worldTimeLable;
 	// control for menu item;
 	private CheckMenuItem descriptionToggle;
 	// Layouts
@@ -627,11 +627,11 @@ public class GUI extends Application {
 	private void setObjectNotification() {
 		TitledPane titlePane = new TitledPane();
 		titlePane.setText("Object Notification");
-		worldTimeLabel = new Label();
-		titlePane.setContent(worldTimeLabel);
-		worldTimeLabel.setPrefWidth(400);
-		worldTimeLabel.setPrefHeight(50);
-		worldTimeLabel.getStyleClass().add("world-time-lable");
+		objectNotificationLabel = new Label();
+		titlePane.setContent(objectNotificationLabel);
+		objectNotificationLabel.setPrefWidth(400);
+		objectNotificationLabel.setPrefHeight(50);
+		objectNotificationLabel.getStyleClass().add("world-time-lable");
 		rightPanel.getChildren().add(titlePane);
 	}
 
@@ -859,8 +859,8 @@ public class GUI extends Application {
 	 * 
 	 * @param worldTime
 	 */
-	public void setWorldTime(String time) {
-		worldTimeLabel.setText(time);
+	public void setObjectNotification(String time) {
+		objectNotificationLabel.setText(time);
 	}
 
 	/**
@@ -1153,27 +1153,26 @@ public class GUI extends Application {
 	}
 
 	/**
-	 * this method is used to set the object notification
+	 * this method is used to set the world time
 	 */
-	public void objectNotifcation() {
-		objectNotifcation = new Label();
-		objectNotifcation.setWrapText(true);
-		objectNotifcation.setPrefWidth(150);
-		objectNotifcation.setLayoutX((GAMEPANE_WIDTH_VALUE / 2) - 20);
-		objectNotifcation.setLayoutY(30);
-		objectNotifcation.getStyleClass().add("object-description");
+	public void setWorldTime() {
+		worldTimeLable = new Label();
+		worldTimeLable.setWrapText(true);
+		worldTimeLable.setPrefWidth(150);
+		worldTimeLable.setLayoutX((GAMEPANE_WIDTH_VALUE / 2) - 20);
+		worldTimeLable.setLayoutY(30);
+		worldTimeLable.getStyleClass().add("object-description");
 	}
 
 	/**
-	 * This method is used to display to the user the notification of last
-	 * action, e.g. if the player failed to open a chest or other reason.
+	 * this method is used to display the world time give a string which is the
+	 * time
 	 * 
-	 * @param nMsg
-	 *            --- the notification message.
+	 * @param time
 	 */
-	public void displayNotification(String nMsg) {
-		objectNotifcation.setText(nMsg);
-		pane.getChildren().add(objectNotifcation);
+	public void displayTime(String time) {
+		worldTimeLable.setText(time);
+		pane.getChildren().add(worldTimeLable);
 	}
 
 	/**

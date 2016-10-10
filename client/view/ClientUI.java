@@ -487,7 +487,7 @@ public class ClientUI {
 					}
 				}
 
-				gui.setWorldTime(nMsg);
+				gui.setObjectNotification(nMsg);
 			}
 		});
 	}
@@ -547,7 +547,7 @@ public class ClientUI {
 		// 5. update area/room description
 		render.updateAreaDescription(descriptions.get(areaId));
 
-		gui.displayNotification(time);
+		gui.displayTime(time);
 
 		// 6. update the map object description
 		if (descriptionToggle) {
@@ -583,7 +583,7 @@ public class ClientUI {
 		});
 		gui.setHealthBar(health, virus, userName, avatar);
 		gui.objectLabel();
-		gui.objectNotifcation();
+		gui.setWorldTime();
 		render.setAreaDescription();
 
 	}
