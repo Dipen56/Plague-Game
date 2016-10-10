@@ -61,6 +61,11 @@ public class Images {
 	 */
 	public static final Map<Character, Image> ITEM_IMAGES;
 
+	/**
+	 * This is the profile pictures.
+	 */
+	public static final Map<Avatar, Image> PROFILE_IMAGES;
+
 	/*
 	 * Initialise the table for Renderer. Each table contains a map which maps a
 	 * char to the corresponding object, so the Renderer knows what to render by
@@ -73,6 +78,7 @@ public class Images {
 		AVATAR_IMAGES_WITH_TORCH = new HashMap<>();
 		GREEN_ARROW = new HashMap<>();
 		RED_ARROW = new HashMap<>();
+		PROFILE_IMAGES = new HashMap<>();
 
 		/*
 		 * TODO This is probably not appropriate, some map objects may need more
@@ -198,6 +204,12 @@ public class Images {
 		RED_ARROW.put(Direction.East, loadImage("/Red_East.png"));
 		RED_ARROW.put(Direction.South, loadImage("/Red_South.png"));
 		RED_ARROW.put(Direction.West, loadImage("/Red_West.png"));
+
+		// ============= profile pictures =====================
+		PROFILE_IMAGES.put(Avatar.Avatar_1, loadImage("/Char_1_face.png"));
+		PROFILE_IMAGES.put(Avatar.Avatar_2, loadImage("/Char_3_Face.png"));
+		PROFILE_IMAGES.put(Avatar.Avatar_3, loadImage("/Char_2_Face.png"));
+		PROFILE_IMAGES.put(Avatar.Avatar_4, loadImage("/Char_4_Face.png"));
 	}
 
 	/**
