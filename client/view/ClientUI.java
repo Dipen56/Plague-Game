@@ -577,9 +577,10 @@ public class ClientUI {
 				} else if (event.toString().contains("Run Away")) {
 					// this is for the main screen of the game
 					gui.getWindow().close();
-				} else if (event.toString().contains("KeyboardShortcut")) {
+				} else if (event.toString().contains("Help")) {
 					// TODO: need to make a help thing which tells the user how
 					// to play the game
+					AlertBox.keyPopUp();
 				} else if (event.toString().contains("Login")) {
 					// parse the port number to int
 					int port = -1;
@@ -613,10 +614,9 @@ public class ClientUI {
 				} else if (event.toString().contains("CloseMenu")) {
 					gui.getWindow().close();
 				} else if (event.toString().contains("InfoMenu")) {
-					// TODO: make a info page
-					System.out.println("INFO");
+					AlertBox.keyPopUp();
 				} else if (event.toString().contains("AboutMenu")) {
-					System.out.println("ABOUT");
+					AlertBox.aboutPopUp();
 				} else if (event.toString().contains("PrevAvatar")) {
 					avatarIndex--;
 					if (avatarIndex < 0) {

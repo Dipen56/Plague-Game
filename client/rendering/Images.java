@@ -41,7 +41,7 @@ public class Images {
 	
 	public static final Image HOWTOPLAY_IMAGE = loadImage("/HowToPlay.png");
 	
-	public static final Image KEYBOARDSHORT_IMAGE = loadImage("/Keyboard_Help.png");
+	public static final Image KEYBOARDSHORT_IMAGE = loadImage("/Keyboard_Help.jpg");
 	
 	public static final Image WAITING_ROOM_IMAGE = loadImage("/wating-room.gif");
 	/**
