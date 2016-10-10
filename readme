@@ -9,13 +9,16 @@ They must search for antidotes to temporarily raise their health again, to keep 
 ===========================================================================================================
 STARTING THE GAME
 1. Starting the server:
-On the computer which will host the server, open the file Plague.jar.
-This is an executable jar file.
-A dialog will open requesting the number of players to player.
+
+On the computer which will host the server, run the file Plague.jar file with the following command line command:
+java -jar Plague.jar -server
+
+A dialog will open requesting the number of players for the upcoming game.
 Enter a number between 2 and 4 (inclusive).
-Once in the game menu, select "Host Server".
+
 2. Starting a client
-Open Plague.jar (if this is already open do not open it again).
+Open Plague.jar using the command line command:
+  java -jar Plague.jar -client
 Press "Play".
 3. Connecting the client to the server:
 In the window which appears fill out the "Enter UserName" field with your name.
