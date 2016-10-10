@@ -30,6 +30,8 @@ public class Images {
 	public static final Image NIGHTIME_IMAGE = loadImage("/background.gif");
 
 	public static final Image GRASS_IMAGE = loadImage("/grass.png");
+	
+	public static final Image GRASSNIGHT_IMAGE = loadImage("/grass_dark.png");
 
 	/**
 	 * Four green arrow images used for rendering mini-map

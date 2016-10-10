@@ -452,8 +452,7 @@ public class ClientUI {
 		gui.updateMinimap(playerLoc, uid, worldMap, visibility, positions);
 
 		// 2. update the renderer
-        // render.render(playerLoc, worldMap, visibility, uid, avatars, positions, torchStatus, hourOfTime);
-		render.render(playerLoc, worldMap, visibility, uid, avatars, positions, torchStatus, false);
+        render.render(playerLoc, worldMap, visibility, uid, avatars, positions, torchStatus, hourOfTime);
 
 		// 3. update the health bar
 		gui.updateHealth(health);

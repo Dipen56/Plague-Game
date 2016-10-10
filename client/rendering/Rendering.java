@@ -57,18 +57,20 @@ public class Rendering {
 	 * @param b
 	 */
 	public void render(Position playerLoc, char[][] worldMap, int visibility, int uid, Map<Integer, Avatar> avatars,
-			Map<Integer, Position> positions, Map<Integer, Boolean> torchStatus, boolean isDayTime) {
+			Map<Integer, Position> positions, Map<Integer, Boolean> torchStatus, int hourOfTime) {
 		renderGroup.getChildren().clear();
 		Direction direction = playerLoc.getDirection();
 		Image background;
+		Image grass;
 		// For Night and Day Backgrounds
-		if (isDayTime) {
+		if (hourOfTime >= 6 && hourOfTime < 18) {
 			background = Images.DAYTIME_IMAGE;
+			grass = Images.GRASS_IMAGE;
 		} else {
 			background = Images.NIGHTIME_IMAGE;
+			grass = Images.GRASSNIGHT_IMAGE;
 		}
 		/////////////////////////////////
-		Image grass = Images.GRASS_IMAGE;
 		addImage(renderGroup, background, gamePanelWidth, gamePaneHeight, 0, 0);
 		setNumSquares(worldMap.length, worldMap[0].length, direction, playerLoc, worldMap);
 		double yTop = getTopOffset();
@@ -415,6 +417,7 @@ public class Rendering {
 	 */
 	private void addImage(Pane renderGroup, Image image, double width, double height, double setX, double setY) {
 		ImageView imageView = new ImageView();
+		// int brightness = getImageBrightness();
 		changeImageBrightness(0);
 		imageView.setImage(image);
 		imageView.setFitHeight(height);
@@ -423,6 +426,11 @@ public class Rendering {
 		imageView.setY(setY);
 		imageView.setEffect(colorAdjust);
 		renderGroup.getChildren().add(imageView);
+	}
+
+	private int getImageBrightness(double clock) {
+
+		return 0;
 	}
 
 	public void setAreaDescription() {
