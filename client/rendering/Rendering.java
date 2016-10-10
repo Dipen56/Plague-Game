@@ -71,7 +71,7 @@ public class Rendering {
 			grass = Images.GRASSNIGHT_IMAGE;
 		}
 		/////////////////////////////////
-		addImage(renderGroup, background, gamePanelWidth, gamePaneHeight, 0, 0);
+		addImage(renderGroup, background, gamePanelWidth, gamePaneHeight, 0, 0, hourOfTime);
 		setNumSquares(worldMap.length, worldMap[0].length, direction, playerLoc, worldMap);
 		double yTop = getTopOffset();
 		double previousTileWidth = tileWidth * Math.pow(scale, squaresInFront);
@@ -94,14 +94,14 @@ public class Rendering {
 						renderGroup);
 				if (direction.equals(Direction.North) || direction.equals(Direction.South)) {
 					addObject(xLeftTop, yBottom, xRightTop, row, playerLoc.x, "middle", worldMap, renderGroup,
-							direction, yTop);
+							direction, yTop, hourOfTime);
 					addAvatar(xLeftTop, yBottom, xRightTop, row, playerLoc.x, "middle", worldMap, renderGroup,
-							direction, yTop, avatars, positions, uid, torchStatus);
+							direction, yTop, avatars, positions, uid, torchStatus, hourOfTime);
 				} else {
 					addObject(xLeftTop, yBottom, xRightTop, row, playerLoc.y, "middle", worldMap, renderGroup,
-							direction, yTop);
+							direction, yTop, hourOfTime);
 					addAvatar(xLeftTop, yBottom, xRightTop, row, playerLoc.y, "middle", worldMap, renderGroup,
-							direction, yTop, avatars, positions, uid, torchStatus);
+							direction, yTop, avatars, positions, uid, torchStatus, hourOfTime);
 				}
 				for (int col = squaresToLeft - 1; col >= 0; col--) {
 					Polygon squareLeft = new Polygon();
@@ -115,9 +115,9 @@ public class Rendering {
 						addTile(squareLeft, tileXLeftTop, tileXRightTop, tileXRightBottom, tileXLeftBottom, yBottom,
 								yTop, renderGroup);
 						addObject(tileXLeftTop, yBottom, tileXRightBottom, row, col, "left", worldMap, renderGroup,
-								direction, yTop);
+								direction, yTop, hourOfTime);
 						addAvatar(tileXLeftTop, yBottom, tileXRightBottom, row, col, "left", worldMap, renderGroup,
-								direction, yTop, avatars, positions, uid, torchStatus);
+								direction, yTop, avatars, positions, uid, torchStatus, hourOfTime);
 					}
 				}
 				for (int col = squaresToRight - 1; col >= 0; col--) {
@@ -132,9 +132,9 @@ public class Rendering {
 						addTile(squareRight, tileXLeftTop, tileXRightTop, tileXRightBottom, tileXLeftBottom, yBottom,
 								yTop, renderGroup);
 						addObject(tileXLeftBottom, yBottom, tileXRightTop, row, col, "right", worldMap, renderGroup,
-								direction, yTop);
+								direction, yTop, hourOfTime);
 						addAvatar(tileXLeftBottom, yBottom, tileXRightTop, row, col, "right", worldMap, renderGroup,
-								direction, yTop, avatars, positions, uid, torchStatus);
+								direction, yTop, avatars, positions, uid, torchStatus, hourOfTime);
 					}
 				}
 			}
@@ -239,11 +239,12 @@ public class Rendering {
 	 * @param positions
 	 * @param uid
 	 * @param torchStatus
+	 * @param hourOfTime
 	 */
 	public void addAvatar(double tileXLeftBottom, double yBottom, double tileXRightBottom, int row, int col,
 			String side, char[][] worldMap, Pane renderGroup, Direction direction, double yTop,
-			Map<Integer, Avatar> avatars, Map<Integer, Position> positions, int uid,
-			Map<Integer, Boolean> torchStatus) {
+			Map<Integer, Avatar> avatars, Map<Integer, Position> positions, int uid, Map<Integer, Boolean> torchStatus,
+			int hourOfTime) {
 		// Current player
 		Image playerImg = Images.getAvatarImageBySide(avatars.get(uid), Side.Back, torchStatus.get(uid));
 		Point imageCoordinate = getImagePoint(direction, row, col, side, worldMap.length, worldMap[0].length);
@@ -253,7 +254,7 @@ public class Rendering {
 			double width = playerImg.getWidth() * Math.pow(scale, squaresInFront - row - 1);
 			double xPoint = getImageX(width, tileXLeftBottom, tileXRightBottom);
 			double yPoint = getImageY(height, yBottom, yTop);
-			addImage(renderGroup, playerImg, width, height, xPoint, yPoint + imageOffset);
+			addImage(renderGroup, playerImg, width, height, xPoint, yPoint + imageOffset, hourOfTime);
 		}
 		// Other players
 		for (Integer userID : positions.keySet()) {
@@ -270,7 +271,7 @@ public class Rendering {
 					double width = otherAvatar.getWidth() * Math.pow(scale, squaresInFront - row - 1);
 					double xPoint = getImageX(width, tileXLeftBottom, tileXRightBottom);
 					double yPoint = getImageY(height, yBottom, yTop);
-					addImage(renderGroup, otherAvatar, width, height, xPoint, yPoint + imageOffset);
+					addImage(renderGroup, otherAvatar, width, height, xPoint, yPoint + imageOffset, hourOfTime);
 				}
 			}
 		}
@@ -291,9 +292,10 @@ public class Rendering {
 	 * @param renderGroup
 	 * @param direction
 	 * @param yTop
+	 * @param hourOfTime
 	 */
 	private void addObject(double tileXLeftBottom, double yBottom, double tileXRightBottom, int row, int col,
-			String side, char[][] worldMap, Pane renderGroup, Direction direction, double yTop) {
+			String side, char[][] worldMap, Pane renderGroup, Direction direction, double yTop, int hourOfTime) {
 		Point imageCoordinate = getImagePoint(direction, row, col, side, worldMap.length, worldMap[0].length);
 		char object = worldMap[imageCoordinate.y][imageCoordinate.x];
 		Image image = getImageFromChar(object);
@@ -302,7 +304,7 @@ public class Rendering {
 			double width = image.getWidth() * Math.pow(scale, squaresInFront - row - 1);
 			double xPoint = getImageX(width, tileXLeftBottom, tileXRightBottom);
 			double yPoint = getImageY(height, yBottom, yTop);
-			addImage(renderGroup, image, width, height, xPoint, yPoint + imageOffset);
+			addImage(renderGroup, image, width, height, xPoint, yPoint + imageOffset, hourOfTime);
 		}
 	}
 
@@ -414,10 +416,12 @@ public class Rendering {
 	 * @param height
 	 * @param setX
 	 * @param setY
+	 * @param hourOfTime
 	 */
-	private void addImage(Pane renderGroup, Image image, double width, double height, double setX, double setY) {
+	private void addImage(Pane renderGroup, Image image, double width, double height, double setX, double setY,
+			int hourOfTime) {
 		ImageView imageView = new ImageView();
-		// int brightness = getImageBrightness();
+		int brightness = getImageBrightness(hourOfTime);
 		changeImageBrightness(0);
 		imageView.setImage(image);
 		imageView.setFitHeight(height);
