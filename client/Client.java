@@ -143,24 +143,24 @@ public class Client extends Thread {
 	}
 
 	/**
-	 * this method is used to let the player know that the game is over and
-	 * rather they have won or not.
-	 *
-	 * @param title
-	 * @param msg
-	 */
-	public void GameOver(String title, String msg) {
-		// TODO: needs to be called when the game is over
-		GUI.showMsgPane(title, msg);
-	}
-
-	/**
 	 * Set ready to enter the game.
 	 *
 	 * @param isUserReady
 	 */
 	public void setUserReady(boolean isUserReady) {
 		this.isUserReady = isUserReady;
+	}
+
+	/**
+	 * This is a closing method, all cleaning process is done here.
+	 */
+	public void closeSocket() {
+		// close the socket.
+		try {
+			socket.close();
+		} catch (IOException e) {
+			// shouldn't happen.
+		}
 	}
 
 	@Override
@@ -252,19 +252,8 @@ public class Client extends Thread {
 		} catch (IOException e) {
 			GUI.showMsgPane("Error", "I/O Error, cannot receive packet to server.");
 			e.printStackTrace();
-		} finally {
-			try {
-				// TODO cleaning up process.
-
-				// send server a disconnect packet
-
-				// close input and output.
-
-				socket.close();
-			} catch (IOException e) {
-				System.err.println("I/O error. But who cares, disconnected anyway.");
-			}
 		}
+
 	}
 
 	/**
@@ -278,6 +267,7 @@ public class Client extends Thread {
 	 * <li>Positions of all players
 	 * <li>The inventory of the player in this client
 	 * <li>The status of player holding torch or not.
+	 * <li>Is there a winner?
 	 * <li>Chat message if there is any.
 	 *
 	 * <p>
@@ -376,7 +366,31 @@ public class Client extends Thread {
 			return;
 		}
 
-		// 7. chat message
+		// 7. win/loose
+		if (s.hasNextLine()) {
+			line = s.nextLine();
+
+			String[] strs = line.split(",");
+
+			boolean hasWinner = Integer.valueOf(strs[0]) == 1 ? true : false;
+
+			if (hasWinner) {
+				String winnerName = strs[1];
+
+				isGameRunning = false;
+
+				controller.GameOver("We have a winner", "The winner is " + winnerName);
+
+			}
+
+		} else {
+			System.out.println("Data incomplete, no win/loose status received.");
+			// Data is incomplete, ignore.
+			s.close();
+			return;
+		}
+
+		// 8. chat message
 		if (s.hasNextLine()) {
 			line = s.nextLine();
 			controller.parseChatMessage(line);

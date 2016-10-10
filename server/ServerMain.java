@@ -54,6 +54,11 @@ public class ServerMain {
 	 * A buffer for messages that client send for chatting.
 	 */
 	private Queue<String> messages;
+	
+	/**
+	 * A map storing all notification messages, where the key is uid, 
+	 */
+	private Map<Integer, String> notificationMsg;
 
 	/**
 	 * This map keeps track of every Receptionist for every connected client.
@@ -69,8 +74,8 @@ public class ServerMain {
 		messages = new ConcurrentLinkedQueue<>();
 
 		// how many players?
-		System.out.println("How many players (between 2 and 4):");
-		numPlayers = ParserUtilities.parseInt(2, 4);
+		System.out.println("How many players (at least 2):");
+		numPlayers = ParserUtilities.parseInt(2, 10);
 
 		// create the game world with test version tiny world.
 		// game = new Game(TestConst.world, TestConst.areas);
@@ -103,7 +108,8 @@ public class ServerMain {
 		new Thread() {
 			public void run() {
 				ServerGui.port = serverSocket.getLocalPort();
-				ServerGui.ip = serverSocket.getInetAddress().toString();
+				String[] ipAdress = serverSocket.getInetAddress().toString().split("/");
+				ServerGui.ip = ipAdress[1];
 				ServerGui.launch(ServerGui.class);
 			}
 		}.start();
@@ -246,15 +252,6 @@ public class ServerMain {
 	}
 
 	/**
-	 * Main function, start the server.
-	 *
-	 * @param args
-	 */
-	public static void main(String args[]) {
-		new ServerMain();
-	}
-
-	/**
 	 * Load game
 	 *
 	 * @param uid
@@ -318,6 +315,15 @@ public class ServerMain {
 	 */
 	public void save(int uid) {
 		XmlFunctions.saveFile(game, game.getPlayerById(uid).getName());
+	}
+
+	/**
+	 * Main function, start the server.
+	 *
+	 * @param args
+	 */
+	public static void main(String args[]) {
+		new ServerMain();
 	}
 
 }

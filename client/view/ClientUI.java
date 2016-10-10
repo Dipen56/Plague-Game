@@ -82,6 +82,11 @@ public class ClientUI {
 	private boolean playerDead = false;
 
 	/**
+	 * The hour of current time, which is used for rendering day/night shift
+	 */
+	private int hourOfTime;
+
+	/**
 	 * This map keeps track of all player's avatars. Renderer can look for which
 	 * avatar to render from here.
 	 */
@@ -222,6 +227,13 @@ public class ClientUI {
 			return false;
 		}
 		client = new Client(s, this);
+
+		// don't allow empty
+		if (userName == null || userName.length() <= 0) {
+			GUI.showMsgPane("Error", "Please input a name.");
+			return false;
+		}
+
 		this.userName = userName;
 		this.avatar = Avatar.get(avatarIndex);
 		client.start();
@@ -311,6 +323,8 @@ public class ClientUI {
 	 *            --- a string representation of world time.
 	 */
 	public void parseTime(String timeStr) {
+		String[] timeStrs = timeStr.split(":");
+		hourOfTime = Integer.valueOf(timeStrs[0]);
 		gui.setTime(timeStr);
 	}
 
@@ -358,6 +372,26 @@ public class ClientUI {
 	 */
 	public void parseTorchStatus(String torchStatusStr) {
 		ParserUtilities.parseTorchStatus(torchStatus, torchStatusStr);
+	}
+
+	/**
+	 * This method is used to let the player know that the game is over and
+	 * rather they have won or not.
+	 *
+	 * @param title
+	 *            --- the dialog title
+	 * @param msg
+	 *            --- the dialog message
+	 */
+	public void GameOver(String title, String msg) {
+		GUI.showMsgPane(title, msg);
+	}
+
+	/**
+	 * This method close the socket on client side.
+	 */
+	public void closeSocket() {
+		client.closeSocket();
 	}
 
 	/**
@@ -418,7 +452,10 @@ public class ClientUI {
 
 		// 1. update minimap
 		gui.updateMinimap(playerLoc, uid, worldMap, visibility, positions);
-		render.render(playerLoc, worldMap, visibility, uid, avatars, positions);
+
+
+		// 2. update the renderer
+		 render.render(playerLoc, worldMap, visibility, uid, avatars,positions, torchStatus, hourOfTime);
 
 		// 3. update the health bar
 		gui.updateHealth(health);
@@ -428,7 +465,6 @@ public class ClientUI {
 
 		// 5. update area/room description
 		render.updateAreaDescription(descriptions.get(areaId));
-
 		// 6. update the map object description
 		if (descriptionToggle) {
 			gui.displayObjectDescription(getFrontElementString());
@@ -439,7 +475,7 @@ public class ClientUI {
 		// 7. if player is dead, prompt it.
 		if (!playerDead) {
 			// Displays dialog when player health is 0
-			if (health == 0) {
+			if (health <= 0) {
 				AlertBox.displayMsg("YOU ARE DEAD", "GAMEOVER");
 				playerDead = true;
 			}
@@ -458,11 +494,9 @@ public class ClientUI {
 				clockThread.start();
 			}
 		});
-
-		gui.setHealthBar(health, virus,userName,avatar);
+		gui.setHealthBar(health, virus, userName, avatar);
 		gui.objectLabel();
 		render.setAreaDescription();
-
 	}
 
 	/**
@@ -585,7 +619,6 @@ public class ClientUI {
 					client.send(Packet.Unlock);
 				} else if (keyCode == KeyCode.G) {
 					client.send(Packet.TakeOutItem);
-
 				} else if (keyCode == KeyCode.R) {
 					client.send(Packet.Transit);
 				} else if (keyCode == KeyCode.DIGIT1) {
@@ -605,6 +638,7 @@ public class ClientUI {
 				} else if (keyCode == KeyCode.DIGIT8) {
 					client.sendWithIndex(Packet.UseItem, 7);
 				}
+
 				/*
 				 * TODO need more keys
 				 *

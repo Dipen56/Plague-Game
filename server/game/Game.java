@@ -768,6 +768,8 @@ public class Game {
 			return playerUnlockLockable(uid);
 		} else if (item instanceof Bag) {
 			Bag bag = (Bag) item;
+			// Remove bag from inventory to allow space for item
+			player.getInventory().remove(bag);
 			// try to take things out
 			boolean b = player.tryTakeItemsFromContainer(bag);
 			// check if it's all taken out
@@ -1030,7 +1032,7 @@ public class Game {
 		for (Player p : players.values()) {
 			sb.append(p.getId());
 			sb.append(",");
-			sb.append(p.isHoldingTorch() ? '0' : '1');
+			sb.append(p.isHoldingTorch() ? '1' : '0');
 			sb.append("|");
 		}
 		return sb.toString();
@@ -1086,6 +1088,85 @@ public class Game {
 		}
 
 		return sb.toString();
+	}
+
+	/**
+	 * Whether the game has a winner or not. If the number of connected player
+	 * is one, or the number of alive player is one, true is returned.
+	 * 
+	 * @return --- true/false for yes/no
+	 */
+	private boolean hasWinner() {
+		if (players.values().size() == 1) {
+			return true;
+		}
+
+		int numAlive = 0;
+
+		for (Player p : players.values()) {
+			if (p.isAlive()) {
+				numAlive++;
+			}
+		}
+
+		if (numAlive == 1) {
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Get the winner. If there is no winner when the method is called, null is
+	 * returned.
+	 * 
+	 * @return --- the winner. or null if there is no winner.
+	 */
+	private Player getWinner() {
+		if (players.values().size() == 1) {
+			return players.values().iterator().next();
+		}
+
+		int numAlive = 0;
+		Player player = null;
+
+		for (Player p : players.values()) {
+			if (p.isAlive()) {
+				numAlive++;
+				player = p;
+			}
+		}
+
+		if (numAlive == 1) {
+			return player;
+		}
+
+		return null;
+	}
+
+	/**
+	 * Get the string of current win/loose status, and if there is a winner, add
+	 * it into the string. The String is used for C/S broadcast. It has the
+	 * following format:
+	 *
+	 * <p>
+	 * The first digit is either 0 (no winner) or 1 (has a winner). The second
+	 * part is a string which is the winner's name, or 0 if no winner yet. Two
+	 * parts are separated with comma ",".
+	 * 
+	 * <p>
+	 * Say we has no winner, the string will be "0,0". Or we has a winner with
+	 * name "John", the string will be "1,John".
+	 * 
+	 * @return --- a string representation of all items in this player's
+	 *         inventory. This is used for network transmission.
+	 */
+	public String getWinString() {
+		if (hasWinner()) {
+			return "1," + getWinner().getName();
+		} else {
+			return "0,0";
+		}
 	}
 
 	@Override

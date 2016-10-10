@@ -74,7 +74,7 @@ public class InitialGameLoader {
 	private static List<List<Item>> chestLoot;
 
 	/**
-	 * 
+	 *
 	 * A list of loot lists for cupboards.
 	 */
 	private static List<List<Item>> cupboardLoot;
@@ -184,7 +184,9 @@ public class InitialGameLoader {
 				new Position(0, 4, areaIDs.get(3), Direction.East));
 		TransitionSpace ts4 = new TransitionSpace(new Position(8, 24, areaIDs.get(0), Direction.South),
 				new Position(5, 0, areaIDs.get(4), Direction.South));
-		// Inside transition spaces
+		/**
+		 *  Inside transition spaces
+		 */
 		// In room1
 		TransitionSpace ts5 = new TransitionSpace(new Position(0, 5, areaIDs.get(1), Direction.South),
 				new Position(2, 5, areaIDs.get(0), Direction.South));
@@ -366,9 +368,9 @@ public class InitialGameLoader {
 	/**
 	 * Initialises a number of lists of type Item within a list of items.
 	 *
-	 * @param The
+	 * @param list
 	 *            list of lists of items.
-	 * @param The
+	 * @param number
 	 *            number of lists to initialise inside the list of lists.
 	 */
 	public static void initialiseListLootLists(List<List<Item>> list, int number) {

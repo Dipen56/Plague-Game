@@ -25,9 +25,13 @@ public class Images {
 
 	public static final Image LOGIN_SCREEN_IMAGE = loadImage("/login-background.png");
 
-	public static final Image BACKGROUND_IMAGE = loadImage("/background.gif");
+	public static final Image DAYTIME_IMAGE = loadImage("/Daytime.jpg");
+
+	public static final Image NIGHTIME_IMAGE = loadImage("/background.gif");
 
 	public static final Image GRASS_IMAGE = loadImage("/grass.png");
+	
+	public static final Image GRASSNIGHT_IMAGE = loadImage("/grass_dark.png");
 
 	public static final Image TREE_IMAGE = loadImage("/tree.png");
 
@@ -68,6 +72,8 @@ public class Images {
 	 */
 	public static final Map<Avatar, Image> PROFILE_IMAGES;
 
+	public static final Map<Avatar, Map<Side, Image>> DEAD_IMAGES;
+
 	/*
 	 * Initialise the table for Renderer. Each table contains a map which maps a
 	 * char to the corresponding object, so the Renderer knows what to render by
@@ -81,6 +87,7 @@ public class Images {
 		GREEN_ARROW = new HashMap<>();
 		RED_ARROW = new HashMap<>();
 		PROFILE_IMAGES = new HashMap<>();
+		DEAD_IMAGES = new HashMap<>();
 
 		/*
 		 * TODO This is probably not appropriate, some map objects may need more
@@ -169,42 +176,31 @@ public class Images {
 		// ============= Avatar images with torch ==========
 
 		Map<Side, Image> avatarImgTorch_1 = new HashMap<>();
-		// avatarImgTorch_1.put(Side.Front,
-		// loadImage("/Char_1_front_stand.png"));
-		// avatarImgTorch_1.put(Side.Back, loadImage("/Char_1_rear_stand.png"));
-		// avatarImgTorch_1.put(Side.Left, loadImage("/Char_1_left_stand.png"));
-		// avatarImgTorch_1.put(Side.Right,
-		// loadImage("/Char_1_left_right_foot.png"));
+		avatarImgTorch_1.put(Side.Front, loadImage("/Char_1_Front_Torch.gif"));
+		avatarImgTorch_1.put(Side.Back, loadImage("/Char_1_Rear_Torch.gif"));
+		avatarImgTorch_1.put(Side.Left, loadImage("/Char_1_Left_Torch.gif"));
+		avatarImgTorch_1.put(Side.Right, loadImage("/Char_1_Right_Torch.gif"));
 		AVATAR_IMAGES_WITH_TORCH.put(Avatar.Avatar_1, avatarImgTorch_1);
 
 		Map<Side, Image> avatarImgTorch_2 = new HashMap<>();
-		// avatarImgTorch_2.put(Side.Front,
-		// loadImage("/Char_2_front_stand.png"));
-		// avatarImgTorch_2.put(Side.Back, loadImage("/Char_2_rear_stand.png"));
-		// avatarImgTorch_2.put(Side.Left,
-		// loadImage("/Char_2_left_right_foot.png"));
-		// avatarImgTorch_2.put(Side.Right,
-		// loadImage("/Char_2_right_left_foot.png"));
+		avatarImgTorch_2.put(Side.Front, loadImage("/Char_3_Front_Torch.gif"));
+		avatarImgTorch_2.put(Side.Back, loadImage("/Char_3_Back_Torch.gif"));
+		avatarImgTorch_2.put(Side.Left, loadImage("/Char_3_Left_Torch.gif"));
+		avatarImgTorch_2.put(Side.Right, loadImage("/Char_3_Right_Torch.gif"));
 		AVATAR_IMAGES_WITH_TORCH.put(Avatar.Avatar_2, avatarImgTorch_2);
 
 		Map<Side, Image> avatarImgTorch_3 = new HashMap<>();
-		// avatarImgTorch_3.put(Side.Front,
-		// loadImage("/Char_3_front_stand.png"));
-		// avatarImgTorch_3.put(Side.Back, loadImage("/Char_3_rear_stand.png"));
-		// avatarImgTorch_3.put(Side.Left,
-		// loadImage("/Char_3_left_left_foot.png"));
-		// avatarImgTorch_3.put(Side.Right,
-		// loadImage("/Char_3_right_right_foot.png"));
+		avatarImgTorch_3.put(Side.Front, loadImage("/Char_2_Front_Torch.gif"));
+		avatarImgTorch_3.put(Side.Back, loadImage("/Char_2_Rear_Torch.gif"));
+		avatarImgTorch_3.put(Side.Left, loadImage("/Char_2_left_Torch.gif"));
+		avatarImgTorch_3.put(Side.Right, loadImage("/Char_2_right_Torch.gif"));
 		AVATAR_IMAGES_WITH_TORCH.put(Avatar.Avatar_3, avatarImgTorch_3);
 
 		Map<Side, Image> avatarImgTorch_4 = new HashMap<>();
-		// avatarImgTorch_4.put(Side.Front,
-		// loadImage("/Char_4_front_stand.png"));
-		// avatarImgTorch_4.put(Side.Back, loadImage("/Char_4_rear_stand.png"));
-		// avatarImgTorch_4.put(Side.Left,
-		// loadImage("/Char_4_left_left_foot.png"));
-		// avatarImgTorch_4.put(Side.Right,
-		// loadImage("/Char_4_right_left_foot.png"));
+		avatarImgTorch_4.put(Side.Front, loadImage("/Char_4_Front_Torch.gif"));
+		avatarImgTorch_4.put(Side.Back, loadImage("/Char_4_Back_Torch.gif"));
+		avatarImgTorch_4.put(Side.Left, loadImage("/Char_4_left_Torch.gif"));
+		avatarImgTorch_4.put(Side.Right, loadImage("/Char_4_right_Torch.gif"));
 		AVATAR_IMAGES_WITH_TORCH.put(Avatar.Avatar_4, avatarImgTorch_4);
 
 		// =================== arrows ==========================
@@ -223,6 +219,37 @@ public class Images {
 		PROFILE_IMAGES.put(Avatar.Avatar_2, loadImage("/Char_3_Face.png"));
 		PROFILE_IMAGES.put(Avatar.Avatar_3, loadImage("/Char_2_Face.png"));
 		PROFILE_IMAGES.put(Avatar.Avatar_4, loadImage("/Char_4_Face.png"));
+
+		// ============= dead avatar pictures =====================
+
+		Map<Side, Image> deadImg_1 = new HashMap<>();
+		// deadImg_1.put(Side.Front, loadImage("/Char_1_Front.gif"));
+		// deadImg_1.put(Side.Back, loadImage("/Char_1_Rear.gif"));
+		// deadImg_1.put(Side.Left, loadImage("/Char_1_Left.gif"));
+		// deadImg_1.put(Side.Right, loadImage("/Char_1_Right.gif"));
+		DEAD_IMAGES.put(Avatar.Avatar_1, deadImg_1);
+
+		Map<Side, Image> deadImg_2 = new HashMap<>();
+		// deadImg_2.put(Side.Front, loadImage("/Char_1_Front.gif"));
+		// deadImg_2.put(Side.Back, loadImage("/Char_1_Rear.gif"));
+		// deadImg_2.put(Side.Left, loadImage("/Char_1_Left.gif"));
+		// deadImg_2.put(Side.Right, loadImage("/Char_1_Right.gif"));
+		DEAD_IMAGES.put(Avatar.Avatar_2, deadImg_2);
+
+		Map<Side, Image> deadImg_3 = new HashMap<>();
+		// deadImg_3.put(Side.Front, loadImage("/Char_1_Front.gif"));
+		// deadImg_3.put(Side.Back, loadImage("/Char_1_Rear.gif"));
+		// deadImg_3.put(Side.Left, loadImage("/Char_1_Left.gif"));
+		// deadImg_3.put(Side.Right, loadImage("/Char_1_Right.gif"));
+		DEAD_IMAGES.put(Avatar.Avatar_3, deadImg_3);
+
+		Map<Side, Image> deadImg_4 = new HashMap<>();
+		// deadImg_4.put(Side.Front, loadImage("/Char_1_Front.gif"));
+		// deadImg_4.put(Side.Back, loadImage("/Char_1_Rear.gif"));
+		// deadImg_4.put(Side.Left, loadImage("/Char_1_Left.gif"));
+		// deadImg_4.put(Side.Right, loadImage("/Char_1_Right.gif"));
+		DEAD_IMAGES.put(Avatar.Avatar_4, deadImg_4);
+
 	}
 
 	/**
@@ -265,6 +292,22 @@ public class Images {
 		} else {
 			return AVATAR_IMAGES_WITHOUT_TORCH.get(avatar).get(side);
 		}
+	}
+
+	/**
+	 * This utility method is used to retrieve dead avatar image according to
+	 * your own direction and the other player's direction.
+	 * 
+	 * @param avatar
+	 *            --- the avatar
+	 * @param ownDir
+	 *            --- your own direction
+	 * @param hisDir
+	 *            --- the other player's direction.
+	 * @return --- the proper image to render the other player when he is dead.
+	 */
+	public static Image getDeadImageByDirection(Avatar avatar, Direction ownDir, Direction hisDir) {
+		return DEAD_IMAGES.get(avatar).get(Side.getSideByRelativeDirection(ownDir, hisDir));
 	}
 
 	/**
