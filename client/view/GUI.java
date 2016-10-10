@@ -37,16 +37,24 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import java.awt.Point;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 
 import server.game.player.Avatar;
 import server.game.player.Direction;
 import server.game.player.Player;
 import server.game.player.Position;
 import server.game.player.Virus;
+import server.view.ServerGui;
 import client.rendering.Images;
 import client.rendering.Rendering;
 import client.rendering.Side;
@@ -65,6 +73,7 @@ public class GUI extends Application {
 	 * GUI Style CSS
 	 */
 	private static final String STYLE_CSS = "/main.css";
+	private static final String BACKGROUND_MUSIC = "/background.wav";
 	/**
 	 * Constant width of the window
 	 */
@@ -155,7 +164,7 @@ public class GUI extends Application {
 	 */
 	private static Stage window;
 	// controls
-	private Label timeLable;
+	private Label objectDetailLabel;
 	// private Label miniMapLable;
 	private Canvas miniMapCanvas;
 	private Label textAreaLable;
@@ -202,6 +211,7 @@ public class GUI extends Application {
 	private Button readyGame;
 	private Button quitWaitingRoom;
 	private Label objectDescription;
+	private Label objectNotifcation;
 
 	private TitledPane titlePane;
 
@@ -239,7 +249,7 @@ public class GUI extends Application {
 	public void start(Stage mainWindow) throws Exception {
 		window = mainWindow;
 		window.setTitle("Plague Game");
-		//window.getIcons().add(Images.GAMEICON_IMAGE);
+		// window.getIcons().add(Images.GAMEICON_IMAGE);
 		// this will disable and enable resizing so when we have a working
 		// version we can just set this to false;
 		// this starts the action listener
@@ -250,7 +260,7 @@ public class GUI extends Application {
 		windowEvent = viewControler.getWindowEventHander();
 		window.setResizable(false);
 		slashScreen();
-		//loginScreen();
+		// loginScreen();
 		window.show();
 		window.setOnCloseRequest(e -> {
 			System.exit(0);
@@ -401,25 +411,38 @@ public class GUI extends Application {
 	}
 
 	public void waitingRoom() {
-		VBox waitingRoomBox = new VBox(5);
+		Pane waitingPane = new Pane();
+		Image waitingImage = Images.WAITING_ROOM_IMAGE;
+		ImageView img = new ImageView(waitingImage);
+		img.setFitHeight(HEIGHT_VALUE);
+		img.setFitWidth(WIDTH_VALUE);
+		waitingPane.getChildren().add(img);
+
 		waitingMsg = new Label();
+		waitingMsg.setLayoutX(20);
+		waitingMsg.setPrefWidth(WIDTH_VALUE);
+		waitingMsg.getStyleClass().add("input-login");
 		waitingMsg.setText(
 				"Welcome! When you are ready to start, click Ready. When the minimum number of players have connected, the game will automatically start.");
 		waitingMsg.setWrapText(true);
-		waitingRoomBox.getChildren().add(waitingMsg);
-		playersWaiting = new FlowPane();
-		playersWaiting.setHgap(10);
-		waitingRoomBox.getChildren().add(playersWaiting);
+		waitingPane.getChildren().add(waitingMsg);
+
 		FlowPane buttons = new FlowPane();
+		buttons.setLayoutX((WIDTH_VALUE / 2) - 180);
+		buttons.setLayoutY(HEIGHT_VALUE - 80);
 		buttons.setHgap(10);
 		readyGame = new Button("Ready");
+		readyGame.getStyleClass().add("button-login");
 		readyGame.setOnAction(actionEvent);
 		quitWaitingRoom = new Button("Leave Game");
+		quitWaitingRoom.getStyleClass().add("button-login");
 		quitWaitingRoom.setOnAction(actionEvent);
 		buttons.setAlignment(Pos.CENTER);
 		buttons.getChildren().addAll(readyGame, quitWaitingRoom);
-		waitingRoomBox.getChildren().add(buttons);
-		Scene slashScene = new Scene(waitingRoomBox, 400, 170);
+		waitingPane.getChildren().add(buttons);
+
+		Scene slashScene = new Scene(waitingPane, WIDTH_VALUE, HEIGHT_VALUE);
+		slashScene.getStylesheets().add(this.getClass().getResource(STYLE_CSS).toExternalForm());
 		window.setScene(slashScene);
 		window.setOnCloseRequest(e -> {
 			System.exit(0);
@@ -441,9 +464,10 @@ public class GUI extends Application {
 		rightPanel.getStyleClass().add("cotrolvbox");
 		borderPane = new BorderPane();
 		setMenuBar();
-		setWorldTime();
+
 		setminiMap();
 		setchat();
+		setObjectNotification();
 		setItems();
 		group.prefWidth(GAMEPANE_WIDTH_VALUE);
 		group.prefHeight(HEIGHT_VALUE);
@@ -457,6 +481,7 @@ public class GUI extends Application {
 		borderPane.setCenter(hbox);
 		Scene scene = new Scene(borderPane, WIDTH_VALUE, HEIGHT_VALUE);
 		scene.getStylesheets().add(this.getClass().getResource(STYLE_CSS).toExternalForm());
+		startMusic();
 		scene.setOnKeyPressed(keyEvent);
 		window.setOnCloseRequest(windowEvent);
 		window.setScene(scene);
@@ -483,9 +508,6 @@ public class GUI extends Application {
 		healthPane.setLayoutX(10);
 		healthPane.setLayoutY(10);
 
-		/*
-		 * TODO link it to the avatar image using avatar index upto. use
-		 */
 
 		Image avatarImg = Images.PROFILE_IMAGES.get(avatar);
 		// Image avatarImg = Images.SLASH_SCREEN_IMAGE;
@@ -569,15 +591,14 @@ public class GUI extends Application {
 	/**
 	 * this method sets up the world clock controls
 	 */
-	private void setWorldTime() {
+	private void setObjectNotification() {
 		TitledPane titlePane = new TitledPane();
-		titlePane.setText("World Time");
-		timeLable = new Label();
-		titlePane.setContent(timeLable);
-		timeLable.setPrefWidth(400);
-		timeLable.setPrefHeight(50);
-		timeLable.getStyleClass().add("world-time-lable");
-		// timeLable.setText(clockTime);
+		titlePane.setText("Object Notification");
+		objectDetailLabel = new Label();
+		titlePane.setContent(objectDetailLabel);
+		objectDetailLabel.setPrefWidth(400);
+		objectDetailLabel.setPrefHeight(50);
+		objectDetailLabel.getStyleClass().add("world-time-lable");
 		rightPanel.getChildren().add(titlePane);
 	}
 
@@ -800,13 +821,8 @@ public class GUI extends Application {
 	 * 
 	 * @param worldTime
 	 */
-	public void setTime(String time) {
-		Platform.runLater(new Runnable() {
-			@Override
-			public void run() {
-				timeLable.setText(time);
-			}
-		});
+	public void setObjectDetail(String time) {
+		objectDetailLabel.setText(time);
 	}
 
 	public void setWaitingRoomAvatar() {
@@ -1077,6 +1093,15 @@ public class GUI extends Application {
 		group.getChildren().add(objectDescription);
 	}
 
+	public void objectNotifcation() {
+		objectNotifcation = new Label();
+		objectNotifcation.setWrapText(true);
+		objectNotifcation.setPrefWidth(150);
+		objectNotifcation.setLayoutX((GAMEPANE_WIDTH_VALUE / 2) - 20);
+		objectNotifcation.setLayoutY(30);
+		objectNotifcation.getStyleClass().add("object-description");
+	}
+
 	/**
 	 * This method is used to display to the user the notification of last
 	 * action, e.g. if the player failed to open a chest or other reason.
@@ -1085,8 +1110,8 @@ public class GUI extends Application {
 	 *            --- the notification message.
 	 */
 	public void displayNotification(String nMsg) {
-		// TODO this is where the notification is shown.
-		System.out.println(nMsg);
+		objectNotifcation.setText(nMsg);
+		group.getChildren().add(objectNotifcation);
 	}
 
 	/**
@@ -1103,5 +1128,51 @@ public class GUI extends Application {
 		});
 	}
 
-}
+	/**
+	 * this method is used to start the background music used thought out the
+	 * game.
+	 */
+	public void startMusic() {
+		new Thread() {
+			public void run() {
+				try {
+					Clip clip = AudioSystem.getClip();
+					AudioInputStream ais = AudioSystem
+							.getAudioInputStream(this.getClass().getResource(BACKGROUND_MUSIC));
+					clip.open(ais);
+					clip.loop(Clip.LOOP_CONTINUOUSLY);
+				} catch (LineUnavailableException e) {
+					e.printStackTrace();
+				} catch (UnsupportedAudioFileException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
 
+					e.printStackTrace();
+				}
+			}
+		}.start();
+
+	}
+
+	/**
+	 * this method is used to play different sound effect during the game
+	 * 
+	 * @param file
+	 */
+	public void soundEffect(String file) {
+		try {
+			Clip clip = AudioSystem.getClip();
+			AudioInputStream ais = AudioSystem.getAudioInputStream(this.getClass().getResource(file));
+			clip.open(ais);
+			clip.start();
+		} catch (LineUnavailableException e) {
+			e.printStackTrace();
+		} catch (UnsupportedAudioFileException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+	}
+
+}
