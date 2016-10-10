@@ -467,7 +467,7 @@ public class GUI extends Application {
 
 		setminiMap();
 		setchat();
-		setObjectDetail();
+		setObjectNotification();
 		setItems();
 		group.prefWidth(GAMEPANE_WIDTH_VALUE);
 		group.prefHeight(HEIGHT_VALUE);
@@ -508,9 +508,6 @@ public class GUI extends Application {
 		healthPane.setLayoutX(10);
 		healthPane.setLayoutY(10);
 
-		/*
-		 * TODO link it to the avatar image using avatar index upto. use
-		 */
 
 		Image avatarImg = Images.PROFILE_IMAGES.get(avatar);
 		// Image avatarImg = Images.SLASH_SCREEN_IMAGE;
@@ -594,9 +591,9 @@ public class GUI extends Application {
 	/**
 	 * this method sets up the world clock controls
 	 */
-	private void setObjectDetail() {
+	private void setObjectNotification() {
 		TitledPane titlePane = new TitledPane();
-		titlePane.setText("Object Detail");
+		titlePane.setText("Object Notification");
 		objectDetailLabel = new Label();
 		titlePane.setContent(objectDetailLabel);
 		objectDetailLabel.setPrefWidth(400);
