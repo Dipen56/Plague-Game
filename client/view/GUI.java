@@ -50,7 +50,6 @@ import client.rendering.Images;
 import client.rendering.Rendering;
 import client.rendering.Side;
 
-
 /**
  * This class represents the main GUI class this class bring together all the
  * different components of the GUI.
@@ -60,12 +59,25 @@ import client.rendering.Side;
  */
 public class GUI extends Application {
 
-	// GUI Style CSS
+	/**
+	 * GUI Style CSS
+	 */
 	private static final String STYLE_CSS = "/main.css";
-	// Constants Dimensions
+	/**
+	 * Constant width of the window
+	 */
 	public static final int WIDTH_VALUE = 1000;
+	/**
+	 * Constant height of the window
+	 */
 	public static final int HEIGHT_VALUE = 700;
+	/**
+	 * Constants Width Dimensions for the rendering panel
+	 */
 	private static final int RIGHTPANE_WIDTH_VALUE = WIDTH_VALUE - 600;
+	/**
+	 * Constants Width Dimensions for the right panel
+	 */
 	public static final int GAMEPANE_WIDTH_VALUE = WIDTH_VALUE - 400;
 	/**
 	 * Minimap height and width
@@ -83,7 +95,7 @@ public class GUI extends Application {
 	public static final Map<Character, String> MAP_OBJECT_DESCRIPTION;
 
 	/*
-	 * initialise the instruction table for minimap color and map element
+	 * Initialize the instruction table for minimap color and map element
 	 * description
 	 */
 	static {
@@ -136,7 +148,9 @@ public class GUI extends Application {
 		MAP_OBJECT_DESCRIPTION.put('E', "I found a hidden cabin! I need to get inside.");
 	}
 
-	// main window
+	/**
+	 * Main window for the game
+	 */
 	private static Stage window;
 	// controls
 	private Label timeLable;
@@ -211,6 +225,7 @@ public class GUI extends Application {
 	}
 
 	public GUI() {
+	
 		// leave this constructor in here need to run the gui.
 	}
 
@@ -806,7 +821,7 @@ public class GUI extends Application {
 	 *            --- the visibility
 	 * @param positions
 	 *            --- a collection of every player's location.
-	 *            
+	 * 
 	 * @author Hector (Fang Zhao 300364061)
 	 */
 	public void updateMinimap(Position playerLoc, int uId, char[][] areaMap, int visibility,
