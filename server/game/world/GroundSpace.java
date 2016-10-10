@@ -1,6 +1,7 @@
 package server.game.world;
 
 /**
+ * This class represents the normal walkable ground tiles in map.
  * 
  * @author Hector (Fang Zhao 300364061)
  *

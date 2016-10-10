@@ -7,7 +7,8 @@ import server.game.player.Position;
  * A space in the map, on which the player must be standing in order to enter a
  * destination Area.
  * 
- * @author Hector (Fang Zhao 300364061), Daniel Anastasi 300145878
+ * @author Hector (Fang Zhao 300364061)
+ * @author Daniel Anastasi 300145878
  *
  */
 public class TransitionSpace extends GroundSpace {
@@ -55,6 +56,11 @@ public class TransitionSpace extends GroundSpace {
 		return destPosition;
 	}
 
+	/**
+	 * Get the correct facing direction to transit to another area.
+	 * 
+	 * @return --- the correct facing direction to transit to another area.
+	 */
 	public Direction getFacingDirection() {
 		return currentPosition.getDirection();
 	}

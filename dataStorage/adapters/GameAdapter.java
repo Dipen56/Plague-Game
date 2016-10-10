@@ -33,28 +33,68 @@ public class GameAdapter{
 	 * I don't know why but them being here allows the parser to put objects of their types into the xml file.
 	 * Without it, the parser does not recognise these types of object, and they will not be written to the game save.
 	 */
+
+	/**
+	 * Included to allow the XML parser to recognise the type of object.
+	 */
 	@XmlElement
 	private ObstacleAdapter obstTypeProtector = new ObstacleAdapter();
+
+	/**
+	 * Included to allow the XML parser to recognise the type of object.
+	 */
 	@XmlElement
 	private ChestAdapter chestTypeProtector = new ChestAdapter();
+
+	/**
+	 * Included to allow the XML parser to recognise the type of object.
+	 */
 	@XmlElement
 	private AntidoteAdapter antidoteTypeProtector = new AntidoteAdapter();
+
+	/**
+	 * Included to allow the XML parser to recognise the type of object.
+	 */
 	@XmlElement
 	private KeyAdapter keyTypeProtector = new KeyAdapter();
+
+	/**
+	 * Included to allow the XML parser to recognise the type of object.
+	 */
 	@XmlElement
 	private CupboardAdapter cupboardTypeProtector = new CupboardAdapter();
+
+	/**
+	 * Included to allow the XML parser to recognise the type of object.
+	 */
 	@XmlElement
 	private ScrapPileAdapter scrapPileTypeProtector = new ScrapPileAdapter();
+
+	/**
+	 * Included to allow the XML parser to recognise the type of object.
+	 */
 	@XmlElement
 	private TransitionSpaceAdapter transitionSpaceTypeProtector = new TransitionSpaceAdapter();
+
+	/**
+	 * Included to allow the XML parser to recognise the type of object.
+	 */
 	@XmlElement
 	private TorchAdapter torchTypeProtector = new TorchAdapter();
+
+	/**
+	 * Included to allow the XML parser to recognise the type of object.
+	 */
 	@XmlElement
 	private BagAdapter bagTypeProtector = new BagAdapter();
 
 
+	/**
+	 * A ground space adapter to be used by area adapters.
+	 */
+	@XmlElement
+	public static final GroundSpaceAdapter groundSpace = new GroundSpaceAdapter();
 
-	public static final GroundSpaceAdapter groundSpaceAdapter= new GroundSpaceAdapter();
 
 	/**
 	 * An alternate version of a World object.
@@ -90,7 +130,7 @@ public class GameAdapter{
 	}
 
 	/**
-	 *@param The object on which to base this object
+	 * @param game	The object on which to base this object
 	 **/
 	public GameAdapter(Game game){
 		if(game == null)

@@ -810,7 +810,7 @@ public class PlayerActionTest {
 			if (!game.playerUseItem(MOCK_UID, 0)) {
 				fail("player should be able to use antidote at index 0");
 			}
-			if (player.getHealthLeft() != Player.MAX_HEALTH + Antidote.EFFECT * 2
+			if (player.getHealthLeft() != Player.MAX_HEALTH + Antidote.EFFECT * Antidote.MULTIPLIER
 					&& player.getHealthLeft() != Player.MAX_HEALTH - Antidote.EFFECT) {
 				fail("player's health should either be increased double amount of effect, or decresed single amount of effect");
 			}

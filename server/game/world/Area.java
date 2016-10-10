@@ -13,7 +13,8 @@ import server.game.player.Position;
 /**
  * This class represents the world map.
  *
- * @author Hector (Fang Zhao 300364061), Daniel Anastasi 300145878
+ * @author Hector (Fang Zhao 300364061)
+ * @author Daniel Anastasi 300145878
  *
  */
 public class Area {
@@ -49,23 +50,7 @@ public class Area {
 	private String description;
 
 	/**
-	 * Constructor
-	 *
-	 * This the proper constructor we use, although the argument could be
-	 * different. The basic idea is we read in a file, parse it, and construct
-	 * the world with what's in the file. The file could be XML, or simple text
-	 * file. It's still to be decided.
-	 *
-	 * @param filename
-	 */
-	public Area(String filename) {
-
-		// TODO: Not useful yet
-
-	}
-
-	/**
-	 * Constructor used only for text client.
+	 * Constructor.
 	 *
 	 * @param board
 	 *            --- a 2d-array of MapElement representing the board.
@@ -133,10 +118,10 @@ public class Area {
 	/**
 	 * Returns the string describing the area.
 	 * 
-	 * @return
+	 * @return --- the description of current area
 	 */
 	public String getDescription() {
-		return new String(description);
+		return description;
 	}
 
 	/**

@@ -7,7 +7,8 @@ package server;
  * For efficiency each Packet should be converted to byte in transition. This
  * class also provides methods to perform byte <--> Packet conversion.
  *
- * @author Rafaela & Hector
+ * @author Rafaela
+ * @author Hector (Fang Zhao 300364061)
  *
  */
 public enum Packet {
@@ -100,25 +101,13 @@ public enum Packet {
 	 */
 	Ready;
 
-	/*
-	 * NOTE!!!!!
-	 *
-	 * If new packet type is added, the long nasty switch statement in
-	 * Receptionist and Client should both be added.
-	 *
-	 * TODO:
-	 *
-	 * need to add:
-	 */
-
 	/**
 	 * Convert the Packet into byte.
 	 * 
 	 * @return --- a byte value which equals the ordinal number.
 	 */
 	public byte toByte() {
-		// We are never going to have more than 127 values in this enum. Safe to
-		// cast.
+		// no way to have more than 127 values in this enum. Safe to cast.
 		return (byte) this.ordinal();
 	}
 

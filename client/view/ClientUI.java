@@ -22,16 +22,16 @@ import server.game.player.Avatar;
 import server.game.player.Direction;
 import server.game.player.Position;
 import server.game.player.Virus;
-import tests.gameLogicTests.WorldLogicTest;
 
 /**
  * This class is the client side UI, which is where the user start the game
  * from. It also serves as the controller for communicating between client and
- * GUI/Renderer. The controller tells the server about the user's action by
+ * GUI/Renderer. The controller tells the server about the user's action by // *
  * interpreting mouse and keyboard events from the user, and updates the
  * renderer/GUI according to the received information from server.
  *
- * @author Dipen & Hector
+ * @author Dipen (300304965)
+ * @author Hector (Fang Zhao 300364061)
  *
  */
 public class ClientUI {
@@ -39,10 +39,6 @@ public class ClientUI {
 	/**
 	 * The period between every update
 	 */
-
-	// This is the default clock thread
-	// public static final int DEFAULT_CLK_PERIOD = 100;
-	// Testing clock thread
 	public static final int DEFAULT_CLK_PERIOD = 50;
 
 	// ============ info fields =================
@@ -82,7 +78,7 @@ public class ClientUI {
 	private boolean playerDead = false;
 
 	/**
-	 * The hour of current time, which is used for rendering day/night shift
+	 * The hour of current time, which is used for rendering day/night shifting
 	 */
 	private int hourOfTime;
 
@@ -103,6 +99,12 @@ public class ClientUI {
 	 * holding a torch.
 	 */
 	private Map<Integer, Boolean> torchStatus;
+
+	/**
+	 * This map keeps track of the status for all players that whether he is
+	 * alive or not.
+	 */
+	private Map<Integer, Boolean> alivenessMap;
 
 	/**
 	 * This list keeps track of this player's inventory. Each item is
@@ -128,7 +130,24 @@ public class ClientUI {
 	 */
 	private Map<Integer, String> descriptions;
 
+	/**
+	 * This is the index of the Avatar
+	 */
+	private int avatarIndex = 0;
+
+	/**
+	 * This is index for the item array
+	 */
+	private int itemIndex;
+
+	/**
+	 * A flag indicating whether to display map-elements description or not.
+	 * It's controlled by the toggle button in menu
+	 */
+	private boolean descriptionToggle = true;
+
 	// ============ Model and Views =============
+
 	/**
 	 * The Gui
 	 */
@@ -150,6 +169,7 @@ public class ClientUI {
 	private ClockThread clockThread;
 
 	// ============ Event Handlers ==============
+
 	/**
 	 * Event Handler for buttons
 	 */
@@ -169,38 +189,36 @@ public class ClientUI {
 	 * Event Handler for window events
 	 */
 	private EventHandler<WindowEvent> windowEvent;
-	/**
-	 * This is the index of the Avatar
-	 */
-	private int avatarIndex = 0;
 
-	/**
-	 * This is index for the item array
-	 */
-	private int itemIndex;
+	private long startMilSec;
 
-	private boolean descriptionToggle = true;
+	private boolean isFirstTime;
+
+	private long endMilSec;
+
+	private boolean displayingNotification;
+
+	private String time;
 
 	/**
 	 * Constructor
 	 */
 	public ClientUI() {
+		// initialse maps
 		areas = new HashMap<>();
 		descriptions = new HashMap<>();
 		avatars = new HashMap<>();
 		positions = new HashMap<>();
+		alivenessMap = new HashMap<>();
 		torchStatus = new HashMap<>();
-		// TODO: need to uses the other constructor
-		// render = new Rendering();
+
 		render = new Rendering();
-		// TODO: get the actual player direction
 		gui = new GUI(this, render);
 		GUI.launch(GUI.class);
 	}
 
 	/**
-	 * This method is used to connect the players to the client which then
-	 * connects them to the server
+	 * This method logs in player and connects to server.
 	 *
 	 * @param ip
 	 *            --- the server ip address.
@@ -210,7 +228,8 @@ public class ClientUI {
 	 *            --- the user name
 	 * @param avatarIndex
 	 *            --- the index of Avatar that the player chose.
-	 * @return
+	 * @return --- true if no errors occurred, or false if the login wasn't
+	 *         successful
 	 */
 	public boolean loginPlayer(String ip, int port, String userName, int avatarIndex) {
 		// ip address format check
@@ -218,6 +237,13 @@ public class ClientUI {
 			GUI.showMsgPane("Error", "It's not a correct ip address.");
 			return false;
 		}
+
+		// don't allow empty names
+		if (userName == null || userName.length() <= 0) {
+			GUI.showMsgPane("Error", "Please input a name.");
+			return false;
+		}
+
 		// create a socket
 		Socket s = null;
 		try {
@@ -226,14 +252,9 @@ public class ClientUI {
 			GUI.showMsgPane("Error", "Failed to connect to server");
 			return false;
 		}
+
+		// ok, ready to connect to server.
 		client = new Client(s, this);
-
-		// don't allow empty
-		if (userName == null || userName.length() <= 0) {
-			GUI.showMsgPane("Error", "Please input a name.");
-			return false;
-		}
-
 		this.userName = userName;
 		this.avatar = Avatar.get(avatarIndex);
 		client.start();
@@ -244,19 +265,20 @@ public class ClientUI {
 	 * This method is used to start the listeners
 	 */
 	public void startListeners() {
-		// start the gui components listener, key listener, and mouse listener
+		// start the GUI components listener, key listener, and mouse listener
 		setActionEventHandler();
 		setKeyEventHander();
 		setMouseEventHander();
 	}
 
 	/*
-	 * ===============================
+	 * ====================================
 	 *
 	 * Methods related to the client
 	 *
-	 * ===============================
+	 * ====================================
 	 */
+
 	/**
 	 * When the client receives the user ID from the server, this method will
 	 * update the local user ID.
@@ -323,9 +345,13 @@ public class ClientUI {
 	 *            --- a string representation of world time.
 	 */
 	public void parseTime(String timeStr) {
+		// update the hour, so the renderer knows when to do day/night shift
 		String[] timeStrs = timeStr.split(":");
 		hourOfTime = Integer.valueOf(timeStrs[0]);
-		gui.setTime(timeStr);
+
+		time = timeStr;
+
+		// gui.setTime(timeStr);
 	}
 
 	/**
@@ -362,6 +388,18 @@ public class ClientUI {
 	}
 
 	/**
+	 * When the client receives the string recording all players aliveness from
+	 * the server, this method will update the local table which records every
+	 * player's aliveness.
+	 *
+	 * @param alivenessString
+	 *            --- a string representation of the aliveness of all players.
+	 */
+	public void parseAliveStatus(String alivenessString) {
+		ParserUtilities.parseAliveness(alivenessMap, alivenessString);
+	}
+
+	/**
 	 * When the client receives the string recording the status of player
 	 * holding torch from the server, this method will update the local table
 	 * which records every player's status of holding torch.
@@ -383,7 +421,7 @@ public class ClientUI {
 	 * @param msg
 	 *            --- the dialog message
 	 */
-	public void GameOver(String title, String msg) {
+	public void gameOver(String title, String msg) {
 		GUI.showMsgPane(title, msg);
 	}
 
@@ -407,12 +445,50 @@ public class ClientUI {
 	}
 
 	/**
-	 * This method reset uid for a hard reset
+	 * When the client receives the string of notification message from the
+	 * server, this method will delegate to gui to display it.
 	 *
-	 * @param uId
+	 * @param nMsg
+	 *            --- the notification message
 	 */
-	public void resetUid(int uId) {
-		this.uid = uId;
+	public void parseNotificationMsg(String nMsg) {
+
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				char frontMapElement;
+				String str = nMsg;
+
+				if ("T".equals(nMsg)) {
+					// This means take-out-item was failed.
+					frontMapElement = getFrontMapElement();
+					if (frontMapElement == 'C' || frontMapElement == 'U') {
+						str = "It's probably locked or just empty";
+					} else if (frontMapElement == 'P') {
+						str = "It's empty";
+					} else {
+						str = "Can't take items out from it";
+					}
+				} else if ("P".equals(nMsg)) {
+					// This means put-item-into-container was failed.
+					frontMapElement = getFrontMapElement();
+					if (frontMapElement == 'C' || frontMapElement == 'U') {
+						str = "It's probably full or locked";
+					} else if (frontMapElement == 'P') {
+						str = "It's already very full.";
+					} else {
+						str = "Can't put items into it";
+					}
+				} else if (nMsg.startsWith("Y")) {
+					// This means try-unlock was failed.
+					frontMapElement = getFrontMapElement();
+					if (frontMapElement != 'C' && frontMapElement != 'E' && frontMapElement != 'U') {
+						str = "";
+					}
+				}
+				gui.setObjectDetail(str);
+			}
+		});
 	}
 
 	/**
@@ -440,6 +516,7 @@ public class ClientUI {
 	 *
 	 * ===============================
 	 */
+
 	/**
 	 * This method is called by ClockThread periodically to update the renderer
 	 * and GUI.
@@ -450,11 +527,14 @@ public class ClientUI {
 		int areaId = playerLoc.areaId;
 		char[][] worldMap = areas.get(areaId);
 
+		// 1. update the world time
+		// System.out.println(time);
+
 		// 1. update minimap
 		gui.updateMinimap(playerLoc, uid, worldMap, visibility, positions);
 
 		// 2. update the renderer
-		render.render(playerLoc, worldMap, visibility, uid, avatars, positions, torchStatus, hourOfTime, torchStatus);
+		render.render(playerLoc, worldMap, visibility, uid, avatars, positions, torchStatus, hourOfTime, alivenessMap);
 
 		// 3. update the health bar
 		gui.updateHealth(health);
@@ -464,9 +544,13 @@ public class ClientUI {
 
 		// 5. update area/room description
 		render.updateAreaDescription(descriptions.get(areaId));
+
+		gui.displayNotification(time);
+
 		// 6. update the map object description
 		if (descriptionToggle) {
 			gui.displayObjectDescription(getFrontElementString());
+			// gui.displayObjectDescription(time);
 		} else {
 			gui.displayObjectDescription("");
 		}
@@ -479,6 +563,8 @@ public class ClientUI {
 				playerDead = true;
 			}
 		}
+
+
 	}
 
 	/**
@@ -495,7 +581,9 @@ public class ClientUI {
 		});
 		gui.setHealthBar(health, virus, userName, avatar);
 		gui.objectLabel();
+		gui.objectNotifcation();
 		render.setAreaDescription();
+
 	}
 
 	/**
@@ -516,9 +604,10 @@ public class ClientUI {
 				} else if (event.toString().contains("Run Away")) {
 					// this is for the main screen of the game
 					gui.getWindow().close();
-				} else if (event.toString().contains("KeyboardShortcut")) {
+				} else if (event.toString().contains("Help")) {
 					// TODO: need to make a help thing which tells the user how
 					// to play the game
+					AlertBox.keyPopUp();
 				} else if (event.toString().contains("Login")) {
 					// parse the port number to int
 					int port = -1;
@@ -552,10 +641,9 @@ public class ClientUI {
 				} else if (event.toString().contains("CloseMenu")) {
 					gui.getWindow().close();
 				} else if (event.toString().contains("InfoMenu")) {
-					// TODO: make a info page
-					System.out.println("INFO");
+					AlertBox.keyPopUp();
 				} else if (event.toString().contains("AboutMenu")) {
-					System.out.println("ABOUT");
+					AlertBox.aboutPopUp();
 				} else if (event.toString().contains("PrevAvatar")) {
 					avatarIndex--;
 					if (avatarIndex < 0) {
@@ -614,11 +702,11 @@ public class ClientUI {
 					client.send(Packet.TurnLeft);
 				} else if (keyCode == KeyCode.E) {
 					client.send(Packet.TurnRight);
-				} else if (keyCode == KeyCode.F) {
+				} else if (keyCode == KeyCode.R || keyCode == keyCode.U) {
 					client.send(Packet.Unlock);
-				} else if (keyCode == KeyCode.G) {
+				} else if (keyCode == KeyCode.F) {
 					client.send(Packet.TakeOutItem);
-				} else if (keyCode == KeyCode.R) {
+				} else if (keyCode == KeyCode.G) {
 					client.send(Packet.Transit);
 				} else if (keyCode == KeyCode.DIGIT1) {
 					client.sendWithIndex(Packet.UseItem, 0);
@@ -718,11 +806,29 @@ public class ClientUI {
 	}
 
 	/**
+	 * This method will retrieve a correct description for the map element in
+	 * front of the player.
 	 *
-	 * @return
+	 * @return --- the map element description as a string.
 	 */
 	public String getFrontElementString() {
+		char mapElement = getFrontMapElement();
+		String decription = GUI.MAP_OBJECT_DESCRIPTION.get(mapElement);
+		if (decription == null) {
+			return "";
+		} else {
+			return decription;
+		}
+	}
 
+	/**
+	 * Get the map element in front of the player, the map element is
+	 * represented as a char.
+	 *
+	 * @return --- the char that represents the map element in front. If it's
+	 *         out of boundary, a '\0' will be returned.
+	 */
+	private char getFrontMapElement() {
 		Position selfPos = positions.get(uid);
 		Direction selfDir = selfPos.getDirection();
 		int currentAreaId = selfPos.areaId;
@@ -736,42 +842,37 @@ public class ClientUI {
 		switch (selfDir) {
 		case East:
 			if (selfPos.x + 1 >= width) {
-				return "";
+				return '\0';
 			}
 			frontX = selfPos.x + 1;
 			frontY = selfPos.y;
 			break;
 		case North:
 			if (selfPos.y - 1 < 0) {
-				return "";
+				return '\0';
 			}
 			frontX = selfPos.x;
 			frontY = selfPos.y - 1;
 			break;
 		case South:
 			if (selfPos.y + 1 >= height) {
-				return "";
+				return '\0';
 			}
 			frontX = selfPos.x;
 			frontY = selfPos.y + 1;
 			break;
 		case West:
 			if (selfPos.x - 1 < 0) {
-				return "";
+				return '\0';
 			}
 			frontX = selfPos.x - 1;
 			frontY = selfPos.y;
 			break;
 		default:
-			return "";
+			return '\0';
 		}
 
-		String decription = GUI.MAP_OBJECT_DESCRIPTION.get(currentMap[frontY][frontX]);
-		if (decription == null) {
-			return "";
-		} else {
-			return decription;
-		}
+		return currentMap[frontY][frontX];
 	}
 
 	/**

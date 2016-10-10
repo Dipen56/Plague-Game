@@ -2,8 +2,8 @@ package client.rendering;
 
 import java.util.HashMap;
 import java.util.Map;
-
 import javafx.scene.image.Image;
+
 import server.game.player.Avatar;
 import server.game.player.Direction;
 
@@ -17,36 +17,80 @@ import server.game.player.Direction;
  */
 public class Images {
 
+	/**
+	 * This is the game icon image
+	 */
 	public static final Image GAMEICON_IMAGE = loadImage("/game-icon.png");
 
+	/**
+	 * This is an empty image for empty item slot in inventory
+	 */
 	public static final Image INVENTORY_IMAGE = loadImage("/item-tray.png");
 
+	/**
+	 * This is the splash screen image
+	 */
 	public static final Image SLASH_SCREEN_IMAGE = loadImage("/spash-screen-background.png");
 
+	/**
+	 * This is the background image for login screen
+	 */
 	public static final Image LOGIN_SCREEN_IMAGE = loadImage("/login-background.png");
 
+	/**
+	 * The day time background image
+	 */
 	public static final Image DAYTIME_IMAGE = loadImage("/Daytime.jpg");
 
+	/**
+	 * The night time background image
+	 */
 	public static final Image NIGHTIME_IMAGE = loadImage("/background.gif");
 
+	/**
+	 * The grass image
+	 */
 	public static final Image GRASS_IMAGE = loadImage("/grass.png");
 
+	/**
+	 * The grass image in the night
+	 */
 	public static final Image GRASSNIGHT_IMAGE = loadImage("/grass_dark.png");
 
 	public static final Image TREE_IMAGE = loadImage("/tree.png");
 
 	public static final Image CHEST_IMAGE = loadImage("/chest.png");
 
+	//public static final Image ROOMTILE_IMAGE = loadImage("/roomTile.png");
+
+	//public static final Image HOWTOPLAY_IMAGE = loadImage("/HowToPlay.png");
+
+	//public static final Image KEYBOARDSHORT_IMAGE = loadImage("/Keyboard_Help.png");
+	/**
+	 * The ground tile image in the room
+	 */
 	public static final Image ROOMTILE_IMAGE = loadImage("/roomTile.png");
 
+	/**
+	 * Help screen image
+	 */
 	public static final Image HOWTOPLAY_IMAGE = loadImage("/HowToPlay.png");
 
-	public static final Image KEYBOARDSHORT_IMAGE = loadImage("/Keyboard_Help.png");
+	/**
+	 * Keyboard short-cut help screen image
+	 */
+	public static final Image KEYBOARDSHORT_IMAGE = loadImage("/Keyboard_Help.jpg");
+
+	/**
+	 * waiting room image
+	 */
+	public static final Image WAITING_ROOM_IMAGE = loadImage("/wating-room.gif");
 
 	/**
 	 * Four green arrow images used for rendering mini-map
 	 */
 	public static final Map<Direction, Image> GREEN_ARROW;
+
 	/**
 	 * Four red arrow images used for rendering mini-map
 	 */
@@ -78,12 +122,14 @@ public class Images {
 	 */
 	public static final Map<Avatar, Image> PROFILE_IMAGES;
 
+	/**
+	 * This is designed as a table for renderer to retrieve the dead player
+	 * images.
+	 */
 	public static final Map<Avatar, Map<Side, Image>> DEAD_IMAGES;
 
 	/*
-	 * Initialise the table for Renderer. Each table contains a map which maps a
-	 * char to the corresponding object, so the Renderer knows what to render by
-	 * knowing what char was sent by server.
+	 * Initialise the constant tables for renderer.
 	 */
 	static {
 		MAP_OBJECT_IMAGES = new HashMap<>();
@@ -94,15 +140,6 @@ public class Images {
 		RED_ARROW = new HashMap<>();
 		PROFILE_IMAGES = new HashMap<>();
 		DEAD_IMAGES = new HashMap<>();
-
-		/*
-		 * TODO This is probably not appropriate, some map objects may need more
-		 * than one png path, e.g. a room has four sides of views, each of them
-		 * should be different.
-		 *
-		 * But the idea is, we initialise this map for renderer so that renderer
-		 * knows what map object to render by looking into this map.
-		 */
 
 		// ============= map objects ====================
 
@@ -221,6 +258,7 @@ public class Images {
 		RED_ARROW.put(Direction.West, loadImage("/Red_West.png"));
 
 		// ============= profile pictures =====================
+
 		PROFILE_IMAGES.put(Avatar.Avatar_1, loadImage("/Char_1_face.png"));
 		PROFILE_IMAGES.put(Avatar.Avatar_2, loadImage("/Char_3_Face.png"));
 		PROFILE_IMAGES.put(Avatar.Avatar_3, loadImage("/Char_2_Face.png"));

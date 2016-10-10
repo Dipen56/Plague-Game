@@ -3,8 +3,8 @@ package client.rendering;
 import server.game.player.Direction;
 
 /**
- * This enum class represents four sides of a object, including front, back,
- * left, right.
+ * This enumeration class represents four sides of a object, including front,
+ * back, left, right.
  * 
  * @author Hector (Fang Zhao 300364061)
  *

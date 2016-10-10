@@ -31,23 +31,48 @@ public class InitialGameAdapter{
 	 * I don't know why but them being here allows the parser to put objects of their types into the xml file.
 	 * Without it, the parser does not recognise these types of object, and they will not be written to the game save.
 	 */
+
+	/**
+	 * Included to allow the XML parser to recognise the type of object.
+	 */
 	@XmlElement
 	private ObstacleAdapter ObstTypeProtector = new ObstacleAdapter();
+
+	/**
+	 * Included to allow the XML parser to recognise the type of object.
+	 */
 	@XmlElement
 	private ChestAdapter ChestTypeProtector = new ChestAdapter();
+
+	/**
+	 * Included to allow the XML parser to recognise the type of object.
+	 */
 	@XmlElement
 	private AntidoteAdapter AntidoteTypeProtector = new AntidoteAdapter();
+
+	/**
+	 * Included to allow the XML parser to recognise the type of object.
+	 */
 	@XmlElement
 	private KeyAdapter KeyTypeProtector = new KeyAdapter();
+
+	/**
+	 * Included to allow the XML parser to recognise the type of object.
+	 */
 	@XmlElement
 	private CupboardAdapter CupboardTypeProtector = new CupboardAdapter();
+
+	/**
+	 * Included to allow the XML parser to recognise the type of object.
+	 */
 	@XmlElement
 	private ScrapPileAdapter ScrapPileTypeProtector = new ScrapPileAdapter();
+
+	/**
+	 * Included to allow the XML parser to recognise the type of object.
+	 */
 	@XmlElement
 	private TransitionSpaceAdapter TransitionSpaceTypeProtector = new TransitionSpaceAdapter();
-
-
-	public static final GroundSpaceAdapter groundSpaceAdapter= new GroundSpaceAdapter();
 
 	/**
 	 * An alternate version of a World object.
@@ -75,7 +100,7 @@ public class InitialGameAdapter{
 	}
 
 	/**
-	 *@param The object on which to base this object
+	 * @param game	The object on which to base this object
 	 **/
 	public InitialGameAdapter(Game game){
 		if(game == null)

@@ -55,6 +55,7 @@ public class Rendering {
 	public void render(Position playerLoc, char[][] worldMap, int visibility, int uid, Map<Integer, Avatar> avatars,
 			Map<Integer, Position> positions, Map<Integer, Boolean> torchStatus, int hourOfTime,
 			Map<Integer, Boolean> isPlayerDead) {
+
 		renderGroup.getChildren().clear();
 		Direction direction = playerLoc.getDirection();
 		Image background;
@@ -248,8 +249,9 @@ public class Rendering {
 		Image playerImg;
 		Image otherAvatar;
 		// Current player / contains torches
-		Boolean currentPlayerDead = isPlayerDead.get(uid);
-		if (!currentPlayerDead)
+		Boolean currentPlayerNotDead = isPlayerDead.get(uid);
+		System.out.println(currentPlayerNotDead);
+		if (currentPlayerNotDead)
 			playerImg = Images.getAvatarImageBySide(avatars.get(uid), Side.Back, torchStatus.get(uid));
 		else
 			playerImg = Images.getDeadImageBySideMyself(avatars.get(uid), Side.Back);
@@ -269,8 +271,8 @@ public class Rendering {
 			int otherPlayerX = userPosition.x;
 			int otherPlayerY = userPosition.y;
 			if (imageCoordinate.x == otherPlayerX && imageCoordinate.y == otherPlayerY) {
-				Boolean otherPlayersDead = isPlayerDead.get(userID);
-				if (!otherPlayersDead)
+				Boolean otherPlayersNotDead = isPlayerDead.get(userID);
+				if (otherPlayersNotDead)
 					otherAvatar = Images.getAvatarImageByDirection(avatarIDs, direction, userPosition.getDirection(),
 							torchStatus.get(userID));
 				else
