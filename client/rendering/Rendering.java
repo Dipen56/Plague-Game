@@ -57,12 +57,12 @@ public class Rendering {
 	 * @param b
 	 */
 	public void render(Position playerLoc, char[][] worldMap, int visibility, int uid, Map<Integer, Avatar> avatars,
-			Map<Integer, Position> positions, Map<Integer, Boolean> torchStatus, boolean isDayTime) {
+			Map<Integer, Position> positions, Map<Integer, Boolean> torchStatus, int hourOfTime) {
 		renderGroup.getChildren().clear();
 		Direction direction = playerLoc.getDirection();
 		Image background;
 		// For Night and Day Backgrounds
-		if (isDayTime) {
+		if (hourOfTime >= 6 && hourOfTime < 18) {
 			background = Images.DAYTIME_IMAGE;
 		} else {
 			background = Images.NIGHTIME_IMAGE;
