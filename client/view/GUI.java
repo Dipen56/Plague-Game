@@ -41,9 +41,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.ScrollPane;
-
 import server.game.player.Avatar;
 import server.game.player.Direction;
 import server.game.player.Player;
@@ -52,13 +49,13 @@ import server.game.player.Virus;
 import client.rendering.Images;
 import client.rendering.Rendering;
 import client.rendering.Side;
-import javafx.scene.control.ScrollPane.ScrollBarPolicy;
+
 
 /**
  * This class represents the main GUI class this class bring together all the
  * different components of the GUI.
  *
- * @author Dipen
+ * @author Dipen Patel
  *
  */
 public class GUI extends Application {
@@ -444,7 +441,7 @@ public class GUI extends Application {
 	 * @param virusName
 	 */
 
-	public void setHealthBar(double health, Virus virusName, String userName) {
+	public void setHealthBar(double health, Virus virusName, String userName, Avatar avatar) {
 
 		healthPane = new FlowPane();
 		healthPane.setHgap(2);
@@ -457,8 +454,8 @@ public class GUI extends Application {
 		 * TODO link it to the avatar image using avatar index upto. use
 		 */
 
-		// Image avatarImg = Images.PROFILE_IMAGES.get(avatar);
-		Image avatarImg = Images.SLASH_SCREEN_IMAGE;
+		Image avatarImg = Images.PROFILE_IMAGES.get(avatar);
+		// Image avatarImg = Images.SLASH_SCREEN_IMAGE;
 		ImageView avatarImage = new ImageView(avatarImg);
 		avatarImage.setFitHeight(60);
 		avatarImage.setFitWidth(50);
@@ -476,7 +473,7 @@ public class GUI extends Application {
 		barPlusNum.getChildren().setAll(bar, healthBarText);
 
 		virus = new Label();
-		virus.setText(" UserName: "+userName+"\n Virus Type: " + virusName.toString());
+		virus.setText(" UserName: " + userName + "\n Virus Type: " + virusName.toString());
 		virus.setWrapText(true);
 		virus.setPrefWidth(148);
 		virus.getStyleClass().add("virus-label");
@@ -809,6 +806,8 @@ public class GUI extends Application {
 	 *            --- the visibility
 	 * @param positions
 	 *            --- a collection of every player's location.
+	 *            
+	 * @author Hector (Fang Zhao 300364061)
 	 */
 	public void updateMinimap(Position playerLoc, int uId, char[][] areaMap, int visibility,
 			Map<Integer, Position> positions) {
