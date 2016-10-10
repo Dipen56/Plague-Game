@@ -452,7 +452,7 @@ public class ClientUI {
 		gui.updateMinimap(playerLoc, uid, worldMap, visibility, positions);
 
 		// 2. update the renderer
-        render.render(playerLoc, worldMap, visibility, uid, avatars, positions, torchStatus, hourOfTime);
+		 render.render(playerLoc, worldMap, visibility, uid, avatars,positions, torchStatus, hourOfTime);
 
 		// 3. update the health bar
 		gui.updateHealth(health);
@@ -473,7 +473,6 @@ public class ClientUI {
 		if (!playerDead) {
 			// Displays dialog when player health is 0
 			if (health <= 0) {
-
 				AlertBox.displayMsg("YOU ARE DEAD", "GAMEOVER");
 				playerDead = true;
 			}
@@ -492,12 +491,9 @@ public class ClientUI {
 				clockThread.start();
 			}
 		});
-
-		gui.setHealthBar(health, virus,userName);
-
+		gui.setHealthBar(health, virus, userName, avatar);
 		gui.objectLabel();
 		render.setAreaDescription();
-
 	}
 
 	/**
@@ -641,6 +637,7 @@ public class ClientUI {
 				} else if (keyCode == KeyCode.DIGIT8) {
 					client.sendWithIndex(Packet.UseItem, 7);
 				}
+
 				/*
 				 * TODO need more keys
 				 *

@@ -54,6 +54,11 @@ public class ServerMain {
 	 * A buffer for messages that client send for chatting.
 	 */
 	private Queue<String> messages;
+	
+	/**
+	 * A map storing all notification messages, where the key is uid, 
+	 */
+	private Map<Integer, String> notificationMsg;
 
 	/**
 	 * This map keeps track of every Receptionist for every connected client.

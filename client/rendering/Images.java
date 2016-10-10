@@ -26,7 +26,7 @@ public class Images {
 	public static final Image LOGIN_SCREEN_IMAGE = loadImage("/login-background.png");
 
 	public static final Image DAYTIME_IMAGE = loadImage("/Daytime.jpg");
-	
+
 	public static final Image NIGHTIME_IMAGE = loadImage("/background.gif");
 
 	public static final Image GRASS_IMAGE = loadImage("/grass.png");
@@ -68,6 +68,8 @@ public class Images {
 	 */
 	public static final Map<Avatar, Image> PROFILE_IMAGES;
 
+	public static final Map<Avatar, Map<Side, Image>> DEAD_IMAGES;
+
 	/*
 	 * Initialise the table for Renderer. Each table contains a map which maps a
 	 * char to the corresponding object, so the Renderer knows what to render by
@@ -81,6 +83,7 @@ public class Images {
 		GREEN_ARROW = new HashMap<>();
 		RED_ARROW = new HashMap<>();
 		PROFILE_IMAGES = new HashMap<>();
+		DEAD_IMAGES = new HashMap<>();
 
 		/*
 		 * TODO This is probably not appropriate, some map objects may need more
@@ -212,6 +215,37 @@ public class Images {
 		PROFILE_IMAGES.put(Avatar.Avatar_2, loadImage("/Char_3_Face.png"));
 		PROFILE_IMAGES.put(Avatar.Avatar_3, loadImage("/Char_2_Face.png"));
 		PROFILE_IMAGES.put(Avatar.Avatar_4, loadImage("/Char_4_Face.png"));
+
+		// ============= dead avatar pictures =====================
+
+		Map<Side, Image> deadImg_1 = new HashMap<>();
+		// deadImg_1.put(Side.Front, loadImage("/Char_1_Front.gif"));
+		// deadImg_1.put(Side.Back, loadImage("/Char_1_Rear.gif"));
+		// deadImg_1.put(Side.Left, loadImage("/Char_1_Left.gif"));
+		// deadImg_1.put(Side.Right, loadImage("/Char_1_Right.gif"));
+		DEAD_IMAGES.put(Avatar.Avatar_1, deadImg_1);
+
+		Map<Side, Image> deadImg_2 = new HashMap<>();
+		// deadImg_2.put(Side.Front, loadImage("/Char_1_Front.gif"));
+		// deadImg_2.put(Side.Back, loadImage("/Char_1_Rear.gif"));
+		// deadImg_2.put(Side.Left, loadImage("/Char_1_Left.gif"));
+		// deadImg_2.put(Side.Right, loadImage("/Char_1_Right.gif"));
+		DEAD_IMAGES.put(Avatar.Avatar_2, deadImg_2);
+
+		Map<Side, Image> deadImg_3 = new HashMap<>();
+		// deadImg_3.put(Side.Front, loadImage("/Char_1_Front.gif"));
+		// deadImg_3.put(Side.Back, loadImage("/Char_1_Rear.gif"));
+		// deadImg_3.put(Side.Left, loadImage("/Char_1_Left.gif"));
+		// deadImg_3.put(Side.Right, loadImage("/Char_1_Right.gif"));
+		DEAD_IMAGES.put(Avatar.Avatar_3, deadImg_3);
+
+		Map<Side, Image> deadImg_4 = new HashMap<>();
+		// deadImg_4.put(Side.Front, loadImage("/Char_1_Front.gif"));
+		// deadImg_4.put(Side.Back, loadImage("/Char_1_Rear.gif"));
+		// deadImg_4.put(Side.Left, loadImage("/Char_1_Left.gif"));
+		// deadImg_4.put(Side.Right, loadImage("/Char_1_Right.gif"));
+		DEAD_IMAGES.put(Avatar.Avatar_4, deadImg_4);
+
 	}
 
 	/**
@@ -254,6 +288,22 @@ public class Images {
 		} else {
 			return AVATAR_IMAGES_WITHOUT_TORCH.get(avatar).get(side);
 		}
+	}
+
+	/**
+	 * This utility method is used to retrieve dead avatar image according to
+	 * your own direction and the other player's direction.
+	 * 
+	 * @param avatar
+	 *            --- the avatar
+	 * @param ownDir
+	 *            --- your own direction
+	 * @param hisDir
+	 *            --- the other player's direction.
+	 * @return --- the proper image to render the other player when he is dead.
+	 */
+	public static Image getDeadImageByDirection(Avatar avatar, Direction ownDir, Direction hisDir) {
+		return DEAD_IMAGES.get(avatar).get(Side.getSideByRelativeDirection(ownDir, hisDir));
 	}
 
 	/**
