@@ -53,7 +53,8 @@ public class Rendering {
 	 * @param b
 	 */
 	public void render(Position playerLoc, char[][] worldMap, int visibility, int uid, Map<Integer, Avatar> avatars,
-			Map<Integer, Position> positions, Map<Integer, Boolean> torchStatus, int hourOfTime) {
+			Map<Integer, Position> positions, Map<Integer, Boolean> torchStatus, int hourOfTime,
+			Map<Integer, Boolean> isPlayerDead) {
 		renderGroup.getChildren().clear();
 		Direction direction = playerLoc.getDirection();
 		Image background;
@@ -62,13 +63,13 @@ public class Rendering {
 		if (hourOfTime >= 6 && hourOfTime < 18) {
 			background = Images.DAYTIME_IMAGE;
 			grass = Images.GRASS_IMAGE;
-			if(worldMap.length<30){
+			if (worldMap.length < 30) {
 				grass = Images.ROOMTILE_IMAGE;
 			}
 		} else {
 			background = Images.NIGHTIME_IMAGE;
 			grass = Images.GRASSNIGHT_IMAGE;
-			if(worldMap.length<30){
+			if (worldMap.length < 30) {
 				grass = Images.ROOMTILE_IMAGE;
 			}
 		}
@@ -98,12 +99,12 @@ public class Rendering {
 					addObject(xLeftTop, yBottom, xRightTop, row, playerLoc.x, "middle", worldMap, renderGroup,
 							direction, yTop, hourOfTime);
 					addAvatar(xLeftTop, yBottom, xRightTop, row, playerLoc.x, "middle", worldMap, renderGroup,
-							direction, yTop, avatars, positions, uid, torchStatus, hourOfTime);
+							direction, yTop, avatars, positions, uid, torchStatus, hourOfTime, isPlayerDead);
 				} else {
 					addObject(xLeftTop, yBottom, xRightTop, row, playerLoc.y, "middle", worldMap, renderGroup,
 							direction, yTop, hourOfTime);
 					addAvatar(xLeftTop, yBottom, xRightTop, row, playerLoc.y, "middle", worldMap, renderGroup,
-							direction, yTop, avatars, positions, uid, torchStatus, hourOfTime);
+							direction, yTop, avatars, positions, uid, torchStatus, hourOfTime, isPlayerDead);
 				}
 				for (int col = squaresToLeft - 1; col >= 0; col--) {
 					Polygon squareLeft = new Polygon();
@@ -119,7 +120,7 @@ public class Rendering {
 						addObject(tileXLeftTop, yBottom, tileXRightBottom, row, col, "left", worldMap, renderGroup,
 								direction, yTop, hourOfTime);
 						addAvatar(tileXLeftTop, yBottom, tileXRightBottom, row, col, "left", worldMap, renderGroup,
-								direction, yTop, avatars, positions, uid, torchStatus, hourOfTime);
+								direction, yTop, avatars, positions, uid, torchStatus, hourOfTime, isPlayerDead);
 					}
 				}
 				for (int col = squaresToRight - 1; col >= 0; col--) {
@@ -136,7 +137,7 @@ public class Rendering {
 						addObject(tileXLeftBottom, yBottom, tileXRightTop, row, col, "right", worldMap, renderGroup,
 								direction, yTop, hourOfTime);
 						addAvatar(tileXLeftBottom, yBottom, tileXRightTop, row, col, "right", worldMap, renderGroup,
-								direction, yTop, avatars, positions, uid, torchStatus, hourOfTime);
+								direction, yTop, avatars, positions, uid, torchStatus, hourOfTime, isPlayerDead);
 					}
 				}
 			}
@@ -238,13 +239,20 @@ public class Rendering {
 	 * @param uid
 	 * @param torchStatus
 	 * @param hourOfTime
+	 * @param isPlayerDead
 	 */
 	public void addAvatar(double tileXLeftBottom, double yBottom, double tileXRightBottom, int row, int col,
 			String side, char[][] worldMap, Pane renderGroup, Direction direction, double yTop,
 			Map<Integer, Avatar> avatars, Map<Integer, Position> positions, int uid, Map<Integer, Boolean> torchStatus,
-			int hourOfTime) {
-		// Current player
-		Image playerImg = Images.getAvatarImageBySide(avatars.get(uid), Side.Back, torchStatus.get(uid));
+			int hourOfTime, Map<Integer, Boolean> isPlayerDead) {
+		Image playerImg;
+		Image otherAvatar;
+		// Current player / contains torches
+		Boolean currentPlayerDead = isPlayerDead.get(uid);
+		if (!currentPlayerDead)
+			playerImg = Images.getAvatarImageBySide(avatars.get(uid), Side.Back, torchStatus.get(uid));
+		else
+			playerImg = Images.getDeadImageBySideMyself(avatars.get(uid), Side.Back);
 		Point imageCoordinate = getImagePoint(direction, row, col, side, worldMap.length, worldMap[0].length);
 		if (playerImg != null && positions.get(uid).x == imageCoordinate.x
 				&& positions.get(uid).y == imageCoordinate.y) {
@@ -254,15 +262,20 @@ public class Rendering {
 			double yPoint = getImageY(height, yBottom, yTop);
 			addImage(renderGroup, playerImg, width, height, xPoint, yPoint + imageOffset, hourOfTime);
 		}
-		// Other players
+		// Other players / contains torches
 		for (Integer userID : positions.keySet()) {
 			Position userPosition = positions.get(userID);
 			Avatar avatarIDs = avatars.get(userID);
 			int otherPlayerX = userPosition.x;
 			int otherPlayerY = userPosition.y;
 			if (imageCoordinate.x == otherPlayerX && imageCoordinate.y == otherPlayerY) {
-				Image otherAvatar = Images.getAvatarImageByDirection(avatarIDs, direction, userPosition.getDirection(),
-						torchStatus.get(userID));
+				Boolean otherPlayersDead = isPlayerDead.get(userID);
+				if (!otherPlayersDead)
+					otherAvatar = Images.getAvatarImageByDirection(avatarIDs, direction, userPosition.getDirection(),
+							torchStatus.get(userID));
+				else
+					otherAvatar = Images.getDeadImageByDirectionOther(avatarIDs, direction,
+							userPosition.getDirection());
 				if (otherAvatar != null) {
 					double height = otherAvatar.getHeight() * Math.pow(scale, squaresInFront - row - 1);
 					double width = otherAvatar.getWidth() * Math.pow(scale, squaresInFront - row - 1);
@@ -478,7 +491,6 @@ public class Rendering {
 	private void changeImageBrightness(double brightness) {
 		colorAdjust.setBrightness(brightness);
 	}
-
 
 	/**
 	 * Sets the pane to be renderGroup

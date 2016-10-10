@@ -36,11 +36,11 @@ public class Images {
 	public static final Image TREE_IMAGE = loadImage("/tree.png");
 
 	public static final Image CHEST_IMAGE = loadImage("/chest.png");
-	
+
 	public static final Image ROOMTILE_IMAGE = loadImage("/roomTile.png");
-	
+
 	public static final Image HOWTOPLAY_IMAGE = loadImage("/HowToPlay.png");
-	
+
 	public static final Image KEYBOARDSHORT_IMAGE = loadImage("/Keyboard_Help.png");
 
 	/**
@@ -311,8 +311,21 @@ public class Images {
 	 *            --- the other player's direction.
 	 * @return --- the proper image to render the other player when he is dead.
 	 */
-	public static Image getDeadImageByDirection(Avatar avatar, Direction ownDir, Direction hisDir) {
+	public static Image getDeadImageByDirectionOther(Avatar avatar, Direction ownDir, Direction hisDir) {
 		return DEAD_IMAGES.get(avatar).get(Side.getSideByRelativeDirection(ownDir, hisDir));
+	}
+
+	/**
+	 * This utility method is used to retrieve dead image from a given side.
+	 *
+	 * @param avatar
+	 *            --- the avatar
+	 * @param side
+	 *            --- the side
+	 * @return --- the proper image to render the dead player.
+	 */
+	public static Image getDeadImageBySideMyself(Avatar avatar, Side side) {
+		return DEAD_IMAGES.get(avatar).get(side);
 	}
 
 	/**

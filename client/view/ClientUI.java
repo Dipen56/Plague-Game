@@ -453,9 +453,8 @@ public class ClientUI {
 		// 1. update minimap
 		gui.updateMinimap(playerLoc, uid, worldMap, visibility, positions);
 
-
 		// 2. update the renderer
-		 render.render(playerLoc, worldMap, visibility, uid, avatars,positions, torchStatus, hourOfTime);
+		render.render(playerLoc, worldMap, visibility, uid, avatars, positions, torchStatus, hourOfTime, torchStatus);
 
 		// 3. update the health bar
 		gui.updateHealth(health);
@@ -713,7 +712,7 @@ public class ClientUI {
 					}
 					// System.out.println("here" + event.toString());
 				}
-				
+
 			}
 		};
 	}
