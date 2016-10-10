@@ -517,7 +517,7 @@ public class ClientUI {
 				} else if (event.toString().contains("Run Away")) {
 					// this is for the main screen of the game
 					gui.getWindow().close();
-				} else if (event.toString().contains("Help")) {
+				} else if (event.toString().contains("KeyboardShortcut")) {
 					// TODO: need to make a help thing which tells the user how
 					// to play the game
 				} else if (event.toString().contains("Login")) {
@@ -713,6 +713,7 @@ public class ClientUI {
 					}
 					// System.out.println("here" + event.toString());
 				}
+				
 			}
 		};
 	}

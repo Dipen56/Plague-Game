@@ -552,14 +552,14 @@ public class GUI extends Application {
 		// creates the menu
 		Menu help = new Menu("Help");
 		// creates the menu items
-		MenuItem itmInfo = new MenuItem("Plague Info");
-		itmInfo.setId("InfoMenu");
-		itmInfo.setOnAction(actionEvent);
-		MenuItem itmAbout = new MenuItem("About Game");
-		itmAbout.setId("AboutMenu");
-		itmAbout.setOnAction(actionEvent);
+		MenuItem itmShortcut = new MenuItem("Keyboard shortcuts");
+		itmShortcut.setId("KeyboardShortcut");
+		itmShortcut.setOnAction(actionEvent);
+		MenuItem itmHowToPlay = new MenuItem("How to play");
+		itmHowToPlay.setId("HowToPlay");
+		itmHowToPlay.setOnAction(actionEvent);
 		// add the items to menu
-		help.getItems().addAll(itmInfo, itmAbout);
+		help.getItems().addAll(itmShortcut, itmHowToPlay);
 		// adds menus to menu Bar
 		menuBar.getMenus().addAll(file, help);
 		// add the layout to the borderPane Layout
