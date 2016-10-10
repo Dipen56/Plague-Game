@@ -105,6 +105,12 @@ public class ClientUI {
 	private Map<Integer, Boolean> torchStatus;
 
 	/**
+	 * This map keeps track of the status for all players that whether he is
+	 * alive or not.
+	 */
+	private Map<Integer, Boolean> alivenessMap;
+
+	/**
 	 * This list keeps track of this player's inventory. Each item is
 	 * represented as a String whose format is: Character@Description. <br>
 	 * <br>
@@ -189,6 +195,7 @@ public class ClientUI {
 		descriptions = new HashMap<>();
 		avatars = new HashMap<>();
 		positions = new HashMap<>();
+		alivenessMap = new HashMap<>();
 		torchStatus = new HashMap<>();
 		// TODO: need to uses the other constructor
 		// render = new Rendering();
@@ -363,6 +370,18 @@ public class ClientUI {
 	}
 
 	/**
+	 * When the client receives the string recording all players aliveness from
+	 * the server, this method will update the local table which records every
+	 * player's aliveness.
+	 *
+	 * @param alivenessString
+	 *            --- a string representation of the aliveness of all players.
+	 */
+	public void parseAliveStatus(String alivenessString) {
+		ParserUtilities.parseAliveNess(alivenessMap, alivenessString);
+	}
+
+	/**
 	 * When the client receives the string recording the status of player
 	 * holding torch from the server, this method will update the local table
 	 * which records every player's status of holding torch.
@@ -384,7 +403,7 @@ public class ClientUI {
 	 * @param msg
 	 *            --- the dialog message
 	 */
-	public void GameOver(String title, String msg) {
+	public void gameOver(String title, String msg) {
 		GUI.showMsgPane(title, msg);
 	}
 
@@ -491,6 +510,8 @@ public class ClientUI {
 		gui.updateMinimap(playerLoc, uid, worldMap, visibility, positions);
 
 		// 2. update the renderer
+		alivenessMap.forEach((k, v) -> System.out.println("Player uid: " + k + ", isAlive: " + v));
+
 		render.render(playerLoc, worldMap, visibility, uid, avatars, positions, torchStatus, hourOfTime, health);
 
 		// 3. update the health bar
