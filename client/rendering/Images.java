@@ -30,7 +30,7 @@ public class Images {
 	public static final Image NIGHTIME_IMAGE = loadImage("/background.gif");
 
 	public static final Image GRASS_IMAGE = loadImage("/grass.png");
-	
+
 	public static final Image GRASSNIGHT_IMAGE = loadImage("/grass_dark.png");
 
 	/**
@@ -219,33 +219,32 @@ public class Images {
 		// ============= dead avatar pictures =====================
 
 		Map<Side, Image> deadImg_1 = new HashMap<>();
-		// deadImg_1.put(Side.Front, loadImage("/Char_1_Front.gif"));
-		// deadImg_1.put(Side.Back, loadImage("/Char_1_Rear.gif"));
-		// deadImg_1.put(Side.Left, loadImage("/Char_1_Left.gif"));
-		// deadImg_1.put(Side.Right, loadImage("/Char_1_Right.gif"));
+		deadImg_1.put(Side.Front, loadImage("/Char_1_front_stand_Dead.png"));
+		deadImg_1.put(Side.Back, loadImage("/Char_1_rear_stand_Dead.png"));
+		deadImg_1.put(Side.Left, loadImage("/Char_1_left_stand_Dead.png"));
+		deadImg_1.put(Side.Right, loadImage("/Char_1_right_stand_Dead.png"));
 		DEAD_IMAGES.put(Avatar.Avatar_1, deadImg_1);
 
 		Map<Side, Image> deadImg_2 = new HashMap<>();
-		// deadImg_2.put(Side.Front, loadImage("/Char_1_Front.gif"));
-		// deadImg_2.put(Side.Back, loadImage("/Char_1_Rear.gif"));
-		// deadImg_2.put(Side.Left, loadImage("/Char_1_Left.gif"));
-		// deadImg_2.put(Side.Right, loadImage("/Char_1_Right.gif"));
+		deadImg_2.put(Side.Front, loadImage("/Char_3_Front_Dead.png"));
+		deadImg_2.put(Side.Back, loadImage("/Char_3_Back_Dead.png"));
+		deadImg_2.put(Side.Left, loadImage("/Char_3_Left_Dead.png"));
+		deadImg_2.put(Side.Right, loadImage("/Char_3_Right_Dead.png"));
 		DEAD_IMAGES.put(Avatar.Avatar_2, deadImg_2);
 
 		Map<Side, Image> deadImg_3 = new HashMap<>();
-		// deadImg_3.put(Side.Front, loadImage("/Char_1_Front.gif"));
-		// deadImg_3.put(Side.Back, loadImage("/Char_1_Rear.gif"));
-		// deadImg_3.put(Side.Left, loadImage("/Char_1_Left.gif"));
-		// deadImg_3.put(Side.Right, loadImage("/Char_1_Right.gif"));
+		deadImg_3.put(Side.Front, loadImage("/Char_2_Front_Dead.png"));
+		deadImg_3.put(Side.Back, loadImage("/Char_2_Rear_Dead.png"));
+		deadImg_3.put(Side.Left, loadImage("/Char_2_left_Dead.png"));
+		deadImg_3.put(Side.Right, loadImage("/Char_2_right_Dead.png"));
 		DEAD_IMAGES.put(Avatar.Avatar_3, deadImg_3);
 
 		Map<Side, Image> deadImg_4 = new HashMap<>();
-		// deadImg_4.put(Side.Front, loadImage("/Char_1_Front.gif"));
-		// deadImg_4.put(Side.Back, loadImage("/Char_1_Rear.gif"));
-		// deadImg_4.put(Side.Left, loadImage("/Char_1_Left.gif"));
-		// deadImg_4.put(Side.Right, loadImage("/Char_1_Right.gif"));
+		deadImg_4.put(Side.Front, loadImage("/Char_4_Front_Dead.png"));
+		deadImg_4.put(Side.Back, loadImage("/Char_4_Back_Dead.png"));
+		deadImg_4.put(Side.Left, loadImage("/Char_4_left_Dead.png"));
+		deadImg_4.put(Side.Right, loadImage("/Char_4_right_Dead.png"));
 		DEAD_IMAGES.put(Avatar.Avatar_4, deadImg_4);
-
 	}
 
 	/**
