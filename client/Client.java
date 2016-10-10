@@ -369,18 +369,13 @@ public class Client extends Thread {
 		// 7. win/loose
 		if (s.hasNextLine()) {
 			line = s.nextLine();
-
 			String[] strs = line.split(",");
-
 			boolean hasWinner = Integer.valueOf(strs[0]) == 1 ? true : false;
 
 			if (hasWinner) {
 				String winnerName = strs[1];
-
 				isGameRunning = false;
-
 				controller.GameOver("We have a winner", "The winner is " + winnerName);
-
 			}
 
 		} else {
@@ -390,10 +385,18 @@ public class Client extends Thread {
 			return;
 		}
 
-		// 8. chat message
-		if (s.hasNextLine()) {
+		// ======= optional message broadcast =======
+
+		while (s.hasNextLine()) {
 			line = s.nextLine();
-			controller.parseChatMessage(line);
+
+			if (line.startsWith("M")) {
+				// 8. chat message
+				controller.parseChatMessage(line.substring(1));
+			} else if (line.startsWith("N")) {
+				// 9. notification
+				controller.parseNotificationMsg(line.substring(1));
+			}
 		}
 
 		// close the scanner

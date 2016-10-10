@@ -227,7 +227,7 @@ public class GUI extends Application {
 	}
 
 	public GUI() {
-	
+
 		// leave this constructor in here need to run the gui.
 	}
 
@@ -539,7 +539,7 @@ public class GUI extends Application {
 		itmSave.setOnAction(actionEvent);
 
 		// description toggle menu item
-		descriptionToggle = new CheckMenuItem("Des");
+		descriptionToggle = new CheckMenuItem("Description");
 		descriptionToggle.setId("Description");
 		descriptionToggle.setOnAction(actionEvent);
 		descriptionToggle.selectedProperty().setValue(true);
@@ -1034,7 +1034,6 @@ public class GUI extends Application {
 		objectDescription.setLayoutX((GAMEPANE_WIDTH_VALUE / 2) - 20);
 		objectDescription.setLayoutY(HEIGHT_VALUE - 170);
 		objectDescription.getStyleClass().add("object-description");
-
 	}
 
 	public void keyRightClickOption() {
@@ -1076,6 +1075,18 @@ public class GUI extends Application {
 	public void displayObjectDescription(String description) {
 		objectDescription.setText(description);
 		group.getChildren().add(objectDescription);
+	}
+
+	/**
+	 * This method is used to display to the user the notification of last
+	 * action, e.g. if the player failed to open a chest or other reason.
+	 * 
+	 * @param nMsg
+	 *            --- the notification message.
+	 */
+	public void displayNotification(String nMsg) {
+		// TODO this is where the notification is shown.
+		System.out.println(nMsg);
 	}
 
 	/**

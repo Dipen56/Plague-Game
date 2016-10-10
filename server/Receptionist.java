@@ -279,7 +279,9 @@ public class Receptionist extends Thread {
 						game.playerTurnRight(uid);
 						break;
 					case Transit:
-						game.playerTransit(uid);
+						if (!game.playerTransit(uid)) {
+							server.addNotification(uid, "Can't enter/exit the room");
+						}
 						break;
 					case UseItem:
 						int index_1 = input.readInt();
@@ -290,21 +292,26 @@ public class Receptionist extends Thread {
 						game.playerDestroyItem(uid, index_2);
 						break;
 					case TakeOutItem:
-						game.playerTakeItemsFromContainer(uid);
+						if (!game.playerTakeItemsFromContainer(uid)) {
+							server.addNotification(uid, "T");
+						}
 						break;
 					case PutItemIntoContainer:
 						int index_3 = input.readInt();
-						game.playerPutItemIntoContainer(uid, index_3);
+						if (!game.playerPutItemIntoContainer(uid, index_3)) {
+							server.addNotification(uid, "P");
+						}
 						break;
 					case Unlock:
-						game.playerUnlockLockable(uid);
+						if (!game.playerUnlockLockable(uid)) {
+							server.addNotification(uid, "You don't have correct key.");
+						}
 						break;
 					case Save:
 						server.save(uid);
 						break;
 					case Load:
-						if (!server.load(uid))
-							throw new RuntimeException("Game could not load.");
+						server.load(uid);
 						break;
 					case Chat:
 						String message = "[" + userName + "] " + input.readUTF();
@@ -315,11 +322,6 @@ public class Receptionist extends Thread {
 						// catch clause.
 						input.close();
 						output.close();
-
-						// TODO close this socket
-
-						// TODO stop this thread
-
 						break;
 					default:
 						break;
@@ -405,7 +407,7 @@ public class Receptionist extends Thread {
 		String torchStatus = game.getTorchStatusString();
 		gameString.append(torchStatus);
 		gameString.append('\n');
-		
+
 		// 7. win/loose
 		String winStatus = game.getWinString();
 		gameString.append(winStatus);
@@ -413,22 +415,25 @@ public class Receptionist extends Thread {
 
 		// ======= optional message broadcast =======
 
-		// FIXME all optional message should have a prefix
-
 		// 8. chat message
 		String message = server.retrieveMessage();
 		if (message != null) {
+			// prefix a 'M' for message
+			gameString.append('M');
 			gameString.append(message);
 			gameString.append('\n');
 		}
 
-		/*
-		 * TODO 8. user-specified content
-		 *
-		 *
-		 *
-		 * chat message
-		 */
+		// 9. notification
+		String nMsg = server.retrieveNotification(uid);
+		if (nMsg != null) {
+			// prefix a 'N' for message
+			gameString.append('N');
+			gameString.append(nMsg);
+			gameString.append('\n');
+		}
+
+		// TODO 10. more optional content
 
 		return gameString.toString();
 	}

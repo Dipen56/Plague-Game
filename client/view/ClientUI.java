@@ -218,6 +218,13 @@ public class ClientUI {
 			GUI.showMsgPane("Error", "It's not a correct ip address.");
 			return false;
 		}
+
+		// don't allow empty
+		if (userName == null || userName.length() <= 0) {
+			GUI.showMsgPane("Error", "Please input a name.");
+			return false;
+		}
+
 		// create a socket
 		Socket s = null;
 		try {
@@ -227,12 +234,6 @@ public class ClientUI {
 			return false;
 		}
 		client = new Client(s, this);
-
-		// don't allow empty
-		if (userName == null || userName.length() <= 0) {
-			GUI.showMsgPane("Error", "Please input a name.");
-			return false;
-		}
 
 		this.userName = userName;
 		this.avatar = Avatar.get(avatarIndex);
@@ -407,6 +408,42 @@ public class ClientUI {
 	}
 
 	/**
+	 * When the client receives the string of notification message from the
+	 * server, this method will delegate to gui to display it.
+	 * 
+	 * @param nMsg
+	 *            --- the notification message
+	 */
+	public void parseNotificationMsg(String nMsg) {
+		char frontMapElement;
+		String str = nMsg;
+
+		if ("T".equals(nMsg)) {
+			// This means take-out-item was failed.
+			frontMapElement = getFrontMapElement();
+			if (frontMapElement == 'C' || frontMapElement == 'U') {
+				str = "It's probably locked or just empty";
+			} else if (frontMapElement == 'P') {
+				str = "It's empty";
+			} else {
+				str = "Can't take items out from it";
+			}
+		} else if ("P".equals(nMsg)) {
+			// This means put-item-into-container was failed.
+			frontMapElement = getFrontMapElement();
+			if (frontMapElement == 'C' || frontMapElement == 'U') {
+				str = "It's probably full or locked";
+			} else if (frontMapElement == 'P') {
+				str = "It's already very full.";
+			} else {
+				str = "Can't put items into it";
+			}
+		}
+
+		gui.displayNotification(str);
+	}
+
+	/**
 	 * This method reset uid for a hard reset
 	 *
 	 * @param uId
@@ -455,7 +492,7 @@ public class ClientUI {
 
 
 		// 2. update the renderer
-		 render.render(playerLoc, worldMap, visibility, uid, avatars,positions, torchStatus, hourOfTime);
+		render.render(playerLoc, worldMap, visibility, uid, avatars,positions, torchStatus, hourOfTime);
 
 		// 3. update the health bar
 		gui.updateHealth(health);
@@ -719,11 +756,29 @@ public class ClientUI {
 	}
 
 	/**
-	 *
-	 * @return
+	 * This method will retrieve a correct description for the map element in
+	 * front of the player.
+	 * 
+	 * @return --- the map element description as a string.
 	 */
 	public String getFrontElementString() {
+		char mapElement = getFrontMapElement();
+		String decription = GUI.MAP_OBJECT_DESCRIPTION.get(mapElement);
+		if (decription == null) {
+			return "";
+		} else {
+			return decription;
+		}
+	}
 
+	/**
+	 * Get the map element in front of the player, the map element is
+	 * represented as a char.
+	 * 
+	 * @return --- the char that represents the map element in front. If it's
+	 *         out of boundary, a '\0' will be returned.
+	 */
+	private char getFrontMapElement() {
 		Position selfPos = positions.get(uid);
 		Direction selfDir = selfPos.getDirection();
 		int currentAreaId = selfPos.areaId;
@@ -737,42 +792,37 @@ public class ClientUI {
 		switch (selfDir) {
 		case East:
 			if (selfPos.x + 1 >= width) {
-				return "";
+				return '\0';
 			}
 			frontX = selfPos.x + 1;
 			frontY = selfPos.y;
 			break;
 		case North:
 			if (selfPos.y - 1 < 0) {
-				return "";
+				return '\0';
 			}
 			frontX = selfPos.x;
 			frontY = selfPos.y - 1;
 			break;
 		case South:
 			if (selfPos.y + 1 >= height) {
-				return "";
+				return '\0';
 			}
 			frontX = selfPos.x;
 			frontY = selfPos.y + 1;
 			break;
 		case West:
 			if (selfPos.x - 1 < 0) {
-				return "";
+				return '\0';
 			}
 			frontX = selfPos.x - 1;
 			frontY = selfPos.y;
 			break;
 		default:
-			return "";
+			return '\0';
 		}
 
-		String decription = GUI.MAP_OBJECT_DESCRIPTION.get(currentMap[frontY][frontX]);
-		if (decription == null) {
-			return "";
-		} else {
-			return decription;
-		}
+		return currentMap[frontY][frontX];
 	}
 
 	/**
