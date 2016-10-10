@@ -480,7 +480,7 @@ public class ClientUI {
 						str = "Can't put items into it";
 					}
 				}
-				gui.setObjectDetail(nMsg);
+				gui.setWorldTime(nMsg);
 			}
 		});
 	}
