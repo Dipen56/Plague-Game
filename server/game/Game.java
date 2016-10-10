@@ -30,12 +30,6 @@ import server.game.world.TransitionSpace;
 /**
  * This class represents the game world. All external access to game world is
  * done through this class.
- * 
- *
- * TODO <br>
- * 1. the game is not detecting win condition<br>
- * 3. it doesn't support trading system yet<br>
- * 4. it has no npc or enemy.<br>
  *
  * @author Hector (Fang Zhao 300364061)
  *
@@ -72,9 +66,9 @@ public class Game {
 	private static final int SUNSET_TIME = 18;
 
 	/**
-	 * The speed of world time advancing
+	 * The speed of world time advancing.
 	 */
-	public static final int TIME_ADVANCING_SPEED = 480;
+	public static final int TIME_ADVANCING_SPEED = (24 * 60) / 5;
 
 	/**
 	 * A static instance used in board grid to represent the ground space (no
@@ -107,11 +101,6 @@ public class Game {
 	 * players and their id. Server can find player easily by looking by id.
 	 */
 	private Map<Integer, Player> players;
-
-	/**
-	 * For testing. Will be removed.
-	 */
-	private Player player;
 
 	/**
 	 * All containers in the world. This is used for key re-distribution.
@@ -147,7 +136,6 @@ public class Game {
 
 		// a temporary random generator
 		Random ran = new Random();
-
 		this.gameID = ran.nextInt((5000 - 0) + 1);
 
 		// the world clock starts from a random time from 00:00:00 to 23:59:59
@@ -201,6 +189,20 @@ public class Game {
 		int minute = ran.nextInt(60);
 		int second = ran.nextInt(60);
 		clock = LocalTime.of(hour, minute, second);
+
+		// scan the world map by map, remember all containers and torches.
+		for (Area area : areas.values()) {
+			MapElement[][] map = area.getMap();
+			for (MapElement[] row : map) {
+				for (MapElement col : row) {
+					// remember containers
+					if (col instanceof Container) {
+						Container container = (Container) col;
+						containers.add(container);
+					}
+				}
+			}
+		}
 	}
 
 	/**
@@ -255,7 +257,6 @@ public class Game {
 			public void run() {
 				// decrease every player's life
 				for (Player p : players.values()) {
-					// TODO: this was -1 before
 					p.increaseHealth(-1);
 
 					// if the player is holding a torch, decrease torch's life
@@ -875,15 +876,6 @@ public class Game {
 	}
 
 	/**
-	 * For testing, will be deleted.
-	 *
-	 * @return
-	 */
-	public Player getPlayer() {
-		return player;
-	}
-
-	/**
 	 * Get all players currently logged in game.
 	 *
 	 * @return --- all players as a map, where the key is player id, and the
@@ -945,10 +937,10 @@ public class Game {
 	/**
 	 * Gets the player object with the name argument.
 	 * 
-	 * @param The
-	 *            name to match.
-	 * @return A Player object if a match is find. Returns null if there is no
-	 *         match.
+	 * @param name
+	 *            --- The name to match.
+	 * @return --- A Player object if a match is find. Returns null if there is
+	 *         no match.
 	 */
 	public Player getPlayerByName(String name) {
 		Player player = null;
@@ -1120,12 +1112,37 @@ public class Game {
 	}
 
 	/**
+	 * Get the string of current win/loose status, and if there is a winner, add
+	 * it into the string. The String is used for C/S broadcast. It has the
+	 * following format:
+	 *
+	 * <p>
+	 * The first digit is either 0 (no winner) or 1 (has a winner). The second
+	 * part is a string which is the winner's name, or 0 if no winner yet. Two
+	 * parts are separated with comma ",".
+	 * 
+	 * <p>
+	 * Say we has no winner, the string will be "0,0". Or we has a winner with
+	 * name "John", the string will be "1,John".
+	 * 
+	 * @return --- a string representation of all items in this player's
+	 *         inventory. This is used for network transmission.
+	 */
+	public String getWinString() {
+		if (hasWinner()) {
+			return "1," + getWinner().getName();
+		} else {
+			return "0,0";
+		}
+	}
+
+	/**
 	 * Whether the game has a winner or not. If the number of connected player
 	 * is one, or the number of alive player is one, true is returned.
 	 * 
 	 * @return --- true/false for yes/no
 	 */
-	private boolean hasWinner() {
+	public boolean hasWinner() {
 		if (players.values().size() == 1) {
 			return true;
 		}
@@ -1151,7 +1168,7 @@ public class Game {
 	 * 
 	 * @return --- the winner. or null if there is no winner.
 	 */
-	private Player getWinner() {
+	public Player getWinner() {
 		if (players.values().size() == 1) {
 			return players.values().iterator().next();
 		}
@@ -1173,31 +1190,6 @@ public class Game {
 		return null;
 	}
 
-	/**
-	 * Get the string of current win/loose status, and if there is a winner, add
-	 * it into the string. The String is used for C/S broadcast. It has the
-	 * following format:
-	 *
-	 * <p>
-	 * The first digit is either 0 (no winner) or 1 (has a winner). The second
-	 * part is a string which is the winner's name, or 0 if no winner yet. Two
-	 * parts are separated with comma ",".
-	 * 
-	 * <p>
-	 * Say we has no winner, the string will be "0,0". Or we has a winner with
-	 * name "John", the string will be "1,John".
-	 * 
-	 * @return --- a string representation of all items in this player's
-	 *         inventory. This is used for network transmission.
-	 */
-	public String getWinString() {
-		if (hasWinner()) {
-			return "1," + getWinner().getName();
-		} else {
-			return "0,0";
-		}
-	}
-
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -1206,7 +1198,6 @@ public class Game {
 		result = prime * result + ((clock == null) ? 0 : clock.hashCode());
 		result = prime * result + ((containers == null) ? 0 : containers.hashCode());
 		result = prime * result + gameID;
-		result = prime * result + ((player == null) ? 0 : player.hashCode());
 		result = prime * result + ((players == null) ? 0 : players.hashCode());
 		result = prime * result + ((world == null) ? 0 : world.hashCode());
 		return result;
@@ -1237,11 +1228,6 @@ public class Game {
 		} else if (!containers.equals(other.containers))
 			return false;
 		if (gameID != other.gameID)
-			return false;
-		if (player == null) {
-			if (other.player != null)
-				return false;
-		} else if (!player.equals(other.player))
 			return false;
 		if (players == null) {
 			if (other.players != null)

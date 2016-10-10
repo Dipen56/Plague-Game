@@ -13,7 +13,7 @@ import server.game.player.Position;
  * This class is a utility class containing static methods to parse
  * communications between server and client.
  * 
- * @author Dipen, Rafaela & Hector (Fang Zhao 300364061)
+ * @author Hector (Fang Zhao 300364061)
  *
  */
 public class ParserUtilities {
@@ -221,7 +221,7 @@ public class ParserUtilities {
 	 *            --- a string recording all player's status of aliveness,
 	 *            received by client from server.
 	 */
-	public static void parseAliveNess(Map<Integer, Boolean> alivenessMap, String alivenessString) {
+	public static void parseAliveness(Map<Integer, Boolean> alivenessMap, String alivenessString) {
 		Scanner scanner = new Scanner(alivenessString);
 		String line = scanner.nextLine();
 

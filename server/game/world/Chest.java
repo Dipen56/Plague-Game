@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import server.game.GameError;
 import server.game.items.Item;
 import server.game.player.Player;
 
@@ -54,9 +53,6 @@ public class Chest extends Obstacle implements Container, Lockable {
 		if (loot == null) {
 			this.loot = new ArrayList<>();
 		} else {
-//			if (loot.size() > Container.CHEST_SIZE) {
-//				throw new GameError("Chest can only contain " + Container.CHEST_SIZE + " items.");
-//			}
 			this.loot = loot;
 		}
 	}

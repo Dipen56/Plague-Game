@@ -22,16 +22,16 @@ import server.game.player.Avatar;
 import server.game.player.Direction;
 import server.game.player.Position;
 import server.game.player.Virus;
-import tests.gameLogicTests.WorldLogicTest;
 
 /**
  * This class is the client side UI, which is where the user start the game
  * from. It also serves as the controller for communicating between client and
- * GUI/Renderer. The controller tells the server about the user's action by
+ * GUI/Renderer. The controller tells the server about the user's action by // *
  * interpreting mouse and keyboard events from the user, and updates the
  * renderer/GUI according to the received information from server.
  *
- * @author Dipen & Hector
+ * @author Dipen (300304965)
+ * @author Hector (Fang Zhao 300364061)
  *
  */
 public class ClientUI {
@@ -39,10 +39,6 @@ public class ClientUI {
 	/**
 	 * The period between every update
 	 */
-
-	// This is the default clock thread
-	// public static final int DEFAULT_CLK_PERIOD = 100;
-	// Testing clock thread
 	public static final int DEFAULT_CLK_PERIOD = 50;
 
 	// ============ info fields =================
@@ -82,7 +78,7 @@ public class ClientUI {
 	private boolean playerDead = false;
 
 	/**
-	 * The hour of current time, which is used for rendering day/night shift
+	 * The hour of current time, which is used for rendering day/night shifting
 	 */
 	private int hourOfTime;
 
@@ -134,7 +130,24 @@ public class ClientUI {
 	 */
 	private Map<Integer, String> descriptions;
 
+	/**
+	 * This is the index of the Avatar
+	 */
+	private int avatarIndex = 0;
+
+	/**
+	 * This is index for the item array
+	 */
+	private int itemIndex;
+
+	/**
+	 * A flag indicating whether to display map-elements description or not.
+	 * It's controlled by the toggle button in menu
+	 */
+	private boolean descriptionToggle = true;
+
 	// ============ Model and Views =============
+
 	/**
 	 * The Gui
 	 */
@@ -156,6 +169,7 @@ public class ClientUI {
 	private ClockThread clockThread;
 
 	// ============ Event Handlers ==============
+
 	/**
 	 * Event Handler for buttons
 	 */
@@ -175,39 +189,26 @@ public class ClientUI {
 	 * Event Handler for window events
 	 */
 	private EventHandler<WindowEvent> windowEvent;
-	/**
-	 * This is the index of the Avatar
-	 */
-	private int avatarIndex = 0;
-
-	/**
-	 * This is index for the item array
-	 */
-	private int itemIndex;
-
-	private boolean descriptionToggle = true;
 
 	/**
 	 * Constructor
 	 */
 	public ClientUI() {
+		// initialse maps
 		areas = new HashMap<>();
 		descriptions = new HashMap<>();
 		avatars = new HashMap<>();
 		positions = new HashMap<>();
 		alivenessMap = new HashMap<>();
 		torchStatus = new HashMap<>();
-		// TODO: need to uses the other constructor
-		// render = new Rendering();
+
 		render = new Rendering();
-		// TODO: get the actual player direction
 		gui = new GUI(this, render);
 		GUI.launch(GUI.class);
 	}
 
 	/**
-	 * This method is used to connect the players to the client which then
-	 * connects them to the server
+	 * This method logs in player and connects to server.
 	 *
 	 * @param ip
 	 *            --- the server ip address.
@@ -217,7 +218,8 @@ public class ClientUI {
 	 *            --- the user name
 	 * @param avatarIndex
 	 *            --- the index of Avatar that the player chose.
-	 * @return
+	 * @return --- true if no errors occurred, or false if the login wasn't
+	 *         successful
 	 */
 	public boolean loginPlayer(String ip, int port, String userName, int avatarIndex) {
 		// ip address format check
@@ -226,7 +228,7 @@ public class ClientUI {
 			return false;
 		}
 
-		// don't allow empty
+		// don't allow empty names
 		if (userName == null || userName.length() <= 0) {
 			GUI.showMsgPane("Error", "Please input a name.");
 			return false;
@@ -240,8 +242,9 @@ public class ClientUI {
 			GUI.showMsgPane("Error", "Failed to connect to server");
 			return false;
 		}
-		client = new Client(s, this);
 
+		// ok, ready to connect to server.
+		client = new Client(s, this);
 		this.userName = userName;
 		this.avatar = Avatar.get(avatarIndex);
 		client.start();
@@ -252,19 +255,20 @@ public class ClientUI {
 	 * This method is used to start the listeners
 	 */
 	public void startListeners() {
-		// start the gui components listener, key listener, and mouse listener
+		// start the GUI components listener, key listener, and mouse listener
 		setActionEventHandler();
 		setKeyEventHander();
 		setMouseEventHander();
 	}
 
 	/*
-	 * ===============================
+	 * ====================================
 	 *
 	 * Methods related to the client
 	 *
-	 * ===============================
+	 * ====================================
 	 */
+
 	/**
 	 * When the client receives the user ID from the server, this method will
 	 * update the local user ID.
@@ -331,8 +335,10 @@ public class ClientUI {
 	 *            --- a string representation of world time.
 	 */
 	public void parseTime(String timeStr) {
+		// update the hour, so the renderer knows when to do day/night shift
 		String[] timeStrs = timeStr.split(":");
 		hourOfTime = Integer.valueOf(timeStrs[0]);
+		// set the time.
 		gui.setTime(timeStr);
 	}
 
@@ -378,7 +384,7 @@ public class ClientUI {
 	 *            --- a string representation of the aliveness of all players.
 	 */
 	public void parseAliveStatus(String alivenessString) {
-		ParserUtilities.parseAliveNess(alivenessMap, alivenessString);
+		ParserUtilities.parseAliveness(alivenessMap, alivenessString);
 	}
 
 	/**
@@ -463,15 +469,6 @@ public class ClientUI {
 	}
 
 	/**
-	 * This method reset uid for a hard reset
-	 *
-	 * @param uId
-	 */
-	public void resetUid(int uId) {
-		this.uid = uId;
-	}
-
-	/**
 	 * Get the user name
 	 *
 	 * @return --- the player's choice of user name
@@ -496,6 +493,7 @@ public class ClientUI {
 	 *
 	 * ===============================
 	 */
+
 	/**
 	 * This method is called by ClockThread periodically to update the renderer
 	 * and GUI.
@@ -510,8 +508,6 @@ public class ClientUI {
 		gui.updateMinimap(playerLoc, uid, worldMap, visibility, positions);
 
 		// 2. update the renderer
-		alivenessMap.forEach((k, v) -> System.out.println("Player uid: " + k + ", isAlive: " + v));
-
 		render.render(playerLoc, worldMap, visibility, uid, avatars, positions, torchStatus, hourOfTime, health);
 
 		// 3. update the health bar
@@ -522,6 +518,7 @@ public class ClientUI {
 
 		// 5. update area/room description
 		render.updateAreaDescription(descriptions.get(areaId));
+
 		// 6. update the map object description
 		if (descriptionToggle) {
 			gui.displayObjectDescription(getFrontElementString());

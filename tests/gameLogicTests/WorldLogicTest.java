@@ -15,6 +15,12 @@ import server.game.player.Avatar;
 import server.game.player.Player;
 import server.game.world.Area;
 
+/**
+ * These tests are related to world logics.
+ * 
+ * @author Hector (Fang Zhao 300364061)
+ *
+ */
 public class WorldLogicTest {
 
 	/**
@@ -51,6 +57,71 @@ public class WorldLogicTest {
 		// test disconnecting players.
 		game.disconnectPlayer(MOCK_UID);
 		assertEquals("Should have 1 players in game", 1, game.getPlayers().size());
+	}
+
+	/**
+	 * This method tests the win and loose condition.
+	 */
+	@Test
+	public void winLooseCondition() {
+		// mock a game world
+		Map<Integer, Area> areas = TestConst.createAreas();
+		Area world = areas.get(0);
+		Game game = new Game(world, areas);
+
+		// mock player
+		Player player_1 = new Player(MOCK_UID, Avatar.Avatar_1, "Hector");
+		Player player_2 = new Player(MOCK_UID + 1, Avatar.Avatar_2, "AnotherHector");
+		Player player_3 = new Player(MOCK_UID + 2, Avatar.Avatar_3, "SameHector");
+		game.joinPlayer(player_1);
+		game.joinPlayer(player_2);
+		game.joinPlayer(player_3);
+
+		// player 1 should die after the following
+		player_1.increaseHealth(-1 - Player.MAX_HEALTH);
+		if (player_1.isAlive()) {
+			fail("player 1 should have been dead.");
+		}
+
+		// player 2 disconnect, now player 3 should be winner
+		game.disconnectPlayer(MOCK_UID + 1);
+		if (!game.hasWinner()) {
+			fail("There should be a winner");
+		}
+		if (game.getWinner() != player_3) {
+			fail("player_3 should be the winner");
+		}
+
+	}
+
+	/**
+	 * This method tests whether all players are randomly spawned.
+	 */
+	@Test
+	public void randomSpawn() {
+		// mock a game world
+		Map<Integer, Area> areas = TestConst.createAreas();
+		Area world = areas.get(0);
+		Game game = new Game(world, areas);
+
+		// mock player
+		int size = 10;
+		Player[] players = new Player[size];
+		for (int i = 0; i < size; i++) {
+			players[i] = new Player(i, Avatar.Avatar_1, "hector_" + i);
+			game.joinPlayer(players[i]);
+		}
+
+		// positions
+		for (int i = 0; i < size; i++) {
+			for (int j = i + 1; j < size; j++) {
+				if (players[i].getPosition().x == players[j].getPosition().x
+						&& players[i].getPosition().y == players[j].getPosition().y) {
+					fail("Player shouldn't be spawned at the same place.");
+				}
+			}
+		}
+
 	}
 
 	/**

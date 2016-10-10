@@ -18,7 +18,8 @@ import server.game.world.Area;
  * connected client. It receives events from a client connection via a socket as
  * well as send information to the client about the current board state.
  *
- * @author Rafaela & Hector
+ * @author Rafaela
+ * @author Hector (Fang Zhao 300364061)
  *
  */
 public class Receptionist extends Thread {
@@ -188,24 +189,11 @@ public class Receptionist extends Thread {
 	}
 
 	/**
-	 * Updates the uid field.
-	 *
-	 * @param A
-	 *            new uid integer.
+	 * This method is called when the server Receptionist thread runs. It
+	 * broadcast the pre-configuration informations like area maps, in-game
+	 * player avatars, etc, and runs in loop to constantly broadcast the new
+	 * game state.
 	 */
-	public void setUID(int uid) {
-		this.uid = uid;
-	}
-
-	/**
-	 * Gets the id of the player.
-	 *
-	 * @return The player UID.
-	 */
-	public int getUID() {
-		return this.uid;
-	}
-
 	@Override
 	public void run() {
 		try {
@@ -242,8 +230,6 @@ public class Receptionist extends Thread {
 					// Should never happen
 				}
 			}
-
-			System.out.println("[Debug] Now entering while(isGameRunning) loop");
 
 			// last, let the receptionist constantly communicate with clients.
 			while (isGameRunning) {
@@ -318,8 +304,6 @@ public class Receptionist extends Thread {
 						server.addMessage(message);
 						break;
 					case Disconnect:
-						// TODO handle disconnection. or we can handle it in
-						// catch clause.
 						input.close();
 						output.close();
 						break;
@@ -352,13 +336,20 @@ public class Receptionist extends Thread {
 	 * format of it is:
 	 *
 	 * <p>
-	 * <li>Time
-	 * <li>Health
-	 * <li>Visibility
-	 * <li>Positions of all players
-	 * <li>The inventory of the player in this client
-	 * <li>The status of player holding torch or not.
-	 * <li>Chat message if there is any.
+	 * Mandatory informations:
+	 * <li>1. Time
+	 * <li>2. Health
+	 * <li>3. Visibility
+	 * <li>4. Positions of all players
+	 * <li>5. The inventory of the player in this client
+	 * <li>6. The status of player holding torch or not.
+	 * <li>7. alive or not for all players.
+	 * <li>8. win/loose
+	 * 
+	 * <p>
+	 * optional informations:
+	 * <li>9. Chat message if there is any.
+	 * <li>10. notification message if there is any.
 	 *
 	 * <p>
 	 * Each one of them is separated by a new line character '\n'. The format of
@@ -366,10 +357,13 @@ public class Receptionist extends Thread {
 	 * {@link client.ParserUtilities #parseTime(String) parseTime},
 	 * {@link client.ParserUtilities #parsePosition(java.util.Map, String)
 	 * parsePosition}, {@link client.ParserUtilities #parseInventory(String)
-	 * parseInventory}, and
+	 * parseInventory},
 	 * {@link client.ParserUtilities #parseTorchStatus(Map, String)
-	 * parseTorchStatus}.
+	 * parseTorchStatus}, and
+	 * {@link client.ParserUtilities #parseAliveness(Map, String)
+	 * parseAliveness}.
 	 *
+	 * 
 	 * @return --- a String representation of the game status
 	 */
 	private String gameToString() {
@@ -407,12 +401,12 @@ public class Receptionist extends Thread {
 		String torchStatus = game.getTorchStatusString();
 		gameString.append(torchStatus);
 		gameString.append('\n');
-		
+
 		// 7. alive or not for all players
 		String aliveStatus = game.getAliveString();
 		gameString.append(aliveStatus);
 		gameString.append('\n');
-		
+
 		// 8. win/loose
 		String winStatus = game.getWinString();
 		gameString.append(winStatus);
@@ -437,8 +431,6 @@ public class Receptionist extends Thread {
 			gameString.append(nMsg);
 			gameString.append('\n');
 		}
-
-		// TODO 11. more optional content
 
 		return gameString.toString();
 	}

@@ -18,9 +18,12 @@ import server.game.player.Player;
 import server.view.ServerGui;
 
 /**
- * This class is where the server is started.
+ * This class represents a server for Plague game. When the server starts, it
+ * listens to client connection, and when all clients are connected, the game
+ * starts simultaneously for all clients.
  *
- * @author Rafaela & Hector
+ * @author Rafaela
+ * @author Hector (Fang Zhao 300364061)
  *
  */
 public class ServerMain {
@@ -29,9 +32,9 @@ public class ServerMain {
 	 * The period between every broadcast
 	 */
 	public static final int DEFAULT_BROADCAST_CLK_PERIOD = 50;
-	
+
 	/**
-	 * A series of port number, in case the port is used.
+	 * A series of port number, in case the default port is used.
 	 */
 	public static final int[] PORT_NUM = { 6000, 6001, 6002, 6003, 6004, 6005 };
 
@@ -79,9 +82,6 @@ public class ServerMain {
 		System.out.println("How many players (at least 2):");
 		numPlayers = ParserUtilities.parseInt(2, 10);
 
-		// create the game world with test version tiny world.
-		// game = new Game(TestConst.world, TestConst.areas);
-
 		// load from game maker
 		game = InitialGameLoader.makeGame();
 
@@ -94,13 +94,12 @@ public class ServerMain {
 
 	/**
 	 * This method listens to client connections, and when all clients are
-	 * ready, a multi-player game is started.
+	 * ready, a multi-player game starts simultaneously for all clients.
 	 *
 	 * @param numPlayers
 	 *            --- the number of players
 	 */
 	private void runServer(int numPlayers) {
-
 		serverSocket = createServerSocket();
 		// display the server address and port.
 		System.out.println("Plague server is listening on IP address: " + serverSocket.getInetAddress().toString()
@@ -123,7 +122,7 @@ public class ServerMain {
 				Socket clientSocket = serverSocket.accept();
 				int uId = clientSocket.getPort();
 
-				System.out.println("Accepted connection from: " + clientSocket.getInetAddress().toString()
+				System.out.println("[Log] Accepted connection from: " + clientSocket.getInetAddress().toString()
 						+ ". uId is: " + uId + ".");
 
 				Receptionist receptionist = new Receptionist(this, clientSocket, uId, game);
@@ -133,7 +132,7 @@ public class ServerMain {
 				count++;
 			}
 
-			System.out.println("All clients accepted, now entering lobby, wait till all players are ready");
+			System.out.println("[Log] All clients accepted, now entering lobby, wait till all players are ready");
 
 			// start the initialisation process (enter the lobby)
 			runGame();
@@ -141,9 +140,6 @@ public class ServerMain {
 		} catch (IOException e) {
 			System.err.println("I/O error: " + e.getMessage());
 		} finally {
-			/*
-			 * XXX maybe need more clean up actions, close server, etc.
-			 */
 			try {
 				serverSocket.close();
 			} catch (IOException e) {
@@ -156,7 +152,6 @@ public class ServerMain {
 	 * Start the multi-player game.
 	 */
 	private void runGame() {
-
 		// join the player in, get the player's user name, avatar and id.
 		for (Receptionist r : receptionists.values()) {
 			r.receiveNameAvatar();
@@ -199,7 +194,7 @@ public class ServerMain {
 			r.setGameRunning();
 		}
 
-		System.out.println("Finished waiting for everybody ready. Game start");
+		System.out.println("[Log] Game started");
 
 		game.startTiming();
 	}
@@ -211,7 +206,6 @@ public class ServerMain {
 	 * @return --- the server socket.
 	 */
 	private ServerSocket createServerSocket() {
-
 		ServerSocket s = null;
 		// try to create a server with port number from pre-defined array.
 		for (int i = 0; i < PORT_NUM.length; i++) {
@@ -294,7 +288,6 @@ public class ServerMain {
 		// check save file existence
 		String userName = game.getPlayerById(uid).getName();
 		boolean isExisting = XmlFunctions.saveExists(userName);
-
 		if (!isExisting) {
 			System.err.println("Cannot find the save file for player " + userName);
 			return false;
@@ -311,7 +304,7 @@ public class ServerMain {
 			return false;
 		}
 
-		Map<Integer, Player> map = new HashMap<>();
+		Map<Integer, Player> newPlayers = new HashMap<>();
 
 		// Reset player ID in Player object and in map.
 		for (Player p : newGame.getPlayers().values()) {
@@ -325,11 +318,11 @@ public class ServerMain {
 			newID = player.getId();
 			// Resets UID of player in newGame
 			p.resetId(newID);
-			map.put(newID, p);
+			newPlayers.put(newID, p);
 		}
 
 		// Reset players map
-		newGame.resetPlayers(map);
+		newGame.resetPlayers(newPlayers);
 		notificationMsg = new ConcurrentHashMap<>();
 
 		// make sure every client get access to the new game instance,
@@ -352,7 +345,7 @@ public class ServerMain {
 	}
 
 	/**
-	 * Main function, start the server.
+	 * Main function for testing, start the server.
 	 *
 	 * @param args
 	 */
