@@ -439,6 +439,7 @@ public class ClientUI {
 		if (!playerDead) {
 			// Displays dialog when player health is 0
 			if (health <= 0) {
+
 				AlertBox.displayMsg("YOU ARE DEAD", "GAMEOVER");
 				playerDead = true;
 			}
@@ -458,7 +459,7 @@ public class ClientUI {
 			}
 		});
 
-		gui.setHealthBar(health, virus,userName,avatar);
+		gui.setHealthBar(health, virus,userName);
 
 		gui.objectLabel();
 		render.setAreaDescription();
