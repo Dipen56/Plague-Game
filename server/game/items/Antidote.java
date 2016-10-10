@@ -24,6 +24,12 @@ public class Antidote extends Item implements Destroyable, Tradable {
 	public static final float CURE_CHANCE = 0.2f;
 
 	/**
+	 * When the player is desperate to drink a wrong type of antidote, this is
+	 * the multiplier if he is lucky to get life increased.
+	 */
+	public static final int MULTIPLIER = 3;
+
+	/**
 	 * What type of virus does this antidote used for?
 	 */
 	private Virus virus;
