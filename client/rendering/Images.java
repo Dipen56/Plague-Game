@@ -36,6 +36,8 @@ public class Images {
 	public static final Image TREE_IMAGE = loadImage("/tree.png");
 
 	public static final Image CHEST_IMAGE = loadImage("/chest.png");
+	
+	public static final Image ROOMTILE_IMAGE = loadImage("/roomTile.png");
 
 	/**
 	 * Four green arrow images used for rendering mini-map
