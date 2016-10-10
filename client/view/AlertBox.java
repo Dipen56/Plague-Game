@@ -9,7 +9,7 @@ import javafx.scene.layout.VBox;
 import javafx.geometry.Pos;
 
 /**
- * This class represents a dialog box and is used to display massages.
+ * This class represents a dialog box and is used to display messages.
  *
  * @author Dipen
  *

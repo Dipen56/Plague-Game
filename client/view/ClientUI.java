@@ -22,10 +22,11 @@ import server.game.player.Avatar;
 import server.game.player.Direction;
 import server.game.player.Position;
 import server.game.player.Virus;
+import tests.gameLogicTests.WorldLogicTest;
 
 /**
  * This class is the client side UI, which is where the user start the game
- * from. It also servers as the controller for communicating between client and
+ * from. It also serves as the controller for communicating between client and
  * GUI/Renderer. The controller tells the server about the user's action by
  * interpreting mouse and keyboard events from the user, and updates the
  * renderer/GUI according to the received information from server.
@@ -38,6 +39,7 @@ public class ClientUI {
 	/**
 	 * The period between every update
 	 */
+
 	// This is the default clock thread
 	// public static final int DEFAULT_CLK_PERIOD = 100;
 	// Testing clock thread
@@ -489,9 +491,7 @@ public class ClientUI {
 		gui.updateMinimap(playerLoc, uid, worldMap, visibility, positions);
 
 		// 2. update the renderer
-		render.render(playerLoc, worldMap, visibility, uid, avatars, positions, torchStatus, hourOfTime);
-		// render.render(playerLoc, worldMap, visibility, uid, avatars,
-		// positions, torchStatus, false);
+		render.render(playerLoc, worldMap, visibility, uid, avatars, positions, torchStatus, hourOfTime, health);
 
 		// 3. update the health bar
 		gui.updateHealth(health);
@@ -530,12 +530,9 @@ public class ClientUI {
 				clockThread.start();
 			}
 		});
-
 		gui.setHealthBar(health, virus, userName, avatar);
-
 		gui.objectLabel();
 		render.setAreaDescription();
-
 	}
 
 	/**
@@ -556,7 +553,7 @@ public class ClientUI {
 				} else if (event.toString().contains("Run Away")) {
 					// this is for the main screen of the game
 					gui.getWindow().close();
-				} else if (event.toString().contains("Help")) {
+				} else if (event.toString().contains("KeyboardShortcut")) {
 					// TODO: need to make a help thing which tells the user how
 					// to play the game
 				} else if (event.toString().contains("Login")) {
@@ -656,10 +653,8 @@ public class ClientUI {
 					client.send(Packet.TurnRight);
 				} else if (keyCode == KeyCode.F) {
 					client.send(Packet.Unlock);
-
 				} else if (keyCode == KeyCode.G) {
 					client.send(Packet.TakeOutItem);
-
 				} else if (keyCode == KeyCode.R) {
 					client.send(Packet.Transit);
 				} else if (keyCode == KeyCode.DIGIT1) {
@@ -754,6 +749,7 @@ public class ClientUI {
 					}
 					// System.out.println("here" + event.toString());
 				}
+
 			}
 		};
 	}
