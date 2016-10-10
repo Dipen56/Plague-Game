@@ -25,8 +25,9 @@ public class Images {
 
 	public static final Image LOGIN_SCREEN_IMAGE = loadImage("/login-background.png");
 
-	// public static final Image BACKGROUND_IMAGE = loadImage("/night.png");
-	public static final Image BACKGROUND_IMAGE = loadImage("/background.gif");
+	public static final Image DAYTIME_IMAGE = loadImage("/Daytime.jpg");
+	
+	public static final Image NIGHTIME_IMAGE = loadImage("/background.gif");
 
 	public static final Image GRASS_IMAGE = loadImage("/grass.png");
 
@@ -166,42 +167,31 @@ public class Images {
 		// ============= Avatar images with torch ==========
 
 		Map<Side, Image> avatarImgTorch_1 = new HashMap<>();
-		// avatarImgTorch_1.put(Side.Front,
-		// loadImage("/Char_1_front_stand.png"));
-		// avatarImgTorch_1.put(Side.Back, loadImage("/Char_1_rear_stand.png"));
-		// avatarImgTorch_1.put(Side.Left, loadImage("/Char_1_left_stand.png"));
-		// avatarImgTorch_1.put(Side.Right,
-		// loadImage("/Char_1_left_right_foot.png"));
+		avatarImgTorch_1.put(Side.Front, loadImage("/Char_1_Front_Torch.gif"));
+		avatarImgTorch_1.put(Side.Back, loadImage("/Char_1_Rear_Torch.gif"));
+		avatarImgTorch_1.put(Side.Left, loadImage("/Char_1_Left_Torch.gif"));
+		avatarImgTorch_1.put(Side.Right, loadImage("/Char_1_Right_Torch.gif"));
 		AVATAR_IMAGES_WITH_TORCH.put(Avatar.Avatar_1, avatarImgTorch_1);
 
 		Map<Side, Image> avatarImgTorch_2 = new HashMap<>();
-		// avatarImgTorch_2.put(Side.Front,
-		// loadImage("/Char_2_front_stand.png"));
-		// avatarImgTorch_2.put(Side.Back, loadImage("/Char_2_rear_stand.png"));
-		// avatarImgTorch_2.put(Side.Left,
-		// loadImage("/Char_2_left_right_foot.png"));
-		// avatarImgTorch_2.put(Side.Right,
-		// loadImage("/Char_2_right_left_foot.png"));
+		avatarImgTorch_2.put(Side.Front, loadImage("/Char_3_Front_Torch.gif"));
+		avatarImgTorch_2.put(Side.Back, loadImage("/Char_3_Back_Torch.gif"));
+		avatarImgTorch_2.put(Side.Left, loadImage("/Char_3_Left_Torch.gif"));
+		avatarImgTorch_2.put(Side.Right, loadImage("/Char_3_Right_Torch.gif"));
 		AVATAR_IMAGES_WITH_TORCH.put(Avatar.Avatar_2, avatarImgTorch_2);
 
 		Map<Side, Image> avatarImgTorch_3 = new HashMap<>();
-		// avatarImgTorch_3.put(Side.Front,
-		// loadImage("/Char_3_front_stand.png"));
-		// avatarImgTorch_3.put(Side.Back, loadImage("/Char_3_rear_stand.png"));
-		// avatarImgTorch_3.put(Side.Left,
-		// loadImage("/Char_3_left_left_foot.png"));
-		// avatarImgTorch_3.put(Side.Right,
-		// loadImage("/Char_3_right_right_foot.png"));
+		avatarImgTorch_3.put(Side.Front, loadImage("/Char_2_Front_Torch.gif"));
+		avatarImgTorch_3.put(Side.Back, loadImage("/Char_2_Rear_Torch.gif"));
+		avatarImgTorch_3.put(Side.Left, loadImage("/Char_2_left_Torch.gif"));
+		avatarImgTorch_3.put(Side.Right, loadImage("/Char_2_right_Torch.gif"));
 		AVATAR_IMAGES_WITH_TORCH.put(Avatar.Avatar_3, avatarImgTorch_3);
 
 		Map<Side, Image> avatarImgTorch_4 = new HashMap<>();
-		// avatarImgTorch_4.put(Side.Front,
-		// loadImage("/Char_4_front_stand.png"));
-		// avatarImgTorch_4.put(Side.Back, loadImage("/Char_4_rear_stand.png"));
-		// avatarImgTorch_4.put(Side.Left,
-		// loadImage("/Char_4_left_left_foot.png"));
-		// avatarImgTorch_4.put(Side.Right,
-		// loadImage("/Char_4_right_left_foot.png"));
+		avatarImgTorch_4.put(Side.Front, loadImage("/Char_4_Front_Torch.gif"));
+		avatarImgTorch_4.put(Side.Back, loadImage("/Char_4_Back_Torch.gif"));
+		avatarImgTorch_4.put(Side.Left, loadImage("/Char_4_left_Torch.gif"));
+		avatarImgTorch_4.put(Side.Right, loadImage("/Char_4_right_Torch.gif"));
 		AVATAR_IMAGES_WITH_TORCH.put(Avatar.Avatar_4, avatarImgTorch_4);
 
 		// =================== arrows ==========================

@@ -41,6 +41,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import server.game.player.Avatar;
 import server.game.player.Direction;
 import server.game.player.Player;
@@ -49,7 +50,7 @@ import server.game.player.Virus;
 import client.rendering.Images;
 import client.rendering.Rendering;
 import client.rendering.Side;
-
+import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 
 /**
  * This class represents the main GUI class this class bring together all the
@@ -60,12 +61,25 @@ import client.rendering.Side;
  */
 public class GUI extends Application {
 
-	// GUI Style CSS
+	/**
+	 * GUI Style CSS
+	 */
 	private static final String STYLE_CSS = "/main.css";
-	// Constants Dimensions
+	/**
+	 * Constant width of the window
+	 */
 	public static final int WIDTH_VALUE = 1000;
+	/**
+	 * Constant height of the window
+	 */
 	public static final int HEIGHT_VALUE = 700;
+	/**
+	 * Constants Width Dimensions for the rendering panel
+	 */
 	private static final int RIGHTPANE_WIDTH_VALUE = WIDTH_VALUE - 600;
+	/**
+	 * Constants Width Dimensions for the right panel
+	 */
 	public static final int GAMEPANE_WIDTH_VALUE = WIDTH_VALUE - 400;
 	/**
 	 * Minimap height and width
@@ -83,7 +97,7 @@ public class GUI extends Application {
 	public static final Map<Character, String> MAP_OBJECT_DESCRIPTION;
 
 	/*
-	 * initialise the instruction table for minimap color and map element
+	 * Initialize the instruction table for minimap color and map element
 	 * description
 	 */
 	static {
@@ -136,7 +150,9 @@ public class GUI extends Application {
 		MAP_OBJECT_DESCRIPTION.put('E', "I found a hidden cabin! I need to get inside.");
 	}
 
-	// main window
+	/**
+	 * Main window for the game
+	 */
 	private static Stage window;
 	// controls
 	private Label timeLable;
@@ -211,6 +227,7 @@ public class GUI extends Application {
 	}
 
 	public GUI() {
+	
 		// leave this constructor in here need to run the gui.
 	}
 
@@ -235,8 +252,11 @@ public class GUI extends Application {
 		slashScreen();
 		// loginScreen();
 		window.show();
-		window.setOnCloseRequest(e -> Platform.exit());
-		window.setOnCloseRequest(e -> System.exit(0));
+		window.setOnCloseRequest(e -> {
+			System.exit(0);
+			Platform.exit();
+			viewControler.closeSocket();
+		});
 	}
 
 	public void slashScreen() {
@@ -268,8 +288,11 @@ public class GUI extends Application {
 		Scene slashScene = new Scene(slashBorderPane, WIDTH_VALUE, HEIGHT_VALUE);
 		slashScene.getStylesheets().add(this.getClass().getResource(STYLE_CSS).toExternalForm());
 		window.setScene(slashScene);
-		window.setOnCloseRequest(e -> Platform.exit());
-		window.setOnCloseRequest(e -> System.exit(0));
+		window.setOnCloseRequest(e -> {
+			System.exit(0);
+			Platform.exit();
+			viewControler.closeSocket();
+		});
 	}
 
 	public void loginScreen() {
@@ -360,8 +383,12 @@ public class GUI extends Application {
 		Scene loginScene = new Scene(loginPane, WIDTH_VALUE, HEIGHT_VALUE);
 		loginScene.getStylesheets().add(this.getClass().getResource(STYLE_CSS).toExternalForm());
 		window.setScene(loginScene);
-		window.setOnCloseRequest(e -> Platform.exit());
-		window.setOnCloseRequest(e -> System.exit(0));
+
+		window.setOnCloseRequest(e -> {
+			System.exit(0);
+			Platform.exit();
+			viewControler.closeSocket();
+		});
 	}
 
 	public void changeAvatarImage(int change) {
@@ -394,8 +421,11 @@ public class GUI extends Application {
 		waitingRoomBox.getChildren().add(buttons);
 		Scene slashScene = new Scene(waitingRoomBox, 400, 170);
 		window.setScene(slashScene);
-		window.setOnCloseRequest(e -> Platform.exit());
-		window.setOnCloseRequest(e -> System.exit(0));
+		window.setOnCloseRequest(e -> {
+			System.exit(0);
+			Platform.exit();
+			viewControler.closeSocket();
+		});
 
 	}
 
@@ -430,8 +460,11 @@ public class GUI extends Application {
 		scene.setOnKeyPressed(keyEvent);
 		window.setOnCloseRequest(windowEvent);
 		window.setScene(scene);
-		window.setOnCloseRequest(e -> Platform.exit());
-		window.setOnCloseRequest(e -> System.exit(0));
+		window.setOnCloseRequest(e -> {
+			System.exit(0);
+			Platform.exit();
+			viewControler.closeSocket();
+		});
 	}
 
 	/**
@@ -806,7 +839,7 @@ public class GUI extends Application {
 	 *            --- the visibility
 	 * @param positions
 	 *            --- a collection of every player's location.
-	 *            
+	 * 
 	 * @author Hector (Fang Zhao 300364061)
 	 */
 	public void updateMinimap(Position playerLoc, int uId, char[][] areaMap, int visibility,
@@ -1057,7 +1090,6 @@ public class GUI extends Application {
 				AlertBox.displayMsg(title, msg);
 			}
 		});
-		System.err.println(msg);
 	}
 
 }

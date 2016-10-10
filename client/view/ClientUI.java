@@ -80,6 +80,11 @@ public class ClientUI {
 	private boolean playerDead = false;
 
 	/**
+	 * The hour of current time, which is used for rendering day/night shift
+	 */
+	private int hourOfTime;
+
+	/**
 	 * This map keeps track of all player's avatars. Renderer can look for which
 	 * avatar to render from here.
 	 */
@@ -220,6 +225,13 @@ public class ClientUI {
 			return false;
 		}
 		client = new Client(s, this);
+
+		// don't allow empty
+		if (userName == null || userName.length() <= 0) {
+			GUI.showMsgPane("Error", "Please input a name.");
+			return false;
+		}
+
 		this.userName = userName;
 		this.avatar = Avatar.get(avatarIndex);
 		client.start();
@@ -309,6 +321,8 @@ public class ClientUI {
 	 *            --- a string representation of world time.
 	 */
 	public void parseTime(String timeStr) {
+		String[] timeStrs = timeStr.split(":");
+		hourOfTime = Integer.valueOf(timeStrs[0]);
 		gui.setTime(timeStr);
 	}
 
@@ -356,6 +370,26 @@ public class ClientUI {
 	 */
 	public void parseTorchStatus(String torchStatusStr) {
 		ParserUtilities.parseTorchStatus(torchStatus, torchStatusStr);
+	}
+
+	/**
+	 * This method is used to let the player know that the game is over and
+	 * rather they have won or not.
+	 *
+	 * @param title
+	 *            --- the dialog title
+	 * @param msg
+	 *            --- the dialog message
+	 */
+	public void GameOver(String title, String msg) {
+		GUI.showMsgPane(title, msg);
+	}
+
+	/**
+	 * This method close the socket on client side.
+	 */
+	public void closeSocket() {
+		client.closeSocket();
 	}
 
 	/**
@@ -418,7 +452,8 @@ public class ClientUI {
 		gui.updateMinimap(playerLoc, uid, worldMap, visibility, positions);
 
 		// 2. update the renderer
-		render.render(playerLoc, worldMap, visibility, uid, avatars, positions);
+        // render.render(playerLoc, worldMap, visibility, uid, avatars, positions, torchStatus, hourOfTime);
+		render.render(playerLoc, worldMap, visibility, uid, avatars, positions, torchStatus, false);
 
 		// 3. update the health bar
 		gui.updateHealth(health);
