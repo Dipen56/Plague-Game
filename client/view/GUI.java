@@ -37,16 +37,24 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import java.awt.Point;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 
 import server.game.player.Avatar;
 import server.game.player.Direction;
 import server.game.player.Player;
 import server.game.player.Position;
 import server.game.player.Virus;
+import server.view.ServerGui;
 import client.rendering.Images;
 import client.rendering.Rendering;
 import client.rendering.Side;
@@ -65,6 +73,7 @@ public class GUI extends Application {
 	 * GUI Style CSS
 	 */
 	private static final String STYLE_CSS = "/main.css";
+	private static final String BACKGROUND_MUSIC = "/background.wav";
 	/**
 	 * Constant width of the window
 	 */
@@ -472,6 +481,7 @@ public class GUI extends Application {
 		borderPane.setCenter(hbox);
 		Scene scene = new Scene(borderPane, WIDTH_VALUE, HEIGHT_VALUE);
 		scene.getStylesheets().add(this.getClass().getResource(STYLE_CSS).toExternalForm());
+		startMusic();
 		scene.setOnKeyPressed(keyEvent);
 		window.setOnCloseRequest(windowEvent);
 		window.setScene(scene);
@@ -1119,6 +1129,53 @@ public class GUI extends Application {
 				AlertBox.displayMsg(title, msg);
 			}
 		});
+	}
+
+	/**
+	 * this method is used to start the background music used thought out the
+	 * game.
+	 */
+	public void startMusic() {
+		new Thread() {
+			public void run() {
+				try {
+					Clip clip = AudioSystem.getClip();
+					AudioInputStream ais = AudioSystem
+							.getAudioInputStream(this.getClass().getResource(BACKGROUND_MUSIC));
+					clip.open(ais);
+					clip.loop(Clip.LOOP_CONTINUOUSLY);
+				} catch (LineUnavailableException e) {
+					e.printStackTrace();
+				} catch (UnsupportedAudioFileException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+
+					e.printStackTrace();
+				}
+			}
+		}.start();
+
+	}
+
+	/**
+	 * this method is used to play different sound effect during the game
+	 * 
+	 * @param file
+	 */
+	public void soundEffect(String file) {
+		try {
+			Clip clip = AudioSystem.getClip();
+			AudioInputStream ais = AudioSystem.getAudioInputStream(this.getClass().getResource(file));
+			clip.open(ais);
+			clip.start();
+		} catch (LineUnavailableException e) {
+			e.printStackTrace();
+		} catch (UnsupportedAudioFileException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
 	}
 
 }
