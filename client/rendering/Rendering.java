@@ -461,7 +461,8 @@ public class Rendering {
 	public void setAreaDescription() {
 		mapDescription = new Label();
 		mapDescription.setWrapText(true);
-		mapDescription.setLayoutX(gamePanelWidth - 150);
+		mapDescription.setPrefWidth(120);
+		mapDescription.setLayoutX(gamePanelWidth - 130);
 		mapDescription.setLayoutY(30);
 		mapDescription.getStyleClass().add("area-description");
 	}
