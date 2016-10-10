@@ -185,7 +185,7 @@ public class InitialGameLoader {
 		TransitionSpace ts4 = new TransitionSpace(new Position(8, 24, areaIDs.get(0), Direction.South),
 				new Position(5, 0, areaIDs.get(4), Direction.South));
 		/**
-		 *  Inside transition spaces
+		 * Inside transition spaces
 		 */
 		// In room1
 		TransitionSpace ts5 = new TransitionSpace(new Position(0, 5, areaIDs.get(1), Direction.South),
@@ -306,10 +306,14 @@ public class InitialGameLoader {
 
 		// Puts the rooms together.
 		// TODO: change back to true
-		Room room1 = new Room(room1Map, areaIDs.get(1), keys.get(keys.size() - 4).getKeyID(), false, "Room1");
-		Room room2 = new Room(room2Map, areaIDs.get(2), keys.get(keys.size() - 3).getKeyID(), false, "Room2");
-		Room room3 = new Room(room3Map, areaIDs.get(3), keys.get(keys.size() - 2).getKeyID(), false, "Room3");
-		Room room4 = new Room(room4Map, areaIDs.get(4), keys.get(keys.size() - 1).getKeyID(), false, "Room4");
+		Room room1 = new Room(room1Map, areaIDs.get(1), keys.get(keys.size() - 4).getKeyID(), false,
+				"Looks like a tidy room");
+		Room room2 = new Room(room2Map, areaIDs.get(2), keys.get(keys.size() - 3).getKeyID(), false,
+				"Has someone been here before?");
+		Room room3 = new Room(room3Map, areaIDs.get(3), keys.get(keys.size() - 2).getKeyID(), false,
+				"This is actually a sunny warm room");
+		Room room4 = new Room(room4Map, areaIDs.get(4), keys.get(keys.size() - 1).getKeyID(), false,
+				"Something stinks in this room");
 
 		MapElement[][] worldMap = {
 				{ t, t, t, t, t, t, t, t, t, g, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t },
@@ -344,7 +348,7 @@ public class InitialGameLoader {
 				{ g, t, t, t, t, t, t, t, t, t, g, g, g, g, t, t, t, t, t, t, t, ch[15], g, t, t, t, t, t, t, t } };
 
 		// Puts game world Area together.
-		Area world = new Area(worldMap, areaIDs.get(0), "Main Map");
+		Area world = new Area(worldMap, areaIDs.get(0), "Why I'm in a forest, or is it a maze?");
 
 		// A map of all area ids and their game areas
 		Map<Integer, Area> areas = new HashMap<>();
