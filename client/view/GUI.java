@@ -69,10 +69,9 @@ import javafx.scene.control.ScrollPane.ScrollBarPolicy;
  */
 public class GUI extends Application {
 
-	/**
-	 * GUI Style CSS
-	 */
+	// Application style CSS
 	private static final String STYLE_CSS = "/main.css";
+	// music file
 	private static final String BACKGROUND_MUSIC = "/background.wav";
 	/**
 	 * Constant width of the window
@@ -90,14 +89,10 @@ public class GUI extends Application {
 	 * Constants Width Dimensions for the right panel
 	 */
 	public static final int GAMEPANE_WIDTH_VALUE = WIDTH_VALUE - 400;
-	/**
-	 * Minimap height and width
-	 */
+	// miniMap Canvus size
 	private static final int MINIMAP_CANVAS_SIZE = 200;
 
-	/**
-	 * mini map color table
-	 */
+	// mini map color table
 	private static final Map<Character, Color> MINIMAP_COLOR_TABLE;
 
 	/**
@@ -159,37 +154,18 @@ public class GUI extends Application {
 		MAP_OBJECT_DESCRIPTION.put('E', "I found a hidden cabin! I need to get inside.");
 	}
 
-	/**
-	 * Main window for the game
-	 */
+	// Main window for the game
 	private static Stage window;
 	// controls
 	private Label objectDetailLabel;
-	// private Label miniMapLable;
 	private Canvas miniMapCanvas;
 	private Label textAreaLable;
 	private TextField msg;
 	private Button send;
-	// private Group group = new Group();
-	private Pane group = new Pane();
-	// panes
-	// right pane with vertical alligment
-	private VBox rightPanel;
-	private GridPane itemGrid;
-	private GridPane iteminfo;
-	// standard layout
-	private BorderPane borderPane;
-	private StringBuffer chatText;
-	// private Rendering render = new Rendering();
-	private static ClientUI viewControler;
-	// private static Rendering render;
-	private static Rendering render;
 	// Button Controls For Slash Screen
 	private Button play;
 	private Button quit;
 	private Button help;
-	private CheckMenuItem descriptionToggle;
-
 	// Controls for the login Screen
 	private Label info;
 	private Button login;
@@ -202,33 +178,55 @@ public class GUI extends Application {
 	private ProgressBar bar;
 	private Text healthBarText;
 	private Label virus;
-	private FlowPane healthPane;
 	private Label avatarLable;
-	private GridPane detail;
 	// waiting room Controls
 	private Label waitingMsg;
-	private FlowPane playersWaiting;
 	private Button readyGame;
 	private Button quitWaitingRoom;
 	private Label objectDescription;
 	private Label objectNotifcation;
+	// control for menu item;
+	private CheckMenuItem descriptionToggle;
 
+	// Layouts
+	private Pane group = new Pane();
 	private TitledPane titlePane;
+	private VBox rightPanel;
+	private GridPane itemGrid;
+	private GridPane iteminfo;
+	private BorderPane borderPane;
+	private StringBuffer chatText;
+	// layouts for the login Screen
+	private GridPane detail;
+	private FlowPane healthPane;
+	// waiting room layouts
+	private FlowPane playersWaiting;
 
-	// this is for event
-	// for action events
+	// for button event
 	private EventHandler<ActionEvent> actionEvent;
 	// for keys inputs
 	private EventHandler<KeyEvent> keyEvent;
 	// for mouse events
 	private EventHandler<MouseEvent> mouseEvent;
-	// for window resizing not really need else where
-	private EventHandler<WindowEvent> windowEvent;
+	// this if rotaing the avtar image in the login screen
 	private static int avatarIndex = 0;
+	// this map is used to store the the point of item in the grid which is
+	// mapped to there descriptions.
 	private Map<Point, String> itemsDescription;
-
+	// this is used to store the list of Avatars which with the avatarIndex is
+	// used to change the images in the login screen
 	private List<Avatar> avatarList = new ArrayList<Avatar>();
+	// private Rendering render = new Rendering();
+	private static ClientUI viewControler;
+	// private static Rendering render;
+	private static Rendering render;
 
+	/**
+	 * Gui Constructor
+	 * 
+	 * @param viewControler
+	 * @param rendering
+	 */
 	@SuppressWarnings("static-access")
 	public GUI(ClientUI viewControler, Rendering rendering) {
 		this.viewControler = viewControler;
@@ -237,8 +235,8 @@ public class GUI extends Application {
 	}
 
 	public GUI() {
-
-		// leave this constructor in here need to run the gui.
+		// this Constructor is used as a place holder to prevent the complier
+		// using the parent class constructor by default.
 	}
 
 	/**
@@ -257,7 +255,6 @@ public class GUI extends Application {
 		actionEvent = viewControler.getActionEventHandler();
 		keyEvent = viewControler.getKeyEventHander();
 		mouseEvent = viewControler.getMouseEventHander();
-		windowEvent = viewControler.getWindowEventHander();
 		window.setResizable(false);
 		slashScreen();
 		// loginScreen();
@@ -269,6 +266,9 @@ public class GUI extends Application {
 		});
 	}
 
+	/**
+	 * This method will load the slash screen for the game
+	 */
 	public void slashScreen() {
 		Group slashGroup = new Group();
 		Image slashBackground = Images.SLASH_SCREEN_IMAGE;
@@ -305,6 +305,9 @@ public class GUI extends Application {
 		});
 	}
 
+	/**
+	 * This method will load the login screen for the game
+	 */
 	public void loginScreen() {
 		avatarList.add(Avatar.Avatar_1);
 		avatarList.add(Avatar.Avatar_2);
@@ -313,7 +316,6 @@ public class GUI extends Application {
 		actionEvent = viewControler.getActionEventHandler();
 		keyEvent = viewControler.getKeyEventHander();
 		mouseEvent = viewControler.getMouseEventHander();
-		windowEvent = viewControler.getWindowEventHander();
 		Pane loginPane = new Pane();
 		Image loginBackground = Images.LOGIN_SCREEN_IMAGE;
 		ImageView loginBackgroundImage = new ImageView(loginBackground);
@@ -401,6 +403,12 @@ public class GUI extends Application {
 		});
 	}
 
+	/**
+	 * This method is passed in a value between 0-4 which is then used to change
+	 * the avatar image in the login screen.
+	 * 
+	 * @param change
+	 */
 	public void changeAvatarImage(int change) {
 		avatarIndex = change;
 		Image avatarImg = Images.getAvatarImageBySide(avatarList.get(change), Side.Front, false);
@@ -410,6 +418,9 @@ public class GUI extends Application {
 		avatarLable.setGraphic(avatarImage);
 	}
 
+	/**
+	 * this method will load the waiting room for the game.
+	 */
 	public void waitingRoom() {
 		Pane waitingPane = new Pane();
 		Image waitingImage = Images.WAITING_ROOM_IMAGE;
@@ -452,11 +463,18 @@ public class GUI extends Application {
 
 	}
 
+	/**
+	 * this method is used to disable the ready button once the player has clock
+	 * ready in the waiting room.
+	 */
 	public void disableReadyButton() {
 		readyGame.setDisable(true);
 		waitingMsg.setText("Waiting for other players...");
 	}
 
+	/**
+	 * this method will load the game controls and start the render.
+	 */
 	public void startGame() {
 		// Create a VBox which is just layout manger and adds gap of 10
 		rightPanel = new VBox(10);
@@ -483,7 +501,6 @@ public class GUI extends Application {
 		scene.getStylesheets().add(this.getClass().getResource(STYLE_CSS).toExternalForm());
 		startMusic();
 		scene.setOnKeyPressed(keyEvent);
-		window.setOnCloseRequest(windowEvent);
 		window.setScene(scene);
 		window.setOnCloseRequest(e -> {
 			System.exit(0);
@@ -498,7 +515,6 @@ public class GUI extends Application {
 	 * @param health
 	 * @param virusName
 	 */
-
 	public void setHealthBar(double health, Virus virusName, String userName, Avatar avatar) {
 
 		healthPane = new FlowPane();
@@ -507,7 +523,6 @@ public class GUI extends Application {
 		healthPane.setPrefWidth(200);
 		healthPane.setLayoutX(10);
 		healthPane.setLayoutY(10);
-
 
 		Image avatarImg = Images.PROFILE_IMAGES.get(avatar);
 		// Image avatarImg = Images.SLASH_SCREEN_IMAGE;
@@ -538,6 +553,13 @@ public class GUI extends Application {
 		group.getChildren().add(healthPane);
 	}
 
+	/**
+	 * This method is passed int which is the players current health which is
+	 * then used to display the amount of health they have remaining in the
+	 * progress bar.
+	 * 
+	 * @param health
+	 */
 	public void updateHealth(int health) {
 		bar.progressProperty().set(((double) health / Player.MAX_HEALTH));
 		healthBarText.setText(String.valueOf(health));
@@ -825,14 +847,6 @@ public class GUI extends Application {
 		objectDetailLabel.setText(time);
 	}
 
-	public void setWaitingRoomAvatar() {
-		Image avatarImg = Images.getAvatarImageBySide(Avatar.values()[avatarIndex], Side.Front, false);
-		ImageView avatarImage = new ImageView(avatarImg);
-		avatarImage.setFitHeight(80);
-		avatarImage.setFitWidth(80);
-		playersWaiting.getChildren().add(avatarImage);
-	}
-
 	/**
 	 * this method will return the window
 	 *
@@ -933,6 +947,11 @@ public class GUI extends Application {
 
 	}
 
+	/**
+	 * this method is to display the inventory items the that the player is
+	 * currently holding given a List if string which is the item letter and it
+	 * description.
+	 */
 	public void setInventory(List<String> inventory) {
 		itemsDescription = new HashMap<Point, String>();
 		int row = 0;
@@ -988,13 +1007,17 @@ public class GUI extends Application {
 		itemGrid.setGridLinesVisible(true);
 	}
 
+	/**
+	 * This method is used to give a more detail about the item the player is
+	 * hovering over currently.
+	 * 
+	 * @param x
+	 * @param y
+	 */
 	public void setItemDescription(int x, int y) {
-		// System.out.println(x+" "+y);
 		String item = null;
 		for (Point p : itemsDescription.keySet()) {
-			// System.out.println(p.x+" "+p.y);
 			if (p.x == x && p.y == y) {
-				// System.out.println(p.x + " " + p.y);
 				item = itemsDescription.get(p);
 				break;
 			}
@@ -1003,7 +1026,6 @@ public class GUI extends Application {
 		if (item == null) {
 			return;
 		}
-		// System.out.println("string: " + item + ", length: " + item.length());
 		String description = item.substring(2, item.length());
 		Image img = null;
 		if (item.startsWith("A")) {
@@ -1030,12 +1052,18 @@ public class GUI extends Application {
 		zoomedItem.setGraphic(image);
 	}
 
+	/**
+	 * this method is used to get the item description given the two int x and y
+	 * of the which is the grid the player click on.
+	 * 
+	 * @param x
+	 * @param y
+	 * @return
+	 */
 	public String getItemDescription(int x, int y) {
 		String item = null;
 		for (Point p : itemsDescription.keySet()) {
-			// System.out.println(p.x+" "+p.y);
 			if (p.x == x && p.y == y) {
-				// System.out.println(p.x + " " + p.y);
 				item = itemsDescription.get(p);
 				break;
 			}
@@ -1043,6 +1071,10 @@ public class GUI extends Application {
 		return item;
 	}
 
+	/**
+	 * This method is used to create the lable which is used to display object
+	 * description to the player.
+	 */
 	public void objectLabel() {
 		objectDescription = new Label();
 		objectDescription.setWrapText(true);
@@ -1052,6 +1084,9 @@ public class GUI extends Application {
 		objectDescription.getStyleClass().add("object-description");
 	}
 
+	/**
+	 * This method is used to create the right click pop up menu.
+	 */
 	public void keyRightClickOption() {
 		ContextMenu contextMenu = new ContextMenu();
 		MenuItem item1 = new MenuItem("Insert");
@@ -1064,6 +1099,10 @@ public class GUI extends Application {
 		titlePane.setContextMenu(contextMenu);
 	}
 
+	/**
+	 * this method is used to create right click menu which is got a more item
+	 * "Drop"
+	 */
 	public void antidoteRightClickOption() {
 		ContextMenu contextMenu = new ContextMenu();
 		MenuItem item1 = new MenuItem("Insert");
@@ -1079,6 +1118,9 @@ public class GUI extends Application {
 		titlePane.setContextMenu(contextMenu);
 	}
 
+	/**
+	 * This method is used to clear the right click pop up
+	 */
 	public void rightClickClear() {
 		titlePane.setContextMenu(null);
 	}
@@ -1093,6 +1135,9 @@ public class GUI extends Application {
 		group.getChildren().add(objectDescription);
 	}
 
+	/**
+	 * this method is used to set the object notification
+	 */
 	public void objectNotifcation() {
 		objectNotifcation = new Label();
 		objectNotifcation.setWrapText(true);
