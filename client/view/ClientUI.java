@@ -452,8 +452,9 @@ public class ClientUI {
 		gui.updateMinimap(playerLoc, uid, worldMap, visibility, positions);
 
 		// 2. update the renderer
-		// render.render(playerLoc, worldMap, visibility, uid, avatars, positions, hourOfTime);
-		render.render(playerLoc, worldMap, visibility, uid, avatars, positions);
+		// render.render(playerLoc, worldMap, visibility, uid, avatars,
+		// positions, torchStatus, hourOfTime);
+		render.render(playerLoc, worldMap, visibility, uid, avatars, positions, torchStatus, false);
 
 		// 3. update the health bar
 		gui.updateHealth(health);
@@ -463,7 +464,6 @@ public class ClientUI {
 
 		// 5. update area/room description
 		render.updateAreaDescription(descriptions.get(areaId));
-
 		// 6. update the map object description
 		if (descriptionToggle) {
 			gui.displayObjectDescription(getFrontElementString());
@@ -474,7 +474,7 @@ public class ClientUI {
 		// 7. if player is dead, prompt it.
 		if (!playerDead) {
 			// Displays dialog when player health is 0
-			if (health == 0) {
+			if (health <= 0) {
 				AlertBox.displayMsg("YOU ARE DEAD", "GAMEOVER");
 				playerDead = true;
 			}
@@ -493,7 +493,9 @@ public class ClientUI {
 				clockThread.start();
 			}
 		});
-		gui.setHealthBar(health, virus, avatar);
+
+		gui.setHealthBar(health, virus, userName, avatar);
+
 		gui.objectLabel();
 		render.setAreaDescription();
 
