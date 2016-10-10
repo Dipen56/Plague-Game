@@ -234,7 +234,7 @@ public class InitialGameLoader {
 			if (loot == null)
 				loot = new ArrayList<>(); // Uses empty list for empty chest.
 			cp[i] = new Cupboard("U|A cupboard. It might contain some medicine.",
-					keys.get(NUMBER_OF_CHESTS + i).getKeyID(), false, loot);
+					keys.get(NUMBER_OF_CHESTS + i).getKeyID(), true, loot);
 
 		}
 
@@ -306,10 +306,10 @@ public class InitialGameLoader {
 
 		// Puts the rooms together.
 		// TODO: change back to true
-		Room room1 = new Room(room1Map, areaIDs.get(1), keys.get(keys.size() - 4).getKeyID(), false, "Room1");
-		Room room2 = new Room(room2Map, areaIDs.get(2), keys.get(keys.size() - 3).getKeyID(), false, "Room2");
-		Room room3 = new Room(room3Map, areaIDs.get(3), keys.get(keys.size() - 2).getKeyID(), false, "Room3");
-		Room room4 = new Room(room4Map, areaIDs.get(4), keys.get(keys.size() - 1).getKeyID(), false, "Room4");
+		Room room1 = new Room(room1Map, areaIDs.get(1), keys.get(keys.size() - 4).getKeyID(), true, "Room1");
+		Room room2 = new Room(room2Map, areaIDs.get(2), keys.get(keys.size() - 3).getKeyID(), true, "Room2");
+		Room room3 = new Room(room3Map, areaIDs.get(3), keys.get(keys.size() - 2).getKeyID(), true, "Room3");
+		Room room4 = new Room(room4Map, areaIDs.get(4), keys.get(keys.size() - 1).getKeyID(), true, "Room4");
 
 		MapElement[][] worldMap = {
 				{ t, t, t, t, t, t, t, t, t, g, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t },

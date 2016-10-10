@@ -452,7 +452,7 @@ public class ClientUI {
 		gui.updateMinimap(playerLoc, uid, worldMap, visibility, positions);
 
 		// 2. update the renderer
-		 render.render(playerLoc, worldMap, visibility, uid, avatars,positions, torchStatus, hourOfTime);
+		render.render(playerLoc, worldMap, visibility, uid, avatars, positions, torchStatus, hourOfTime);
 
 		// 3. update the health bar
 		gui.updateHealth(health);
@@ -477,6 +477,8 @@ public class ClientUI {
 				playerDead = true;
 			}
 		}
+
+
 	}
 
 	/**
@@ -612,13 +614,13 @@ public class ClientUI {
 					client.send(Packet.TurnLeft);
 				} else if (keyCode == KeyCode.E) {
 					client.send(Packet.TurnRight);
-				} else if (keyCode == KeyCode.F) {
+				} else if (keyCode == KeyCode.R || keyCode == keyCode.U) {
 					client.send(Packet.Unlock);
 
-				} else if (keyCode == KeyCode.G) {
+				} else if (keyCode == KeyCode.F) {
 					client.send(Packet.TakeOutItem);
 
-				} else if (keyCode == KeyCode.R) {
+				} else if (keyCode == KeyCode.G) {
 					client.send(Packet.Transit);
 				} else if (keyCode == KeyCode.DIGIT1) {
 					client.sendWithIndex(Packet.UseItem, 0);
