@@ -403,26 +403,37 @@ public class GUI extends Application {
 
 	public void waitingRoom() {
 		Pane waitingPane = new Pane();
-		
-		VBox waitingRoomBox = new VBox(5);
+		Image waitingImage = Images.WAITING_ROOM_IMAGE;
+		ImageView img = new ImageView(waitingImage);
+		img.setFitHeight(HEIGHT_VALUE);
+		img.setFitWidth(WIDTH_VALUE);
+		waitingPane.getChildren().add(img);
+
 		waitingMsg = new Label();
+		waitingMsg.setLayoutX(20);
+		waitingMsg.setPrefWidth(WIDTH_VALUE);
+		waitingMsg.getStyleClass().add("input-login");
 		waitingMsg.setText(
 				"Welcome! When you are ready to start, click Ready. When the minimum number of players have connected, the game will automatically start.");
 		waitingMsg.setWrapText(true);
-		waitingRoomBox.getChildren().add(waitingMsg);
-		playersWaiting = new FlowPane();
-		playersWaiting.setHgap(10);
-		waitingRoomBox.getChildren().add(playersWaiting);
+		waitingPane.getChildren().add(waitingMsg);
+
 		FlowPane buttons = new FlowPane();
+		buttons.setLayoutX((WIDTH_VALUE / 2) - 180);
+		buttons.setLayoutY(HEIGHT_VALUE - 80);
 		buttons.setHgap(10);
 		readyGame = new Button("Ready");
+		readyGame.getStyleClass().add("button-login");
 		readyGame.setOnAction(actionEvent);
 		quitWaitingRoom = new Button("Leave Game");
+		quitWaitingRoom.getStyleClass().add("button-login");
 		quitWaitingRoom.setOnAction(actionEvent);
 		buttons.setAlignment(Pos.CENTER);
 		buttons.getChildren().addAll(readyGame, quitWaitingRoom);
-		waitingRoomBox.getChildren().add(buttons);
-		Scene slashScene = new Scene(waitingRoomBox, WIDTH_VALUE, HEIGHT_VALUE);
+		waitingPane.getChildren().add(buttons);
+
+		Scene slashScene = new Scene(waitingPane, WIDTH_VALUE, HEIGHT_VALUE);
+		slashScene.getStylesheets().add(this.getClass().getResource(STYLE_CSS).toExternalForm());
 		window.setScene(slashScene);
 		window.setOnCloseRequest(e -> {
 			System.exit(0);
