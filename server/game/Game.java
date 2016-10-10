@@ -1026,7 +1026,7 @@ public class Game {
 		for (Player p : players.values()) {
 			sb.append(p.getId());
 			sb.append(",");
-			sb.append(p.isHoldingTorch() ? '0' : '1');
+			sb.append(p.isHoldingTorch() ? '1' : '0');
 			sb.append("|");
 		}
 		return sb.toString();

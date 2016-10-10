@@ -60,8 +60,8 @@ public class ClientUI {
 	 */
 	private Avatar avatar;
 
-	/**e
-	 * Virus type of the player at this connection
+	/**
+	 * e Virus type of the player at this connection
 	 */
 	private Virus virus;
 
@@ -418,7 +418,7 @@ public class ClientUI {
 		gui.updateMinimap(playerLoc, uid, worldMap, visibility, positions);
 
 		// 2. update the renderer
-		render.render(playerLoc, worldMap, visibility, uid, avatars, positions);
+		render.render(playerLoc, worldMap, visibility, uid, avatars, positions, torchStatus, false);
 
 		// 3. update the health bar
 		gui.updateHealth(health);
@@ -437,9 +437,9 @@ public class ClientUI {
 		}
 
 		// 7. if player is dead, prompt it.
-		if(!playerDead){
-			//Displays dialog when player health is 0
-			if(health == 0){
+		if (!playerDead) {
+			// Displays dialog when player health is 0
+			if (health == 0) {
 				AlertBox.displayMsg("YOU ARE DEAD", "GAMEOVER");
 				playerDead = true;
 			}

@@ -40,7 +40,6 @@ public class Rendering {
 	private Label mapDescription;
 
 	public Rendering() {
-
 	}
 
 	/**
@@ -52,12 +51,21 @@ public class Rendering {
 	 * @param uid
 	 * @param avatars
 	 * @param positions
+	 * @param torchStatus
+	 * @param b
 	 */
 	public void render(Position playerLoc, char[][] worldMap, int visibility, int uid, Map<Integer, Avatar> avatars,
-			Map<Integer, Position> positions) {
+			Map<Integer, Position> positions, Map<Integer, Boolean> torchStatus, boolean isDayTime) {
 		renderGroup.getChildren().clear();
 		Direction direction = playerLoc.getDirection();
-		Image background = Images.BACKGROUND_IMAGE;
+		Image background;
+		// For Night and Day Backgrounds
+		if (isDayTime) {
+			background = Images.DAYTIME_IMAGE;
+		} else {
+			background = Images.NIGHTIME_IMAGE;
+		}
+		/////////////////////////////////
 		Image grass = Images.GRASS_IMAGE;
 		addImage(renderGroup, background, gamePanelWidth, gamePaneHeight, 0, 0);
 		setNumSquares(worldMap.length, worldMap[0].length, direction, playerLoc, worldMap);
@@ -84,12 +92,12 @@ public class Rendering {
 					addObject(xLeftTop, yBottom, xRightTop, row, playerLoc.x, "middle", worldMap, renderGroup,
 							direction, yTop);
 					addAvatar(xLeftTop, yBottom, xRightTop, row, playerLoc.x, "middle", worldMap, renderGroup,
-							direction, yTop, avatars, positions, uid);
+							direction, yTop, avatars, positions, uid, torchStatus);
 				} else {
 					addObject(xLeftTop, yBottom, xRightTop, row, playerLoc.y, "middle", worldMap, renderGroup,
 							direction, yTop);
 					addAvatar(xLeftTop, yBottom, xRightTop, row, playerLoc.y, "middle", worldMap, renderGroup,
-							direction, yTop, avatars, positions, uid);
+							direction, yTop, avatars, positions, uid, torchStatus);
 				}
 				for (int col = squaresToLeft - 1; col >= 0; col--) {
 					Polygon squareLeft = new Polygon();
@@ -105,8 +113,7 @@ public class Rendering {
 						addObject(tileXLeftTop, yBottom, tileXRightBottom, row, col, "left", worldMap, renderGroup,
 								direction, yTop);
 						addAvatar(tileXLeftTop, yBottom, tileXRightBottom, row, col, "left", worldMap, renderGroup,
-								direction, yTop, avatars, positions, uid);
-
+								direction, yTop, avatars, positions, uid, torchStatus);
 					}
 				}
 				for (int col = squaresToRight - 1; col >= 0; col--) {
@@ -123,7 +130,7 @@ public class Rendering {
 						addObject(tileXLeftBottom, yBottom, tileXRightTop, row, col, "right", worldMap, renderGroup,
 								direction, yTop);
 						addAvatar(tileXLeftBottom, yBottom, tileXRightTop, row, col, "right", worldMap, renderGroup,
-								direction, yTop, avatars, positions, uid);
+								direction, yTop, avatars, positions, uid, torchStatus);
 					}
 				}
 			}
@@ -227,12 +234,14 @@ public class Rendering {
 	 * @param avatars
 	 * @param positions
 	 * @param uid
+	 * @param torchStatus
 	 */
 	public void addAvatar(double tileXLeftBottom, double yBottom, double tileXRightBottom, int row, int col,
 			String side, char[][] worldMap, Pane renderGroup, Direction direction, double yTop,
-			Map<Integer, Avatar> avatars, Map<Integer, Position> positions, int uid) {
+			Map<Integer, Avatar> avatars, Map<Integer, Position> positions, int uid,
+			Map<Integer, Boolean> torchStatus) {
 		// Current player
-		Image playerImg = Images.getAvatarImageBySide(avatars.get(uid), Side.Back, false);
+		Image playerImg = Images.getAvatarImageBySide(avatars.get(uid), Side.Back, torchStatus.get(uid));
 		Point imageCoordinate = getImagePoint(direction, row, col, side, worldMap.length, worldMap[0].length);
 		if (playerImg != null && positions.get(uid).x == imageCoordinate.x
 				&& positions.get(uid).y == imageCoordinate.y) {
@@ -249,7 +258,8 @@ public class Rendering {
 			int otherPlayerX = userPosition.x;
 			int otherPlayerY = userPosition.y;
 			if (imageCoordinate.x == otherPlayerX && imageCoordinate.y == otherPlayerY) {
-				Image otherAvatar = Images.getAvatarImageByDirection(avatarIDs, direction, userPosition.getDirection(),false);
+				Image otherAvatar = Images.getAvatarImageByDirection(avatarIDs, direction, userPosition.getDirection(),
+						torchStatus.get(userID));
 				if (otherAvatar != null) {
 					double height = otherAvatar.getHeight() * Math.pow(scale, squaresInFront - row - 1);
 					double width = otherAvatar.getWidth() * Math.pow(scale, squaresInFront - row - 1);
@@ -421,11 +431,6 @@ public class Rendering {
 	public void updateAreaDescription(String areaDescription) {
 		mapDescription.setText(areaDescription);
 		renderGroup.getChildren().add(mapDescription);
-	}
-
-
-	public void applyWeather() {
-
 	}
 
 	/**
