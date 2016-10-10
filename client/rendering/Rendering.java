@@ -62,9 +62,15 @@ public class Rendering {
 		if (hourOfTime >= 6 && hourOfTime < 18) {
 			background = Images.DAYTIME_IMAGE;
 			grass = Images.GRASS_IMAGE;
+			if(worldMap.length<30){
+				grass = Images.ROOMTILE_IMAGE;
+			}
 		} else {
 			background = Images.NIGHTIME_IMAGE;
 			grass = Images.GRASSNIGHT_IMAGE;
+			if(worldMap.length<30){
+				grass = Images.ROOMTILE_IMAGE;
+			}
 		}
 		/////////////////////////////////
 		addImage(renderGroup, background, gamePanelWidth, gamePaneHeight, 0, 0, hourOfTime);
@@ -176,10 +182,6 @@ public class Rendering {
 		p.getPoints().add(yBottom);
 		p.getPoints().add(xLeftBottom);
 		p.getPoints().add(yBottom);
-		// This forms the grid of squares
-		// p.setStroke(javafx.scene.paint.Color.AQUA);
-		// p.setStrokeWidth(1);
-		//////////////////////////////////////////////
 		renderGroup.getChildren().add(p);
 	}
 
@@ -476,6 +478,7 @@ public class Rendering {
 	private void changeImageBrightness(double brightness) {
 		colorAdjust.setBrightness(brightness);
 	}
+
 
 	/**
 	 * Sets the pane to be renderGroup

@@ -33,6 +33,16 @@ public class Images {
 
 	public static final Image GRASSNIGHT_IMAGE = loadImage("/grass_dark.png");
 
+	public static final Image TREE_IMAGE = loadImage("/tree.png");
+
+	public static final Image CHEST_IMAGE = loadImage("/chest.png");
+	
+	public static final Image ROOMTILE_IMAGE = loadImage("/roomTile.png");
+	
+	public static final Image HOWTOPLAY_IMAGE = loadImage("/HowToPlay.png");
+	
+	public static final Image KEYBOARDSHORT_IMAGE = loadImage("/Keyboard_Help.png");
+
 	/**
 	 * Four green arrow images used for rendering mini-map
 	 */

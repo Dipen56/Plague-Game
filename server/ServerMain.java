@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
-
 import client.ParserUtilities;
 import dataStorage.InitialGameLoader;
 import dataStorage.XmlFunctions;
@@ -29,7 +28,7 @@ public class ServerMain {
 	 * The period between every broadcast
 	 */
 	public static final int DEFAULT_BROADCAST_CLK_PERIOD = 50;
-
+	
 	/**
 	 * A series of port number, in case the port is used.
 	 */
