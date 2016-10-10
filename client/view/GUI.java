@@ -236,7 +236,7 @@ public class GUI extends Application {
 		windowEvent = viewControler.getWindowEventHander();
 		window.setResizable(false);
 		slashScreen();
-		// loginScreen();
+		//loginScreen();
 		window.show();
 		window.setOnCloseRequest(e -> Platform.exit());
 		window.setOnCloseRequest(e -> System.exit(0));
