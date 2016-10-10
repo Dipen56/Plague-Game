@@ -405,12 +405,17 @@ public class Receptionist extends Thread {
 		String torchStatus = game.getTorchStatusString();
 		gameString.append(torchStatus);
 		gameString.append('\n');
+		
+		// 7. win/loose
+		String winStatus = game.getWinString();
+		gameString.append(winStatus);
+		gameString.append('\n');
 
 		// ======= optional message broadcast =======
 
 		// FIXME all optional message should have a prefix
 
-		// 7. chat message
+		// 8. chat message
 		String message = server.retrieveMessage();
 		if (message != null) {
 			gameString.append(message);
