@@ -19,7 +19,7 @@ import server.ServerMain;
  * This class represents a single thread that handles communication with a
  * connected server. It receives events from the server connection via a socket
  * as well as send actions to the server about the player's command.
- * 
+ *
  * @author Rafaela & Hector
  *
  */
@@ -64,7 +64,7 @@ public class Client extends Thread {
 
 	/**
 	 * Constructor. It also initialise the socket input and output.
-	 * 
+	 *
 	 * @param socket
 	 *            --- the socket connecting the server
 	 * @param controller
@@ -81,14 +81,14 @@ public class Client extends Thread {
 			output = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
 			input = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
 		} catch (IOException e) {
-			GUI.showWarningPane("I/O exceptions, " + e.toString());
+			GUI.showMsgPane("Error", "I/O exceptions, connection ended.");
 			e.printStackTrace();
 		}
 	}
 
 	/**
 	 * This method will send a packet to server.
-	 * 
+	 *
 	 * @param packet
 	 *            --- the packet need to send
 	 */
@@ -97,7 +97,7 @@ public class Client extends Thread {
 			output.writeByte(packet.toByte());
 			output.flush();
 		} catch (IOException e) {
-			GUI.showWarningPane("I/O exceptions, " + e.toString());
+			GUI.showMsgPane("Error", "I/O exceptions, cannot send packet to server.");
 			e.printStackTrace();
 		}
 	}
@@ -105,7 +105,7 @@ public class Client extends Thread {
 	/**
 	 * This method will send a packet to server, with an integer followed. This
 	 * integer is usually used as a index for special commands.
-	 * 
+	 *
 	 * @param packet
 	 *            --- the packet need to send
 	 * @param i
@@ -117,7 +117,7 @@ public class Client extends Thread {
 			output.writeInt(i);
 			output.flush();
 		} catch (IOException e) {
-			GUI.showWarningPane("I/O exceptions, " + e.toString());
+			GUI.showMsgPane("Error", "I/O exceptions, cannot send packet to server.");
 			e.printStackTrace();
 		}
 	}
@@ -125,7 +125,7 @@ public class Client extends Thread {
 	/**
 	 * This method will send a packet to server, with an String followed. This
 	 * string is usually used as extra message for special commands.
-	 * 
+	 *
 	 * @param packet
 	 *            --- the packet need to send
 	 * @param str
@@ -137,7 +137,7 @@ public class Client extends Thread {
 			output.writeUTF(str);
 			output.flush();
 		} catch (IOException e) {
-			GUI.showWarningPane("I/O exceptions, " + e.toString());
+			GUI.showMsgPane("Error", "I/O exceptions, " + e.toString());
 			e.printStackTrace();
 		}
 	}
@@ -145,18 +145,18 @@ public class Client extends Thread {
 	/**
 	 * this method is used to let the player know that the game is over and
 	 * rather they have won or not.
-	 * 
+	 *
 	 * @param title
 	 * @param msg
 	 */
 	public void GameOver(String title, String msg) {
-		//TODO: needs to be called when the game is over
+		// TODO: needs to be called when the game is over
 		GUI.showMsgPane(title, msg);
 	}
 
 	/**
 	 * Set ready to enter the game.
-	 * 
+	 *
 	 * @param isUserReady
 	 */
 	public void setUserReady(boolean isUserReady) {
@@ -250,7 +250,7 @@ public class Client extends Thread {
 				}
 			}
 		} catch (IOException e) {
-			GUI.showWarningPane("I/O Error: " + e.getMessage());
+			GUI.showMsgPane("Error", "I/O Error, cannot receive packet to server.");
 			e.printStackTrace();
 		} finally {
 			try {
@@ -270,7 +270,7 @@ public class Client extends Thread {
 	/**
 	 * This method generates a String representation of the game status. The
 	 * format of it is:
-	 * 
+	 *
 	 * <p>
 	 * <li>Time
 	 * <li>Health
@@ -279,7 +279,7 @@ public class Client extends Thread {
 	 * <li>The inventory of the player in this client
 	 * <li>The status of player holding torch or not.
 	 * <li>Chat message if there is any.
-	 * 
+	 *
 	 * <p>
 	 * Each one of them is separated by a new line character '\n'. The format of
 	 * each part should refer to
@@ -289,7 +289,7 @@ public class Client extends Thread {
 	 * parseInventory}, and
 	 * {@link client.ParserUtilities #parseTorchStatus(Map, String)
 	 * parseTorchStatus}..
-	 * 
+	 *
 	 * @return --- a String representation of the game status
 	 */
 	private void stringToGame(String gameStr) {
@@ -388,7 +388,7 @@ public class Client extends Thread {
 
 	/**
 	 * A helper method for testing
-	 * 
+	 *
 	 * @param incoming
 	 */
 	@SuppressWarnings("unused")

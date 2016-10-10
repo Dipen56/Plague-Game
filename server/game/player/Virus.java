@@ -8,7 +8,6 @@ package server.game.player;
  */
 public enum Virus {
 
-	// Form BioHazzard. Or we could use other names. Ideas welcomed.
 	Spanish_Flu, Black_Death, Ebola;
 
 	/**

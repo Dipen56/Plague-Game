@@ -89,11 +89,6 @@ public class ScrapPile extends Obstacle implements Container {
 	}
 
 	@Override
-	public String toString() {
-		return super.toString();
-	}
-
-	@Override
 	public char getMapChar() {
 		return 'P';
 	}

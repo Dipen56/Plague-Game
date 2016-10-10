@@ -5,6 +5,7 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -13,11 +14,12 @@ import dataStorage.InitialGameLoader;
 import dataStorage.XmlFunctions;
 import server.game.Game;
 import server.game.GameError;
+import server.game.player.Player;
 import server.view.ServerGui;
 
 /**
  * This class is where the server is started.
- * 
+ *
  * @author Rafaela & Hector
  *
  */
@@ -86,7 +88,7 @@ public class ServerMain {
 	/**
 	 * This method listens to client connections, and when all clients are
 	 * ready, a multi-player game is started.
-	 * 
+	 *
 	 * @param numPlayers
 	 *            --- the number of players
 	 */
@@ -197,7 +199,7 @@ public class ServerMain {
 	/**
 	 * This method creates a server socket. If it is not successfully created, a
 	 * GameError is thrown.
-	 * 
+	 *
 	 * @return --- the server socket.
 	 */
 	private ServerSocket createServerSocket() {
@@ -223,7 +225,7 @@ public class ServerMain {
 
 	/**
 	 * Add a message into the queue, ready for the server to broadcast.
-	 * 
+	 *
 	 * @param message
 	 *            --- the message
 	 */
@@ -235,7 +237,7 @@ public class ServerMain {
 
 	/**
 	 * retrieve a message from the queue, and let the socket send it out.
-	 * 
+	 *
 	 * @return --- the next message at the head of queue, or null if the queue
 	 *         is empty.
 	 */
@@ -245,7 +247,7 @@ public class ServerMain {
 
 	/**
 	 * Main function, start the server.
-	 * 
+	 *
 	 * @param args
 	 */
 	public static void main(String args[]) {
@@ -254,7 +256,7 @@ public class ServerMain {
 
 	/**
 	 * Load game
-	 * 
+	 *
 	 * @param uid
 	 *            --- the uid of the client who requested to load game.
 	 * @return --- true/false for success/failure
@@ -264,21 +266,53 @@ public class ServerMain {
 		String userName = game.getPlayerById(uid).getName();
 		boolean isExisting = XmlFunctions.saveExists(userName);
 
-		if (isExisting) {
-			// load game
-			game = XmlFunctions.loadFile(userName);
-
-			// make sure every client get access to the new game instance
-			for (Receptionist r : receptionists.values()) {
-				r.setGame(game);
-			}
+		if (!isExisting) {
+			System.err.println("Cannot find the save file for player " + userName);
+			return false;
 		}
-		return isExisting;
+
+		Player player = null;
+		int newID = 0;
+		String name = null;
+
+		// load game
+		Game newGame = XmlFunctions.loadFile(userName);
+		if (newGame == null) {
+			System.err.println("Game object not constucted, Load failed.");
+			return false;
+		}
+
+		Map<Integer, Player> map = new HashMap<>();
+
+		// Reset player ID in Player object and in map.
+		for (Player p : newGame.getPlayers().values()) {
+			// gets new ID from other version of player.
+			name = p.getName();
+			player = game.getPlayerByName(name);
+			// Skips player if they are not in the current game before load.
+			if (player == null) {
+				continue;
+			}
+			newID = player.getId();
+			// Resets UID of player in newGame
+			p.resetId(newID);
+			map.put(newID, p);
+		}
+		// Reset players map
+		newGame.resetPlayers(map);
+
+		// make sure every client get access to the new game instance,
+		for (Receptionist r : receptionists.values()) {
+			// Updates the game field.
+			r.setGame(newGame);
+		}
+
+		return true;
 	}
 
 	/**
 	 * Save game
-	 * 
+	 *
 	 * @param uid
 	 *            --- the uid of the client who requested to save game.
 	 */

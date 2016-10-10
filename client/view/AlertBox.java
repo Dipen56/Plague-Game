@@ -20,9 +20,9 @@ public class AlertBox {
 	 * this method will open a dialog box given the title and the massage.
 	 *
 	 * @param title
-	 * @param massage
+	 * @param message
 	 */
-	public static void displayMsg(String title, String massage) {
+	public static void displayMsg(String title, String message) {
 		Stage window = new Stage();
 		// this makes it so you can't click on the window other then this one
 		window.initModality(Modality.APPLICATION_MODAL);
@@ -34,7 +34,7 @@ public class AlertBox {
 
 		Label lable = new Label();
 		// set the massage
-		lable.setText(massage);
+		lable.setText(message);
 		// creates the button
 		Button ok = new Button("Ok");
 		ok.setOnAction(e -> window.close());

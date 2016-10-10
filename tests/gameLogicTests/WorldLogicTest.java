@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 import java.time.LocalTime;
+import java.util.Map;
 
 import org.junit.Test;
 
@@ -12,6 +13,7 @@ import server.game.TestConst;
 import server.game.items.Torch;
 import server.game.player.Avatar;
 import server.game.player.Player;
+import server.game.world.Area;
 
 public class WorldLogicTest {
 
@@ -26,7 +28,10 @@ public class WorldLogicTest {
 	@Test
 	public void joinDisconnectPlayer() {
 		// mock a game world and player
-		Game game = new Game(TestConst.world, TestConst.areas);
+		Map<Integer, Area> areas = TestConst.createAreas();
+		Area world = areas.get(0);
+		Game game = new Game(world, areas);
+
 		Player player_1 = new Player(MOCK_UID, Avatar.Avatar_1, "Hector");
 		Player player_2 = new Player(MOCK_UID, Avatar.Avatar_2, "AnotherHector");
 		Player player_3 = new Player(MOCK_UID + 1, Avatar.Avatar_3, "SameHector");
@@ -56,7 +61,10 @@ public class WorldLogicTest {
 	@Test
 	public void timeElapse() {
 		// mock a game world
-		Game game = new Game(TestConst.world, TestConst.areas);
+		Map<Integer, Area> areas = TestConst.createAreas();
+		Area world = areas.get(0);
+		Game game = new Game(world, areas);
+
 		// mock players
 		int size = 10;
 		Player[] players = new Player[size];
@@ -98,7 +106,7 @@ public class WorldLogicTest {
 		}
 
 		// check time
-		if (!timeBefore.plusSeconds(1).equals(timeAfter)) {
+		if (!timeBefore.plusSeconds(Game.TIME_ADVANCING_SPEED).equals(timeAfter)) {
 			fail("time should be advancing");
 		}
 
