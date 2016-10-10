@@ -7,6 +7,7 @@ import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Queue;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import client.ParserUtilities;
@@ -54,9 +55,10 @@ public class ServerMain {
 	 * A buffer for messages that client send for chatting.
 	 */
 	private Queue<String> messages;
-	
+
 	/**
-	 * A map storing all notification messages, where the key is uid, 
+	 * A map storing all notification messages, where the key is uid, the value
+	 * is the notification message
 	 */
 	private Map<Integer, String> notificationMsg;
 
@@ -72,6 +74,7 @@ public class ServerMain {
 	public ServerMain() {
 		receptionists = new HashMap<>();
 		messages = new ConcurrentLinkedQueue<>();
+		notificationMsg = new ConcurrentHashMap<>();
 
 		// how many players?
 		System.out.println("How many players (at least 2):");
@@ -252,6 +255,36 @@ public class ServerMain {
 	}
 
 	/**
+	 * Add a notification message into the map, then the client can get
+	 * notification back.
+	 *
+	 * @param message
+	 *            --- the message
+	 */
+	public void addNotification(int uId, String nMsg) {
+		notificationMsg.put(uId, nMsg);
+	}
+
+	/**
+	 * Retrieve the notification message if there are some for this client. If
+	 * there is none, return null;
+	 * 
+	 * @param uId
+	 *            --- the uId of client
+	 * @return --- the notification message, or null if there is none.
+	 */
+	public String retrieveNotification(int uId) {
+		String nMsg = notificationMsg.get(uId);
+
+		if (nMsg == null || nMsg.length() <= 0) {
+			return null;
+		} else {
+			notificationMsg.remove(uId);
+			return nMsg;
+		}
+	}
+
+	/**
 	 * Load game
 	 *
 	 * @param uid
@@ -295,8 +328,10 @@ public class ServerMain {
 			p.resetId(newID);
 			map.put(newID, p);
 		}
+
 		// Reset players map
 		newGame.resetPlayers(map);
+		notificationMsg = new ConcurrentHashMap<>();
 
 		// make sure every client get access to the new game instance,
 		for (Receptionist r : receptionists.values()) {
