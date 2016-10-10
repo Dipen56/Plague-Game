@@ -94,7 +94,7 @@ public class PlayerAdapter {
 	}
 
 	/**
-	 * @param The original Player object
+	 * @param player	 The original Player object
 	 */
 	public PlayerAdapter(Player player) {
 		if(player == null)

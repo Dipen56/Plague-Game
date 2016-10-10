@@ -381,7 +381,7 @@ public class ClientUI {
 	 * @param msg
 	 *            --- the dialog message
 	 */
-	public void GameOver(String title, String msg) {
+	public void gameOver(String title, String msg) {
 		GUI.showMsgPane(title, msg);
 	}
 

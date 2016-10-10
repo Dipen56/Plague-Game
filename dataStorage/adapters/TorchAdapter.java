@@ -29,6 +29,9 @@ public class TorchAdapter extends ItemAdapter{
      */
     private String description;
 
+    /**
+	 * @param item	The object on which to base this object
+	 **/
 	public TorchAdapter(Torch item) {
 		if(item == null)
 			throw new IllegalArgumentException("Argument is null");

@@ -368,10 +368,8 @@ public class InitialGameLoader {
 	/**
 	 * Initialises a number of lists of type Item within a list of items.
 	 *
-	 * @param list
-	 *            list of lists of items.
-	 * @param number
-	 *            number of lists to initialise inside the list of lists.
+	 * @param list		list of lists of items.
+	 * @param number	number of lists to initialise inside the list of lists.
 	 */
 	public static void initialiseListLootLists(List<List<Item>> list, int number) {
 		for (int i = 0; i < number; i++) {
@@ -412,11 +410,8 @@ public class InitialGameLoader {
 	 * multiplier. The chance of adding 2 antidote = multiplier/2. The chance of
 	 * adding 3 antidote = multiplier/3.
 	 *
-	 * @param loot
-	 *            The loot list
-	 * @param multiplier
-	 *            A double used as a multiplier
-	 *
+	 * @param loot			The loot list
+	 * @param multiplier	A double used as a multiplier
 	 */
 	private static void spawnAntidotes(List<Item> loot, double multiplier) {
 		int result = 0;

@@ -378,7 +378,7 @@ public class Client extends Thread {
 
 				isGameRunning = false;
 
-				controller.GameOver("We have a winner", "The winner is " + winnerName);
+				controller.gameOver("We have a winner", "The winner is " + winnerName);
 
 			}
 

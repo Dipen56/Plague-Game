@@ -26,7 +26,10 @@ public class AntidoteAdapter extends ItemAdapter{
 	 */
 	@XmlElement
 	private String description;
-	
+
+	/**
+	 * @param a	The object on which to base this object
+	 **/
 	public AntidoteAdapter(Antidote a) {
 		if(a == null)
 			throw new IllegalArgumentException("Argument is null");

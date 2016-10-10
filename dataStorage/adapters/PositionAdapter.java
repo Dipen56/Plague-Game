@@ -21,19 +21,22 @@ public class PositionAdapter {
 	 */
 	@XmlElement
 	private int x, y;
-	
+
 	 /**
      * The area which position is in.
      */
 	@XmlElement
 	private int areaId;
-	
+
 	/**
 	 * The direction which the object at this position is facing.
 	 */
 	@XmlElement
 	private Direction direction;
 
+	/**
+	 * @param pos	The object on which to base this object
+	 **/
 	public PositionAdapter(Position pos){
 		if(pos == null)
 			throw new IllegalArgumentException("Argument is null");
@@ -58,6 +61,9 @@ public class PositionAdapter {
 		return new Position(x,y,areaId,direction);
 	}
 
+	/**
+	 * Returns a string representing this class's fields.
+	 */
 	public String toString(){
 		StringBuffer b = new StringBuffer();
 		b.append("POSITION:");

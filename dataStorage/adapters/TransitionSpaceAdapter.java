@@ -36,6 +36,9 @@ public class TransitionSpaceAdapter extends MapElementAdapter{
 	@XmlElement
 	private Direction direction;
 
+	/**
+	 * @param ts	The object on which to base this object
+	 **/
 	public TransitionSpaceAdapter(TransitionSpace ts) {
 		if(ts == null)
 			throw new IllegalArgumentException("Argument is null");
@@ -51,6 +54,10 @@ public class TransitionSpaceAdapter extends MapElementAdapter{
 
 	}
 
+	/**
+	 * Return a copy of the object which this object was based on.
+	 * @return The TransitionSpace copy.
+	 */
 	public TransitionSpace getOriginal() {
 		Position pos = position.getOriginal();
 		Position destPos = this.destPos.getOriginal();

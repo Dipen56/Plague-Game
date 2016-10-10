@@ -70,6 +70,10 @@ public class AreaAdapter{
      */
     private int[][] playerPortals = null;
 
+
+    /**
+	 * @param area	The object on which to base this object
+	 **/
 	public AreaAdapter(Area area){
 		if(area == null)
 			throw new IllegalArgumentException("Argument is null");
@@ -86,7 +90,7 @@ public class AreaAdapter{
 					this.board[row][col] = new TransitionSpaceAdapter((TransitionSpace)board[row][col]);
 				}
 				else if(me instanceof GroundSpace){
-					this.board[row][col] = GameAdapter.groundSpaceAdapter;
+					this.board[row][col] = GameAdapter.groundSpace;
 				}
 				else if(me instanceof ScrapPile){
 					this.board[row][col] = new ScrapPileAdapter((ScrapPile)board[row][col]);
