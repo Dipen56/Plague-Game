@@ -30,7 +30,9 @@ public class ScrapPileAdapter extends ObstacleAdapter{
 	@XmlElement
 	private String description;
 
-
+	/**
+	 * @param sp	The object on which to base this object
+	 **/
 	public ScrapPileAdapter(ScrapPile sp){
 		List<Item> spLoot = sp.getLoot();
 		this.loot = new ItemAdapter[spLoot.size()];

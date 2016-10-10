@@ -20,6 +20,10 @@ public class ObstacleAdapter extends MapElementAdapter{
 	@XmlElement
 	protected String description;
 
+
+	/**
+	 * @param obstacle	The object on which to base this object
+	 **/
 	public ObstacleAdapter(Obstacle obstacle) {
 		if(obstacle == null)
 			throw new IllegalArgumentException("Argument is null");
@@ -35,7 +39,10 @@ public class ObstacleAdapter extends MapElementAdapter{
 
 	}
 
-	
+	/**
+	 * Sets the description field.
+	 * @param description	The new description String
+	 */
 	public void setDescrption(String description){
 		this.description = description;
 	}
@@ -47,9 +54,9 @@ public class ObstacleAdapter extends MapElementAdapter{
 	public Obstacle getOriginal() {
 		return new Obstacle(description);
 	}
-	
-	
-	
+
+
+
 	/**
 	 * Returns a string representation of this object's fields.
 	 */

@@ -39,6 +39,10 @@ public class CupboardAdapter extends ObstacleAdapter{
 	@XmlElement
 	private ItemAdapter[] loot;
 
+
+	/**
+	 * @param cupboard	The object on which to base this object
+	 **/
 	public CupboardAdapter(Cupboard cupboard){
 		if(cupboard == null)
 			throw new IllegalArgumentException("Argument is null");

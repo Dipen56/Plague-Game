@@ -38,6 +38,10 @@ public class ChestAdapter extends ObstacleAdapter{
 	@XmlElement
 	private ItemAdapter[] loot;
 
+
+	/**
+	 *@param chest	The object on which to base this object
+	 **/
 	public ChestAdapter(Chest chest){
 		if(chest == null)
 			throw new IllegalArgumentException("Argument is null");
