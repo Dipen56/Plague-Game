@@ -575,10 +575,10 @@ public class GUI extends Application {
 		Menu help = new Menu("Help");
 		// creates the menu items
 		MenuItem itmShortcut = new MenuItem("Keyboard shortcuts");
-		itmShortcut.setId("KeyboardShortcut");
+		itmShortcut.setId("InfoMenu");
 		itmShortcut.setOnAction(actionEvent);
 		MenuItem itmHowToPlay = new MenuItem("How to play");
-		itmHowToPlay.setId("HowToPlay");
+		itmHowToPlay.setId("AboutMenu");
 		itmHowToPlay.setOnAction(actionEvent);
 		// add the items to menu
 		help.getItems().addAll(itmShortcut, itmHowToPlay);
