@@ -16,6 +16,7 @@ import server.game.player.Position;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.effect.ColorAdjust;
 
 /**
  * This class represents the main rendering class, this class will control the
@@ -38,6 +39,7 @@ public class Rendering {
 	private int squaresToRight = 0;
 	private Pane renderGroup;
 	private Label mapDescription;
+	private ColorAdjust colorAdjust = new ColorAdjust();
 
 	public Rendering() {
 
@@ -249,7 +251,8 @@ public class Rendering {
 			int otherPlayerX = userPosition.x;
 			int otherPlayerY = userPosition.y;
 			if (imageCoordinate.x == otherPlayerX && imageCoordinate.y == otherPlayerY) {
-				Image otherAvatar = Images.getAvatarImageByDirection(avatarIDs, direction, userPosition.getDirection(),false);
+				Image otherAvatar = Images.getAvatarImageByDirection(avatarIDs, direction, userPosition.getDirection(),
+						false);
 				if (otherAvatar != null) {
 					double height = otherAvatar.getHeight() * Math.pow(scale, squaresInFront - row - 1);
 					double width = otherAvatar.getWidth() * Math.pow(scale, squaresInFront - row - 1);
@@ -402,11 +405,13 @@ public class Rendering {
 	 */
 	private void addImage(Pane renderGroup, Image image, double width, double height, double setX, double setY) {
 		ImageView imageView = new ImageView();
+		changeImageBrightness(0);
 		imageView.setImage(image);
 		imageView.setFitHeight(height);
 		imageView.setFitWidth(width);
 		imageView.setX(setX);
 		imageView.setY(setY);
+		imageView.setEffect(colorAdjust);
 		renderGroup.getChildren().add(imageView);
 	}
 
@@ -423,9 +428,12 @@ public class Rendering {
 		renderGroup.getChildren().add(mapDescription);
 	}
 
-
 	public void applyWeather() {
 
+	}
+
+	private void changeImageBrightness(double brightness) {
+		 colorAdjust.setBrightness(brightness);
 	}
 
 	/**
