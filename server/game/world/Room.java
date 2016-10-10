@@ -23,22 +23,6 @@ public class Room extends Area implements Lockable {
 	private boolean isLocked;
 
 	/**
-	 * Constructor used to parse in a file. NOT used currently.
-	 *
-	 * @param filename
-	 *            --- the XML file recording details of this room
-	 * @param keyID
-	 *            --- the key id
-	 * @param isLocked
-	 *            -- whether it is locked.
-	 */
-	public Room(String filename, int keyID, boolean isLocked) {
-		super(filename);
-		this.keyID = keyID;
-		this.isLocked = isLocked;
-	}
-
-	/**
 	 * Constructor used during game creation.
 	 *
 	 * @param board

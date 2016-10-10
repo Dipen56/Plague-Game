@@ -1,9 +1,6 @@
 package client.rendering;
 
 import java.awt.Point;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import client.view.GUI;
 import javafx.scene.image.Image;
@@ -15,7 +12,6 @@ import server.game.player.Direction;
 import server.game.player.Position;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.control.Label;
-import javafx.scene.control.ProgressBar;
 import javafx.scene.effect.ColorAdjust;
 
 /**
@@ -57,7 +53,7 @@ public class Rendering {
 	 * @param b
 	 */
 	public void render(Position playerLoc, char[][] worldMap, int visibility, int uid, Map<Integer, Avatar> avatars,
-			Map<Integer, Position> positions, Map<Integer, Boolean> torchStatus, int hourOfTime) {
+			Map<Integer, Position> positions, Map<Integer, Boolean> torchStatus, int hourOfTime, int health) {
 		renderGroup.getChildren().clear();
 		Direction direction = playerLoc.getDirection();
 		Image background;
@@ -66,9 +62,15 @@ public class Rendering {
 		if (hourOfTime >= 6 && hourOfTime < 18) {
 			background = Images.DAYTIME_IMAGE;
 			grass = Images.GRASS_IMAGE;
+			if (worldMap.length < 30) {
+				grass = Images.ROOMTILE_IMAGE;
+			}
 		} else {
 			background = Images.NIGHTIME_IMAGE;
 			grass = Images.GRASSNIGHT_IMAGE;
+			if (worldMap.length < 30) {
+				grass = Images.ROOMTILE_IMAGE;
+			}
 		}
 		/////////////////////////////////
 		addImage(renderGroup, background, gamePanelWidth, gamePaneHeight, 0, 0, hourOfTime);
@@ -180,10 +182,6 @@ public class Rendering {
 		p.getPoints().add(yBottom);
 		p.getPoints().add(xLeftBottom);
 		p.getPoints().add(yBottom);
-		// This forms the grid of squares
-		// p.setStroke(javafx.scene.paint.Color.AQUA);
-		// p.setStrokeWidth(1);
-		//////////////////////////////////////////////
 		renderGroup.getChildren().add(p);
 	}
 
@@ -265,7 +263,6 @@ public class Rendering {
 			if (imageCoordinate.x == otherPlayerX && imageCoordinate.y == otherPlayerY) {
 				Image otherAvatar = Images.getAvatarImageByDirection(avatarIDs, direction, userPosition.getDirection(),
 						torchStatus.get(userID));
-
 				if (otherAvatar != null) {
 					double height = otherAvatar.getHeight() * Math.pow(scale, squaresInFront - row - 1);
 					double width = otherAvatar.getWidth() * Math.pow(scale, squaresInFront - row - 1);
@@ -421,8 +418,8 @@ public class Rendering {
 	private void addImage(Pane renderGroup, Image image, double width, double height, double setX, double setY,
 			int hourOfTime) {
 		ImageView imageView = new ImageView();
-		int brightness = getImageBrightness(hourOfTime);
-		changeImageBrightness(0);
+		double brightness = getImageBrightness(hourOfTime);
+		changeImageBrightness(brightness);
 		imageView.setImage(image);
 		imageView.setFitHeight(height);
 		imageView.setFitWidth(width);
@@ -432,8 +429,32 @@ public class Rendering {
 		renderGroup.getChildren().add(imageView);
 	}
 
-	private int getImageBrightness(double clock) {
-
+	/**
+	 * Sets the brightness of the game, this is based off the clock. Simulates
+	 * both day and night!
+	 * 
+	 * @param clock
+	 * @return
+	 */
+	private double getImageBrightness(int clock) {
+		if (clock >= 11 && clock < 14)
+			return 0;
+		else if (clock >= 14 && clock < 17)
+			return -0.1;
+		else if (clock >= 18 && clock < 20)
+			return -0.25;
+		else if (clock >= 20 && clock < 23)
+			return -0.4;
+		else if (clock >= 23 && clock <= 24)
+			return -0.5;
+		else if (clock >= 0 && clock < 2)
+			return -0.4;
+		else if (clock >= 2 && clock < 5)
+			return -0.3;
+		else if (clock >= 5 && clock < 8)
+			return -0.2;
+		else if (clock >= 8 && clock < 11)
+			return -0.1;
 		return 0;
 	}
 

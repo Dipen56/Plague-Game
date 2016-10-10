@@ -5,55 +5,52 @@ import javafx.application.Platform;
 /**
  * This class is used for periodically updating GUI and Renderer.
  * 
- * @author Rafaela & Hector
+ * @author Rafaela
+ * @author Hector (Fang Zhao 300364061)
  *
  */
 public class ClockThread extends Thread {
 
-    /**
-     * The pointer to controller
-     */
-    private ClientUI controller;
+	/**
+	 * The reference to controller
+	 */
+	private ClientUI controller;
 
-    /**
-     * the period between every update.
-     */
-    private final int delay;
+	/**
+	 * the period between every update.
+	 */
+	private final int delay;
 
-    /**
-     * Constructor
-     * 
-     * @param delay
-     * @param game
-     */
-    public ClockThread(int delay, ClientUI controller) {
-        this.controller = controller;
-        this.delay = delay;
-    }
+	/**
+	 * Constructor
+	 * 
+	 * @param delay
+	 *            --- the broadcast period
+	 * @param controller
+	 *            --- the reference to controller
+	 */
+	public ClockThread(int delay, ClientUI controller) {
+		this.controller = controller;
+		this.delay = delay;
+	}
 
-    @Override
-    public void run() {
-        while (true) {
-            // Loop forever
-            try {
-                Thread.sleep(delay);
+	@Override
+	public void run() {
+		while (true) {
+			// Loop forever
+			try {
+				Thread.sleep(delay);
+				// update Renderer and GUI.
+				Platform.runLater(new Runnable() {
+					@Override
+					public void run() {
+						controller.updateRenderAndGui();
+					}
+				});
 
-                // update Renderer and GUI.
-                
-                
-                Platform.runLater(new Runnable() {
-                    @Override
-                    public void run() {
-                    	controller.updateRenderAndGui();
-                    }
-                });
-                
-                
-
-            } catch (InterruptedException e) {
-                // should never happen
-            }
-        }
-    }
-
+			} catch (InterruptedException e) {
+				// should never happen
+			}
+		}
+	}
 }

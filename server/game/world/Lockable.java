@@ -1,6 +1,9 @@
 package server.game.world;
 
 /**
+ * This interface represents the property of being able to be locked. It can be
+ * used in many Items or MapElements to create diversity of Item usage and map
+ * interaction.
  * 
  * @author Hector (Fang Zhao 300364061)
  *

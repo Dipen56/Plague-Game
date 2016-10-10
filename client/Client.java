@@ -3,9 +3,9 @@ package client;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.net.Socket;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.net.Socket;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -19,7 +19,8 @@ import server.ServerMain;
  * connected server. It receives events from the server connection via a socket
  * as well as send actions to the server about the player's command.
  *
- * @author Rafaela & Hector
+ * @author Rafaela
+ * @author Hector (Fang Zhao 300364061)
  *
  */
 public class Client extends Thread {
@@ -162,6 +163,11 @@ public class Client extends Thread {
 		}
 	}
 
+	/**
+	 * This method is called when the client thread runs. It receives the
+	 * pre-configuration informations from server, initialise the client side
+	 * data, and runs in loop to constantly receive the server broadcast.
+	 */
 	@Override
 	public void run() {
 		try {
@@ -169,7 +175,7 @@ public class Client extends Thread {
 			String incoming = input.readUTF();
 			while (!incoming.equals("Fin")) {
 				controller.parseMap(incoming);
-				System.out.println("received map string:\n" + incoming);
+				System.out.println("[Debug] received map string:\n" + incoming);
 				incoming = input.readUTF();
 			}
 
@@ -218,7 +224,6 @@ public class Client extends Thread {
 				}
 
 				if (isGameRunning && isUserReady) {
-					System.out.println("two flags are all ready");
 					break;
 				}
 
@@ -365,21 +370,27 @@ public class Client extends Thread {
 			return;
 		}
 
-		// 7. win/loose
+		// 7. alive or not for all players
 		if (s.hasNextLine()) {
 			line = s.nextLine();
+			controller.parseAliveStatus(line);
+		} else {
+			System.out.println("Data incomplete, no status for player's aliveness received.");
+			// Data is incomplete, ignore.
+			s.close();
+			return;
+		}
 
+		// 8. win/loose
+		if (s.hasNextLine()) {
+			line = s.nextLine();
 			String[] strs = line.split(",");
-
 			boolean hasWinner = Integer.valueOf(strs[0]) == 1 ? true : false;
 
 			if (hasWinner) {
 				String winnerName = strs[1];
-
 				isGameRunning = false;
-
 				controller.gameOver("We have a winner", "The winner is " + winnerName);
-
 			}
 
 		} else {
@@ -389,10 +400,18 @@ public class Client extends Thread {
 			return;
 		}
 
-		// 8. chat message
-		if (s.hasNextLine()) {
+		// ======= optional message broadcast =======
+
+		while (s.hasNextLine()) {
 			line = s.nextLine();
-			controller.parseChatMessage(line);
+
+			if (line.startsWith("M")) {
+				// 9. chat message
+				controller.parseChatMessage(line.substring(1));
+			} else if (line.startsWith("N")) {
+				// 10. notification
+				controller.parseNotificationMsg(line.substring(1));
+			}
 		}
 
 		// close the scanner
@@ -403,6 +422,7 @@ public class Client extends Thread {
 	 * A helper method for testing
 	 *
 	 * @param incoming
+	 *            --- the string received from server
 	 */
 	@SuppressWarnings("unused")
 	private void printTestString(String incoming) {
@@ -412,12 +432,21 @@ public class Client extends Thread {
 		System.out.println("Health: " + sc.nextLine());
 		System.out.println("Visibility: " + sc.nextLine());
 		System.out.println("Players: " + sc.nextLine());
+		System.out.println("Inventory: " + sc.nextLine());
+		System.out.println("Torch status: " + sc.nextLine());
+		System.out.println("Aliveness status: " + sc.nextLine());
+		System.out.println("Win/loose status: " + sc.nextLine());
+		System.out.println("============Optional==============");
 
-		if (sc.hasNextLine()) {
-			System.out.println("Inventory: " + sc.nextLine());
+		while (sc.hasNextLine()) {
+			String line = sc.nextLine();
+			if (sc.nextLine().startsWith("M")) {
+				System.out.println("Chat msg: " + sc.nextLine());
+			} else if (line.startsWith("N")) {
+				System.out.println("notification: " + sc.nextLine());
+			}
+
 		}
-
-		System.out.println("=====================================");
 
 		sc.close();
 	}

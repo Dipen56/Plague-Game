@@ -5,8 +5,6 @@ import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import javafx.scene.layout.BorderPane;
 
-import static client.rendering.Images.loadImage;
-
 import javafx.animation.FadeTransition;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -24,7 +22,6 @@ import javafx.util.Duration;
  */
 public class ServerGui extends Application {
 
-	private static final String GAMEICON_IMAGE = "/game-icon.png";
 	private Stage window;
 	private BorderPane borderPane;
 	private Label textLabel;
@@ -40,7 +37,7 @@ public class ServerGui extends Application {
 	public void start(Stage mainWindow) throws Exception {
 		window = mainWindow;
 		window.setTitle("Plague Game Server");
-		window.getIcons().add(loadImage(GAMEICON_IMAGE));
+		// window.getIcons().add(loadImage(GAMEICON_IMAGE));
 		borderPane = new BorderPane();
 		textLabel = new Label();
 		textLabel.getStyleClass().add("root-server");
