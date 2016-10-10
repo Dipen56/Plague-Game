@@ -53,7 +53,7 @@ public class Rendering {
 	 * @param b
 	 */
 	public void render(Position playerLoc, char[][] worldMap, int visibility, int uid, Map<Integer, Avatar> avatars,
-			Map<Integer, Position> positions, Map<Integer, Boolean> torchStatus, int hourOfTime) {
+			Map<Integer, Position> positions, Map<Integer, Boolean> torchStatus, int hourOfTime, int health) {
 		renderGroup.getChildren().clear();
 		Direction direction = playerLoc.getDirection();
 		Image background;
@@ -62,13 +62,13 @@ public class Rendering {
 		if (hourOfTime >= 6 && hourOfTime < 18) {
 			background = Images.DAYTIME_IMAGE;
 			grass = Images.GRASS_IMAGE;
-			if(worldMap.length<30){
+			if (worldMap.length < 30) {
 				grass = Images.ROOMTILE_IMAGE;
 			}
 		} else {
 			background = Images.NIGHTIME_IMAGE;
 			grass = Images.GRASSNIGHT_IMAGE;
-			if(worldMap.length<30){
+			if (worldMap.length < 30) {
 				grass = Images.ROOMTILE_IMAGE;
 			}
 		}
@@ -478,7 +478,6 @@ public class Rendering {
 	private void changeImageBrightness(double brightness) {
 		colorAdjust.setBrightness(brightness);
 	}
-
 
 	/**
 	 * Sets the pane to be renderGroup
