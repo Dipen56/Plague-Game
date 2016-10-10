@@ -216,14 +216,10 @@ public class Images {
 		RED_ARROW.put(Direction.West, loadImage("/Red_West.png"));
 
 		// ============= profile pictures =====================
-		// PROFILE_IMAGES.put(Avatar.Avatar_1,
-		// loadImage("/profile_image_for_avatar_1.png"));
-		// PROFILE_IMAGES.put(Avatar.Avatar_2,
-		// loadImage("/profile_image_for_avatar_2.png"));
-		// PROFILE_IMAGES.put(Avatar.Avatar_3,
-		// loadImage("/profile_image_for_avatar_3.png"));
-		// PROFILE_IMAGES.put(Avatar.Avatar_4,
-		// loadImage("/profile_image_for_avatar_4.png"));
+		PROFILE_IMAGES.put(Avatar.Avatar_1, loadImage("/Char_1_face.png"));
+		PROFILE_IMAGES.put(Avatar.Avatar_2, loadImage("/Char_3_Face.png"));
+		PROFILE_IMAGES.put(Avatar.Avatar_3, loadImage("/Char_2_Face.png"));
+		PROFILE_IMAGES.put(Avatar.Avatar_4, loadImage("/Char_4_Face.png"));
 	}
 
 	/**
