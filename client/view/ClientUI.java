@@ -486,7 +486,8 @@ public class ClientUI {
 						str = "";
 					}
 				}
-				gui.setObjectDetail(str);
+
+				gui.setWorldTime(nMsg);
 			}
 		});
 	}
