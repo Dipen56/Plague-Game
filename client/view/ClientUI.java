@@ -565,7 +565,6 @@ public class ClientUI {
 					client.send(Packet.TurnRight);
 				} else if (keyCode == KeyCode.F) {
 					client.send(Packet.Unlock);
-
 					// gui.setInventory(inventory);
 				} else if (keyCode == KeyCode.G) {
 					client.send(Packet.TakeOutItem);
