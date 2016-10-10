@@ -41,6 +41,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import server.game.player.Avatar;
 import server.game.player.Direction;
 import server.game.player.Player;
@@ -49,6 +50,7 @@ import server.game.player.Virus;
 import client.rendering.Images;
 import client.rendering.Rendering;
 import client.rendering.Side;
+import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 
 /**
  * This class represents the main GUI class this class bring together all the
@@ -250,8 +252,11 @@ public class GUI extends Application {
 		slashScreen();
 		// loginScreen();
 		window.show();
-		window.setOnCloseRequest(e -> Platform.exit());
-		window.setOnCloseRequest(e -> System.exit(0));
+		window.setOnCloseRequest(e -> {
+			System.exit(0);
+			Platform.exit();
+			viewControler.closeSocket();
+		});
 	}
 
 	public void slashScreen() {
@@ -283,8 +288,11 @@ public class GUI extends Application {
 		Scene slashScene = new Scene(slashBorderPane, WIDTH_VALUE, HEIGHT_VALUE);
 		slashScene.getStylesheets().add(this.getClass().getResource(STYLE_CSS).toExternalForm());
 		window.setScene(slashScene);
-		window.setOnCloseRequest(e -> Platform.exit());
-		window.setOnCloseRequest(e -> System.exit(0));
+		window.setOnCloseRequest(e -> {
+			System.exit(0);
+			Platform.exit();
+			viewControler.closeSocket();
+		});
 	}
 
 	public void loginScreen() {
@@ -375,8 +383,12 @@ public class GUI extends Application {
 		Scene loginScene = new Scene(loginPane, WIDTH_VALUE, HEIGHT_VALUE);
 		loginScene.getStylesheets().add(this.getClass().getResource(STYLE_CSS).toExternalForm());
 		window.setScene(loginScene);
-		window.setOnCloseRequest(e -> Platform.exit());
-		window.setOnCloseRequest(e -> System.exit(0));
+
+		window.setOnCloseRequest(e -> {
+			System.exit(0);
+			Platform.exit();
+			viewControler.closeSocket();
+		});
 	}
 
 	public void changeAvatarImage(int change) {
@@ -409,8 +421,11 @@ public class GUI extends Application {
 		waitingRoomBox.getChildren().add(buttons);
 		Scene slashScene = new Scene(waitingRoomBox, 400, 170);
 		window.setScene(slashScene);
-		window.setOnCloseRequest(e -> Platform.exit());
-		window.setOnCloseRequest(e -> System.exit(0));
+		window.setOnCloseRequest(e -> {
+			System.exit(0);
+			Platform.exit();
+			viewControler.closeSocket();
+		});
 
 	}
 
@@ -445,8 +460,11 @@ public class GUI extends Application {
 		scene.setOnKeyPressed(keyEvent);
 		window.setOnCloseRequest(windowEvent);
 		window.setScene(scene);
-		window.setOnCloseRequest(e -> Platform.exit());
-		window.setOnCloseRequest(e -> System.exit(0));
+		window.setOnCloseRequest(e -> {
+			System.exit(0);
+			Platform.exit();
+			viewControler.closeSocket();
+		});
 	}
 
 	/**
@@ -1072,7 +1090,6 @@ public class GUI extends Application {
 				AlertBox.displayMsg(title, msg);
 			}
 		});
-		System.err.println(msg);
 	}
 
 }
