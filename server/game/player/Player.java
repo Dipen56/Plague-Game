@@ -192,7 +192,8 @@ public class Player {
 		if (antidote.getVirus().equals(virus)) {
 			increaseHealth(Antidote.EFFECT);
 		} else {
-			int effect = Math.random() < Antidote.CURE_CHANCE ? Antidote.EFFECT * 3 : -Antidote.EFFECT;
+			int effect = Math.random() < Antidote.CURE_CHANCE ? Antidote.EFFECT * Antidote.MULTIPLIER
+					: -Antidote.EFFECT;
 			increaseHealth(effect);
 		}
 
