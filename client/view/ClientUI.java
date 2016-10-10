@@ -459,7 +459,7 @@ public class ClientUI {
 			}
 		});
 
-		gui.setHealthBar(health, virus,userName);
+		gui.setHealthBar(health, virus,userName,avatar);
 
 		gui.objectLabel();
 		render.setAreaDescription();
