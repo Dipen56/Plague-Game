@@ -155,7 +155,7 @@ public class GUI extends Application {
 	 */
 	private static Stage window;
 	// controls
-	private Label timeLable;
+	private Label objectDetailLabel;
 	// private Label miniMapLable;
 	private Canvas miniMapCanvas;
 	private Label textAreaLable;
@@ -402,6 +402,8 @@ public class GUI extends Application {
 	}
 
 	public void waitingRoom() {
+		Pane waitingPane = new Pane();
+		
 		VBox waitingRoomBox = new VBox(5);
 		waitingMsg = new Label();
 		waitingMsg.setText(
@@ -420,7 +422,7 @@ public class GUI extends Application {
 		buttons.setAlignment(Pos.CENTER);
 		buttons.getChildren().addAll(readyGame, quitWaitingRoom);
 		waitingRoomBox.getChildren().add(buttons);
-		Scene slashScene = new Scene(waitingRoomBox, 400, 170);
+		Scene slashScene = new Scene(waitingRoomBox, WIDTH_VALUE, HEIGHT_VALUE);
 		window.setScene(slashScene);
 		window.setOnCloseRequest(e -> {
 			System.exit(0);
@@ -442,10 +444,10 @@ public class GUI extends Application {
 		rightPanel.getStyleClass().add("cotrolvbox");
 		borderPane = new BorderPane();
 		setMenuBar();
-		
+
 		setminiMap();
 		setchat();
-		setWorldTime();
+		setObjectDetail();
 		setItems();
 		group.prefWidth(GAMEPANE_WIDTH_VALUE);
 		group.prefHeight(HEIGHT_VALUE);
@@ -571,15 +573,14 @@ public class GUI extends Application {
 	/**
 	 * this method sets up the world clock controls
 	 */
-	private void setWorldTime() {
+	private void setObjectDetail() {
 		TitledPane titlePane = new TitledPane();
-		titlePane.setText("World Time");
-		timeLable = new Label();
-		titlePane.setContent(timeLable);
-		timeLable.setPrefWidth(400);
-		timeLable.setPrefHeight(50);
-		timeLable.getStyleClass().add("world-time-lable");
-		// timeLable.setText(clockTime);
+		titlePane.setText("Object Detail");
+		objectDetailLabel = new Label();
+		titlePane.setContent(objectDetailLabel);
+		objectDetailLabel.setPrefWidth(400);
+		objectDetailLabel.setPrefHeight(50);
+		objectDetailLabel.getStyleClass().add("world-time-lable");
 		rightPanel.getChildren().add(titlePane);
 	}
 
@@ -802,13 +803,8 @@ public class GUI extends Application {
 	 * 
 	 * @param worldTime
 	 */
-	public void setTime(String time) {
-		Platform.runLater(new Runnable() {
-			@Override
-			public void run() {
-				timeLable.setText(time);
-			}
-		});
+	public void setObjectDetail(String time) {
+		objectDetailLabel.setText(time);
 	}
 
 	public void setWaitingRoomAvatar() {

@@ -455,10 +455,9 @@ public class ClientUI {
 						str = "Can't put items into it";
 					}
 				}
-				// gui.displayNotification(str);
+				gui.setObjectDetail(nMsg);
 			}
 		});
-
 	}
 
 	/**
@@ -506,8 +505,7 @@ public class ClientUI {
 		char[][] worldMap = areas.get(areaId);
 
 		// 1. update the world time
-		//System.out.println(time);
-		
+		// System.out.println(time);
 
 		// 1. update minimap
 		gui.updateMinimap(playerLoc, uid, worldMap, visibility, positions);
@@ -527,7 +525,7 @@ public class ClientUI {
 		// 6. update the map object description
 		if (descriptionToggle) {
 			gui.displayObjectDescription(getFrontElementString());
-			//gui.displayObjectDescription(time);
+			// gui.displayObjectDescription(time);
 		} else {
 			gui.displayObjectDescription("");
 		}
@@ -558,7 +556,7 @@ public class ClientUI {
 		gui.objectLabel();
 		gui.objectNotifcation();
 		render.setAreaDescription();
-		
+
 	}
 
 	/**
