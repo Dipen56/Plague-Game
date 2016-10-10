@@ -181,6 +181,16 @@ public class ClientUI {
 
 	private boolean descriptionToggle = true;
 
+	private long startMilSec;
+
+	private boolean isFirstTime;
+
+	private long endMilSec;
+
+	private boolean displayingNotification;
+
+	private String time;
+
 	/**
 	 * Constructor
 	 */
@@ -326,7 +336,9 @@ public class ClientUI {
 	public void parseTime(String timeStr) {
 		String[] timeStrs = timeStr.split(":");
 		hourOfTime = Integer.valueOf(timeStrs[0]);
-		gui.setTime(timeStr);
+		time = timeStr;
+
+		// gui.setTime(timeStr);
 	}
 
 	/**
@@ -415,32 +427,38 @@ public class ClientUI {
 	 *            --- the notification message
 	 */
 	public void parseNotificationMsg(String nMsg) {
-		char frontMapElement;
-		String str = nMsg;
 
-		if ("T".equals(nMsg)) {
-			// This means take-out-item was failed.
-			frontMapElement = getFrontMapElement();
-			if (frontMapElement == 'C' || frontMapElement == 'U') {
-				str = "It's probably locked or just empty";
-			} else if (frontMapElement == 'P') {
-				str = "It's empty";
-			} else {
-				str = "Can't take items out from it";
-			}
-		} else if ("P".equals(nMsg)) {
-			// This means put-item-into-container was failed.
-			frontMapElement = getFrontMapElement();
-			if (frontMapElement == 'C' || frontMapElement == 'U') {
-				str = "It's probably full or locked";
-			} else if (frontMapElement == 'P') {
-				str = "It's already very full.";
-			} else {
-				str = "Can't put items into it";
-			}
-		}
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				char frontMapElement;
+				String str = nMsg;
 
-		gui.displayNotification(str);
+				if ("T".equals(nMsg)) {
+					// This means take-out-item was failed.
+					frontMapElement = getFrontMapElement();
+					if (frontMapElement == 'C' || frontMapElement == 'U') {
+						str = "It's probably locked or just empty";
+					} else if (frontMapElement == 'P') {
+						str = "It's empty";
+					} else {
+						str = "Can't take items out from it";
+					}
+				} else if ("P".equals(nMsg)) {
+					// This means put-item-into-container was failed.
+					frontMapElement = getFrontMapElement();
+					if (frontMapElement == 'C' || frontMapElement == 'U') {
+						str = "It's probably full or locked";
+					} else if (frontMapElement == 'P') {
+						str = "It's already very full.";
+					} else {
+						str = "Can't put items into it";
+					}
+				}
+				// gui.displayNotification(str);
+			}
+		});
+
 	}
 
 	/**
@@ -487,6 +505,10 @@ public class ClientUI {
 		int areaId = playerLoc.areaId;
 		char[][] worldMap = areas.get(areaId);
 
+		// 1. update the world time
+		//System.out.println(time);
+		
+
 		// 1. update minimap
 		gui.updateMinimap(playerLoc, uid, worldMap, visibility, positions);
 
@@ -501,9 +523,11 @@ public class ClientUI {
 
 		// 5. update area/room description
 		render.updateAreaDescription(descriptions.get(areaId));
+		gui.displayNotification(time);
 		// 6. update the map object description
 		if (descriptionToggle) {
 			gui.displayObjectDescription(getFrontElementString());
+			//gui.displayObjectDescription(time);
 		} else {
 			gui.displayObjectDescription("");
 		}
@@ -532,7 +556,9 @@ public class ClientUI {
 		});
 		gui.setHealthBar(health, virus, userName, avatar);
 		gui.objectLabel();
+		gui.objectNotifcation();
 		render.setAreaDescription();
+		
 	}
 
 	/**

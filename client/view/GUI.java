@@ -202,6 +202,7 @@ public class GUI extends Application {
 	private Button readyGame;
 	private Button quitWaitingRoom;
 	private Label objectDescription;
+	private Label objectNotifcation;
 
 	private TitledPane titlePane;
 
@@ -239,7 +240,7 @@ public class GUI extends Application {
 	public void start(Stage mainWindow) throws Exception {
 		window = mainWindow;
 		window.setTitle("Plague Game");
-		//window.getIcons().add(Images.GAMEICON_IMAGE);
+		// window.getIcons().add(Images.GAMEICON_IMAGE);
 		// this will disable and enable resizing so when we have a working
 		// version we can just set this to false;
 		// this starts the action listener
@@ -250,7 +251,7 @@ public class GUI extends Application {
 		windowEvent = viewControler.getWindowEventHander();
 		window.setResizable(false);
 		slashScreen();
-		//loginScreen();
+		// loginScreen();
 		window.show();
 		window.setOnCloseRequest(e -> {
 			System.exit(0);
@@ -441,9 +442,10 @@ public class GUI extends Application {
 		rightPanel.getStyleClass().add("cotrolvbox");
 		borderPane = new BorderPane();
 		setMenuBar();
-		setWorldTime();
+		
 		setminiMap();
 		setchat();
+		setWorldTime();
 		setItems();
 		group.prefWidth(GAMEPANE_WIDTH_VALUE);
 		group.prefHeight(HEIGHT_VALUE);
@@ -1077,6 +1079,15 @@ public class GUI extends Application {
 		group.getChildren().add(objectDescription);
 	}
 
+	public void objectNotifcation() {
+		objectNotifcation = new Label();
+		objectNotifcation.setWrapText(true);
+		objectNotifcation.setPrefWidth(150);
+		objectNotifcation.setLayoutX((GAMEPANE_WIDTH_VALUE / 2) - 20);
+		objectNotifcation.setLayoutY(30);
+		objectNotifcation.getStyleClass().add("object-description");
+	}
+
 	/**
 	 * This method is used to display to the user the notification of last
 	 * action, e.g. if the player failed to open a chest or other reason.
@@ -1085,8 +1096,8 @@ public class GUI extends Application {
 	 *            --- the notification message.
 	 */
 	public void displayNotification(String nMsg) {
-		// TODO this is where the notification is shown.
-		System.out.println(nMsg);
+		objectNotifcation.setText(nMsg);
+		group.getChildren().add(objectNotifcation);
 	}
 
 	/**
@@ -1104,4 +1115,3 @@ public class GUI extends Application {
 	}
 
 }
-
