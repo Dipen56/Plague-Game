@@ -693,11 +693,11 @@ public class ClientUI {
 					client.send(Packet.TurnLeft);
 				} else if (keyCode == KeyCode.E) {
 					client.send(Packet.TurnRight);
-				} else if (keyCode == KeyCode.R || keyCode == KeyCode.U) {
-					client.send(Packet.Unlock);
 				} else if (keyCode == KeyCode.F) {
-					client.send(Packet.TakeOutItem);
+					client.send(Packet.Unlock);
 				} else if (keyCode == KeyCode.G) {
+					client.send(Packet.TakeOutItem);
+				} else if (keyCode == KeyCode.R) {
 					client.send(Packet.Transit);
 				} else if (keyCode == KeyCode.DIGIT1) {
 					client.sendWithIndex(Packet.UseItem, 0);

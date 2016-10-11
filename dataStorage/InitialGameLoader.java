@@ -306,13 +306,13 @@ public class InitialGameLoader {
 
 		// Puts the rooms together.
 		// TODO: change back to true
-		Room room1 = new Room(room1Map, areaIDs.get(1), keys.get(keys.size() - 4).getKeyID(), true,
+		Room room1 = new Room(room1Map, areaIDs.get(1), keys.get(keys.size() - 4).getKeyID(), false,
 				"Looks like a tidy room");
-		Room room2 = new Room(room2Map, areaIDs.get(2), keys.get(keys.size() - 3).getKeyID(), true,
+		Room room2 = new Room(room2Map, areaIDs.get(2), keys.get(keys.size() - 3).getKeyID(), false,
 				"Has someone been here before?");
-		Room room3 = new Room(room3Map, areaIDs.get(3), keys.get(keys.size() - 2).getKeyID(), true,
+		Room room3 = new Room(room3Map, areaIDs.get(3), keys.get(keys.size() - 2).getKeyID(), false,
 				"This is actually a sunny warm room");
-		Room room4 = new Room(room4Map, areaIDs.get(4), keys.get(keys.size() - 1).getKeyID(), true,
+		Room room4 = new Room(room4Map, areaIDs.get(4), keys.get(keys.size() - 1).getKeyID(), false,
 				"Something stinks in this room");
 
 		MapElement[][] worldMap = {
