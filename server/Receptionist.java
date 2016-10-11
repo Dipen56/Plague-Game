@@ -18,7 +18,7 @@ import server.game.world.Area;
  * connected client. It receives events from a client connection via a socket as
  * well as send information to the client about the current board state.
  *
- * @author Rafaela
+ * @author Rafaela (300350087)
  * @author Hector (Fang Zhao 300364061)
  *
  */

@@ -22,7 +22,7 @@ import server.view.ServerGui;
  * listens to client connection, and when all clients are connected, the game
  * starts simultaneously for all clients.
  *
- * @author Rafaela
+ * @author Rafaela (300350087)
  * @author Hector (Fang Zhao 300364061)
  *
  */

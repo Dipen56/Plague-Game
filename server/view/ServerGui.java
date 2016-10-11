@@ -17,7 +17,7 @@ import javafx.util.Duration;
  * client to connect to the game.NOTE: this GUI only outputs information it does
  * not actually takes any in.
  *
- * @author Dipen
+ * @author Dipen Patel (300304965)
  *
  */
 public class ServerGui extends Application {
@@ -29,20 +29,21 @@ public class ServerGui extends Application {
 	public static String ip;
 	public static int port;
 
+	/**
+	 * This constructor for the ServerGui is just a place holder.
+	 */
 	public ServerGui() {
-
+		// this is just a place holder constructor to stop the use of default
+		// constructor
 	}
 
 	@Override
 	public void start(Stage mainWindow) throws Exception {
 		window = mainWindow;
 		window.setTitle("Plague Game Server");
-		// window.getIcons().add(loadImage(GAMEICON_IMAGE));
 		borderPane = new BorderPane();
 		textLabel = new Label();
 		textLabel.getStyleClass().add("root-server");
-		// textLabel.setText("Welcome Server Is Starting Up...\n Operated By:
-		// HARDD inc");
 		setText();
 		ft = new FadeTransition(Duration.millis(4000), textLabel);
 		ft.setFromValue(0.0);
@@ -50,17 +51,12 @@ public class ServerGui extends Application {
 		ft.play();
 		textLabel.setWrapText(true);
 		borderPane.setCenter(textLabel);
-		// setText("192.1.1.0", "8080");
 		Scene mainScene = new Scene(borderPane, 300, 300);
 		window.setScene(mainScene);
 		mainScene.getStylesheets().add(this.getClass().getResource("/main.css").toExternalForm());
-
 		window.show();
-
 		window.setOnCloseRequest(e -> Platform.exit());
 		window.setOnCloseRequest(e -> System.exit(0));
-		// setText("10.1.1","5000");
-
 	}
 
 	/**

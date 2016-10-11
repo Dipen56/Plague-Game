@@ -15,10 +15,9 @@ import javafx.scene.image.Image;
 /**
  * This class represents a dialog box and is used to display messages.
  *
- * @author Dipen
+ * @author Dipen Patel (300304965)
  *
  */
-
 public class AlertBox {
 	/**
 	 * this method will open a dialog box given the title and the massage.
@@ -69,7 +68,7 @@ public class AlertBox {
 		howImage.setFitHeight(GUI.HEIGHT_VALUE);
 		howImage.setFitWidth(GUI.WIDTH_VALUE);
 		pane.getChildren().add(howImage);
-		
+
 		// VBox layout = new VBox(10);
 		// layout.getChildren().addAll(lable, ok);
 		// layout.setAlignment(Pos.CENTER);
@@ -79,6 +78,7 @@ public class AlertBox {
 		window.show();
 
 	}
+
 	public static void keyPopUp() {
 		Stage window = new Stage();
 		// this makes it so you can't click on the window other then this one
@@ -95,7 +95,7 @@ public class AlertBox {
 		howImage.setFitHeight(GUI.HEIGHT_VALUE);
 		howImage.setFitWidth(GUI.WIDTH_VALUE);
 		pane.getChildren().add(howImage);
-		
+
 		Scene scene = new Scene(pane);
 		window.setScene(scene);
 		window.show();

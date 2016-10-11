@@ -16,7 +16,7 @@ import server.game.world.Lockable;
  * This class represents a player. When the player is loaded from a data file,
  * the Builder pattern is used in the construction.
  *
- * @author Hector (Fang Zhao 300364061), Daniel Anastasi 300145878
+ * @author Hector (Fang Zhao 300364061)
  *
  */
 public class Player {

@@ -14,7 +14,6 @@ import server.game.player.Position;
  * This class represents the world map.
  *
  * @author Hector (Fang Zhao 300364061)
- * @author Daniel Anastasi 300145878
  *
  */
 public class Area {

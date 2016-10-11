@@ -31,7 +31,7 @@ import server.game.player.Virus;
  * interpreting mouse and keyboard events from the user, and updates the
  * renderer/GUI according to the received information from server.
  *
- * @author Dipen (300304965)
+ * @author Dipen Patel (300304965)
  * @author Hector (Fang Zhao 300364061)
  *
  */
@@ -82,6 +82,11 @@ public class ClientUI {
 	 * The hour of current time, which is used for rendering day/night shifting
 	 */
 	private int hourOfTime;
+
+	/**
+	 * The world time, with format "hh:mm:ss"
+	 */
+	private String time;
 
 	/**
 	 * This map keeps track of all player's avatars. Renderer can look for which
@@ -190,11 +195,6 @@ public class ClientUI {
 	 * Event Handler for window events
 	 */
 	private EventHandler<WindowEvent> windowEvent;
-
-	/**
-	 * The world time, with format "hh:mm:ss"
-	 */
-	private String time;
 
 	/**
 	 * Constructor
@@ -693,11 +693,11 @@ public class ClientUI {
 					client.send(Packet.TurnLeft);
 				} else if (keyCode == KeyCode.E) {
 					client.send(Packet.TurnRight);
-				} else if (keyCode == KeyCode.R || keyCode == KeyCode.U) {
-					client.send(Packet.Unlock);
 				} else if (keyCode == KeyCode.F) {
-					client.send(Packet.TakeOutItem);
+					client.send(Packet.Unlock);
 				} else if (keyCode == KeyCode.G) {
+					client.send(Packet.TakeOutItem);
+				} else if (keyCode == KeyCode.R) {
 					client.send(Packet.Transit);
 				} else if (keyCode == KeyCode.DIGIT1) {
 					client.sendWithIndex(Packet.UseItem, 0);

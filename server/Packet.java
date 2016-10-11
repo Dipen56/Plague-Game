@@ -7,7 +7,7 @@ package server;
  * For efficiency each Packet should be converted to byte in transition. This
  * class also provides methods to perform byte <--> Packet conversion.
  *
- * @author Rafaela
+ * @author Rafaela (300350087)
  * @author Hector (Fang Zhao 300364061)
  *
  */

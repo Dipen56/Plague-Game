@@ -19,7 +19,7 @@ import server.ServerMain;
  * connected server. It receives events from the server connection via a socket
  * as well as send actions to the server about the player's command.
  *
- * @author Rafaela
+ * @author Rafaela 300350087
  * @author Hector (Fang Zhao 300364061)
  *
  */

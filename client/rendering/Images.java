@@ -40,7 +40,7 @@ public class Images {
 	/**
 	 * The day time background image
 	 */
-	public static final Image DAYTIME_IMAGE = loadImage("/Daytime.jpg");
+	public static final Image DAYTIME_IMAGE = loadImage("/Daytime.gif");
 
 	/**
 	 * The night time background image
@@ -57,15 +57,6 @@ public class Images {
 	 */
 	public static final Image GRASSNIGHT_IMAGE = loadImage("/grass_dark.png");
 
-	public static final Image TREE_IMAGE = loadImage("/tree.png");
-
-	public static final Image CHEST_IMAGE = loadImage("/chest.png");
-
-	//public static final Image ROOMTILE_IMAGE = loadImage("/roomTile.png");
-
-	//public static final Image HOWTOPLAY_IMAGE = loadImage("/HowToPlay.png");
-
-	//public static final Image KEYBOARDSHORT_IMAGE = loadImage("/Keyboard_Help.png");
 	/**
 	 * The ground tile image in the room
 	 */
@@ -79,7 +70,7 @@ public class Images {
 	/**
 	 * Keyboard short-cut help screen image
 	 */
-	public static final Image KEYBOARDSHORT_IMAGE = loadImage("/Keyboard_Help.jpg");
+	public static final Image KEYBOARDSHORT_IMAGE = loadImage("/Keyboard_Help.png");
 
 	/**
 	 * waiting room image
@@ -427,7 +418,8 @@ public class Images {
 	 * A helper method used to load images
 	 *
 	 * @param name
-	 * @return
+	 *            --- the image path as a String
+	 * @return --- the Image object
 	 */
 	public static Image loadImage(String name) {
 		return new Image(Images.class.getResourceAsStream(name));

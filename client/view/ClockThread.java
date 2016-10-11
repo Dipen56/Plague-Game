@@ -5,7 +5,7 @@ import javafx.application.Platform;
 /**
  * This class is used for periodically updating GUI and Renderer.
  * 
- * @author Rafaela
+ * @author Rafaela 300350087
  * @author Hector (Fang Zhao 300364061)
  *
  */

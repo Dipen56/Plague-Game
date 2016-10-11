@@ -349,6 +349,7 @@ public class GUI extends Application {
 	 * the avatar image in the login screen.
 	 * 
 	 * @param change
+	 *            -- this is the number from 0-4 which is the avatar number
 	 */
 	public void changeAvatarImage(int change) {
 		avatarIndex = change;
@@ -463,7 +464,9 @@ public class GUI extends Application {
 	 * this method creates the health bar and adds it to the pane.
 	 * 
 	 * @param health
+	 *            -- this is a double from INVENTORY_SIZE
 	 * @param virusName
+	 *            -- this is the userName of the player
 	 */
 	public void setHealthBar(double health, Virus virusName, String userName, Avatar avatar) {
 		// this will create a flow pane which will store the player avatar and
@@ -510,6 +513,8 @@ public class GUI extends Application {
 	 * progress bar.
 	 * 
 	 * @param health
+	 *            -- this is the current health of the player thats less then
+	 *            INVENTORY_SIZE
 	 */
 	public void updateHealth(int health) {
 		bar.progressProperty().set(((double) health / Player.MAX_HEALTH));
@@ -706,6 +711,7 @@ public class GUI extends Application {
 	 * this method is used to set the chat message the text area in the gui
 	 *
 	 * @param text
+	 *            -- this is the chat message to display to the player
 	 */
 	public void setChatText(String text) {
 		// don't keep the message too long.
@@ -788,19 +794,21 @@ public class GUI extends Application {
 	/**
 	 * Set the description toggle as the given boolean value
 	 * 
-	 * @param boo
+	 * @param isToggleOn
+	 *            --boolean of rather it on or not
 	 */
-	public void setDescriptionOn(boolean boo) {
-		this.descriptionToggle.selectedProperty().setValue(boo);
+	public void setDescriptionOn(boolean isToggleOn) {
+		this.descriptionToggle.selectedProperty().setValue(isToggleOn);
 	}
 
 	/**
 	 * this method will set the world time
 	 * 
 	 * @param worldTime
+	 *            -- object description
 	 */
-	public void setObjectNotification(String time) {
-		objectNotificationLabel.setText(time);
+	public void setObjectNotification(String objectDiscription) {
+		objectNotificationLabel.setText(objectDiscription);
 	}
 
 	/**
@@ -969,7 +977,9 @@ public class GUI extends Application {
 	 * hovering over currently.
 	 * 
 	 * @param x
+	 *            -- x grid value
 	 * @param y
+	 *            -- y grid value
 	 */
 	public void setItemDescription(int x, int y) {
 		String item = null;
@@ -1014,7 +1024,9 @@ public class GUI extends Application {
 	 * of the which is the grid the player click on.
 	 * 
 	 * @param x
+	 *            -- x grid value
 	 * @param y
+	 *            -- y grid value
 	 * @return
 	 */
 	public String getItemDescription(int x, int y) {
@@ -1086,6 +1098,7 @@ public class GUI extends Application {
 	 * This method is used to display to the user the objects description.
 	 * 
 	 * @param description
+	 *            -- string with object detail
 	 */
 	public void displayObjectDescription(String description) {
 		objectDescription.setText(description);
@@ -1109,6 +1122,7 @@ public class GUI extends Application {
 	 * time
 	 * 
 	 * @param time
+	 *            -- string of the world time
 	 */
 	public void displayTime(String time) {
 		worldTimeLable.setText(time);
@@ -1119,6 +1133,9 @@ public class GUI extends Application {
 	 * This static helper method will pop up a message dialog to user.
 	 *
 	 * @param msg
+	 *            -- message for the popup box
+	 * @param title
+	 *            -- title for the popup box
 	 */
 	public static void showMsgPane(String title, String msg) {
 		Platform.runLater(new Runnable() {
@@ -1159,6 +1176,7 @@ public class GUI extends Application {
 	 * this method is used to play different sound effect during the game
 	 * 
 	 * @param file
+	 *            --sound file name
 	 */
 	public void soundEffect(String file) {
 		try {

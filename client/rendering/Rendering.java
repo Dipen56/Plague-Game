@@ -18,7 +18,7 @@ import javafx.scene.effect.ColorAdjust;
  * This class represents the main rendering class, this class will control the
  * rendering of the game board, character, and objects.
  *
- * @author Angelo
+ * @author Angelo Main Author (300323076)
  *
  */
 public class Rendering {
@@ -55,7 +55,6 @@ public class Rendering {
 	public void render(Position playerLoc, char[][] worldMap, int visibility, int uid, Map<Integer, Avatar> avatars,
 			Map<Integer, Position> positions, Map<Integer, Boolean> torchStatus, int hourOfTime,
 			Map<Integer, Boolean> isPlayerDead) {
-
 		renderGroup.getChildren().clear();
 		Direction direction = playerLoc.getDirection();
 		Image background;
@@ -64,15 +63,13 @@ public class Rendering {
 		if (hourOfTime >= 6 && hourOfTime < 18) {
 			background = Images.DAYTIME_IMAGE;
 			grass = Images.GRASS_IMAGE;
-			if (worldMap.length < 30) {
+			if (worldMap.length < 30)
 				grass = Images.ROOMTILE_IMAGE;
-			}
 		} else {
 			background = Images.NIGHTIME_IMAGE;
 			grass = Images.GRASSNIGHT_IMAGE;
-			if (worldMap.length < 30) {
+			if (worldMap.length < 30)
 				grass = Images.ROOMTILE_IMAGE;
-			}
 		}
 		/////////////////////////////////
 		addImage(renderGroup, background, gamePanelWidth, gamePaneHeight, 0, 0, hourOfTime);
@@ -156,9 +153,8 @@ public class Rendering {
 	 */
 	private double getTopOffset() {
 		double count = 0;
-		for (int i = 0; i < squaresInFront; i++) {
+		for (int i = 0; i < squaresInFront; i++)
 			count += tileHeight * Math.pow(scale, squaresInFront - i - 1);
-		}
 		return gamePaneHeight - count;
 	}
 
@@ -304,6 +300,7 @@ public class Rendering {
 	 * @param direction
 	 * @param yTop
 	 * @param hourOfTime
+	 * 
 	 */
 	private void addObject(double tileXLeftBottom, double yBottom, double tileXRightBottom, int row, int col,
 			String side, char[][] worldMap, Pane renderGroup, Direction direction, double yTop, int hourOfTime) {
@@ -323,6 +320,8 @@ public class Rendering {
 	 * Calculates the front, left, and right coordinates for finding char
 	 * objects, creates a point and then return the newly created point
 	 * 
+	 * @author Dipen (Math Correction Bug Fix)
+	 * 
 	 * @param direction
 	 * @param row
 	 * @param col
@@ -330,41 +329,38 @@ public class Rendering {
 	 * @param boardHeight
 	 * @param boardWidth
 	 * @return
+	 * 
 	 */
 	private Point getImagePoint(Direction direction, int row, int col, String side, int boardHeight, int boardWidth) {
 		switch (direction) {
 		case North:
-			if (side.equals("left")) {
+			if (side.equals("left"))
 				return new Point(squaresToLeft - col - 1, row);
-			} else if (side.equals("right")) {
+			else if (side.equals("right"))
 				return new Point(squaresToLeft + col + 1, row);
-			} else {
+			else
 				return new Point(col, row);
-			}
 		case South:
-			if (side.equals("left")) {
+			if (side.equals("left"))
 				return new Point(boardWidth - (squaresToLeft - col), boardHeight - row - 1);
-			} else if (side.equals("right")) {
+			else if (side.equals("right"))
 				return new Point((squaresToRight - col) - 1, boardHeight - row - 1);
-			} else {
+			else
 				return new Point(col, boardHeight - row - 1);
-			}
 		case East:
-			if (side.equals("left")) {
+			if (side.equals("left"))
 				return new Point(boardWidth - 1 - row, squaresToLeft - col - 1);
-			} else if (side.equals("right")) {
+			else if (side.equals("right"))
 				return new Point(boardWidth - 1 - row, squaresToLeft + col + 1);
-			} else {
+			else
 				return new Point(boardWidth - 1 - row, col);
-			}
 		case West:
-			if (side.equals("left")) {
+			if (side.equals("left"))
 				return new Point(row, boardHeight - (squaresToLeft - col));
-			} else if (side.equals("right")) {
+			else if (side.equals("right"))
 				return new Point(row, squaresToRight - col - 1);
-			} else {
+			else
 				return new Point(row, col);
-			}
 		}
 		return null;
 	}
@@ -392,11 +388,10 @@ public class Rendering {
 	private double getImageX(double imageWidth, double tileXLeft, double tileXRight) {
 		double tileWidth = tileXRight - tileXLeft;
 		double widthOffset = Math.abs(tileWidth - imageWidth) / 2;
-		if (tileWidth > imageWidth) {
+		if (tileWidth > imageWidth)
 			return tileXLeft + widthOffset;
-		} else {
+		else
 			return tileXLeft - widthOffset;
-		}
 	}
 
 	/*
@@ -472,24 +467,39 @@ public class Rendering {
 		return 0;
 	}
 
+	/**
+	 * this method is used to create label which is used to display the area
+	 * name.
+	 * 
+	 * @author Dipen Patel
+	 */
 	public void setAreaDescription() {
 		mapDescription = new Label();
 		mapDescription.setWrapText(true);
-		mapDescription.setPrefWidth(120);
-		mapDescription.setLayoutX(gamePanelWidth - 130);
+		mapDescription.setPrefWidth(100);
+		mapDescription.setPrefHeight(100);
+		mapDescription.setLayoutX(gamePanelWidth - 140);
 		mapDescription.setLayoutY(30);
 		mapDescription.getStyleClass().add("area-description");
 	}
 
+	/**
+	 * this method is set area name
+	 * 
+	 * @param areaDescription
+	 * @author Dipen Patel
+	 */
 	public void updateAreaDescription(String areaDescription) {
 		mapDescription.setText(areaDescription);
 		renderGroup.getChildren().add(mapDescription);
 	}
 
-	public void applyWeather() {
-
-	}
-
+	/**
+	 * this method is used set brightness of image。
+	 * 
+	 * @param brightness
+	 * @author Dipen Patel
+	 */
 	private void changeImageBrightness(double brightness) {
 		colorAdjust.setBrightness(brightness);
 	}
@@ -498,6 +508,7 @@ public class Rendering {
 	 * Sets the pane to be renderGroup
 	 * 
 	 * @param renderGroup
+	 * @author Dipen Patel
 	 */
 	public void setGroup(Pane renderGroup) {
 		this.renderGroup = renderGroup;

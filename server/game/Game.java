@@ -1,7 +1,6 @@
 package server.game;
 
 import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -103,11 +102,6 @@ public class Game {
 	private Map<Integer, Player> players;
 
 	/**
-	 * All containers in the world. This is used for key re-distribution.
-	 */
-	private List<Container> containers;
-
-	/**
 	 * A timer for world clock. It starts when the Game object is constructed.
 	 */
 	private Timer timer;
@@ -129,7 +123,6 @@ public class Game {
 	 */
 	public Game(Area world, Map<Integer, Area> areas) {
 		players = new HashMap<>();
-		containers = new ArrayList<>();
 
 		this.world = world;
 		this.areas = areas;
@@ -143,20 +136,6 @@ public class Game {
 		int minute = ran.nextInt(60);
 		int second = ran.nextInt(60);
 		clock = LocalTime.of(hour, minute, second);
-
-		// scan the world map by map, remember all containers and torches.
-		for (Area area : areas.values()) {
-			MapElement[][] map = area.getMap();
-			for (MapElement[] row : map) {
-				for (MapElement col : row) {
-					// remember containers
-					if (col instanceof Container) {
-						Container container = (Container) col;
-						containers.add(container);
-					}
-				}
-			}
-		}
 	}
 
 	/**
@@ -189,20 +168,6 @@ public class Game {
 		int minute = ran.nextInt(60);
 		int second = ran.nextInt(60);
 		clock = LocalTime.of(hour, minute, second);
-
-		// scan the world map by map, remember all containers and torches.
-		for (Area area : areas.values()) {
-			MapElement[][] map = area.getMap();
-			for (MapElement[] row : map) {
-				for (MapElement col : row) {
-					// remember containers
-					if (col instanceof Container) {
-						Container container = (Container) col;
-						containers.add(container);
-					}
-				}
-			}
-		}
 	}
 
 	/**
@@ -1197,7 +1162,6 @@ public class Game {
 		int result = 1;
 		result = prime * result + ((areas == null) ? 0 : areas.hashCode());
 		result = prime * result + ((clock == null) ? 0 : clock.hashCode());
-		result = prime * result + ((containers == null) ? 0 : containers.hashCode());
 		result = prime * result + gameID;
 		result = prime * result + ((players == null) ? 0 : players.hashCode());
 		result = prime * result + ((world == null) ? 0 : world.hashCode());
@@ -1222,11 +1186,6 @@ public class Game {
 			if (other.clock != null)
 				return false;
 		} else if (!clock.equals(other.clock))
-			return false;
-		if (containers == null) {
-			if (other.containers != null)
-				return false;
-		} else if (!containers.equals(other.containers))
 			return false;
 		if (gameID != other.gameID)
 			return false;
