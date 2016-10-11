@@ -31,7 +31,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
-import javafx.stage.WindowEvent;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -42,7 +41,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
@@ -54,17 +52,15 @@ import server.game.player.Direction;
 import server.game.player.Player;
 import server.game.player.Position;
 import server.game.player.Virus;
-import server.view.ServerGui;
 import client.rendering.Images;
 import client.rendering.Rendering;
 import client.rendering.Side;
-import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 
 /**
  * This class represents the main GUI class this class bring together all the
  * different components of the GUI.
  *
- * @author Dipen Patel
+ * @author Dipen Patel 3000304965
  *
  */
 public class GUI extends Application {
@@ -92,84 +88,15 @@ public class GUI extends Application {
 	// miniMap Canvus size
 	private static final int MINIMAP_CANVAS_SIZE = 200;
 
-	// mini map color table
-	private static final Map<Character, Color> MINIMAP_COLOR_TABLE;
-
-	/**
-	 * mini map color table
-	 */
-	public static final Map<Character, String> MAP_OBJECT_DESCRIPTION;
-
-	/*
-	 * Initialize the instruction table for minimap color and map element
-	 * description
-	 */
-	static {
-		MINIMAP_COLOR_TABLE = new HashMap<>();
-		MAP_OBJECT_DESCRIPTION = new HashMap<>();
-
-		// ========== obstacles: Grey, Rock, Barrel, Table ===========
-
-		// Rock
-		MINIMAP_COLOR_TABLE.put('R', Color.rgb(83, 86, 102, 1.0));
-		MAP_OBJECT_DESCRIPTION.put('R', "A rock. That won't heal me.");
-		// Barrel
-		MINIMAP_COLOR_TABLE.put('B', Color.rgb(83, 86, 102, 1.0));
-		MAP_OBJECT_DESCRIPTION.put('B', "People put things in there. I can't though.");
-		// Table
-		MINIMAP_COLOR_TABLE.put('A', Color.rgb(83, 86, 102, 1.0));
-		MAP_OBJECT_DESCRIPTION.put('A', "A table. That can't help me.");
-		// Chair
-		MINIMAP_COLOR_TABLE.put('H', Color.rgb(83, 86, 102, 1.0));
-		MAP_OBJECT_DESCRIPTION.put('H', "It's a chair. I'd rather sit on it to rest.");
-
-		// ===== Containers: golden, chest, cupboard, scrap pile =====
-
-		// Chest
-		MINIMAP_COLOR_TABLE.put('C', Color.rgb(255, 170, 37, 1.0));
-		MAP_OBJECT_DESCRIPTION.put('C', "A chest. Probably contains loot.");
-		// Cupboard
-		MINIMAP_COLOR_TABLE.put('U', Color.rgb(255, 170, 37, 1.0));
-		MAP_OBJECT_DESCRIPTION.put('U', "A cupboard. It might contain some medicine.");
-		// Scrap pile
-		MINIMAP_COLOR_TABLE.put('P', Color.rgb(255, 170, 37, 1.0));
-		MAP_OBJECT_DESCRIPTION.put('P', "A pile of useless scrap. Or is it?");
-
-		// ============== Tree or ground: green ======================
-
-		// Tree, dark green
-		MINIMAP_COLOR_TABLE.put('T', Color.rgb(68, 170, 58, 1.0));
-		MAP_OBJECT_DESCRIPTION.put('T', "A tree. Why they all look the same?");
-		// Ground, light green
-		MINIMAP_COLOR_TABLE.put('G', Color.rgb(200, 236, 204, 1.0));
-		MAP_OBJECT_DESCRIPTION.put('G', "");
-		// Door space, this is just ground
-		MINIMAP_COLOR_TABLE.put('D', Color.rgb(200, 236, 204, 1.0));
-		MAP_OBJECT_DESCRIPTION.put('D', "");
-
-		// =========== Room obstacles: blue ====================
-
-		// Room obstacles
-		MINIMAP_COLOR_TABLE.put('E', Color.rgb(19, 137, 245, 1.0));
-		MAP_OBJECT_DESCRIPTION.put('E', "I found a hidden cabin! I need to get inside.");
-	}
-
 	// Main window for the game
 	private static Stage window;
 	// controls
-	private Label objectDetailLabel;
+	private Label objectNotificationLabel;
 	private Canvas miniMapCanvas;
 	private Label textAreaLable;
-	private TextField msg;
-	private Button send;
-	// Button Controls For Slash Screen
-	private Button play;
-	private Button quit;
-	private Button help;
+	private TextField chatMessage;
+
 	// Controls for the login Screen
-	private Label info;
-	private Button login;
-	private Button quitLogin;
 	private TextField userNameInput;
 	private TextField ipInput;
 	private TextField portInput;
@@ -180,16 +107,16 @@ public class GUI extends Application {
 	private Label virus;
 	private Label avatarLable;
 	// waiting room Controls
-	private Label waitingMsg;
+	private Label waitingRoomMessage;
+
 	private Button readyGame;
-	private Button quitWaitingRoom;
 	private Label objectDescription;
-	private Label objectNotifcation;
+	private Label worldTimeLable;
 	// control for menu item;
 	private CheckMenuItem descriptionToggle;
-
 	// Layouts
-	private Pane group = new Pane();
+	private Pane pane = new Pane();
+
 	private TitledPane titlePane;
 	private VBox rightPanel;
 	private GridPane itemGrid;
@@ -199,8 +126,6 @@ public class GUI extends Application {
 	// layouts for the login Screen
 	private GridPane detail;
 	private FlowPane healthPane;
-	// waiting room layouts
-	private FlowPane playersWaiting;
 
 	// for button event
 	private EventHandler<ActionEvent> actionEvent;
@@ -208,7 +133,8 @@ public class GUI extends Application {
 	private EventHandler<KeyEvent> keyEvent;
 	// for mouse events
 	private EventHandler<MouseEvent> mouseEvent;
-	// this if rotaing the avtar image in the login screen
+
+	// this if rotating the avtar image in the login screen
 	private static int avatarIndex = 0;
 	// this map is used to store the the point of item in the grid which is
 	// mapped to there descriptions.
@@ -216,10 +142,11 @@ public class GUI extends Application {
 	// this is used to store the list of Avatars which with the avatarIndex is
 	// used to change the images in the login screen
 	private List<Avatar> avatarList = new ArrayList<Avatar>();
-	// private Rendering render = new Rendering();
-	private static ClientUI viewControler;
-	// private static Rendering render;
-	private static Rendering render;
+
+	// this is used to store the controller.
+	private static ClientUI controller;
+	// this is used to store the rendering object
+	private static Rendering rendering;
 
 	/**
 	 * Gui Constructor
@@ -229,8 +156,8 @@ public class GUI extends Application {
 	 */
 	@SuppressWarnings("static-access")
 	public GUI(ClientUI viewControler, Rendering rendering) {
-		this.viewControler = viewControler;
-		this.render = rendering;
+		this.controller = viewControler;
+		this.rendering = rendering;
 		chatText = new StringBuffer();
 	}
 
@@ -239,30 +166,20 @@ public class GUI extends Application {
 		// using the parent class constructor by default.
 	}
 
-	/**
-	 * this method will get passed in a stage which is the main window and will
-	 * start it
-	 */
 	@Override
 	public void start(Stage mainWindow) throws Exception {
 		window = mainWindow;
 		window.setTitle("Plague Game");
-		// window.getIcons().add(Images.GAMEICON_IMAGE);
-		// this will disable and enable resizing so when we have a working
-		// version we can just set this to false;
-		// this starts the action listener
-		viewControler.startListeners();
-		actionEvent = viewControler.getActionEventHandler();
-		keyEvent = viewControler.getKeyEventHander();
-		mouseEvent = viewControler.getMouseEventHander();
+		window.getIcons().add(Images.GAMEICON_IMAGE);
+		controller.startListeners();
+		activateListners();
 		window.setResizable(false);
 		slashScreen();
-		// loginScreen();
 		window.show();
 		window.setOnCloseRequest(e -> {
 			System.exit(0);
 			Platform.exit();
-			viewControler.closeSocket();
+			controller.closeSocket();
 		});
 	}
 
@@ -270,38 +187,48 @@ public class GUI extends Application {
 	 * This method will load the slash screen for the game
 	 */
 	public void slashScreen() {
+		// this will create the layout for the slash screen
 		Group slashGroup = new Group();
+		// load the slash background image
 		Image slashBackground = Images.SLASH_SCREEN_IMAGE;
 		ImageView slashBackgroundImage = new ImageView(slashBackground);
 		slashBackgroundImage.setFitHeight(HEIGHT_VALUE + 18);
 		slashBackgroundImage.setFitWidth(WIDTH_VALUE + 18);
+		// creates a vertical box layout with 10 gap
 		VBox buttonBox = new VBox(10);
 		buttonBox.setLayoutX(50);
 		buttonBox.setLayoutY(HEIGHT_VALUE / 2 + (50));
-		play = new Button("Play");
+		// creates the plays button
+		Button play = new Button("Play");
 		play.getStyleClass().add("button-slashscreen");
 		play.setPrefWidth(200);
 		play.setOnAction(actionEvent);
-		quit = new Button("Run Away");
+		// creates the quit button
+		Button quit = new Button("Run Away");
 		quit.getStyleClass().add("button-slashscreen");
 		quit.setPrefWidth(200);
 		quit.setOnAction(actionEvent);
-		help = new Button("Help");
+		// creates the help button
+		Button help = new Button("Help");
 		help.getStyleClass().add("button-slashscreen");
 		help.setPrefWidth(200);
 		help.setOnAction(actionEvent);
+		// add the the buttons to the layout
 		buttonBox.getChildren().addAll(play, quit, help);
 		slashGroup.getChildren().add(slashBackgroundImage);
 		slashGroup.getChildren().add(buttonBox);
 		BorderPane slashBorderPane = new BorderPane();
 		slashBorderPane.getChildren().add(slashGroup);
+		// lastly add the parent layout to the scene
 		Scene slashScene = new Scene(slashBorderPane, WIDTH_VALUE, HEIGHT_VALUE);
+		// Attach the CSS file to the scene
 		slashScene.getStylesheets().add(this.getClass().getResource(STYLE_CSS).toExternalForm());
+		// add the scene to the window
 		window.setScene(slashScene);
 		window.setOnCloseRequest(e -> {
 			System.exit(0);
 			Platform.exit();
-			viewControler.closeSocket();
+			controller.closeSocket();
 		});
 	}
 
@@ -309,26 +236,31 @@ public class GUI extends Application {
 	 * This method will load the login screen for the game
 	 */
 	public void loginScreen() {
+		// load the avatar images into a list
 		avatarList.add(Avatar.Avatar_1);
 		avatarList.add(Avatar.Avatar_2);
 		avatarList.add(Avatar.Avatar_3);
 		avatarList.add(Avatar.Avatar_4);
-		actionEvent = viewControler.getActionEventHandler();
-		keyEvent = viewControler.getKeyEventHander();
-		mouseEvent = viewControler.getMouseEventHander();
+		// start the action listeners
+		activateListners();
+		// creates the parent layout
 		Pane loginPane = new Pane();
+		// load the background image
 		Image loginBackground = Images.LOGIN_SCREEN_IMAGE;
 		ImageView loginBackgroundImage = new ImageView(loginBackground);
 		loginBackgroundImage.setFitHeight(HEIGHT_VALUE + 18);
 		loginBackgroundImage.setFitWidth(WIDTH_VALUE + 18);
 		loginPane.getChildren().add(loginBackgroundImage);
-		info = new Label();
+		// creates the a label for information
+		Label info = new Label();
 		info.setText("Welcome Players");
 		info.getStyleClass().add("login-info");
 		loginPane.getChildren().add(info);
 		info.setLayoutX(390);
+
 		FlowPane avatar = new FlowPane();
 		avatar.setPrefWidth(WIDTH_VALUE);
+		// this will store the left button
 		BorderPane left = new BorderPane();
 		Button prev = new Button("Prev");
 		prev.setOnAction(actionEvent);
@@ -343,6 +275,7 @@ public class GUI extends Application {
 		avatarImage.setFitHeight(300);
 		avatarImage.setFitWidth(300);
 		avatarLable.setGraphic(avatarImage);
+		// this will store the right button
 		BorderPane right = new BorderPane();
 		Button next = new Button("Next");
 		next.setOnAction(actionEvent);
@@ -355,24 +288,29 @@ public class GUI extends Application {
 		loginPane.getChildren().add(avatar);
 		avatar.setLayoutX(280);
 		avatar.setLayoutY(100);
+
 		VBox inputStore = new VBox(5);
 		HBox userNameBox = new HBox(3);
+		// this used to retrieve the users name of the player
 		Label user = new Label("Enter UserName");
 		user.getStyleClass().add("input-login");
 		userNameInput = new TextField();
 		userNameInput = new TextField();
 		userNameBox.getChildren().addAll(user, userNameInput);
+		// this is used to retrieve the ip address
 		HBox ipBox = new HBox(3);
 		Label ip = new Label("Enter IP Address");
 		ip.getStyleClass().add("input-login");
 		ipInput = new TextField();
 		ipBox.getChildren().addAll(ip, ipInput);
+		// this is used to set the port number
 		HBox portBox = new HBox(3);
 		portBox.alignmentProperty().set(Pos.CENTER);
 		Label port = new Label("Enter Port");
 		port.getStyleClass().add("input-login");
 		portInput = new TextField();
 		portBox.getChildren().addAll(port, portInput);
+
 		inputStore.getChildren().addAll(userNameBox, ipBox, portBox);
 		loginPane.getChildren().add(inputStore);
 		inputStore.setLayoutX(350);
@@ -381,25 +319,28 @@ public class GUI extends Application {
 		FlowPane buttons = new FlowPane();
 		buttons.alignmentProperty().set(Pos.CENTER);
 		buttons.setHgap(10);
-		login = new Button("Login");
+		// this will create the login button
+		Button login = new Button("Login");
 		login.getStyleClass().add("button-login");
 		login.setOnAction(actionEvent);
-		quitLogin = new Button("Leave");
+		// this will create the leave button which is used to quit the game.
+		Button quitLogin = new Button("Leave");
 		quitLogin.getStyleClass().add("button-login");
 		quitLogin.setOnAction(actionEvent);
 		buttons.getChildren().addAll(login, quitLogin);
 		loginPane.getChildren().add(buttons);
 		buttons.setLayoutX(300);
 		buttons.setLayoutY(580);
-
+		// this will create the scene which the parent layout is added to
 		Scene loginScene = new Scene(loginPane, WIDTH_VALUE, HEIGHT_VALUE);
+		// this will attach the CSS file the scene
 		loginScene.getStylesheets().add(this.getClass().getResource(STYLE_CSS).toExternalForm());
 		window.setScene(loginScene);
 
 		window.setOnCloseRequest(e -> {
 			System.exit(0);
 			Platform.exit();
-			viewControler.closeSocket();
+			controller.closeSocket();
 		});
 	}
 
@@ -422,43 +363,47 @@ public class GUI extends Application {
 	 * this method will load the waiting room for the game.
 	 */
 	public void waitingRoom() {
+		// this will create the parent layout
 		Pane waitingPane = new Pane();
 		Image waitingImage = Images.WAITING_ROOM_IMAGE;
 		ImageView img = new ImageView(waitingImage);
 		img.setFitHeight(HEIGHT_VALUE);
 		img.setFitWidth(WIDTH_VALUE);
 		waitingPane.getChildren().add(img);
-
-		waitingMsg = new Label();
-		waitingMsg.setLayoutX(20);
-		waitingMsg.setPrefWidth(WIDTH_VALUE);
-		waitingMsg.getStyleClass().add("input-login");
-		waitingMsg.setText(
+		// Creates the label which is used display a message to the user
+		waitingRoomMessage = new Label();
+		waitingRoomMessage.setLayoutX(20);
+		waitingRoomMessage.setPrefWidth(WIDTH_VALUE);
+		waitingRoomMessage.getStyleClass().add("input-login");
+		waitingRoomMessage.setText(
 				"Welcome! When you are ready to start, click Ready. When the minimum number of players have connected, the game will automatically start.");
-		waitingMsg.setWrapText(true);
-		waitingPane.getChildren().add(waitingMsg);
-
+		waitingRoomMessage.setWrapText(true);
+		waitingPane.getChildren().add(waitingRoomMessage);
+		// stores the buttons
 		FlowPane buttons = new FlowPane();
 		buttons.setLayoutX((WIDTH_VALUE / 2) - 180);
 		buttons.setLayoutY(HEIGHT_VALUE - 80);
 		buttons.setHgap(10);
+		// this will create the ready button
 		readyGame = new Button("Ready");
 		readyGame.getStyleClass().add("button-login");
 		readyGame.setOnAction(actionEvent);
-		quitWaitingRoom = new Button("Leave Game");
+		// this will create the leave game button
+		Button quitWaitingRoom = new Button("Leave Game");
 		quitWaitingRoom.getStyleClass().add("button-login");
 		quitWaitingRoom.setOnAction(actionEvent);
 		buttons.setAlignment(Pos.CENTER);
 		buttons.getChildren().addAll(readyGame, quitWaitingRoom);
 		waitingPane.getChildren().add(buttons);
-
+		// this will create the scene which will store the parent layout
 		Scene slashScene = new Scene(waitingPane, WIDTH_VALUE, HEIGHT_VALUE);
+		// this will attach CSS file to the scene
 		slashScene.getStylesheets().add(this.getClass().getResource(STYLE_CSS).toExternalForm());
 		window.setScene(slashScene);
 		window.setOnCloseRequest(e -> {
 			System.exit(0);
 			Platform.exit();
-			viewControler.closeSocket();
+			controller.closeSocket();
 		});
 
 	}
@@ -469,7 +414,7 @@ public class GUI extends Application {
 	 */
 	public void disableReadyButton() {
 		readyGame.setDisable(true);
-		waitingMsg.setText("Waiting for other players...");
+		waitingRoomMessage.setText("Waiting for other players...");
 	}
 
 	/**
@@ -481,22 +426,27 @@ public class GUI extends Application {
 		rightPanel.setPrefSize(RIGHTPANE_WIDTH_VALUE, HEIGHT_VALUE);
 		rightPanel.getStyleClass().add("cotrolvbox");
 		borderPane = new BorderPane();
+		// this will set up the menu bar
 		setMenuBar();
-
+		// this will set up the mini map
 		setminiMap();
+		// this will set up the chat room
 		setchat();
+		// this will set up the object notification
 		setObjectNotification();
+		// this will set up the item inventory
 		setItems();
-		group.prefWidth(GAMEPANE_WIDTH_VALUE);
-		group.prefHeight(HEIGHT_VALUE);
+		pane.prefWidth(GAMEPANE_WIDTH_VALUE);
+		pane.prefHeight(HEIGHT_VALUE);
 		// Calls the rendering
-		render.setGroup(group);
-		// render.renderNorth();
-		group.setLayoutX(3);
-		group.setLayoutY(35);
+		rendering.setGroup(pane);
+		pane.setLayoutX(3);
+		pane.setLayoutY(35);
+
 		HBox hbox = new HBox(5);
-		hbox.getChildren().addAll(group, rightPanel);
+		hbox.getChildren().addAll(pane, rightPanel);
 		borderPane.setCenter(hbox);
+
 		Scene scene = new Scene(borderPane, WIDTH_VALUE, HEIGHT_VALUE);
 		scene.getStylesheets().add(this.getClass().getResource(STYLE_CSS).toExternalForm());
 		startMusic();
@@ -505,18 +455,19 @@ public class GUI extends Application {
 		window.setOnCloseRequest(e -> {
 			System.exit(0);
 			Platform.exit();
-			viewControler.closeSocket();
+			controller.closeSocket();
 		});
 	}
 
 	/**
-	 * this method creats the health bar and adds it to the pane.
+	 * this method creates the health bar and adds it to the pane.
 	 * 
 	 * @param health
 	 * @param virusName
 	 */
 	public void setHealthBar(double health, Virus virusName, String userName, Avatar avatar) {
-
+		// this will create a flow pane which will store the player avatar and
+		// Their health and other information
 		healthPane = new FlowPane();
 		healthPane.setHgap(2);
 		healthPane.setPrefHeight(50);
@@ -525,7 +476,6 @@ public class GUI extends Application {
 		healthPane.setLayoutY(10);
 
 		Image avatarImg = Images.PROFILE_IMAGES.get(avatar);
-		// Image avatarImg = Images.SLASH_SCREEN_IMAGE;
 		ImageView avatarImage = new ImageView(avatarImg);
 		avatarImage.setFitHeight(60);
 		avatarImage.setFitWidth(50);
@@ -550,7 +500,8 @@ public class GUI extends Application {
 		healthBox.getChildren().add(barPlusNum);
 		healthBox.getChildren().add(virus);
 		healthPane.getChildren().add(healthBox);
-		group.getChildren().add(healthPane);
+		// this will add the parent layout to the same pane used my rendering
+		pane.getChildren().add(healthPane);
 	}
 
 	/**
@@ -563,7 +514,7 @@ public class GUI extends Application {
 	public void updateHealth(int health) {
 		bar.progressProperty().set(((double) health / Player.MAX_HEALTH));
 		healthBarText.setText(String.valueOf(health));
-		group.getChildren().add(healthPane);
+		pane.getChildren().add(healthPane);
 	}
 
 	/**
@@ -616,11 +567,11 @@ public class GUI extends Application {
 	private void setObjectNotification() {
 		TitledPane titlePane = new TitledPane();
 		titlePane.setText("Object Notification");
-		objectDetailLabel = new Label();
-		titlePane.setContent(objectDetailLabel);
-		objectDetailLabel.setPrefWidth(400);
-		objectDetailLabel.setPrefHeight(50);
-		objectDetailLabel.getStyleClass().add("world-time-lable");
+		objectNotificationLabel = new Label();
+		titlePane.setContent(objectNotificationLabel);
+		objectNotificationLabel.setPrefWidth(400);
+		objectNotificationLabel.setPrefHeight(50);
+		objectNotificationLabel.getStyleClass().add("world-time-lable");
 		rightPanel.getChildren().add(titlePane);
 	}
 
@@ -633,6 +584,7 @@ public class GUI extends Application {
 
 		miniMapCanvas = new Canvas(MINIMAP_CANVAS_SIZE, MINIMAP_CANVAS_SIZE);
 		miniMapCanvas.layoutXProperty().set(5);
+
 		BorderPane minimapLable = new BorderPane();
 		minimapLable.setCenter(miniMapCanvas);
 		minimapLable.getStyleClass().add("minimap-lable");
@@ -646,13 +598,14 @@ public class GUI extends Application {
 	 */
 	public void setchat() {
 		TitledPane titlePane = new TitledPane();
+
 		VBox chatControls = new VBox(5);
 		titlePane.setText("Chat Room");
 		chatControls.setPrefWidth(400);
 		chatControls.setPrefHeight(200);
 		chatControls.getStyleClass().add("chatarea-background");
 		ScrollPane scrollPane = new ScrollPane();
-		// scrollPane.setFitToHeight(true);
+
 		scrollPane.setPrefHeight(150);
 		scrollPane.setHbarPolicy(ScrollBarPolicy.NEVER);
 		scrollPane.setVbarPolicy(ScrollBarPolicy.ALWAYS);
@@ -664,20 +617,21 @@ public class GUI extends Application {
 		textAreaLable.getStyleClass().add("chat-display");
 		textAreaLable.setWrapText(true);
 		scrollPane.setContent(textAreaLable);
+
 		HBox hbox = new HBox(5);
-		send = new Button("Send");
+		Button send = new Button("Send");
 		send.setOnAction(actionEvent);
 		send.setPrefWidth(100);
 		send.getStyleClass().add("button-send");
-		msg = new TextField();
-		msg.setPrefWidth(280);
-		msg.setPrefHeight(40);
-		hbox.getChildren().add(msg);
+		chatMessage = new TextField();
+		chatMessage.setPrefWidth(280);
+		chatMessage.setPrefHeight(40);
+		hbox.getChildren().add(chatMessage);
 		hbox.getChildren().add(send);
-		// chatControls.getChildren().add(textAreaLable);\
 		chatControls.getChildren().add(scrollPane);
 		chatControls.getChildren().add(hbox);
 		titlePane.setContent(chatControls);
+		// this will add the parent layout to the right panel layout
 		rightPanel.getChildren().add(titlePane);
 	}
 
@@ -686,15 +640,17 @@ public class GUI extends Application {
 	 */
 	public void setItems() {
 		titlePane = new TitledPane();
+
 		titlePane.setText("Item Inventory");
+
 		VBox itemContainer = new VBox(5);
 		HBox hbox = new HBox(5);
 		itemGrid = new GridPane();
 		itemGrid.setOnMouseMoved(mouseEvent);
-		// hbox.setOnMousePressed(mouseEvent);
 		itemGrid.setOnMousePressed(mouseEvent);
 		itemContainer.getStyleClass().add("itempane-background");
 		itemGrid.setGridLinesVisible(true);
+
 		for (int i = 0; i < 2; i++) {
 			for (int j = 0; j < 4; j++) {
 				Label item = new Label();
@@ -725,8 +681,8 @@ public class GUI extends Application {
 		GridPane.setColumnIndex(zoomedItem, 0);
 		iteminfo.getChildren().add(zoomedItem);
 		hbox.getChildren().add(iteminfo);
-		// makes the extra box for the info of the item
 
+		// makes the extra box for the info of the item
 		// info stuff
 		detail = new GridPane();
 		detail.setGridLinesVisible(true);
@@ -776,8 +732,8 @@ public class GUI extends Application {
 	 * @return
 	 */
 	public String getChatMsg() {
-		String msgToSend = msg.getText();
-		msg.clear();
+		String msgToSend = chatMessage.getText();
+		chatMessage.clear();
 		return msgToSend;
 	}
 
@@ -843,8 +799,8 @@ public class GUI extends Application {
 	 * 
 	 * @param worldTime
 	 */
-	public void setObjectDetail(String time) {
-		objectDetailLabel.setText(time);
+	public void setObjectNotification(String time) {
+		objectNotificationLabel.setText(time);
 	}
 
 	/**
@@ -907,7 +863,7 @@ public class GUI extends Application {
 		Color color = null;
 		for (int row = bound_top; row < bound_bottom; row++) {
 			for (int col = bound_left; col < bound_right; col++) {
-				color = MINIMAP_COLOR_TABLE.get(areaMap[row][col]);
+				color = Images.MINIMAP_COLOR_TABLE.get(areaMap[row][col]);
 				if (color == null) {
 					// This is an unknown character/MapElement, shouldn't happen
 					color = Color.BLACK;
@@ -987,6 +943,7 @@ public class GUI extends Application {
 				row++;
 			}
 		}
+		// this will fill in the empty space where there are not items
 		for (int i = row; i < 2; i++) {
 			for (int j = col; j < 4; j++) {
 				Label item = new Label();
@@ -1072,7 +1029,7 @@ public class GUI extends Application {
 	}
 
 	/**
-	 * This method is used to create the lable which is used to display object
+	 * This method is used to create the label which is used to display object
 	 * description to the player.
 	 */
 	public void objectLabel() {
@@ -1132,31 +1089,30 @@ public class GUI extends Application {
 	 */
 	public void displayObjectDescription(String description) {
 		objectDescription.setText(description);
-		group.getChildren().add(objectDescription);
+		pane.getChildren().add(objectDescription);
 	}
 
 	/**
-	 * this method is used to set the object notification
+	 * this method is used to set the world time
 	 */
-	public void objectNotifcation() {
-		objectNotifcation = new Label();
-		objectNotifcation.setWrapText(true);
-		objectNotifcation.setPrefWidth(150);
-		objectNotifcation.setLayoutX((GAMEPANE_WIDTH_VALUE / 2) - 20);
-		objectNotifcation.setLayoutY(30);
-		objectNotifcation.getStyleClass().add("object-description");
+	public void setWorldTime() {
+		worldTimeLable = new Label();
+		worldTimeLable.setWrapText(true);
+		worldTimeLable.setPrefWidth(150);
+		worldTimeLable.setLayoutX((GAMEPANE_WIDTH_VALUE / 2) - 20);
+		worldTimeLable.setLayoutY(30);
+		worldTimeLable.getStyleClass().add("object-description");
 	}
 
 	/**
-	 * This method is used to display to the user the notification of last
-	 * action, e.g. if the player failed to open a chest or other reason.
+	 * this method is used to display the world time give a string which is the
+	 * time
 	 * 
-	 * @param nMsg
-	 *            --- the notification message.
+	 * @param time
 	 */
-	public void displayNotification(String nMsg) {
-		objectNotifcation.setText(nMsg);
-		group.getChildren().add(objectNotifcation);
+	public void displayTime(String time) {
+		worldTimeLable.setText(time);
+		pane.getChildren().add(worldTimeLable);
 	}
 
 	/**
@@ -1218,6 +1174,15 @@ public class GUI extends Application {
 			e.printStackTrace();
 		}
 
+	}
+
+	/**
+	 * This method is used to get the event listeners from the controller.
+	 */
+	private void activateListners() {
+		actionEvent = controller.getActionEventHandler();
+		keyEvent = controller.getKeyEventHander();
+		mouseEvent = controller.getMouseEventHander();
 	}
 
 }

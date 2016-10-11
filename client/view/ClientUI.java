@@ -16,6 +16,7 @@ import javafx.stage.WindowEvent;
 
 import client.Client;
 import client.ParserUtilities;
+import client.rendering.Images;
 import client.rendering.Rendering;
 import server.Packet;
 import server.game.player.Avatar;
@@ -190,21 +191,16 @@ public class ClientUI {
 	 */
 	private EventHandler<WindowEvent> windowEvent;
 
-	private long startMilSec;
-
-	private boolean isFirstTime;
-
-	private long endMilSec;
-
-	private boolean displayingNotification;
-
+	/**
+	 * The world time, with format "hh:mm:ss"
+	 */
 	private String time;
 
 	/**
 	 * Constructor
 	 */
 	public ClientUI() {
-		// initialse maps
+		// Initialise maps
 		areas = new HashMap<>();
 		descriptions = new HashMap<>();
 		avatars = new HashMap<>();
@@ -349,9 +345,8 @@ public class ClientUI {
 		String[] timeStrs = timeStr.split(":");
 		hourOfTime = Integer.valueOf(timeStrs[0]);
 
+		// update the time
 		time = timeStr;
-
-		// gui.setTime(timeStr);
 	}
 
 	/**
@@ -413,26 +408,6 @@ public class ClientUI {
 	}
 
 	/**
-	 * This method is used to let the player know that the game is over and
-	 * rather they have won or not.
-	 *
-	 * @param title
-	 *            --- the dialog title
-	 * @param msg
-	 *            --- the dialog message
-	 */
-	public void gameOver(String title, String msg) {
-		GUI.showMsgPane(title, msg);
-	}
-
-	/**
-	 * This method close the socket on client side.
-	 */
-	public void closeSocket() {
-		client.closeSocket();
-	}
-
-	/**
 	 * When the client receives the string of chat message from the server, this
 	 * method will update the chat text area.
 	 *
@@ -452,7 +427,6 @@ public class ClientUI {
 	 *            --- the notification message
 	 */
 	public void parseNotificationMsg(String nMsg) {
-
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
@@ -486,9 +460,30 @@ public class ClientUI {
 						str = "";
 					}
 				}
-				gui.setObjectDetail(str);
+
+				gui.setObjectNotification(str);
 			}
 		});
+	}
+
+	/**
+	 * This method is used to let the player know that the game is over and
+	 * rather they have won or not.
+	 *
+	 * @param title
+	 *            --- the dialog title
+	 * @param msg
+	 *            --- the dialog message
+	 */
+	public void gameOver(String title, String msg) {
+		GUI.showMsgPane(title, msg);
+	}
+
+	/**
+	 * This method close the socket on client side.
+	 */
+	public void closeSocket() {
+		client.closeSocket();
 	}
 
 	/**
@@ -527,9 +522,6 @@ public class ClientUI {
 		int areaId = playerLoc.areaId;
 		char[][] worldMap = areas.get(areaId);
 
-		// 1. update the world time
-		// System.out.println(time);
-
 		// 1. update minimap
 		gui.updateMinimap(playerLoc, uid, worldMap, visibility, positions);
 
@@ -545,12 +537,12 @@ public class ClientUI {
 		// 5. update area/room description
 		render.updateAreaDescription(descriptions.get(areaId));
 
-		gui.displayNotification(time);
+		// 6. display the time
+		gui.displayTime(time);
 
 		// 6. update the map object description
 		if (descriptionToggle) {
 			gui.displayObjectDescription(getFrontElementString());
-			// gui.displayObjectDescription(time);
 		} else {
 			gui.displayObjectDescription("");
 		}
@@ -559,11 +551,10 @@ public class ClientUI {
 		if (!playerDead) {
 			// Displays dialog when player health is 0
 			if (health <= 0) {
-				AlertBox.displayMsg("YOU ARE DEAD", "GAMEOVER");
+				AlertBox.displayMsg("YOU ARE DEAD", "GAME OVER");
 				playerDead = true;
 			}
 		}
-
 
 	}
 
@@ -581,9 +572,8 @@ public class ClientUI {
 		});
 		gui.setHealthBar(health, virus, userName, avatar);
 		gui.objectLabel();
-		gui.objectNotifcation();
+		gui.setWorldTime();
 		render.setAreaDescription();
-
 	}
 
 	/**
@@ -605,8 +595,7 @@ public class ClientUI {
 					// this is for the main screen of the game
 					gui.getWindow().close();
 				} else if (event.toString().contains("Help")) {
-					// TODO: need to make a help thing which tells the user how
-					// to play the game
+					// The help menu, how to play the game
 					AlertBox.keyPopUp();
 				} else if (event.toString().contains("Login")) {
 					// parse the port number to int
@@ -619,60 +608,62 @@ public class ClientUI {
 					}
 
 					if (loginPlayer(gui.getIpAddress(), port, gui.getUserName(), gui.getAvatarIndex())) {
-						// in the waiting room
+						// join in the waiting room
 						gui.waitingRoom();
-
 					}
 				} else if (event.toString().contains("Leave")) {
 					// this is for the login screen
 					gui.getWindow().close();
 				} else if (event.toString().contains("Ready")) {
-
+					// set the client ready
 					client.setUserReady(true);
 					gui.disableReadyButton();
-
 				} else if (event.toString().contains("Leave Game")) {
 					// this is for leaving the waiting room
 					gui.getWindow().close();
 				} else if (event.toString().contains("LoadMenu")) {
+					// load game
 					client.send(Packet.Load);
 				} else if (event.toString().contains("SaveMenu")) {
+					// save game
 					client.send(Packet.Save);
 				} else if (event.toString().contains("CloseMenu")) {
+					// close menu
 					gui.getWindow().close();
+					System.exit(0);
+					Platform.exit();
+					closeSocket();
 				} else if (event.toString().contains("InfoMenu")) {
+					// key short-cut pop-up
 					AlertBox.keyPopUp();
 				} else if (event.toString().contains("AboutMenu")) {
+					// help pop-up
 					AlertBox.aboutPopUp();
 				} else if (event.toString().contains("PrevAvatar")) {
+					// previous avatar
 					avatarIndex--;
 					if (avatarIndex < 0) {
 						avatarIndex = 3;
 					}
 					gui.changeAvatarImage(avatarIndex);
 				} else if (event.toString().contains("NextAvatar")) {
+					// next avatar
 					avatarIndex++;
 					if (avatarIndex > 3) {
 						avatarIndex = 0;
 					}
 					gui.changeAvatarImage(avatarIndex);
 				} else if (event.toString().contains("right-insert")) {
-
-					// System.out.println("insert");
-					// System.out.println(itemIndex);
-
 					// the player want to insert item into container
 					client.sendWithIndex(Packet.PutItemIntoContainer, itemIndex);
-
 				} else if (event.toString().contains("right-use")) {
-					// System.out.println("right-use");
+					// the player want to use item
 					client.sendWithIndex(Packet.UseItem, itemIndex);
-
 				} else if (event.toString().contains("drop-use")) {
-					// System.out.println("drop-use");
+					// the player want to throw away item
 					client.sendWithIndex(Packet.DestroyItem, itemIndex);
-
 				} else if (event.toString().contains("Description")) {
+					// toggle on/off the description
 					descriptionToggle = !descriptionToggle;
 					gui.setDescriptionOn(descriptionToggle);
 				}
@@ -702,7 +693,7 @@ public class ClientUI {
 					client.send(Packet.TurnLeft);
 				} else if (keyCode == KeyCode.E) {
 					client.send(Packet.TurnRight);
-				} else if (keyCode == KeyCode.R || keyCode == keyCode.U) {
+				} else if (keyCode == KeyCode.R || keyCode == KeyCode.U) {
 					client.send(Packet.Unlock);
 				} else if (keyCode == KeyCode.F) {
 					client.send(Packet.TakeOutItem);
@@ -725,14 +716,6 @@ public class ClientUI {
 				} else if (keyCode == KeyCode.DIGIT8) {
 					client.sendWithIndex(Packet.UseItem, 7);
 				}
-
-				/*
-				 * TODO need more keys
-				 *
-				 * How to implement shift + 1 keys???
-				 *
-				 *
-				 */
 			}
 		};
 	}
@@ -745,17 +728,12 @@ public class ClientUI {
 		mouseEvent = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
-				// Currently this listen to clicks on the items
-				// TODO: some how make it work with items
-				// System.out.println("here" + event.toString());
-
 				if (event.toString().contains("Grid") && event.isSecondaryButtonDown() == false) {
-					// System.out.println(event.getX());
+					// right click on inventory
 					if (inventory.size() != 0) {
 						int itemX = (int) (event.getX() / 60);
 						int itemY = (int) (event.getY() / 60);
 						gui.setItemDescription(itemX, itemY);
-						// System.out.println(itemX + " " + itemY);
 					}
 				} else if (event.getButton() == MouseButton.SECONDARY) {
 					if (inventory.size() != 0) {
@@ -763,9 +741,8 @@ public class ClientUI {
 						int itemY = (int) (event.getY() / 60);
 						String item = gui.getItemDescription(itemX, itemY);
 
-						// System.out.println("item " + item);
+						// get the correct right menu
 						if (item != null) {
-
 							if (item.startsWith("A")) {
 								gui.antidoteRightClickOption();
 							} else if (item.startsWith("K")) {
@@ -778,6 +755,7 @@ public class ClientUI {
 								gui.rightClickClear();
 							}
 
+							// get the correct inventory index.
 							if (itemY == 0) {
 								itemIndex = itemX;
 							} else if (itemY == 1) {
@@ -790,17 +768,14 @@ public class ClientUI {
 								} else if (itemX == 3) {
 									itemIndex = 7;
 								}
-
 							}
 
 						} else {
+							// no right click menu on elsewhere
 							gui.rightClickClear();
 						}
-						// System.out.println(itemX + " " + itemY);
 					}
-					// System.out.println("here" + event.toString());
 				}
-
 			}
 		};
 	}
@@ -813,7 +788,7 @@ public class ClientUI {
 	 */
 	public String getFrontElementString() {
 		char mapElement = getFrontMapElement();
-		String decription = GUI.MAP_OBJECT_DESCRIPTION.get(mapElement);
+		String decription = Images.MAP_OBJECT_DESCRIPTION.get(mapElement);
 		if (decription == null) {
 			return "";
 		} else {
