@@ -31,7 +31,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
-
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -42,7 +41,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
@@ -54,7 +52,6 @@ import server.game.player.Direction;
 import server.game.player.Player;
 import server.game.player.Position;
 import server.game.player.Virus;
-
 import client.rendering.Images;
 import client.rendering.Rendering;
 import client.rendering.Side;
@@ -91,68 +88,6 @@ public class GUI extends Application {
 	// miniMap Canvus size
 	private static final int MINIMAP_CANVAS_SIZE = 200;
 
-	// mini map color table
-	private static final Map<Character, Color> MINIMAP_COLOR_TABLE;
-
-	/**
-	 * mini map color table
-	 */
-	public static final Map<Character, String> MAP_OBJECT_DESCRIPTION;
-
-	/*
-	 * Initialize the instruction table for minimap color and map element
-	 * description
-	 */
-	static {
-		MINIMAP_COLOR_TABLE = new HashMap<>();
-		MAP_OBJECT_DESCRIPTION = new HashMap<>();
-
-		// ========== obstacles: Grey, Rock, Barrel, Table ===========
-
-		// Rock
-		MINIMAP_COLOR_TABLE.put('R', Color.rgb(83, 86, 102, 1.0));
-		MAP_OBJECT_DESCRIPTION.put('R', "A rock. That won't heal me.");
-		// Barrel
-		MINIMAP_COLOR_TABLE.put('B', Color.rgb(83, 86, 102, 1.0));
-		MAP_OBJECT_DESCRIPTION.put('B', "People put things in there. I can't though.");
-		// Table
-		MINIMAP_COLOR_TABLE.put('A', Color.rgb(83, 86, 102, 1.0));
-		MAP_OBJECT_DESCRIPTION.put('A', "A table. That can't help me.");
-		// Chair
-		MINIMAP_COLOR_TABLE.put('H', Color.rgb(83, 86, 102, 1.0));
-		MAP_OBJECT_DESCRIPTION.put('H', "It's a chair. I'd rather sit on it to rest.");
-
-		// ===== Containers: golden, chest, cupboard, scrap pile =====
-
-		// Chest
-		MINIMAP_COLOR_TABLE.put('C', Color.rgb(255, 170, 37, 1.0));
-		MAP_OBJECT_DESCRIPTION.put('C', "A chest. Probably contains loot.");
-		// Cupboard
-		MINIMAP_COLOR_TABLE.put('U', Color.rgb(255, 170, 37, 1.0));
-		MAP_OBJECT_DESCRIPTION.put('U', "A cupboard. It might contain some medicine.");
-		// Scrap pile
-		MINIMAP_COLOR_TABLE.put('P', Color.rgb(255, 170, 37, 1.0));
-		MAP_OBJECT_DESCRIPTION.put('P', "A pile of useless scrap. Or is it?");
-
-		// ============== Tree or ground: green ======================
-
-		// Tree, dark green
-		MINIMAP_COLOR_TABLE.put('T', Color.rgb(68, 170, 58, 1.0));
-		MAP_OBJECT_DESCRIPTION.put('T', "A tree. Why they all look the same?");
-		// Ground, light green
-		MINIMAP_COLOR_TABLE.put('G', Color.rgb(200, 236, 204, 1.0));
-		MAP_OBJECT_DESCRIPTION.put('G', "");
-		// Door space, this is just ground
-		MINIMAP_COLOR_TABLE.put('D', Color.rgb(200, 236, 204, 1.0));
-		MAP_OBJECT_DESCRIPTION.put('D', "");
-
-		// =========== Room obstacles: blue ====================
-
-		// Room obstacles
-		MINIMAP_COLOR_TABLE.put('E', Color.rgb(19, 137, 245, 1.0));
-		MAP_OBJECT_DESCRIPTION.put('E', "I found a hidden cabin! I need to get inside.");
-	}
-
 	// Main window for the game
 	private static Stage window;
 	// controls
@@ -160,6 +95,7 @@ public class GUI extends Application {
 	private Canvas miniMapCanvas;
 	private Label textAreaLable;
 	private TextField chatMessage;
+
 	// Controls for the login Screen
 	private TextField userNameInput;
 	private TextField ipInput;
@@ -172,6 +108,7 @@ public class GUI extends Application {
 	private Label avatarLable;
 	// waiting room Controls
 	private Label waitingRoomMessage;
+
 	private Button readyGame;
 	private Label objectDescription;
 	private Label worldTimeLable;
@@ -179,6 +116,7 @@ public class GUI extends Application {
 	private CheckMenuItem descriptionToggle;
 	// Layouts
 	private Pane pane = new Pane();
+
 	private TitledPane titlePane;
 	private VBox rightPanel;
 	private GridPane itemGrid;
@@ -195,6 +133,7 @@ public class GUI extends Application {
 	private EventHandler<KeyEvent> keyEvent;
 	// for mouse events
 	private EventHandler<MouseEvent> mouseEvent;
+
 	// this if rotating the avtar image in the login screen
 	private static int avatarIndex = 0;
 	// this map is used to store the the point of item in the grid which is
@@ -203,6 +142,7 @@ public class GUI extends Application {
 	// this is used to store the list of Avatars which with the avatarIndex is
 	// used to change the images in the login screen
 	private List<Avatar> avatarList = new ArrayList<Avatar>();
+
 	// this is used to store the controller.
 	private static ClientUI controller;
 	// this is used to store the rendering object
@@ -923,7 +863,7 @@ public class GUI extends Application {
 		Color color = null;
 		for (int row = bound_top; row < bound_bottom; row++) {
 			for (int col = bound_left; col < bound_right; col++) {
-				color = MINIMAP_COLOR_TABLE.get(areaMap[row][col]);
+				color = Images.MINIMAP_COLOR_TABLE.get(areaMap[row][col]);
 				if (color == null) {
 					// This is an unknown character/MapElement, shouldn't happen
 					color = Color.BLACK;
