@@ -17,10 +17,8 @@ public class XmlFunctions {
 	 * The object will require an XmlRootElement annotation above the class header.
 	 * Any internal fields or methods with the XmlElement annotation will be added to the file.
 	 * Relies upon the saveProcess method.
-	 * @param obj
-	 * 			An object to save to the file.
-	 * @param prefix
-	 * 			A string which determines the prefix of the save file.
+	 * @param obj		An object to save to the file.
+	 * @param prefix	A string which determines the prefix of the save file.
 	 */
 	public static void saveFile(Object obj, String prefix){
 	    if(obj instanceof Game){
@@ -31,9 +29,8 @@ public class XmlFunctions {
 
 	/**
 	 * Saves an object as an XML file
-	 * @param obj
-	 * 			The object to save.
-	 * @param The file path of the save file.
+	 * @param obj 	The object to save.
+	 * @param file	The file path of the save file.
 	 */
 	private static void saveProcess(Object obj, File file){
 		try {
@@ -73,7 +70,7 @@ public class XmlFunctions {
 	/**
 	 * Saves an XML version of a Game object, except that the XML file will not contain any players.
 	 * This file contains its own saving
-	 * @param A Game object.
+	 * @param game	A Game object.
 	 */
 	public static void saveInitialFile(Game game){
 		InitialGameAdapter adapter = new InitialGameAdapter(game);
@@ -104,7 +101,7 @@ public class XmlFunctions {
 	/**
 	 * Returns true if the save file with the name exists.
 	 * The point of this method is to abstract any details regarding files from the game logic.
-	 * @param The filepath of the file to check.
+	 * @param string	The filepath of the file to check.
 	 * @return True if there is a save file with the name provided.
 	 */
 	public static boolean saveExists(String string){

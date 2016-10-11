@@ -32,6 +32,9 @@ public class BagAdapter extends ItemAdapter{
 	private String description;
 
 
+	/**
+	 * @param sp	The object on which to base this object
+	 **/
 	public BagAdapter(Bag sp){
 		List<Item> spLoot = sp.getLoot();
 		Item item = null;

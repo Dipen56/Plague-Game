@@ -11,6 +11,9 @@ public class MapElementAdapter {
 
 	}
 
+	/**
+	 * Calls the toString method correspoding to the element subtype.
+	 */
 	public String toString(){
 		if(this instanceof ChestAdapter)
 			return ((ChestAdapter)this).toString();

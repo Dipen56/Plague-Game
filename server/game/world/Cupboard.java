@@ -3,7 +3,6 @@ package server.game.world;
 import java.util.Iterator;
 import java.util.List;
 
-import server.game.GameError;
 import server.game.items.Item;
 import server.game.player.Player;
 
@@ -46,14 +45,8 @@ public class Cupboard extends Obstacle implements Container, Lockable {
 	 */
 	public Cupboard(String description, int keyID, boolean isLocked, List<Item> loot) {
 		super(description);
-
 		this.keyID = keyID;
 		this.isLocked = isLocked;
-
-		if (loot.size() > Container.OTHER_SIZE) {
-			throw new GameError("Chest can only contain " + Container.OTHER_SIZE + " items.");
-		}
-
 		this.loot = loot;
 	}
 

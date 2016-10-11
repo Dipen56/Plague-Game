@@ -13,7 +13,7 @@ public class Antidote extends Item implements Destroyable, Tradable {
 
 	/**
 	 * How long this antidote is going to prolong player's life if it's correct
-	 * type. This number is set to 1 hours (equivalent 1 minutes in game).
+	 * type..
 	 */
 	public static final int EFFECT = 1 * 60;
 
@@ -22,6 +22,12 @@ public class Antidote extends Item implements Destroyable, Tradable {
 	 * chance (a relatively low chance).
 	 */
 	public static final float CURE_CHANCE = 0.2f;
+
+	/**
+	 * When the player is desperate to drink a wrong type of antidote, this is
+	 * the multiplier if he is lucky to get life increased.
+	 */
+	public static final int MULTIPLIER = 3;
 
 	/**
 	 * What type of virus does this antidote used for?

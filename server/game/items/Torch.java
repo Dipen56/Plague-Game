@@ -9,7 +9,7 @@ package server.game.items;
 public class Torch extends Item implements Destroyable, Tradable {
 
 	/**
-	 * Each torch can burn up to 3 minute.
+	 * Each torch can burn up to 1 minute.
 	 */
 	private static final int INIT_TIME = 1 * 60;
 
@@ -122,11 +122,6 @@ public class Torch extends Item implements Destroyable, Tradable {
 
 	@Override
 	public String toString() {
-
-		// for easy testing
-		// return super.toString() + " I reckon it has about " + timeLimit
-		// + " seconds left to burn.";
-
 		int minutesLeft = timeLimit / 60;
 		String minutesLeftString = minutesLeft >= 1 ? String.valueOf(minutesLeft) : "less than 1";
 		return super.toString() + " I reckon it has about " + minutesLeftString + " minutes left to burn.";

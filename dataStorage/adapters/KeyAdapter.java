@@ -26,6 +26,10 @@ public class KeyAdapter extends ItemAdapter{
 	@XmlElement
     private String description;
 
+
+	/**
+	 * @param item	The object on which to base this object
+	 **/
 	public KeyAdapter(Key item) {
 		if(item == null)
 			throw new IllegalArgumentException("Argument is null");
@@ -47,7 +51,7 @@ public class KeyAdapter extends ItemAdapter{
 	public Key getOriginal(){
 		return new Key(description, keyID);
 	}
-	
+
 	/**
 	 * Returns a string representation of this object's fields.
 	 */

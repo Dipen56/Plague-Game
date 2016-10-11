@@ -27,9 +27,9 @@ public class Player {
 
 	/**
 	 * The max health (time left) of player. This number is set to 3 minutes.
-	 * After 3 minutes, the player will die.
+	 * After 5 minutes, the player will die.
 	 */
-	public static final int MAX_HEALTH = 3 * 60;
+	public static final int MAX_HEALTH = 5 * 60;
 
 	/**
 	 * User Id to identify this player.
@@ -192,7 +192,8 @@ public class Player {
 		if (antidote.getVirus().equals(virus)) {
 			increaseHealth(Antidote.EFFECT);
 		} else {
-			int effect = Math.random() < Antidote.CURE_CHANCE ? Antidote.EFFECT * 2 : -Antidote.EFFECT;
+			int effect = Math.random() < Antidote.CURE_CHANCE ? Antidote.EFFECT * Antidote.MULTIPLIER
+					: -Antidote.EFFECT;
 			increaseHealth(effect);
 		}
 
@@ -604,8 +605,9 @@ public class Player {
 	 *            --- A Virus.
 	 */
 	public void setVirus(Virus v) {
-		if (loading)
+		if (loading) {
 			this.virus = v;
+		}
 	}
 
 	/**
@@ -616,8 +618,9 @@ public class Player {
 	 *            --- A boolean describing whether the player is alive or not.
 	 */
 	public void setIsAlive(boolean isAlive) {
-		if (loading)
+		if (loading) {
 			this.isAlive = isAlive;
+		}
 	}
 
 	/**
@@ -628,8 +631,9 @@ public class Player {
 	 *            --- A list of items.
 	 */
 	public void setInventory(List<Item> newInventory) {
-		if (loading)
+		if (loading) {
 			this.inventory = newInventory;
+		}
 	}
 
 	/**
@@ -640,10 +644,11 @@ public class Player {
 	 *            --- The player's name.
 	 */
 	public void setName(String name) {
-		if (loading)
+		if (loading) {
 			this.name = name;
-		else
+		} else {
 			this.name = "DEFAULT";
+		}
 	}
 
 	/**

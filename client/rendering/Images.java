@@ -2,8 +2,8 @@ package client.rendering;
 
 import java.util.HashMap;
 import java.util.Map;
-
 import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
 import server.game.player.Avatar;
 import server.game.player.Direction;
 
@@ -17,36 +17,80 @@ import server.game.player.Direction;
  */
 public class Images {
 
+	/**
+	 * This is the game icon image
+	 */
 	public static final Image GAMEICON_IMAGE = loadImage("/game-icon.png");
 
+	/**
+	 * This is an empty image for empty item slot in inventory
+	 */
 	public static final Image INVENTORY_IMAGE = loadImage("/item-tray.png");
 
+	/**
+	 * This is the splash screen image
+	 */
 	public static final Image SLASH_SCREEN_IMAGE = loadImage("/spash-screen-background.png");
 
+	/**
+	 * This is the background image for login screen
+	 */
 	public static final Image LOGIN_SCREEN_IMAGE = loadImage("/login-background.png");
 
+	/**
+	 * The day time background image
+	 */
 	public static final Image DAYTIME_IMAGE = loadImage("/Daytime.jpg");
 
+	/**
+	 * The night time background image
+	 */
 	public static final Image NIGHTIME_IMAGE = loadImage("/background.gif");
 
+	/**
+	 * The grass image
+	 */
 	public static final Image GRASS_IMAGE = loadImage("/grass.png");
-	
+
+	/**
+	 * The grass image in the night
+	 */
 	public static final Image GRASSNIGHT_IMAGE = loadImage("/grass_dark.png");
 
 	public static final Image TREE_IMAGE = loadImage("/tree.png");
 
 	public static final Image CHEST_IMAGE = loadImage("/chest.png");
-	
+
+	//public static final Image ROOMTILE_IMAGE = loadImage("/roomTile.png");
+
+	//public static final Image HOWTOPLAY_IMAGE = loadImage("/HowToPlay.png");
+
+	//public static final Image KEYBOARDSHORT_IMAGE = loadImage("/Keyboard_Help.png");
+	/**
+	 * The ground tile image in the room
+	 */
 	public static final Image ROOMTILE_IMAGE = loadImage("/roomTile.png");
-	
+
+	/**
+	 * Help screen image
+	 */
 	public static final Image HOWTOPLAY_IMAGE = loadImage("/HowToPlay.png");
-	
-	public static final Image KEYBOARDSHORT_IMAGE = loadImage("/Keyboard_Help.png");
+
+	/**
+	 * Keyboard short-cut help screen image
+	 */
+	public static final Image KEYBOARDSHORT_IMAGE = loadImage("/Keyboard_Help.jpg");
+
+	/**
+	 * waiting room image
+	 */
+	public static final Image WAITING_ROOM_IMAGE = loadImage("/wating-room.gif");
 
 	/**
 	 * Four green arrow images used for rendering mini-map
 	 */
 	public static final Map<Direction, Image> GREEN_ARROW;
+
 	/**
 	 * Four red arrow images used for rendering mini-map
 	 */
@@ -78,12 +122,24 @@ public class Images {
 	 */
 	public static final Map<Avatar, Image> PROFILE_IMAGES;
 
+	/**
+	 * This is designed as a table for renderer to retrieve the dead player
+	 * images.
+	 */
 	public static final Map<Avatar, Map<Side, Image>> DEAD_IMAGES;
 
+	/**
+	 * Mini-map colour table
+	 */
+	public static final Map<Character, Color> MINIMAP_COLOR_TABLE;
+
+	/**
+	 * Map object description table
+	 */
+	public static final Map<Character, String> MAP_OBJECT_DESCRIPTION;
+
 	/*
-	 * Initialise the table for Renderer. Each table contains a map which maps a
-	 * char to the corresponding object, so the Renderer knows what to render by
-	 * knowing what char was sent by server.
+	 * Initialise the constant tables for renderer.
 	 */
 	static {
 		MAP_OBJECT_IMAGES = new HashMap<>();
@@ -94,15 +150,8 @@ public class Images {
 		RED_ARROW = new HashMap<>();
 		PROFILE_IMAGES = new HashMap<>();
 		DEAD_IMAGES = new HashMap<>();
-
-		/*
-		 * TODO This is probably not appropriate, some map objects may need more
-		 * than one png path, e.g. a room has four sides of views, each of them
-		 * should be different.
-		 *
-		 * But the idea is, we initialise this map for renderer so that renderer
-		 * knows what map object to render by looking into this map.
-		 */
+		MINIMAP_COLOR_TABLE = new HashMap<>();
+		MAP_OBJECT_DESCRIPTION = new HashMap<>();
 
 		// ============= map objects ====================
 
@@ -221,6 +270,7 @@ public class Images {
 		RED_ARROW.put(Direction.West, loadImage("/Red_West.png"));
 
 		// ============= profile pictures =====================
+
 		PROFILE_IMAGES.put(Avatar.Avatar_1, loadImage("/Char_1_face.png"));
 		PROFILE_IMAGES.put(Avatar.Avatar_2, loadImage("/Char_3_Face.png"));
 		PROFILE_IMAGES.put(Avatar.Avatar_3, loadImage("/Char_2_Face.png"));
@@ -229,33 +279,77 @@ public class Images {
 		// ============= dead avatar pictures =====================
 
 		Map<Side, Image> deadImg_1 = new HashMap<>();
-		// deadImg_1.put(Side.Front, loadImage("/Char_1_Front.gif"));
-		// deadImg_1.put(Side.Back, loadImage("/Char_1_Rear.gif"));
-		// deadImg_1.put(Side.Left, loadImage("/Char_1_Left.gif"));
-		// deadImg_1.put(Side.Right, loadImage("/Char_1_Right.gif"));
+		deadImg_1.put(Side.Front, loadImage("/Char_1_front_stand_Dead.png"));
+		deadImg_1.put(Side.Back, loadImage("/Char_1_rear_stand_Dead.png"));
+		deadImg_1.put(Side.Left, loadImage("/Char_1_left_stand_Dead.png"));
+		deadImg_1.put(Side.Right, loadImage("/Char_1_right_stand_Dead.png"));
 		DEAD_IMAGES.put(Avatar.Avatar_1, deadImg_1);
 
 		Map<Side, Image> deadImg_2 = new HashMap<>();
-		// deadImg_2.put(Side.Front, loadImage("/Char_1_Front.gif"));
-		// deadImg_2.put(Side.Back, loadImage("/Char_1_Rear.gif"));
-		// deadImg_2.put(Side.Left, loadImage("/Char_1_Left.gif"));
-		// deadImg_2.put(Side.Right, loadImage("/Char_1_Right.gif"));
+		deadImg_2.put(Side.Front, loadImage("/Char_3_Front_Dead.png"));
+		deadImg_2.put(Side.Back, loadImage("/Char_3_Back_Dead.png"));
+		deadImg_2.put(Side.Left, loadImage("/Char_3_Left_Dead.png"));
+		deadImg_2.put(Side.Right, loadImage("/Char_3_Right_Dead.png"));
 		DEAD_IMAGES.put(Avatar.Avatar_2, deadImg_2);
 
 		Map<Side, Image> deadImg_3 = new HashMap<>();
-		// deadImg_3.put(Side.Front, loadImage("/Char_1_Front.gif"));
-		// deadImg_3.put(Side.Back, loadImage("/Char_1_Rear.gif"));
-		// deadImg_3.put(Side.Left, loadImage("/Char_1_Left.gif"));
-		// deadImg_3.put(Side.Right, loadImage("/Char_1_Right.gif"));
+		deadImg_3.put(Side.Front, loadImage("/Char_2_Front_Dead.png"));
+		deadImg_3.put(Side.Back, loadImage("/Char_2_Rear_Dead.png"));
+		deadImg_3.put(Side.Left, loadImage("/Char_2_left_Dead.png"));
+		deadImg_3.put(Side.Right, loadImage("/Char_2_right_Dead.png"));
 		DEAD_IMAGES.put(Avatar.Avatar_3, deadImg_3);
 
 		Map<Side, Image> deadImg_4 = new HashMap<>();
-		// deadImg_4.put(Side.Front, loadImage("/Char_1_Front.gif"));
-		// deadImg_4.put(Side.Back, loadImage("/Char_1_Rear.gif"));
-		// deadImg_4.put(Side.Left, loadImage("/Char_1_Left.gif"));
-		// deadImg_4.put(Side.Right, loadImage("/Char_1_Right.gif"));
+		deadImg_4.put(Side.Front, loadImage("/Char_4_Front_Dead.png"));
+		deadImg_4.put(Side.Back, loadImage("/Char_4_Back_Dead.png"));
+		deadImg_4.put(Side.Left, loadImage("/Char_4_left_Dead.png"));
+		deadImg_4.put(Side.Right, loadImage("/Char_4_right_Dead.png"));
 		DEAD_IMAGES.put(Avatar.Avatar_4, deadImg_4);
 
+		// ===== Mini-map colour & Map object description table ======
+
+		// Rock
+		MINIMAP_COLOR_TABLE.put('R', Color.rgb(83, 86, 102, 1.0));
+		MAP_OBJECT_DESCRIPTION.put('R', "A rock. That won't heal me.");
+		// Barrel
+		MINIMAP_COLOR_TABLE.put('B', Color.rgb(83, 86, 102, 1.0));
+		MAP_OBJECT_DESCRIPTION.put('B', "People put things in there. I can't though.");
+		// Table
+		MINIMAP_COLOR_TABLE.put('A', Color.rgb(83, 86, 102, 1.0));
+		MAP_OBJECT_DESCRIPTION.put('A', "A table. That can't help me.");
+		// Chair
+		MINIMAP_COLOR_TABLE.put('H', Color.rgb(83, 86, 102, 1.0));
+		MAP_OBJECT_DESCRIPTION.put('H', "It's a chair. I'd rather sit on it to rest.");
+
+		// ===== Containers: golden, chest, cupboard, scrap pile =====
+
+		// Chest
+		MINIMAP_COLOR_TABLE.put('C', Color.rgb(255, 170, 37, 1.0));
+		MAP_OBJECT_DESCRIPTION.put('C', "A chest. Probably contains loot.");
+		// Cupboard
+		MINIMAP_COLOR_TABLE.put('U', Color.rgb(255, 170, 37, 1.0));
+		MAP_OBJECT_DESCRIPTION.put('U', "A cupboard. It might contain some medicine.");
+		// Scrap pile
+		MINIMAP_COLOR_TABLE.put('P', Color.rgb(255, 170, 37, 1.0));
+		MAP_OBJECT_DESCRIPTION.put('P', "A pile of useless scrap. Or is it?");
+
+		// ============== Tree or ground: green ======================
+
+		// Tree, dark green
+		MINIMAP_COLOR_TABLE.put('T', Color.rgb(68, 170, 58, 1.0));
+		MAP_OBJECT_DESCRIPTION.put('T', "A tree. Why they all look the same?");
+		// Ground, light green
+		MINIMAP_COLOR_TABLE.put('G', Color.rgb(200, 236, 204, 1.0));
+		MAP_OBJECT_DESCRIPTION.put('G', "");
+		// Door space, this is just ground
+		MINIMAP_COLOR_TABLE.put('D', Color.rgb(200, 236, 204, 1.0));
+		MAP_OBJECT_DESCRIPTION.put('D', "");
+
+		// =========== Room obstacles: blue ====================
+
+		// Room obstacles
+		MINIMAP_COLOR_TABLE.put('E', Color.rgb(19, 137, 245, 1.0));
+		MAP_OBJECT_DESCRIPTION.put('E', "I found a hidden cabin! I need to get inside.");
 	}
 
 	/**
@@ -312,8 +406,21 @@ public class Images {
 	 *            --- the other player's direction.
 	 * @return --- the proper image to render the other player when he is dead.
 	 */
-	public static Image getDeadImageByDirection(Avatar avatar, Direction ownDir, Direction hisDir) {
+	public static Image getDeadImageByDirectionOther(Avatar avatar, Direction ownDir, Direction hisDir) {
 		return DEAD_IMAGES.get(avatar).get(Side.getSideByRelativeDirection(ownDir, hisDir));
+	}
+
+	/**
+	 * This utility method is used to retrieve dead image from a given side.
+	 *
+	 * @param avatar
+	 *            --- the avatar
+	 * @param side
+	 *            --- the side
+	 * @return --- the proper image to render the dead player.
+	 */
+	public static Image getDeadImageBySideMyself(Avatar avatar, Side side) {
+		return DEAD_IMAGES.get(avatar).get(side);
 	}
 
 	/**

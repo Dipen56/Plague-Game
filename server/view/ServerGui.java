@@ -5,8 +5,6 @@ import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import javafx.scene.layout.BorderPane;
 
-import static client.rendering.Images.loadImage;
-
 import javafx.animation.FadeTransition;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -24,7 +22,6 @@ import javafx.util.Duration;
  */
 public class ServerGui extends Application {
 
-	private static final String GAMEICON_IMAGE = "/game-icon.png";
 	private Stage window;
 	private BorderPane borderPane;
 	private Label textLabel;
@@ -36,29 +33,27 @@ public class ServerGui extends Application {
 
 	}
 
-    @Override
-    public void start(Stage mainWindow) throws Exception {
-        window = mainWindow;
-        window.setTitle("Plague Game Server");
-       // window.getIcons().add(loadImage(GAMEICON_IMAGE));
-        borderPane = new BorderPane();
-        textLabel = new Label();
-        textLabel.getStyleClass().add("root-server");
-        // textLabel.setText("Welcome Server Is Starting Up...\n Operated By:
-        // HARDD inc");
-        setText();
-        ft = new FadeTransition(Duration.millis(4000), textLabel);
-        ft.setFromValue(0.0);
-        ft.setToValue(1.0);
-        ft.play();
-        textLabel.setWrapText(true);
-        borderPane.setCenter(textLabel);
-        // setText("192.1.1.0", "8080");
-        Scene mainScene = new Scene(borderPane, 300, 300);
-        window.setScene(mainScene);
-        mainScene.getStylesheets()
-                .add(this.getClass().getResource("/main.css").toExternalForm());
-
+	@Override
+	public void start(Stage mainWindow) throws Exception {
+		window = mainWindow;
+		window.setTitle("Plague Game Server");
+		// window.getIcons().add(loadImage(GAMEICON_IMAGE));
+		borderPane = new BorderPane();
+		textLabel = new Label();
+		textLabel.getStyleClass().add("root-server");
+		// textLabel.setText("Welcome Server Is Starting Up...\n Operated By:
+		// HARDD inc");
+		setText();
+		ft = new FadeTransition(Duration.millis(4000), textLabel);
+		ft.setFromValue(0.0);
+		ft.setToValue(1.0);
+		ft.play();
+		textLabel.setWrapText(true);
+		borderPane.setCenter(textLabel);
+		// setText("192.1.1.0", "8080");
+		Scene mainScene = new Scene(borderPane, 300, 300);
+		window.setScene(mainScene);
+		mainScene.getStylesheets().add(this.getClass().getResource("/main.css").toExternalForm());
 
 		window.show();
 

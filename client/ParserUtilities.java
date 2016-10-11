@@ -13,11 +13,10 @@ import server.game.player.Position;
  * This class is a utility class containing static methods to parse
  * communications between server and client.
  * 
- * @author Dipen, Rafaela & Hector (Fang Zhao 300364061)
+ * @author Hector (Fang Zhao 300364061)
  *
  */
 public class ParserUtilities {
-
 
 	/**
 	 * A universally used console input scanner. It's used in test based UI
@@ -178,7 +177,7 @@ public class ParserUtilities {
 
 				if (uId < 0 || avatarIndex < 0) {
 					System.out.println(
-							"Error occurred when parsing postion. Negative uId or avatarIndex. String input is: "
+							"Error occurred when parsing avatars. Negative uId or avatarIndex. String input is: "
 									+ avatarsStr);
 					scanner.close();
 					return; // do not crash the game.
@@ -189,8 +188,74 @@ public class ParserUtilities {
 
 		} catch (NumberFormatException e1) {
 			System.out
-					.println("Error occurred when parsing postion. uId or avatarIndex is not integer. String input is: "
+					.println("Error occurred when parsing avatars. uId or avatarIndex is not integer. String input is: "
 							+ avatarsStr);
+			scanner.close();
+			return; // do not crash the game.
+		}
+		scanner.close();
+
+	}
+
+	/**
+	 * This method reads in a String and parse it into aliveness status for each
+	 * player in game, which is then used on client side to render player
+	 * walking or being dead with different image. The result is recorded in
+	 * <i><b>alivenessMap</b></i> given as parameter. The input String is
+	 * expected to have the following format:
+	 * <i>"uId_1,true/false|uId_2,true/false"</i>
+	 * 
+	 * <p>
+	 * Say 2 players currently in game:
+	 * <li>player 1, id 111, is alive
+	 * <li>player 2, id 222, is dead<br>
+	 * <br>
+	 * <p>
+	 * The string representation will be <i>"111,1|222,0"</i>
+	 * 
+	 * @param alivenessMap
+	 *            --- a map recording all player's status of aliveness, where
+	 *            the key is player Id, and the value is a boolean value for
+	 *            being alive or dead.
+	 * @param alivenessString
+	 *            --- a string recording all player's status of aliveness,
+	 *            received by client from server.
+	 */
+	public static void parseAliveness(Map<Integer, Boolean> alivenessMap, String alivenessString) {
+		Scanner scanner = new Scanner(alivenessString);
+		String line = scanner.nextLine();
+
+		String[] posStrs = line.split("\\|"); // not '|'
+
+		int uId = -1;
+		int isAlive = -1;
+
+		try {
+			for (String posStr : posStrs) {
+
+				if (posStr.length() < 1) {
+					continue;
+				}
+
+				String[] nums = posStr.split(",");
+				uId = Integer.valueOf(nums[0]);
+				isAlive = Integer.valueOf(nums[1]);
+
+				if (uId < 0 || isAlive < 0 || isAlive > 1) {
+					System.out.println(
+							"Error occurred when parsing postion. Negative uId or aliveness status. String input is: "
+									+ alivenessString);
+					scanner.close();
+					return; // do not crash the game.
+				}
+
+				alivenessMap.put(uId, isAlive == 0 ? false : true);
+			}
+
+		} catch (NumberFormatException e1) {
+			System.out.println(
+					"Error occurred when parsing aliveness string. uId or torch status is not integer. String input is: "
+							+ alivenessString);
 			scanner.close();
 			return; // do not crash the game.
 		}
@@ -244,7 +309,7 @@ public class ParserUtilities {
 
 				if (uId < 0 || isHoldingTorch < 0 || isHoldingTorch > 1) {
 					System.out.println(
-							"Error occurred when parsing postion. Negative uId or torch status. String input is: "
+							"Error occurred when parsing torch status string. Negative uId or torch status. String input is: "
 									+ torchStatusStr);
 					scanner.close();
 					return; // do not crash the game.
@@ -255,7 +320,7 @@ public class ParserUtilities {
 
 		} catch (NumberFormatException e1) {
 			System.out.println(
-					"Error occurred when parsing postion. uId or torch status is not integer. String input is: "
+					"Error occurred when parsing torch status string. uId or torch status is not integer. String input is: "
 							+ torchStatusStr);
 			scanner.close();
 			return; // do not crash the game.
@@ -446,6 +511,5 @@ public class ParserUtilities {
 
 		return line.charAt(0);
 	}
-
 
 }

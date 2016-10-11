@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import server.game.GameError;
 import server.game.player.Player;
 import server.game.world.Container;
 
@@ -31,14 +30,9 @@ public class Bag extends Item implements Container {
 	 */
 	public Bag(String description, List<Item> loot) {
 		super(description);
-
 		if (loot == null) {
 			this.loot = new ArrayList<>();
 		} else {
-			// if (loot.size() > Container.OTHER_SIZE) {
-			// throw new GameError("Bag can only contain " +
-			// Container.OTHER_SIZE + " items.");
-			// }
 			this.loot = loot;
 		}
 	}
